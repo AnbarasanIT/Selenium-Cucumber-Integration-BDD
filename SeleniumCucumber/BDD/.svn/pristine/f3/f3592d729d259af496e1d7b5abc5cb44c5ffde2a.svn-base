@@ -1,0 +1,194 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.pharmacy_health;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class PharmacyAccountBalanceLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the pharmacy account balance page
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -SARAVANAN M
+     * @Modified Date -18-JUNE-2013
+     ************************************************************* 
+     */
+    public static void pharmacyAccountBalanceVerifications(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String YourAccountPharmacyHealth_TAB = "div[id='yourAccountMenu']>ul>li +li a~CSS";
+	String PharmacyAccountBalance_LNK = "//li/a[contains(text(),'Account Balance')]~XPATH";
+	String ManageRxAccountBalance_ELM = "//*[contains(text(),'Manage Your Pharmacy Account Balance')]~XPATH";
+	String FamilyMemberToggle_LST = "select[id='selectMemberView']~CSS";
+	String EditCreditCard_IMG = "img[title='Edit Credit Card']~CSS";
+	String CreditCardType_LST = "select[id='cardType']~CSS";
+	String CreditCardNumber_TXT = "input[id='ccNumber']~CSS";
+	String CreditCardMonth_LST = "select[id='expmonth']~CSS";
+	String CreditCardYear_LST = "select[id='expyear']~CSS";
+	String Address_TXT = "input[id='streetaddress']~CSS";
+	String City_TXT = "input[id='city']~CSS";
+	String Zipcode_TXT = "input[id='zipcode']~CSS";
+	String State_LST = "select[id='billstate']~CSS";
+	String SaveChanges_BTN = "input[title='Save Changes']~CSS";
+	String CCSaveChangesSuccessMsg_ELM = "//*[contains(text(),'We have successfully saved changes to your credit card information.')]~XPATH";
+	String InvalidCCMsg_LBL = "//b[contains(text(),'Invalid Credit Card:')]~XPATH";
+	String EmptyCCErrorMsg_LBL = "//p[contains(text(),'Please enter a valid credit card number. No spaces or dashes.')]~XPATH";
+	String CurrentBilling_RDO = "input#current_billing~CSS";
+	String NewBilling_RDO = "input#new_billing~CSS";
+
+	String VerificationRequiredForMember = null, strSectionToVerify = null, PrepopVerify = null, ValidationType = null, CCType = null, CCNumber = null, CCExpiryDate = null, UpdateBillingAdress = null, CCExpiryYear = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		VerificationRequiredForMember = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberToVerify");
+		strSectionToVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SectionToVerify");
+		PrepopVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrepopVerify");
+		CCType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CardType");
+		CCNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CardNumber");
+		CCExpiryDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpireMonth");
+		CCExpiryYear = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpireYear");
+		UpdateBillingAdress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UpdateBillingAdress");
+		ValidationType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ValidationType");
+		// clicking on the Pharmacy & health Tab in your account section
+		getElementByProperty(YourAccountPharmacyHealth_TAB, browser).click();
+		if (!performHoverClickAction(getElementByProperty(YourAccountPharmacyHealth_TAB, browser), PharmacyAccountBalance_LNK, browser)) {
+		    throw new Exception("Unable to navigate to pharmacy account balance via Account page");
+		}
+		if (!VerificationRequiredForMember.equalsIgnoreCase("-")) {
+		    selectByVisibleText(FamilyMemberToggle_LST, VerificationRequiredForMember, browser);
+		}
+		if (!isElementPresentVerification(ManageRxAccountBalance_ELM, browser)) {
+		    messagesMap.put("Header Verification for Manage your account balance page", "The expected Manage your account balance page header is not displayed.");
+		    status = WARNING;
+		}
+		if (strSectionToVerify.equalsIgnoreCase("Credit Card")) {
+		    do{
+			//Do nothing
+		    }while(!isElementPresentVerification(EditCreditCard_IMG, browser));
+		    
+		    if (!isElementPresentVerifyClick(EditCreditCard_IMG, browser)) {
+			throw new Exception("Not able to click on Edit Credit Card button in Credit Card section of Manage account page");
+		    }
+
+		    // if credit card details already exist, the following
+		    // verifications happen
+		    // 1. If Type is displayed instead of default value
+		    // 2. If Month is displayed instead of default value
+		    // 3. If Year is displayed instead of default value
+		    if (PrepopVerify.equalsIgnoreCase("Yes")) {
+			if (!getElementByProperty(CreditCardNumber_TXT, browser).getAttribute("value").equals("")) {
+			    if (new Select(getElementByProperty(CreditCardType_LST, browser)).getFirstSelectedOption().getText().trim().equalsIgnoreCase("Card type")) {
+				messagesMap.put("Field verification for Cred Card Section", "Default value for CC Type is displayed instead of actual value");
+				status = WARNING;
+			    }
+			    if (new Select(getElementByProperty(CreditCardMonth_LST, browser)).getFirstSelectedOption().getText().trim().equalsIgnoreCase("Month")) {
+				messagesMap.put("Field verification for Cred Card Section", "Default value for CC Month is displayed instead of actual value");
+				status = WARNING;
+			    }
+			    if (new Select(getElementByProperty(CreditCardType_LST, browser)).getFirstSelectedOption().getText().trim().equalsIgnoreCase("Year")) {
+				messagesMap.put("Field verification for Cred Card Section", "Default value for CC Year is displayed instead of actual value");
+				status = WARNING;
+			    }
+			}
+		    }
+		    // updating credit card details
+		    if (!CCType.equals("-")) {
+			selectByVisibleText(CreditCardType_LST, CCType, browser);
+		    }
+
+		    if (!CCNumber.equals("-")) {
+			if (!clearAndEnterText(CreditCardNumber_TXT, CCNumber, browser)) {
+			    messagesMap.put("Field verification for Cred Card Section", "Unable to enter Credit Card Number");
+			    status = WARNING;
+			}
+		    }
+		    if (!CCExpiryDate.equals("-")) {
+			new Select(getElementByProperty(CreditCardMonth_LST, browser)).selectByValue(CCExpiryDate);
+		    }
+		    if (!CCExpiryYear.equals("-")) {
+			new Select(getElementByProperty(CreditCardYear_LST, browser)).selectByValue(CCExpiryYear);
+		    }
+		    if (UpdateBillingAdress.equalsIgnoreCase("Yes")) {
+			String Address = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+			String City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+			String State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+			String ZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+
+			if (isElementPresentVerification(NewBilling_RDO, browser) && !getElementByProperty(NewBilling_RDO, browser).isSelected()) {
+			    getElementByProperty(NewBilling_RDO, browser).click();
+			}
+			// Update billing address details
+			if (!Address.equals("-")) {
+			    if (!clearAndEnterText(Address_TXT, Address, browser)) {
+				messagesMap.put("Field verification for Cred Card Section", "Unable to enter Billing Address.");
+				status = WARNING;
+			    }
+			}
+			if (!City.equals("-")) {
+			    if (!clearAndEnterText(City_TXT, City, browser)) {
+				messagesMap.put("Field verification for Cred Card Section", "Unable to enter Billing City.");
+				status = WARNING;
+			    }
+			}
+			if (!State.equals("-")) {
+			    new Select(getElementByProperty(State_LST, browser)).selectByValue(State);
+			}
+			if (!ZipCode.equals("-")) {
+			    if (!clearAndEnterText(Zipcode_TXT, ZipCode, browser)) {
+				messagesMap.put("Field verification for Cred Card Section", "Unable to enter Billing Zipcode.");
+				status = WARNING;
+			    }
+			}
+		    } else {
+			if (isElementPresentVerification(CurrentBilling_RDO, browser) && !getElementByProperty(CurrentBilling_RDO, browser).isSelected()) {
+			    getElementByProperty(CurrentBilling_RDO, browser).click();
+			}
+		    }
+		    if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+			throw new Exception("Unable to click on Save changes button in CC Info page.");
+		    }
+
+		    if (ValidationType.equalsIgnoreCase("Empty")) {
+			getElementByProperty(CreditCardNumber_TXT, browser).clear();
+			getElementByProperty(SaveChanges_BTN, browser).click();
+			if (!isElementPresentVerification(EmptyCCErrorMsg_LBL, browser)) {
+			    messagesMap.put("Error message-CC Number", "Error message is not displayed for null entry in credit card number field.");
+			    status = WARNING;
+			}
+		    } else if (CCNumber.trim().length() < 15) {
+			if (!isElementPresentVerification(InvalidCCMsg_LBL, browser)) {
+			    messagesMap.put("Error message-CC Number", "Error message is not displayed for invalid entry in credit card number field.");
+			    status = WARNING;
+			}
+		    } else {
+			// verify successs message after saving changes
+			if (!isElementPresentVerification(CCSaveChangesSuccessMsg_ELM, browser)) {
+			    messagesMap.put("Success message verification", "Success message is not displayed after trying to save credit card changes.");
+			    status = WARNING;
+			}
+		    }
+		} else if (strSectionToVerify.equalsIgnoreCase("Transactions")) {
+		    // no dependent TC's as of now
+		} else {
+		    messagesMap.put("Section to be verified", "Invalid Section.");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

@@ -1,0 +1,171 @@
+@PersonalSettings
+
+Feature:  Customer validates the link navigation and UI under the personal settings tab
+#----------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-22
+Scenario: Unmatched user validates the express pay prescriptions page from pharmacy home page
+
+Given  "RX-UnAuthRxValidations-22" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations 	 | RX-UnAuthRxValidations-22 	|
+
+Given "RX-UnAuthRxValidations-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| Pharmacy  	 | login     | Unmatcheduser1	 |
+
+Then "RX-UnAuthRxValidations-22" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 		| RowId              |
+| PharmacyHomePageLinkVerification  | UnAuthenticated  	| YourAccount		 |
+| PharmacyHomePageLinkVerification  | UnAuthenticated  	| Expresspay		 |
+
+Then "RX-UnAuthRxValidations-22" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+Then "RX-UnAuthRxValidations-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-22		|
+
+#----------------------------------------------------------------------------------
+@RX-SigninSecurityValidations-01
+Scenario:  user validates the Siginin and Security page UI
+
+Given  "RX-SigninSecurityValidations-01" Customer starts the scenario:
+| InputFileName | SheetName 			      | RowId         		 	        |
+| QC-RX	        | SigninSecurityValidations   | RX-SigninSecurityValidations-01 	|
+
+Given "RX-SigninSecurityValidations-01" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| Pharmacy  	 | login     | Unmatcheduser2	 |
+
+Then "RX-SigninSecurityValidations-01" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName     | SheetName        | RowId                       |
+| AccountDashboard  | SigninSecurity   | SigninsecurityValidation1	 |
+
+Then "RX-SigninSecurityValidations-01" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-SigninSecurityValidations-01" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	            | RowId      	 	          	        |
+| QC-RX 	    | SigninSecurityValidations      	    | RX-SigninSecurityValidations-01		|
+
+#----------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-25
+Scenario: Matched user validates the express pay prescriptions page from pharmacy home page
+
+Given  "RX-UnAuthRxValidations-25" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations 	 | RX-UnAuthRxValidations-25 	|
+
+Given "RX-UnAuthRxValidations-25" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Matcheduser1	 |
+
+Then "RX-UnAuthRxValidations-25" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 		| RowId              |
+| PharmacyHomePageLinkVerification  | UnAuthenticated  	| YourAccount		 |
+| PharmacyHomePageLinkVerification  | UnAuthenticated  	| Expresspay		 |
+
+Then "RX-UnAuthRxValidations-25" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |FetchActivationFlag|
+| MATCHED   |-					|
+
+Then "RX-UnAuthRxValidations-25" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-25" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-25		|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-PERSONALSETTINGSTAB-1
+Scenario: Verify user is able to setup Refill Reminders
+
+Given  "CF-PERSONALSETTINGSTAB-1" Customer starts the scenario:
+| InputFileName  | SheetName 		   | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB | CF-PERSONALSETTINGSTAB-1 |
+
+Given "CF-PERSONALSETTINGSTAB-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData  	| login   	| autenticated6	 |
+
+Then "CF-PERSONALSETTINGSTAB-1" Customer either Signs up or Cancels the Refill Reminders from Communication Preferences page:
+| InputFileName   | SheetName 				  | RowId          |
+|AccountDashBoard |  CommunicationPreferences | RR-Cancel  	   |
+#|AccountDashBoard |  CommunicationPreferences | RR-Signup     |
+
+Then "CF-PERSONALSETTINGSTAB-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB | CF-PERSONALSETTINGSTAB-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-PERSONALSETTINGSTAB-2
+Scenario: Verify unauthenticated user is able to opt for Rx status mail
+
+Given  "CF-PERSONALSETTINGSTAB-2" Customer starts the scenario:
+| InputFileName  | SheetName 		   | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB | CF-PERSONALSETTINGSTAB-2 |
+
+Given "CF-PERSONALSETTINGSTAB-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   				  |
+| CommonData  	| login   	| UnauthenticateduserSRx  |	
+
+Then "CF-PERSONALSETTINGSTAB-2" Customer updates Your Pharmacy Preferences from Communication Preference page:
+|UserType			  |RxStatusMail	|RxPreferences |
+|Unauthenticated	  |No			|No			   |
+|Unauthenticated	  |Yes			|No			   |
+
+Then "CF-PERSONALSETTINGSTAB-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-PERSONALSETTINGSTAB-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB | CF-PERSONALSETTINGSTAB-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-PERSONALSETTINGSTAB-3
+Scenario: Verify user is able to update Email Health Preferences
+
+Given  "CF-PERSONALSETTINGSTAB-3" Customer starts the scenario:
+| InputFileName  | SheetName 		    | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB  | CF-PERSONALSETTINGSTAB-3 |
+
+Given "CF-PERSONALSETTINGSTAB-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData  	| login   	| autenticated4	 |
+
+And "CF-PERSONALSETTINGSTAB-3" Customer updates Health Center Email Preferences from Communication Preference page:
+|WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates | TackerUpdateReminders |
+|Yes             |  Once a day         |       -              |      Yes              |
+
+Then "CF-PERSONALSETTINGSTAB-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 		    | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB  | CF-PERSONALSETTINGSTAB-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-PERSONALSETTINGSTAB-4
+Scenario: Verify user is able to update Personal Information
+
+Given  "CF-PERSONALSETTINGSTAB-4" Customer starts the scenario:
+| InputFileName  | SheetName 		    | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB  | CF-PERSONALSETTINGSTAB-4 |
+
+Given "CF-PERSONALSETTINGSTAB-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData  	| login   	| autenticated4	 |
+
+Then "CF-PERSONALSETTINGSTAB-4" Customer updates Personal Information from Personal Information page:
+| InputFileName       | SheetName 		     | RowId            |
+|AccountDashBoard	  |  PersonalInformation | personalinfo1    | 
+
+Then "CF-PERSONALSETTINGSTAB-4" Customer finished testing the scenario:
+| InputFileName  | SheetName 		    | RowId                    |
+| QC-CF			 | PERSONALSETTINGSTAB  | CF-PERSONALSETTINGSTAB-4 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,1682 @@
+@dailyliving @AddressBookValidations
+Feature: Customer is able to do checkout and Address validations in Shipping information page
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-1
+Scenario: Guest User DL in cart New address fields populated defaultly and completes checkout
+
+Given  "CAC-ABValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | ABValidations	| CAC-ABValidations-1|
+
+And "CAC-ABValidations-1" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-1" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-1" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-ABValidations-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-ABValidations-1" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | -		 	 | 		- 		 | 		-		|		-		|
+
+Then "CAC-ABValidations-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |
+
+Then "CAC-ABValidations-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CAC-ABValidations-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-2
+Scenario: Newly Registered User DL in cart New address fields populated defaultly and completes checkout
+
+Given  "CAC-ABValidations-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-2|
+
+Then "CAC-ABValidations-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-ABValidations-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-ABValidations-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   	   	      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "CAC-ABValidations-2" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-2" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-ABValidations-2" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | -		 	 | 		- 		 | 		-		|		-		|
+
+Then "CAC-ABValidations-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ABValidations-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress 	| SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | NewBillingAddress  | true	                | -                  | CACData         | CreditCard  | cc1     | -			|
+
+# Customer submits the order
+Then "CAC-ABValidations-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-2|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-3
+Scenario: Existing User with DL in cart Existing address in profile no preferred address_check the progress bar_check the blue box back to cart and logout
+
+Given  "CAC-ABValidations-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-3|
+
+Given "CAC-ABValidations-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-3" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-3" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-3" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-3" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		Yes		|		-		|
+
+Then "CAC-ABValidations-3" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|-	   | -	 		 | 		-		 | 		AB		|		-		|
+
+Then "CAC-ABValidations-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| -				      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-3" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-3|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-4
+Scenario: Existing User with CL in cart Existing address in profile with preferred address check the blue box back to cart and logout
+
+Given  "CAC-ABValidations-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-4|
+
+Given "CAC-ABValidations-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-4" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-ABValidations-4" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-ABValidations-4" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-ABValidations-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-ABValidations-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-ABValidations-4" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| shippingaddress     | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-4" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-4" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-4|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-5
+Scenario: Existing User with DL in cart New Address from address book and completes checkout
+
+Given  "CAC-ABValidations-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-5|
+
+Given "CAC-ABValidations-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-5" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-5" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-5" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-5" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-5" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-5|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-6
+Scenario: Existing User with CL in cart Selects Address from address book and completes checkout
+
+Given  "CAC-ABValidations-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-6|
+
+Given "CAC-ABValidations-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-6" Customer Clears the Shopping Cart
+
+
+And "CAC-ABValidations-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-6" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-ABValidations-6" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-ABValidations-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-ABValidations-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-ABValidations-6" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| shippingaddress     | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | Overnight                |
+
+Then "CAC-ABValidations-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-6" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-6|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-7
+Scenario: Existing User with DL in cart with preferred address Edits the default address check for no preferred address check box and saves and completes checkout
+
+Given  "CAC-ABValidations-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-7|
+
+Given "CAC-ABValidations-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-7" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-7" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-7" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-7" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| Editshippingaddress  | -                  | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-7" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-7|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-8
+Scenario: Existing User with CL in cart without preferred address Edits address check and select for preferred address check box and saves and completes checkout
+
+Given  "CAC-ABValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-8 |
+
+Given "CAC-ABValidations-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-8" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-8" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-ABValidations-8" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-ABValidations-8" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-ABValidations-8" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-ABValidations-8" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| Editshippingaddress  | -                  | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | Overnight                |
+
+Then "CAC-ABValidations-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-8" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-8|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-9
+Scenario: Existing User with max addresses in address book DL in cart clicks on change address from blue box and see your Address book is full message
+
+Given  "CAC-ABValidations-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-9|
+
+Given "CAC-ABValidations-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   		   	|
+| CommonData    | login     | Addressbookfull01 |
+
+And "CAC-ABValidations-9" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-9" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-9" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-9" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|	MaxAddresses|
+
+Then "CAC-ABValidations-9" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-9" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-9|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-10
+Scenario: Existing User with CL in cart New Address from address book check for first name exception alone and give po box address and completes checkout
+
+Given  "CAC-ABValidations-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-10|
+
+Given "CAC-ABValidations-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-10" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-10" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-ABValidations-10" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-ABValidations-10" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-ABValidations-10" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType| Select  | BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -		  |  Yes 	| 	   -			   | 	 ShippingInfo   |
+
+Then "CAC-ABValidations-10" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail|Continue|
+| newshippingaddress  | -                  | -                | -		   | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-			  | -			 |  -		   | No	    |
+
+Then "CAC-ABValidations-10" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|FirstName		|
+
+Then "CAC-ABValidations-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Usertwo   | PO Box 1234    | DEERFIELD | 16    | 60015   |   -    |-	  		   | -			   |  -		     |
+
+Then "CAC-ABValidations-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | Overnight                |
+
+Then "CAC-ABValidations-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-10" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-10|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-11
+Scenario: Existing User with DL in cart New Address from address book check for Last name exception alone and give Union Territory address and completes checkout
+
+Given  "CAC-ABValidations-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-11|
+
+Given "CAC-ABValidations-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-11" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-11" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-11" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-11" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber |OffersbyEmail|Continue|
+| newshippingaddress  | -                   | -                | test      | -		   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-			  | -		    |  -		  |No	   |
+
+Then "CAC-ABValidations-11" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|-	   | -		 	 | 		-		 | 		-		|LastName		|
+
+Then "CAC-ABValidations-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Usertwo   | no 1234 	    | Fajardo   | 43    | 09653   |   -    |-	  		   | -			  |  -		    |
+
+Then "CAC-ABValidations-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-11" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-11|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-12
+Scenario: Existing User with DL in cart New Address from address book check for city exception alone and give Deerfield address and completes checkout
+
+Given  "CAC-ABValidations-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-12|
+
+Given "CAC-ABValidations-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-12" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-12" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-12" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-12" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber |OffersbyEmail|Continue|
+| newshippingaddress  | -                   | -                | test      | usertwo   | 104 wilmot rd  | - 		| 16    | 60015   |   -    |-			  |		 -		|  -		  | No	   |
+
+Then "CAC-ABValidations-12" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|-	   | -		 	 | 		-		 | 		-		|City			|
+
+Then "CAC-ABValidations-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Usertwo   | 104 wilmot rd  | Deefield  | 16    | 60015   |   -    |-	  		   | -			  |  -		    |
+
+Then "CAC-ABValidations-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-12" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-12|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-13
+Scenario: Existing User with DL in cart New Address from address book and check for suggest address overlay and completes checkout
+
+Given  "CAC-ABValidations-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-13|
+
+Given "CAC-ABValidations-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-13" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-13" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-13" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Usertwo   | 104 wilmont rd  | Deefield  | 16    | 60015   |   -    |-	  		   | -			  |  -		    |
+
+Then "CAC-ABValidations-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-13" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-13|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-14
+Scenario: Existing User with DL in cart New Address from address book and check for county page and completes checkout
+
+Given  "CAC-ABValidations-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-14|
+
+Given "CAC-ABValidations-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-14" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-14" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-14" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Usertwo   | 	test 	     | test      | 16    | 60015   |   -    |-	  		   | -			  |  -		    |
+
+Then "CAC-ABValidations-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ABValidations-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-14" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-14|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-15
+Scenario: Newly Registered Rx User New RX in cart home address populated defaultly without preferred address and completes checkout
+
+Given  "CAC-ABValidations-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-15|
+
+Given "CAC-ABValidations-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Addressbook1	  |
+
+And "CAC-ABValidations-15" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-15" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-ABValidations-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-15" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard	      |           -              |       -	 	            |
+
+Then "CAC-ABValidations-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-15" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-15|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-16
+Scenario: Newly Registered Rx User Transfer RX in cart Click on Change address and New address fields populated enter fields and completes checkout
+
+Given  "CAC-ABValidations-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-16|
+
+Given "CAC-ABValidations-16" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma5 | 
+
+
+When "CAC-ABValidations-16" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | 
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             | 
+
+Then "CAC-ABValidations-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | 	-      | 	-      | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |		-      | 	-         |  -		    |
+
+Then "CAC-ABValidations-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress 	 | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | NewBillingAddress  |		 true     	     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CAC-ABValidations-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-16" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-16|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-17
+Scenario: Existing User PSC in cart home address populated defaultly and completes checkout
+
+Given  "CAC-ABValidations-17" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-17|
+
+Given "CAC-ABValidations-17" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| CommonData 	 | login     | NonLoyaltyUser	  |
+
+And "CAC-ABValidations-17" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-ABValidations-17" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-ABValidations-17" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-ABValidations-17" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-ABValidations-17" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+|Shipping Information |
+
+Then "CAC-ABValidations-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -			      |          Standard        |       -	 	            |
+
+Then "CAC-ABValidations-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-17" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-17|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-18
+Scenario: Existing User with Refill in cart Existing address in profile no preferred address_check the progress bar_check the blue box back to cart and logout
+
+Given  "CAC-ABValidations-18" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-18|
+
+Given "CAC-ABValidations-18" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| CommonData 	 | login     | RXUserNoPrefAddr	  |
+
+And "CAC-ABValidations-18" Customer Clears the Shopping Cart
+
+When  "CAC-ABValidations-18" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-ABValidations-18" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-18" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-18" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-18|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-19
+Scenario: Existing User with Mail Plan in cart Existing address in profile with preferred address check the blue box back to cart and logout
+
+Given  "CAC-ABValidations-19" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-19|
+
+Given "CAC-ABValidations-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | login     | RXUser80      |
+
+And "CAC-ABValidations-19" Customer Clears the Shopping Cart
+
+When  "CAC-ABValidations-19" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | mailrx10  |
+
+Then "CAC-ABValidations-19" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|	-		   |Shipping Information |
+
+Then "CAC-ABValidations-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-19" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-19" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-19|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-20 
+Scenario: Existing User with Specialty in cart New Address from address book and completes checkout
+
+Given  "CAC-ABValidations-20" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId          	   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-20|
+
+Given "CAC-ABValidations-20" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId   		   |
+| CommonData      | login       | SpecialtyUser    |
+
+And "CAC-ABValidations-20" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-20" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | SpecialtyRx5  |
+
+And "CAC-ABValidations-20" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx5 | 		No  	  |
+
+Then "CAC-ABValidations-20" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage 	|
+| -			     | Shipping Information |
+
+Then "CAC-ABValidations-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+And "CAC-ABValidations-20" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date       |  Month     |  Year  |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			   |  Default  |   -	    | 	-    |   Yes		 |
+
+Then "CAC-ABValidations-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-ABValidations-20" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-20" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      			 |
+| QC-CAC        | ABValidations | CAC-ABValidations-20   |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-21
+Scenario: Existing User with New+Transfer+RX in cart Selects Address from address book and completes checkout
+
+Given  "CAC-ABValidations-21" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-21|
+
+Given "CAC-ABValidations-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80   	  |
+
+And "CAC-ABValidations-21" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-21" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-ABValidations-21" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+When  "CAC-ABValidations-21" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CAC-ABValidations-21" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-21" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-21" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-21" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-21|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-22
+Scenario: Existing User with DL+RX in cart with preferred address Edits the default address check for first name and last name no editable fields no preferred address check box and saves and completes checkout
+
+Given  "CAC-ABValidations-22" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-22|
+
+Given "CAC-ABValidations-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80  	  |
+
+And "CAC-ABValidations-22" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-22" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-22" Customer Goes to the Shopping Cart
+
+When "CAC-ABValidations-22" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-ABValidations-22" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-22" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-22" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType  | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| Editshippingaddress  | -                   | -                | -     	| -  	    | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-22" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |          Standard        |       -	 	            |
+
+Then "CAC-ABValidations-22" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-22" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-22" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-22|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-23
+Scenario: Existing User with DL+RX in cart without preferred address Edits address and select for preferred address check box and saves and completes checkout
+
+Given  "CAC-ABValidations-23" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-23|
+
+Given "CAC-ABValidations-23" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| CommonData 	 | login     | RXUserNoPrefAddr	  |
+
+And "CAC-ABValidations-23" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-23" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-23" Customer Goes to the Shopping Cart
+
+When "CAC-ABValidations-23" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-ABValidations-23" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+
+Then "CAC-ABValidations-23" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		Yes		|		-		|
+
+Then "CAC-ABValidations-23" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| -					  | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-23" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-23" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-23" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-23" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-23" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-23|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-24
+Scenario: Existing User with max addresses in address book RX in cart clicks on change address from blue box and see your Address book is full message
+
+Given  "CAC-ABValidations-24" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-24|
+
+Given "CAC-ABValidations-24" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          	 |
+| CommonData 	 | login     | Addressbookfull01 |
+
+And "CAC-ABValidations-24" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-24" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-ABValidations-24" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-24" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|	MaxAddresses|
+
+Then "CAC-ABValidations-24" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-24" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-24" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-24|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-25
+Scenario: Existing User with RX in cart New Address from address book check for street address exception alone and give Deerfield address and completes checkout
+
+Given  "CAC-ABValidations-25" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-25|
+
+Given "CAC-ABValidations-25" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80  	  |
+
+And "CAC-ABValidations-25" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-25" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-ABValidations-25" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-25" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | Yes	 	 | 		-		 | 		-		|		-		|
+
+Then "CAC-ABValidations-25" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail|Continue|
+| newshippingaddress  | -                   | -                | -     	   |-	   	   | 	-		    | DEERFIELD | 16    | 60015   |   -    |-			  | -			 |  -		   |	-   |
+
+Then "CAC-ABValidations-25" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|-	   | -		 	 | 		-		 | 		-		|StreetAddress	|
+
+Then "CAC-ABValidations-25" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | -		   |-		   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |-			  | -			   |  -		    |
+
+Then "CAC-ABValidations-25" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+
+Then "CAC-ABValidations-25" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-25" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-25" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-25" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-25|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-26
+Scenario: Existing User with RX in cart New Address from address book and check for suggest address overlay and completes checkout
+
+Given  "CAC-ABValidations-26" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-26|
+
+Given "CAC-ABValidations-26" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80  	  |
+
+And "CAC-ABValidations-26" Customer Clears the Shopping Cart
+
+When "CAC-ABValidations-26" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-ABValidations-26" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-26" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | 	-      |	-	   | 104 wilmont rd | DEERFIELD | 16    | 60015   |   -    |-			  | -			   |  -		    |
+
+Then "CAC-ABValidations-26" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-26" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-26" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-26" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-26" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-26|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-27
+Scenario: Existing User with RX in cart New Address from address book and check for county page and completes checkout
+
+Given  "CAC-ABValidations-27" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-27|
+
+Given "CAC-ABValidations-27" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80  	  |
+
+And "CAC-ABValidations-27" Customer Clears the Shopping Cart
+
+When  "CAC-ABValidations-27" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CAC-ABValidations-27" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-ABValidations-27" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | -	       | -		   | 	test 	     | test      | 16    | 60015   |   -    |-	  		   | -			  |  -		    |
+
+Then "CAC-ABValidations-27" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-27" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-27" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-27" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-27" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-27|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-28
+Scenario: Existing User with DL+CL+New+Transfer+RX in cart Selects Address from address book and completes checkout
+
+Given  "CAC-ABValidations-28" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-28|
+
+Given "CAC-ABValidations-28" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80       |
+
+And "CAC-ABValidations-28" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-28" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-28" Customer Goes to the Shopping Cart
+
+When "CAC-ABValidations-28" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-ABValidations-28" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+When  "CAC-ABValidations-28" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+And "CAC-ABValidations-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-28" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-ABValidations-28" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CAC-ABValidations-28" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-ABValidations-28" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-ABValidations-28" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| shippingaddress     | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-28" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-28" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-28" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-28" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-28" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-28|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-29
+Scenario: Existing User with DL+CL+RX+MailService in cart Click on Change address and New address fields populated enter fields and completes checkout
+
+Given  "CAC-ABValidations-29" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-29|
+
+Given "CAC-ABValidations-29" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80       |
+
+And "CAC-ABValidations-29" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-29" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-29" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-29" Customer Goes to the Shopping Cart
+
+And "CAC-ABValidations-29" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-29" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CAC-ABValidations-29" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When  "CAC-ABValidations-29" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | mailrx10   |
+
+Then "CAC-ABValidations-29" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CAC-ABValidations-29" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-ABValidations-29" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CAC-ABValidations-29" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-ABValidations-29" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-ABValidations-29" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-ABValidations-29" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-29" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-29" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-29" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-29|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-30
+Scenario: Existing User with DL+CL+RX+Speciality in cart Click on Change address and New address fields populated enter fields and completes checkout
+
+Given  "CAC-ABValidations-30" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-30|
+
+Given "CAC-ABValidations-30" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | SpecialtyUser  |
+
+And "CAC-ABValidations-30" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ABValidations-30" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-30" Customer Goes to the Shopping Cart
+
+And "CAC-ABValidations-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "CAC-ABValidations-30" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CAC-ABValidations-30" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When  "CAC-ABValidations-30" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | SpecialtyRx5   |
+
+Then "CAC-ABValidations-30" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CAC-ABValidations-30" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-ABValidations-30" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-ABValidations-30" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-ABValidations-30" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+And "CAC-ABValidations-30" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  	   |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  Default   | -		  |    -	  |   -			  |
+
+Then "CAC-ABValidations-30" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| 		-         |           -              |       standard           |
+
+Then "CAC-ABValidations-30" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-ABValidations-30" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-ABValidations-30" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-30" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-30|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ABValidations-31
+Scenario: Existing Registered User DL in cart deletes address from address book back to cart and log out
+
+Given  "CAC-ABValidations-31" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-31|
+
+Given "CAC-ABValidations-31" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | Addressbook1  |
+
+And "CAC-ABValidations-31" Customer Clears the Shopping Cart
+
+And "CAC-ABValidations-31" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | loyaltysave1  |
+
+Then "CAC-ABValidations-31" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ABValidations-31" Customer Goes to the Shopping Cart
+
+Then "CAC-ABValidations-31" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ABValidations-31" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | test      | userthree | 	test 	     | test      | 16    | 60015   |   -    |-	  		    | -			   |  -		    |
+
+Then "CAC-ABValidations-31" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ABValidations-31" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-ABValidations-31" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | ABValidations	|  CAC-ABValidations-31|

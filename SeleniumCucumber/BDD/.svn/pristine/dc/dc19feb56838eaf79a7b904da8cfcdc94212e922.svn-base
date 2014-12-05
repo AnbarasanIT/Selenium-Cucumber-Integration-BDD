@@ -1,0 +1,1085 @@
+package walgreens.ecom.batch.automation.library.selfservice;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class shoppingcartValidationsLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Enter Coupon COde in Shopping Cart page( Negative
+     *          validation)
+     * @author - Mohamed Fyrose
+     * @Created - 14-03-2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -3-4-2013
+     ************************************************************* 
+     */
+    public static void couponCodeValidation(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Coupon_TXT = "//input[@id='ccode']~XPATH";
+	String Apply_IMG = "//input[@title='Apply Code']~XPATH";
+	String ErrorMessage_DIV = "//p[contains(text(),'Invalid code. Please check your code and try again')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String CouponCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Coupon");
+	    String InvalidCoupon = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Invalidcoupon");
+	    if (isElementPresentVerification(Coupon_TXT, browser)) {
+		if (!clearAndEnterText(Coupon_TXT, CouponCode, browser)) {
+		    throw new Exception("Not able to Enter Coupon code in Coupon text box in shopping cart");
+		}
+		if (!isElementPresentVerifyClick(Apply_IMG, browser)) {
+		    throw new Exception("Not able to Click Apply button");
+		}
+		// Chec for Error Message if it is Negative
+		// validation(InvalidCoupon = "YES")
+		if (InvalidCoupon.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(ErrorMessage_DIV, browser)) {
+			messagesMap.put("Invalid Coupon", "Invalid Coupon message is not displayed");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		messagesMap.put("Shopping cart page", "Coupon text box not found");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate pairing of BOGO/BAGB eligible products in
+     *          shopping cart page
+     * @author - Mohamed Fyrose
+     * @Created - 14-03-2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -3-4-2013
+     ************************************************************* 
+     */
+    public static void checkproductpairing(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String BAGBOffer_DIV = "//strong[contains(text(),' Get 1 FREE')]~XPATH";
+	String Prompt_DIV = "//span[contains(text(),'Add 1 more to quantity')]~XPATH";
+	String Quantity_TXT = "input[title='Quantity Box']~CSS";
+	String Update_LNK = "//input[@title='Update']~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String Quantitycheck = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Quantitycheck");
+	    String CheckQuantity = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CheckQuantityValue");
+	    String BAGBPromotion = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CheckBAGBMessage");
+	    // QuantiyChecking Scenario
+	    if (Quantitycheck.equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(Quantity_TXT, browser)) {
+		    // Convert string value to integer
+		    int qty_val = Integer.parseInt(getElementByProperty(Quantity_TXT, browser).getAttribute("value"));
+		    int qty_sheet = Integer.parseInt(CheckQuantity);
+		    // Value should be equal
+		    // if (qty_val=qty_sheet)
+		    if (qty_val == qty_sheet) {
+			// do nothing
+		    } else {
+			messagesMap.put("Quantity Text box value", "Quantity value is not updated to : " + qty_sheet);
+			status = WARNING;
+		    }
+		    // BAGA PROMOTION TEXT should not be displayed if quantity
+		    // is even
+		    if (BAGBPromotion.equalsIgnoreCase("Yes")) {
+			if (isElementPresentVerification(Prompt_DIV, browser)) {
+			    messagesMap.put("Quantity Text box value", "Add 1 more to quantity to get it for free Text is not getting removed");
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    messagesMap.put("Cart page", "Quantity text box not displayed");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Validate Shipping information page error validations
+     * @author - Mohamed Fyrose
+     * @Created - 5-Apr-2013
+     * @Modified By - Simeon
+     * @Modified Date - 29-Aug-2013
+     ************************************************************* 
+     */
+    public static void shippingInfoErrorValidation(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	String EditAddress_LNK = "//input[@title='Edit this address']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String SelectNewShipingAddress_BTN = "input#newshipaddy~CSS";
+	String Continue_BTN = "//input[@title='Continue' or @title='Continue checkout']~XPATH";
+	String selectAndSave_BTN = "//input[@id='btnSelectandSave']~XPATH"; // SIMEON - 8/29/13 - Added
+	String FirstName_TEXT = "//input[@id='firstName'  or @id='newShippingFirstName']~XPATH";
+	String LastName_TEXT = "//input[@id='newShippingLastName'  or @id='lastName']~XPATH";
+	String StreetAddress_TEXT = "//input[@id='streetAddress1'  or @id='address' or @id='streetAddress' or @id='shipAddress']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String City_TEXT = "//input[@id='newShippingCity'  or @id='city' or @id='editShipCity']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String ShippingState_SELECT = "//select[@id='newShippingState'  or @id='state' or @id='editShipState']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String ZipCode_TEXT = "//input[@id='newShippingPostalCode'  or @id='zip' or @id='editZipCode']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String EmailAddress_TEXT = "//input[@id='newShippingEmailId'  or @id='email1' or @id='emailAddress']~XPATH";
+	String PhoneNumber_TEXT = "//input[@id='newShippingPhoneNumber'  or @id='phone' or @id='phoneNumber']~XPATH";
+	String ZipCodeExtn_TXT = "input#zipext~CSS";
+	// String BacktoCart_LNK = "img[alt='Back to Cart']~CSS";
+	String InvalidFirst_DIV = "//p[contains(text(),'Please enter valid First name')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String BlankError_DIV = "//p[contains(text(),'Please enter the First Name')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // String Quantitycheck=
+	    // getTestData(dataMap.get("InputFileName").get(0),
+	    // dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+	    // "Quantitycheck");
+	    if (isElementPresentVerifyClick(EditAddress_LNK, browser)) {
+		/* SIMEON - 8/30/13 - Commented out, no such radio button.
+		if (!isElementPresentVerifyClick(SelectNewShipingAddress_BTN, browser)) {
+		    messagesMap.put("New Shipping address radio button", "not able to clic New Shipping address radio button");
+		    status = WARNING;
+		}
+		*/
+		// Invlaid First Name Validation
+		if (!clearAndEnterText(FirstName_TEXT, "123456789", browser)) {
+		    messagesMap.put("First Name", "Not able to Enterinvalid Numerical values in First name text box");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(LastName_TEXT, "12345678", browser)) {
+		    messagesMap.put("Last Name", "Not able to Enter Last Name in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(StreetAddress_TEXT, "104wilmot road", browser)) {
+		    messagesMap.put("StreetAddress", "Not able to Enter Street Address in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(City_TEXT, "Deerfiled", browser)) {
+		    messagesMap.put("City", "New Shipping Address: Not able to Enter City in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		WebElement stateListElement = getElementByProperty(ShippingState_SELECT, browser);
+		if (stateListElement != null) {
+		    Select selectBox = new Select(stateListElement);
+		    // Select the State from the dropdown
+		    selectBox.selectByIndex(defaultSelectIndex);
+		} else {
+		    messagesMap.put("State", "New Shipping Address: Not able to select State from Shipping Information Page.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(ZipCode_TEXT, "60015", browser)) {
+		    messagesMap.put("Zip Code", "New Shipping Address: Not able to Enter Zip Code in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(EmailAddress_TEXT, "Somemail@testebiz.com", browser)) {
+		    messagesMap.put("Email Address", "New Shipping Address: Not able to Enter Email Address in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(PhoneNumber_TEXT, "1234567890", browser)) {
+		    messagesMap.put("Phone Number", "New Shipping Address: Not able to Enter Phone Number in the Text Field from Shipping Information Page.");
+		    status = WARNING;
+		}
+		
+		// SIMEON - 8/29/13 - Click on 'Select and Save' button
+		// Error messages don't display if continue is clicked because address is not saved
+		//---------------------
+		if (!isElementPresentVerifyClick(selectAndSave_BTN, browser)) {
+		    messagesMap.put("Select and Save Button", "Not able to Click select and save button");
+		    status = WARNING;
+		}
+		//---------------------
+		
+//		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+//		    messagesMap.put("Continue Button", "Not able to Click continue button");
+//		    status = WARNING;
+//		}
+		
+		if (!isElementPresentVerification(InvalidFirst_DIV, browser)) {
+		    messagesMap.put("Error Message", "Invlalid First name error message not displayed");
+		    status = WARNING;
+		}
+		// Verify Blank Message
+		getElementByProperty(FirstName_TEXT, browser).clear();
+		getElementByProperty(LastName_TEXT, browser).clear();
+		getElementByProperty(StreetAddress_TEXT, browser).clear();
+		getElementByProperty(City_TEXT, browser).clear();
+		getElementByProperty(ZipCode_TEXT, browser).clear();
+		getElementByProperty(PhoneNumber_TEXT, browser).clear();
+		getElementByProperty(EmailAddress_TEXT, browser).clear();
+		
+		// SIMEON - 8/29/13 - Click on 'Select and Save' button
+		//---------------------
+		if (!isElementPresentVerifyClick(selectAndSave_BTN, browser)) {
+		    messagesMap.put("Select and Save Button", "Not able to Click select and save button");
+		    status = WARNING;
+		}
+		//---------------------
+		
+//		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+//		    messagesMap.put("Continue Button", "Not able to Click continue button");
+//		    status = WARNING;
+//		}
+		
+		if (!isElementPresentVerification(BlankError_DIV, browser)) {
+		    messagesMap.put("Error Message", "Please Enter First name error message not displayed");
+		    status = WARNING;
+		}
+
+	    } else {
+		throw new Exception("Not able to Click Edit Address in Shipping ");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate pairing of BOGO/BAGB eligible products in
+     *          shopping cart page
+     * @author - Mohamed Fyrose
+     * @Created - 14-03-2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -3-4-2013
+     ************************************************************* 
+     */
+    public static void shoppingListUIValidations(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Parent_CHK = "//input[@id='chkAll']~XPATH";
+	String Prodcheck1_CHK = "//input[@id='res_chk1_0']~XPATH";
+	String Prodcheck2_CHK = "//input[@id='res_chk1_1']~XPATH";
+	String AddSelectedtoCart_BTN = "//input[@alt='add selected to cart']~XPATH";
+	String AddedCart_DIV = "//div[contains(text(),'to your Cart')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // String Quantitycheck=
+	    // getTestData(dataMap.get("InputFileName").get(0),
+	    // dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+	    // "Quantitycheck");
+	    // Select all checkbox and click add to cart
+	    if (!isElementPresentVerifyClick(Parent_CHK, browser)) {
+		throw new Exception("Not able to select Parent checkbox");
+	    }
+	    if (!isElementPresentVerifyClick(AddSelectedtoCart_BTN, browser)) {
+		throw new Exception("Not able to Click select cart button");
+	    }
+	    if (!isElementPresentVerification(AddedCart_DIV, browser)) {
+		messagesMap.put("Shopping list page", "Successfully added to cart message is not displayed");
+		status = WARNING;
+	    }
+	    // uncheck all and click addtocart without selecting any products
+	    getElementByProperty(Parent_CHK, browser).click();
+	    getElementByProperty(AddSelectedtoCart_BTN, browser).click();
+	    if (isElementPresentVerification(AddedCart_DIV, browser)) {
+		messagesMap.put("Shopping list page", "Successfully added to cart message should not displayed while clicking addtocart without selecting product");
+		status = WARNING;
+	    }
+	    // Select Two products by selecting checkbox near to that products
+	    if (!isElementPresentVerifyClick(Prodcheck1_CHK, browser)) {
+		throw new Exception("Not able to Click product 1 checkbox");
+	    }
+	    if (!isElementPresentVerifyClick(Prodcheck2_CHK, browser)) {
+		throw new Exception("Not able to Click product 2 checkbox");
+	    }
+	    if (!isElementPresentVerifyClick(AddSelectedtoCart_BTN, browser)) {
+		throw new Exception("Not able to Click selectedtocart button");
+	    }
+	    if (!isElementPresentVerification(AddedCart_DIV, browser)) {
+		messagesMap.put("Shopping list page", "Successfully added to cart message is not displayed");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate offers being applied in shopping cart page
+     * @author - Mohamed Fyrose
+     * @Created - 22-April-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void offersVerification(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String BOGOPriceSecondary_DIV = "//table[contains(@class,'sddCartTable')]/tbody/tr[6]/td[5]~XPATH";
+	String PricePrimaryPrice_DIV = "//table[contains(@class,'sddCartTable')]/tbody/tr[3]/td[5]~XPATH";
+	String Remove_LNK = "//a[@title='Remove']~XPATH";
+	String PromoionalSavings_DIV = "//p[contains(text(),'Promotion')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String validation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ValidationType");
+	    if (validation.equalsIgnoreCase("RemovePrimary")) {
+		// check whether Buy1 get 50 offer is applied
+		String OfferText = getElementByProperty(BOGOPriceSecondary_DIV, browser).getText();
+		if (!OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% off offer has not been applied");
+		    status = WARNING;
+		}
+		// Remove Primary item
+		if (!isElementPresentVerifyClick(Remove_LNK, browser)) {
+		    throw new Exception("Remove link not found");
+		}
+		// Now Offer should be removed( original price should be
+		// displayed )
+		OfferText = getElementByProperty(PricePrimaryPrice_DIV, browser).getText();
+		if (OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% message still present in price section");
+		    status = WARNING;
+		}
+	    } else if (validation.equalsIgnoreCase("QuantityTwo")) {
+		// After Updating primary quantity as two , offer message should
+		// not be displayed for Secondary item
+		String OfferText = getElementByProperty(BOGOPriceSecondary_DIV, browser).getText();
+		if (OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% message still present in price section");
+		    status = WARNING;
+		}
+
+	    } else if (validation.equalsIgnoreCase("UpdateThree_Bogo50")) {
+		// After Updating primary quantity as three , 50 % off message
+		// should be displayed in primary prod column and secondary
+		// product column
+		// ie ( 2 products paired with each other + remaining 1 suhould
+		// get paired with each other )
+		String OfferText = getElementByProperty(PricePrimaryPrice_DIV, browser).getText();
+		if (!OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% message not present in the primary product coulmn");
+		    status = WARNING;
+		}
+		OfferText = getElementByProperty(BOGOPriceSecondary_DIV, browser).getText();
+		if (!OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% message not present in the secondary product coulmn");
+		    status = WARNING;
+		}
+
+	    } else if (validation.equalsIgnoreCase("Combinedoffers")) {
+		// After Updating primary quantity as two
+		// ie ( 2 products paired with each other )
+		// Promotional message should be displayed
+		String OfferText = getElementByProperty(PricePrimaryPrice_DIV, browser).getText();
+		if (!OfferText.contains("50% OFF")) {
+		    messagesMap.put("Shopping Cart page", "Buy 1 get 50% message not present in the primary product coulmn");
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerification(PromoionalSavings_DIV, browser)) {
+		    messagesMap.put("Shopping Cart page", "Promotional savings section is not displayed");
+		    status = WARNING;
+		}
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate offers being applied in shopping cart page
+     * @author - Mohamed Fyrose
+     * @Created - 22-April-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateprimaryprodQuantity(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String PrimaryQuantity_TXT = "//input[@title='Quantity Box']~XPATH";
+	String Update_LNK = "//input[@id='updateQuantityButton0']~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String Quantity = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Quantity");
+	    if (!clearAndEnterText(PrimaryQuantity_TXT, Quantity, browser)) {
+		throw new Exception("Not able to Enter quantity in primary product Text box");
+	    }
+	    if (!isElementPresentVerifyClick(Update_LNK, browser)) {
+		throw new Exception("Not able to Click update link");
+	    }
+	    int Updated_quantity = Integer.parseInt(getElementByProperty(PrimaryQuantity_TXT, browser).getAttribute("value"));
+	    if (Integer.parseInt(Quantity) != Updated_quantity) {
+		messagesMap.put("Shopping Cart page", "update quantity and given quantity is same");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate Weight and Price Threshold in shopping cart
+     *          page
+     * @author - Saravanan M
+     * @Created - 07-May-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void weightThresholdVerification(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String WeightThresholdMsg_TXT = "//span[contains(text(),'Order exceeds the max. weight threshold. Additional charges will apply.')]~XPATH";
+	String EliigibleShippingMsg_ELM = "//div[contains(@class,'eligibleShippingMsgNew')]/p/span[2]~XPATH";
+	String ItemSubTotal_LBL = "p#orderTotal~CSS";
+	String ShippingDetails_LNK = "a[title*='Shipping Details']~CSS";
+	String WeightText = null;
+	String OvlyShippingConstraintMsg_LBL = "//li[contains(text(),'When an order is under $25 the Standard Shipping fee is $5.99')]~XPATH";
+	String OvlyFAQMsg_H = "//h4[contains(text(),'Shipping: General Merchandise')]~XPATH";
+	String OvlyFAQ_LNK = "a#shippingfaqlink~CSS";
+	String OvlyClose_BTN = "a#back~CSS";
+	boolean thresholdWeightExceeded = false;
+	boolean thresholdPriceExceeded = false;
+	float WeightSum = 0;
+	float subTotal = 0;
+	int Quantity = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String WeightThresholdLimit = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WeightThresholdLimit");
+	    String SubTotalFreeShippingLimit = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SubTotalFreeShippingLimit");
+	    // Getting total product quantity
+	    int productTableRows = browser.findElement(By.xpath("//table[contains(@class,'sddCartTable')][@summary='Product Table']/tbody")).findElements(By.tagName("tr")).size();
+
+	    for (int row = 3; row <= productTableRows; row = row + 3) {
+		if ((getElementByProperty("//table[contains(@class,'sddCartTable')][@summary='Product Table']/tbody/tr[" + row + "]/td", browser).getText()).contains("Weight:")) {
+		    WeightText = getElementByProperty("//table[contains(@class,'sddCartTable')][@summary='Product Table']/tbody/tr[" + row + "]/td", browser).getText().split("Weight:")[1].split(" LBS")[0].trim();
+		    Quantity = Quantity + Integer.parseInt(getElementByProperty("//table[contains(@class,'sddCartTable')][@summary='Product Table']/tbody/tr[" + row + "]/td[4]/input", browser).getAttribute("value").trim());
+		}
+		WeightSum = WeightSum + Float.parseFloat(WeightText);
+	    }
+	    // Calculating total weight in LBS
+	    int calculatedWeight = (int) (WeightSum * Quantity);
+	    // Getting the total price
+	    subTotal = Float.parseFloat(getElementByProperty(ItemSubTotal_LBL, browser).getText().replace("$", "").trim());
+
+	    if (calculatedWeight > Integer.parseInt(WeightThresholdLimit.trim())) {
+		thresholdWeightExceeded = true;
+	    }
+
+	    if (subTotal > Integer.parseInt(SubTotalFreeShippingLimit.trim())) {
+		thresholdPriceExceeded = true;
+	    }
+	    // Verifying the presence of maximum weight exceeded threshold
+	    // message
+	    if (thresholdWeightExceeded) {
+		if (!isElementPresentVerification(WeightThresholdMsg_TXT, browser)) {
+		    messagesMap.put("Shopping Cart page", "Weight threshold message is not present/not as expected");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying the absense of Elligible for free shipping message when
+	    // the price Exceeds $25
+	    if (thresholdPriceExceeded) {
+		if (isElementPresentVerification(EliigibleShippingMsg_ELM, browser)) {
+		    messagesMap.put("Shopping Cart page", "Eliigible Shipping Message is present");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying the content in the Shipping Details Overlay
+	    getElementByProperty(ShippingDetails_LNK, browser).click();
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(OvlyShippingConstraintMsg_LBL, browser)) {
+		messagesMap.put("Shopping Cart page-Shipping Details overlay", "Overlay doesn't contain the shipping message");
+		status = WARNING;
+	    }
+	    getElementByProperty(OvlyFAQ_LNK, browser).click();
+	    if (!isElementPresentVerification(OvlyFAQMsg_H, browser)) {
+		messagesMap.put("Shopping Cart page-Shipping Details overlay", "Overlay doesn't contain the FAQ message");
+		status = WARNING;
+	    }
+	    getElementByProperty(OvlyClose_BTN, browser).click();
+	    switchToDefault(browser);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate item added successfully overlay
+     * @author - Saravanan M
+     * @Created - 10-May-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void itemAddedOverlayUIValidation(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String YourAccount_LNK="a[alt='Your Account']~CSS";
+	String AddToCart_BTN = "a[title='Add to Cart']~CSS";
+	String SuccessMsg_H = "//div[@id='cart-info']/h1[contains(text(),'XYZ')] [contains(text(),'to your Cart.')]~XPATH";
+	String ViewCart_LNK = "//a/strong[contains(text(),'View your Cart:')]~XPATH";
+	String SubTotal_LBL = "//span/b[contains(text(),'$')]~XPATH";
+	String ConditionalMsg_LBL = "//p[contains(text(),'Item quantities may be limited by availability or company policy upon checkout.')]~XPATH";
+	String Items_LBL = "//span[contains(text(),'items | subtotal')]~XPATH";
+	String ContinueShopping_BTN = "a#back~CSS";
+	String WagCartItems_LBL = "//span[@id='cart-count']/strong[contains(text(),'(')]~XPATH";
+	String VPDQuantity_TXT = "input#txtQuantity~CSS";
+	String AddToShoppingList_LNK = "a#save-to-shopping-list-button~CSS";
+	String OverlayClose_ELM = "a#back~CSS";
+	String NextPage_LNK = "a[title='Next Page']~CSS";
+	String ColorList_LST = "//div[@id='colorDiv']//select[@id='colorId']~XPATH";
+	String NotAvailErrorMsg_TXT = "//span[contains(text(),'Not Available')]~XPATH";
+	String ShoppingList_LNK = "a[title='Shopping List']~CSS";
+	String Quantity = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String AddItemTo = dataMap.get("AddItemTo").get(0);
+	    String UpdateQty = dataMap.get("UpdateQty").get(0);
+	    String VerifyOverlay = dataMap.get("VerifyOverlay").get(0);
+	    String ProductName = dataMap.get("ProductName").get(0);
+
+	    if (AddItemTo.equalsIgnoreCase("Cart")) {
+
+		if (!UpdateQty.equals("-")) {
+		    if (!clearAndEnterText(VPDQuantity_TXT, UpdateQty, browser)) {
+			messagesMap.put("Product VPD Page", "Unable to enter the Quantity");
+			status = WARNING;
+		    }
+		}
+
+		if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+		    throw new Exception("Unable to click on the Add to Cart button");
+		}
+		switchToOverlay(browser);
+		if (VerifyOverlay.equalsIgnoreCase("Yes")) {
+		    String ItemsAdded = dataMap.get("ItemsAdded").get(0);
+		    if (!isElementPresentVerification(SuccessMsg_H.replace("XYZ", ItemsAdded), browser)) {
+			messagesMap.put("Item Added Successfully Overlay", "The Header is displayed wrongly");
+			status = WARNING;
+		    }
+
+		    String[] UIArray = { ViewCart_LNK, SubTotal_LBL, ConditionalMsg_LBL };
+		    for (int i = 0; i < UIArray.length; i++) {
+			if (!isElementPresentVerification(UIArray[i], browser)) {
+			    messagesMap.put("Item Added Successfully Overlay", "Unable to find the Element" + UIArray[i]);
+			    status = WARNING;
+			}
+		    }
+
+		    Quantity = "(" + getElementByProperty(Items_LBL, browser).getText().split(" ")[0].trim() + ")";
+		    getElementByProperty(ContinueShopping_BTN, browser).click();
+		    switchToDefault(browser);
+
+		    if (!(getElementByProperty(WagCartItems_LBL, browser).getText().trim().equals(Quantity))) {
+			messagesMap.put("Item Added Successfully Overlay", "Items in Shopping cart and in the overlay are mismatching");
+			status = WARNING;
+		    }
+		} else {
+		    getElementByProperty(ContinueShopping_BTN, browser).click();
+		    switchToDefault(browser);
+		}
+	    } else if (AddItemTo.equalsIgnoreCase("ShoppingList")) {
+		// Clicking on the product name in order to navigate to the VPD
+		// page
+		do {
+		    if (isElementPresentVerifyClick("//a[contains(text(),'" + ProductName.trim() + "')]", browser)) {
+			if (!isElementPresentVerification(AddToCart_BTN, browser)) {
+			    messagesMap.put("Product Page", "Add to cart button is not present in the Product page");
+			    status = WARNING;
+			}
+		    }
+		} while (isElementPresentVerifyClick(NextPage_LNK, browser));
+
+		if (!UpdateQty.equals("-")) {
+		    if (!clearAndEnterText(VPDQuantity_TXT, UpdateQty, browser)) {
+			messagesMap.put("Product VPD Page", "Unable to enter the Quantity");
+			status = WARNING;
+		    }
+		}
+		// selecting product color in case if it has color selector
+		if (isElementPresentVerification(ColorList_LST, browser)) {
+		    int i = 1;
+		    do {
+			new Select(getElementByProperty(ColorList_LST, browser)).selectByIndex(i);
+			i++;
+		    } while (isElementPresentVerification(NotAvailErrorMsg_TXT, browser));
+		}
+
+		if (!isElementPresentVerifyClick(AddToShoppingList_LNK, browser)) {
+		    throw new Exception("Unable to click on the Add to Shopping list link");
+		}
+		switchToOverlay(browser);
+		getElementByProperty(OverlayClose_ELM, browser).click();
+		switchToDefault(browser);
+		// Clicking the shopping list link
+		if (!performHoverClickAction(getElementByProperty(YourAccount_LNK, browser), ShoppingList_LNK, browser)) {
+		    throw new Exception("Unable to click Shopping list link");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Find the product in the tier 3 pages
+     * @author - Saravanan M
+     * @Created - 10-May-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void findProductInTier3Page(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String NextPage_LNK = "a[title='Next Page']~CSS";
+	String AddToCart_BTN = "a#add-to-cart-button~CSS";
+	boolean isProductFind = false;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ProductName = dataMap.get("MultivariantProductName").get(0);
+	    String Tier2PageLink = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), "Tier2Page1", "LinkObject");
+	    String Tier2PageHeader = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), "Tier2Page1", "ExpectedTargetPageHeader");
+	    String Tier3PageLink = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LinkObject");
+	    String Tier3PageHeader = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedTargetPageHeader");
+
+	    if (isElementPresentVerifyClick(Tier2PageLink, browser)) {
+		if (!isElementPresentVerification("//*[contains(text(),'" + Tier2PageHeader + "')]", browser)) {
+		    throw new Exception("Unable to navigate to the Tier 3 page '" + Tier3PageHeader + "'");
+		}
+	    }
+
+	    if (isElementPresentVerifyClick(Tier3PageLink, browser)) {
+		if (!isElementPresentVerification("//*[contains(text(),'" + Tier3PageHeader + "')]", browser)) {
+		    throw new Exception("Unable to navigate to the Tier 3 page '" + Tier3PageHeader + "'");
+		}
+	    }
+	    do {
+		if (isElementPresentVerifyClick("//a[contains(text(),'" + ProductName.trim() + "')]", browser)) {
+		    if (!isElementPresentVerification(AddToCart_BTN, browser)) {
+			messagesMap.put("Product Page", "Add to cart button is not present in the Product page");
+			status = WARNING;
+		    }
+		    isProductFind = true;
+		}
+	    } while (isElementPresentVerifyClick(NextPage_LNK, browser));
+
+	    if (!isProductFind) {
+		throw new Exception("Unable to find the product '" + ProductName + "' in Tier 3 Pages");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add the product from shopping list
+     * @author - Saravanan M
+     * @Created - 10-May-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addProductToCartFromShoppingList(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String AddToCart_BTN = "input[alt='Add to Cart']~CSS";
+	String Quantity_TXT = "input[name='textfield1']~CSS";
+	String Update_LNK = "input[title='Update']~CSS";
+	String SuccessMsg_LBL = "//div[contains(text(),'QTY')] [contains(text(),'items')] [contains(text(),'added')]";
+	String ItemsChk_CHK = "input#res_chk1_0~CSS";
+	String ViewCart_LNK = "//a/strong[contains(text(),'View your Cart:')]~XPATH";
+	String SubTotal_LBL = "//strong[contains(text(),'$')]~XPATH";
+	String ConditionalMsg_LBL = "//div[contains(text(),'Item quantities may be limited by availability or company policy upon checkout.')]~XPATH";
+	String InStock_LBL = "//p[contains(text(),'In stock')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String[] DIVElements = { ViewCart_LNK, SubTotal_LBL, ConditionalMsg_LBL };
+	    String UpdateQty = dataMap.get("UpdateQty").get(0);
+	    if (!isElementPresentVerification(InStock_LBL, browser)) {
+		throw new Exception("Product is not In Stock.Please add some other product in stock");
+	    }
+
+	    if (!(getElementByProperty(ItemsChk_CHK, browser) == null && getElementByProperty(ItemsChk_CHK, browser).isSelected())) {
+		getElementByProperty(ItemsChk_CHK, browser).click();
+	    }
+
+	    if (!UpdateQty.equals("-")) {
+		if (!clearAndEnterText(Quantity_TXT, UpdateQty, browser)) {
+		    messagesMap.put("Shopping List page", "Unable to enter the Quantity in the Text box");
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerifyClick(Update_LNK, browser)) {
+		    messagesMap.put("Shopping List page", "Unable to click the Update link");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+		throw new Exception("Unable to click on the Add to Cart Button");
+	    }
+	    if (!UpdateQty.equals("-")) {
+		if (!isElementPresentVerification(SuccessMsg_LBL.replace("QTY", UpdateQty), browser)) {
+		    messagesMap.put("Shopping List page", "Item Added success message is not displayed");
+		    status = WARNING;
+		}
+	    } else {
+		if (!isElementPresentVerification(SuccessMsg_LBL.replace("QTY", "1"), browser)) {
+		    messagesMap.put("Shopping List page", "Item Added success message is not displayed");
+		    status = WARNING;
+		}
+	    }
+
+	    for (int i = 0; i < DIVElements.length; i++) {
+		if (!isElementPresentVerification(DIVElements[i], browser)) {
+		    messagesMap.put("Shopping List page", DIVElements[i] + " Object is not found");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the sale Rules in Any Tier and Loyalty points
+     *          page
+     * @author - SARAVANAN M
+     * @Created - 16-JULY-2013
+     * @Modified By -SARAVANAN M
+     * @Modified Date -18-JULY-2013 [Added Loyalty page part]
+     ************************************************************* 
+     */
+    public static void validateSaleRuleInAnyTier(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Tier2Products_ELM = "//div[ABC][contains(@class,'posCnt dividerBg')]//div[contains(@class,'product-row')]";
+	String Tier3Products_ELM = "//div[@id='rowMain'][ROW]//div[contains(@class,'product-container')][COLUMN]";
+	String NextPage_LNK = "a[title='Next Page']~CSS";
+	String EarnPoints_LNK = "//img[@title='earn points']";
+	String LearnMore_LNK = "//a[contains(text(),'Learn more')]~XPATH";
+	String JoinNow_BTN = "//input[@id='joinLoyalty']~XPATH";
+	String ActivateNow_BTN = "//input[@id='attachLoyalty']~XPATH";
+	String GuestJoinOrAttachTargetPage_H = "//h1[contains(text(),'Welcome to Balance™ Rewards.')]~XPATH";
+	String GuestLearnMoreTargetPage_H = "img[title='Welcome to Balance Rewards']~CSS";
+	String OfferText_TXT = "//div[contains(@id,'vpd_special_offer')]/p~XPATH";
+	String ProductName = null, ProductContent = null;
+	String Elements[] = null;
+	boolean isProductFound = false;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ProductName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ProductName").trim();
+	    String TierPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TierPage").trim();
+	    String Loyalty = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Loyalty").trim();
+	    String Usertype = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType").trim();
+	    String Objects = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Objects").trim();
+	    String OfferText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OfferText").trim();
+
+	    if (TierPage.equalsIgnoreCase("Tier2")) {
+		for (int posCnt = 8; posCnt <= 11; posCnt += 3) {
+		    for (int divInc = 1; divInc <= 3; divInc++) {
+			ProductContent = Tier2Products_ELM.replace("ABC", Integer.toString(posCnt)) + "/div[" + divInc + "]";
+			if ((getElementByProperty(ProductContent + "//strong/a[contains(@class,'SearchLinkBold')]", browser).getText().trim()).equals(ProductName)) {
+			    isProductFound = true;
+			    break;
+			}
+		    }
+		}
+	    } else if (TierPage.equalsIgnoreCase("Tier3") || TierPage.equalsIgnoreCase("Loyalty Points")) {
+		do {
+		    for (int row = 1; row <= 4; row++) {
+			if (isProductFound) {
+			    break;
+			}
+			for (int col = 1; col <= 4; col++) {
+			    ProductContent = Tier3Products_ELM.replace("ROW", Integer.toString(row)).replace("COLUMN", Integer.toString(col));
+			    if (getElementByProperty(ProductContent, browser).getText().contains(ProductName)) {
+				if (TierPage.equalsIgnoreCase("Loyalty Points")) {
+				    getElementByProperty(ProductContent + "//a[contains(@class,'SearchLinkBold')]", browser).click();
+				    if (isElementPresentVerification("//*[contains(text(),'" + ProductName + "')]", browser)) {
+					isProductFound = true;
+					ProductContent = "";
+				    } else {
+					messagesMap.put("Loyalty Points page", "Unable to navigate to the given product VPD page=>" + ProductName);
+					status = WARNING;
+				    }
+				} else {
+				    isProductFound = true;
+				}
+				break;
+			    }
+			}
+		    }
+		} while (!isProductFound && isElementPresentVerifyClick(NextPage_LNK, browser));
+	    }
+
+	    if (!isProductFound) {
+		messagesMap.put("Product Not Found", "The given Product '" + ProductName + "' is not found");
+		status = WARNING;
+	    }
+
+	    if (isProductFound) {
+		if (Objects.contains("`")) {
+		    Elements = Objects.split("`");
+		    for (int ElementInc = 0; ElementInc < Elements.length; ElementInc++) {
+			if (!isElementPresentVerification(ProductContent + Elements[ElementInc], browser)) {
+			    messagesMap.put(TierPage + "page", Elements[ElementInc] + " is not found");
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    if (!Objects.equals("-")) {
+			if (!isElementPresentVerification(ProductContent + Objects, browser)) {
+			    messagesMap.put(TierPage + "page", Objects + " is not found");
+			    status = WARNING;
+			}
+		    }
+		}
+
+		if (!(OfferText.equals("-") || OfferText.equals(null))) {
+		    if (!((getElementByProperty(OfferText_TXT, browser).getText()).equalsIgnoreCase(OfferText))) {
+			messagesMap.put(TierPage + "page", "Offer Text is not found for the product=>" + ProductName);
+			status = WARNING;
+		    }
+		}
+
+		if (Loyalty.equalsIgnoreCase("Yes")) {
+		    boolean isEarnPointsFound = false;
+
+		    if (Usertype.equalsIgnoreCase("Guest") || Usertype.equalsIgnoreCase("Non Loyalty")) {
+			String BackUrl = browser.getCurrentUrl();
+			if (isElementPresentVerifyClick(ProductContent + EarnPoints_LNK, browser)) {
+			    switchToOverlay(browser);
+			    if (isElementPresentVerifyClick(LearnMore_LNK, browser)) {
+				switchToDefault(browser);
+				if (!isElementPresentVerification(GuestLearnMoreTargetPage_H, browser)) {
+				    messagesMap.put("Learn More Navigation", "Clicking on Learn more link in the overlay is not navigating to the respective page");
+				    status = WARNING;
+				}
+				browser.get(BackUrl);
+			    }
+			    isEarnPointsFound = true;
+			}
+
+			if (isElementPresentVerifyClick(ProductContent + EarnPoints_LNK, browser)) {
+			    switchToOverlay(browser);
+			    if (isElementPresentVerifyClick(JoinNow_BTN, browser)) {
+				switchToDefault(browser);
+				if (!isElementPresentVerification(GuestJoinOrAttachTargetPage_H, browser)) {
+				    messagesMap.put("Join Now Navigation", "Clicking on Join Now link in the overlay is not navigating to the respective page");
+				    status = WARNING;
+				}
+				browser.get(BackUrl);
+			    }
+			    isEarnPointsFound = true;
+			}
+
+			if (isElementPresentVerifyClick(ProductContent + EarnPoints_LNK, browser)) {
+			    switchToOverlay(browser);
+			    if (isElementPresentVerifyClick(ActivateNow_BTN, browser)) {
+				switchToDefault(browser);
+				if (!isElementPresentVerification(GuestJoinOrAttachTargetPage_H, browser)) {
+				    messagesMap.put("Attach/Activate Now Navigation", "Clicking on Attach/Activate Now link in the overlay is not navigating to the respective page");
+				    status = WARNING;
+				}
+				browser.get(BackUrl);
+			    }
+			    isEarnPointsFound = true;
+			}
+		    }
+		    if (!isEarnPointsFound) {
+			messagesMap.put("Earn Points", "Earn Points card is not found for the given product");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate the Loyalty Points page
+     * @author - SARAVANAN M
+     * @Created - 17-JULY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateLoyaltyPointspage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Tier3Products_ELM = "//div[@id='rowMain'][ROW]//div[contains(@class,'product-container')][COLUMN]//a[contains(@class,'SearchLinkBold')]";
+	String SortBy_LST = "select#sortSelectTop~CSS";
+	String NextPage_LNK = "a[title='Next Page']~CSS";
+	String PageNumber_TXT = "//span[@class='numpage'][contains(text(),'1')]~XPATH";
+	String FirstPage_BTN = "a[title='First Page']~CSS";
+	String ProductName1 = null, ProductName2 = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String SortBy = dataMap.get("SortBy").get(i);
+
+		if (getElementByProperty(PageNumber_TXT, browser) == null) {
+		    isElementPresentVerifyClick(FirstPage_BTN, browser);
+		}
+
+		do {
+		    if (SortBy.equalsIgnoreCase("Ascending")) {
+			new Select(getElementByProperty(SortBy_LST, browser)).selectByIndex(1);
+		    } else if (SortBy.equalsIgnoreCase("Descending")) {
+			new Select(getElementByProperty(SortBy_LST, browser)).selectByIndex(2);
+		    }
+
+		    int NoOfProducts = browser.findElements(By.xpath("//div[contains(@class,'product-container')]")).size();
+		    int MaxColumnPerRow = 4;
+		    int InterRow = NoOfProducts / MaxColumnPerRow;
+		    int TotalRows = (NoOfProducts - ((InterRow) * MaxColumnPerRow)) + InterRow;
+
+		    for (int row = 1; row <= TotalRows; row++) {
+			for (int col = 1; col < 4; col++) {
+			    if (getElementByProperty(Tier3Products_ELM.replace("ROW", Integer.toString(row)).replace("COLUMN", Integer.toString(col + 1)), browser) != null) {
+				ProductName1 = getElementByProperty(Tier3Products_ELM.replace("ROW", Integer.toString(row)).replace("COLUMN", Integer.toString(col)), browser).getText().trim();
+				ProductName2 = getElementByProperty(Tier3Products_ELM.replace("ROW", Integer.toString(row)).replace("COLUMN", Integer.toString(col + 1)), browser).getText().trim();
+				if (SortBy.equalsIgnoreCase("Ascending")) {
+				    if (!(ProductName1.compareTo(ProductName2) <= 0)) {
+					System.out.println("Not matched=> " + ProductName1 + " <= " + ProductName2);
+					messagesMap.put("LTYPage", "Product is not sorting in Ascending order");
+					status = WARNING;
+				    }
+				} else if (SortBy.equalsIgnoreCase("Descending")) {
+				    if (!(ProductName1.compareTo(ProductName2) >= 0)) {
+					System.out.println("Not matched=> " + ProductName1 + " >= " + ProductName2);
+					messagesMap.put("LTYPage", "Product is not sorting in Descending order");
+					status = WARNING;
+				    }
+				}
+			    }
+			}
+		    }
+		} while (isElementPresentVerifyClick(NextPage_LNK, browser));
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,290 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class HomePageLinksAndUIValidationLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify link navigation in Manage Rx widget (Pharmacy
+     *          home page) for any user
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void ManageRxWidgetLinksVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LeftNavLinksContainer_ELM = "div[id='sidenavLinks']~CSS";
+	String GenericManageRxLink_LNK = "[title='Link Title']~CSS";
+	String HeaderContainer_ELM = "div[id='header_bar']~CSS";
+	String GenericHeaderText_ELM = "//h1[contains(text(),'Header')]~XPATH";
+	String CompleteRegistration_IMG = "img[title='Complete Registration']~CSS";
+	String RegisterNow_LNK = "a[title='register now']~CSS";
+	String PharmacyTab_BTN = "a[title='Pharmacy & Health']~CSS";
+
+	String strLinkTitle = null, StrExpectedPage = null, StrExpectedPageHeader = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		if (!isElementPresentVerifyClick(PharmacyTab_BTN, browser)) {
+		    throw new Exception("Unable to click pharmacy tab");
+		}
+
+		strLinkTitle = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LinkTitleValue");
+		getChildElementPropertyFromParent(getElementByProperty(LeftNavLinksContainer_ELM, browser),
+			StringUtils.substringBefore(GenericManageRxLink_LNK.replace("Link Title", strLinkTitle), "~"), StringUtils.substringAfter(GenericManageRxLink_LNK, "~")).click();
+		StrExpectedPage = dataMap.get("ExpectedTargetPage").get(i);
+
+		StrExpectedPageHeader = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("ExpectedTargetPageHeader").get(i), "ExpectedTargetPageHeader");
+		if (getChildElementPropertyFromParent(getElementByProperty(HeaderContainer_ELM, browser),
+			StringUtils.substringBefore(GenericHeaderText_ELM.replace("Header", StrExpectedPageHeader), "~"), StringUtils.substringAfter(GenericHeaderText_ELM, "~")) == null) {
+		    messagesMap.put("Header Verification for Manage Rx widget in Pharamacy Home page", "The expected page header, " + StrExpectedPageHeader + " is not displayed.");
+		    status = WARNING;
+		}
+
+		if (StrExpectedPage.equalsIgnoreCase("CompleteRegn") && (!isElementPresentVerification(CompleteRegistration_IMG, browser))) {
+		    messagesMap.put("Complete Registration button verification for Manage Rx widget in Pharamacy Home page", "Complete Registration button is not present.");
+		    status = WARNING;
+		} else if (StrExpectedPage.equalsIgnoreCase("SignInPage") && (!isElementPresentVerification(RegisterNow_LNK, browser))) {
+		    messagesMap.put("Register Now link verification for Manage Rx widget in Pharamacy Home page", "Register Now link is not present.");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validates all the links under Health and news section in
+     *          Pharmacy home page
+     * 
+     * 
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date -14-Dec-12
+     ************************************************************* 
+     */
+    public static void validatesHealthandNewLinks(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PharmacyTab_IMG = "a[title='Pharmacy & Health']~CSS";
+	String StayWellBlog_Link = "//a[contains(text(),'Stay Well Blog')]~XPATH";
+	String StayWellBlogPg_Heading = "// img[@alt='Stay Well Blog']~XPATH";
+	String HealthNewslettersArchive_Link = "a[title='Health Newsletters Archive']~CSS";
+	String HealthNewslettersArchivePg_Heading = "//h1[contains(text(),'Health Newsletters Archive')]~XPATH";
+	String HealthCornorTV_Link = "a[title='Health Corner TV']~CSS";
+	String HealthCornorTVPg_Heading = "// div[@id='flash_banner']~XPATH";
+	String HealthRecipes_Link = "a[title='Healthy Recipes']~CSS";
+	String HealthRecipesPg_Heading = "//h1[contains(text(),'Recipe File')]~XPATH";
+	String CaregiverSupport_Link = "a[title='Caregiver Support']~CSS";
+	String CaregiverSupportPg_Heading = "//h1[contains(text(),'Caregiver Support')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		String LinkName = dataMap.get("LinkName").get(i);
+		String ExpectedPage = dataMap.get("ExpectedPage").get(i);
+		if (!isElementPresentVerifyClick(PharmacyTab_IMG, browser)) {
+		    throw new Exception("Not able able to click on Pharmacy tab");
+		}
+		if (LinkName.equalsIgnoreCase("StayWellBlog")) {
+		    if (!isElementPresentVerifyClick(StayWellBlog_Link, browser)) {
+			throw new Exception("Stay well blog link is not present");
+		    }
+
+		} else if (LinkName.equalsIgnoreCase("HealthNewslettersArchive")) {
+		    if (!isElementPresentVerifyClick(HealthNewslettersArchive_Link, browser)) {
+			throw new Exception("HealthNewslettersArchive link is not present");
+		    }
+
+		} else if (LinkName.equalsIgnoreCase("HealthCornorTV")) {
+		    if (!isElementPresentVerifyClick(HealthCornorTV_Link, browser)) {
+			throw new Exception("HealthCornorTV link is not present");
+		    }
+
+		} else if (LinkName.equalsIgnoreCase("HealthyRecipes")) {
+		    if (!isElementPresentVerifyClick(HealthRecipes_Link, browser)) {
+			throw new Exception("HealthyRecipes link is not present");
+		    }
+
+		} else if (LinkName.equalsIgnoreCase("CaregiverSupport")) {
+		    if (!isElementPresentVerifyClick(CaregiverSupport_Link, browser)) {
+			throw new Exception("CaregiverSupport link is not present");
+		    }
+
+		} else {
+		    throw new Exception("Link Name input is not present in Datamap");
+		}
+		if (ExpectedPage.equalsIgnoreCase("StayWellBlog")) {
+		    String WinHandleBefore = browser.getWindowHandle();
+		    for (String NewWinHandle : browser.getWindowHandles()) {
+			browser.switchTo().window(NewWinHandle);
+		    }
+		    if (!isElementPresentVerification(StayWellBlogPg_Heading, browser)) {
+			messagesMap.put("Expected page", "Stay well blog page is not displayed");
+			status = WARNING;
+		    }
+		    browser.close();
+		    browser.switchTo().window(WinHandleBefore);
+		} else if (ExpectedPage.equalsIgnoreCase("HealthNewslettersArchive")) {
+		    if (!isElementPresentVerification(HealthNewslettersArchivePg_Heading, browser)) {
+			messagesMap.put("Expected page", "HealthNewslettersArchive page is not displayed");
+			status = WARNING;
+		    }
+		} else if (ExpectedPage.equalsIgnoreCase("HealthCornorTV")) {
+		    if (!isElementPresentVerification(HealthCornorTVPg_Heading, browser)) {
+			messagesMap.put("Expected page", "HealthCornorTV page is not displayed");
+			status = WARNING;
+
+		    }
+		    browser.navigate().back();
+		} else if (ExpectedPage.equalsIgnoreCase("HealthyRecipes")) {
+		    if (!isElementPresentVerification(HealthRecipesPg_Heading, browser)) {
+			messagesMap.put("Expected page", "HealthyRecipes page is not displayed");
+			status = WARNING;
+		    }
+		} else if (ExpectedPage.equalsIgnoreCase("CaregiverSupport")) {
+		    if (!isElementPresentVerification(CaregiverSupportPg_Heading, browser)) {
+			messagesMap.put("Expected page", "CaregiverSupport page is not displayed");
+			status = WARNING;
+		    }
+		} else {
+		    throw new Exception("Expected page input is not given in DataMap");
+		}
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************* 
+     * @Purpose - Customer verifies whether the hepatitisSupportCheckBox is
+     *          preselected or not
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void hepatitisSupportCheckBoxVerification(EventFiringWebDriver browser, StepBean step, Map<String, List<String>> dataMap) throws Exception {
+	String status = PASS;
+	String Element = "//div[@id='allservices']/div[@id='health']/ul/li[3]/input[@id='hhs']~XPATH";
+	String ServiceName = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		step.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    // Veryfing the service name
+	    for (int i = 0; i < totalRowCount; i++) {
+		ServiceName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ObjectLocators");
+
+		if (!isElementPresentVerification(ServiceName.trim(), browser)) {
+		    throw new Exception("Expected Service Name not found");
+		}
+		// Verifying the hepatitis support checkbox is checked
+		if (!(isCheckBoxSelected(browser, Element, "YES"))) {
+		    throw new Exception("Expected checkbox is not checked");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, step);
+	} finally {
+	    step.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************************************** 
+     * @Purpose - Method to click an Object Validates the Expected Page URL in New Window
+     * @Input -
+     * @author - Kumaran P
+     * @Created - 6-APR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************************** 
+     */
+    public static void verifyLinkNavigationInNewPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ObjectTobeClicked = null;
+	String DestinationPageURL, HepatitisServiceURL = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int intTotalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < intTotalRowCount; i++) {
+		// 1. Get the URL & navigate to the source page
+		ObjectTobeClicked = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ObjectTobeClicked");
+		DestinationPageURL = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DestinationPageURL");
+		HepatitisServiceURL = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "HepatitisServiceURL");
+		getUrl(browser, EcommTestRunner.config.getString("walgreensURL") + HepatitisServiceURL);
+
+		if (!isElementPresentVerifyClick(ObjectTobeClicked, browser)) {
+		    throw new Exception("Not able to Click on Given Object" + ObjectTobeClicked);
+		}
+		String WndHandle = browser.getWindowHandle();
+		for (String NewWinHandle : browser.getWindowHandles()) {
+		    browser.switchTo().window(NewWinHandle);
+		}
+		if(DestinationPageURL.contains("WAGURL+")){
+		    DestinationPageURL=DestinationPageURL.replace("WAGURL+", EcommTestRunner.config.getString("walgreensURL"));
+		}
+		if (!browser.getCurrentUrl().equalsIgnoreCase(DestinationPageURL)) {
+		    messagesMap.put("Destination page", "Destination Page is not found");
+		    status = FAIL;
+		    throw new Exception("Destination Page is not found");
+		}
+		browser.close();
+		browser.switchTo().window(WndHandle);
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

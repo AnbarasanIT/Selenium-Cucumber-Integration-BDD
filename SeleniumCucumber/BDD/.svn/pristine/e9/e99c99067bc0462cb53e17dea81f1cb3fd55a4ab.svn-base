@@ -1,0 +1,185 @@
+@checkout @PSCCheckout
+Feature: Customer is able to order a PSC card through Checkout
+
+@PSC1
+Scenario: Customer adds a PSC Card to cart for self
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData 	 | login     | pscuser1 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+Then "" Customer logout from walgreens:
+
+#--------------------------------------------------------------------------------------------------------------------
+@PSC2
+Scenario: Customer updates the personal information for self from PSC Individual Enrollment
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData | login     | pscuser1 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType		 |
+| Individual     | Pharmacy      |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| Yes                     | -                  | -              |			-               |
+
+Then " " Customer fills out the fields on the Personal Information  page and clicks on Save changes:
+| InputFileName  | SheetName   | RowId     |
+| CommonData     | personalInfo| personal1 |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+Then "" Customer logout from walgreens:
+
+#-----------------------------------------------------------------------------------------------------------------------
+@PSC3
+Scenario: Customer adds a PSC Card to cart for Family where family member is already added
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData 	 | login     | pscuser2 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	 	 |
+| Family         |  Pharmacy     	 |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+#Then "" Customer logout from walgreens:
+
+#=========================================================================================
+@PSC4
+Scenario: Customer adds a PSC Card to cart for Family where no family member is added yet
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData     | login     | pscuser2 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType		  |
+| Family         |  Pharmacy	  	  |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | Yes            |			-               |
+
+Then " " Customer fills out the fields on the family member information  Overlay and clicks on Continue:
+| InputFileName  | SheetName   | RowId         |
+| CommonData | personalInfo    | familymember1 |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+Then "" Customer logout from walgreens:
+
+#======================================================================================
+@PSC5
+Scenario: Customer updates the personal information for self from PSC Family Enrollment - 
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData     | login     | pscuser2 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType |  UserType	|
+| Family         |   Pharmacy   |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| Yes                     | -                  | -              |			-               |
+
+Then " " Customer fills out the fields on the Personal Information  page and clicks on Save changes:
+| InputFileName  | SheetName    | RowId     |
+| CommonData 	 | personalInfo | personal1 |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+Then "" Customer logout from walgreens:
+#========================================================
+@PSC6
+Scenario: Customer renews a PSC Card  - 
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData	 | login     | pscuser4 |
+
+And    "99" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then " " Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then " " Customer selects Enrollment Type and click on continue:
+| EnrollmentType  | UserType	|
+| RenewMembership | Pharmacy	|
+
+Then " " Customer Enters the PSC Card Number on Card Information page and clicks on Submit:
+| CardIdNumber |
+| 999999986000 |
+
+Then " " Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes             |
+
+Then "" Customer logout from walgreens:
+

@@ -1,0 +1,638 @@
+@checkout @sdd @OrderConfirmationPage
+Feature: This feature Contains different validations in Order Confirmation page for SDD.
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-1
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX PU(Refill Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-1" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-1 |
+
+Given "SDD-ORDCNF-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-1" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "SDD-ORDCNF-1" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-ORDCNF-1" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-ORDCNF-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |RxRefillPickupinfo1   |
+
+Then "SDD-ORDCNF-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-SDD        | ORDCNF	| SDD-ORDCNF-1	|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-2
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX PU(New Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-2" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-2 |
+
+Given "SDD-ORDCNF-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId         |
+| CommonData    | login      | Rxcashprice2  |
+
+And "SDD-ORDCNF-2" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-2" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "SDD-ORDCNF-2" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-ORDCNF-2" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-ORDCNF-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    		 |
+| SDDData       | orderconfirmationdetails |RxNewPickupinfo1 |
+
+Then "SDD-ORDCNF-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-SDD        | ORDCNF	| SDD-ORDCNF-2	|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-3
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX PU(Transfer Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-3" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-3 |
+
+Given "SDD-ORDCNF-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-3" Customer Clears the Shopping Cart
+
+When "SDD-ORDCNF-3" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "SDD-ORDCNF-3" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-ORDCNF-3" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-ORDCNF-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   			   | RowId    			   |
+| SDDData       | orderconfirmationdetails |RxTransferPickupInfo1  |
+
+Then "SDD-ORDCNF-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-SDD        | ORDCNF	| SDD-ORDCNF-3 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-4
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX Ship(Refill Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-4" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-4 |
+
+Given "SDD-ORDCNF-4" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId         |
+| CommonData    | login      | Rxcashprice2  |
+
+And "SDD-ORDCNF-4" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "SDD-ORDCNF-4" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		   |
+| SDDData       | Product Details  | RxRefillinfo1 |
+
+Then "SDD-ORDCNF-4" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-ORDCNF-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-ORDCNF-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId     			 |
+| SDDData       | orderconfirmationdetails |RxRefillShipInfo1    |
+
+Then "SDD-ORDCNF-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-4" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 	|
+| QC-SDD 	    | ORDCNF 	  | SDD-ORDCNF-4    |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-5
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX Ship(New Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-5" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-5 |
+
+Given "SDD-ORDCNF-5" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-5" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-5" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "SDD-ORDCNF-5" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		|
+| SDDData       | Product Details  | RxNewInfo1 |
+
+Then "SDD-ORDCNF-5" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-ORDCNF-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-ORDCNF-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-5" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId    		 |
+| SDDData       | orderconfirmationdetails |RxNewShipInfo1   |
+
+Then "SDD-ORDCNF-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-5" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-5 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-6
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when RX Ship(Transfer Prescription) alone is in cart
+
+Given  "SDD-ORDCNF-6" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-6 |
+
+Given "SDD-ORDCNF-6" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-6" Customer Clears the Shopping Cart
+
+When "SDD-ORDCNF-6" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "SDD-ORDCNF-6" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		     |
+| SDDData       | Product Details  | RxTransferInfo1 |
+
+Then "SDD-ORDCNF-6" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-ORDCNF-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-ORDCNF-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-6" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId    		 	|
+| SDDData       | orderconfirmationdetails |RxTransferShipInfo1 |
+
+Then "SDD-ORDCNF-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-6" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-6 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-7
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when DL(DC) Web Only product alone is in cart
+
+Given  "SDD-ORDCNF-7" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-7 |
+
+Given "SDD-ORDCNF-7" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-7" Customer Clears the Shopping Cart
+
+And "SDD-ORDCNF-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-ORDCNF-7" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-ORDCNF-7" Customer Goes to the Shopping Cart
+
+Then "SDD-ORDCNF-7" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-ORDCNF-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+|   -	          |    standard              |       -	 	            |
+
+Then "SDD-ORDCNF-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | 
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-ORDCNF-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId    		 |
+| SDDData       | orderconfirmationdetails |DLDLWebOnlyInfo1 |
+
+Then "SDD-ORDCNF-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-7" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-7 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-8
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when DL(CH) Web Only product alone is in cart
+
+Given  "SDD-ORDCNF-8" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-8 |
+
+Given "SDD-ORDCNF-8" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId        |
+| CommonData    | login      | Rxcashprice2 |
+
+And "SDD-ORDCNF-8" Customer Clears the Shopping Cart
+
+And "SDD-ORDCNF-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_ch1	 |
+
+Then "SDD-ORDCNF-8" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-ORDCNF-8" Customer Goes to the Shopping Cart
+
+Then "SDD-ORDCNF-8" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-ORDCNF-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+|   -	          |    standard              |       -	 	            |
+
+Then "SDD-ORDCNF-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | 
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-ORDCNF-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-8" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId    		 |
+| SDDData       | orderconfirmationdetails |DLCHWebOnlyInfo1 |
+
+Then "SDD-ORDCNF-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-8" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-8 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-9
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when CL product alone is in cart
+
+Given  "SDD-ORDCNF-9" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId        |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-9 |
+
+Given "SDD-ORDCNF-9" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxcashprice2|
+
+And "SDD-ORDCNF-9" Customer Clears the Shopping Cart
+
+And "SDD-ORDCNF-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-ORDCNF-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-ORDCNF-9" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-ORDCNF-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-ORDCNF-9" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-ORDCNF-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -		                 | overnight                |
+
+Then "SDD-ORDCNF-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-ORDCNF-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId  |
+| SDDData       | orderconfirmationdetails |CLinfo1 |
+
+Then "SDD-ORDCNF-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-9" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	 |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-9 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-10
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when Mail Plan Rx alone is in cart
+
+Given  "SDD-ORDCNF-10" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId         |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-10 |
+
+Given "SDD-ORDCNF-10" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      	 |
+| CommonData    | login      | MailPlanuser1 |
+
+And "SDD-ORDCNF-10" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-10" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | mailRx2   |
+
+Then "SDD-ORDCNF-10" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-ORDCNF-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-ORDCNF-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId  		|
+| SDDData       | orderconfirmationdetails |RxMailPlanInfo1 |
+
+Then "SDD-ORDCNF-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-10" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	  |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-10 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-11
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when Mail Plan Rx and Refill Rx(Pick Up) is in cart
+
+Given  "SDD-ORDCNF-11" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId         |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-11 |
+
+Given "SDD-ORDCNF-11" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      	 |
+| CommonData    | login      | MailPlanuser1 |
+
+And "SDD-ORDCNF-11" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	  |
+| CACData       | RefillRx  | mailRx2     |
+| CACData       | RefillRx  | retailRx13  |
+
+Then "SDD-ORDCNF-11" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-ORDCNF-11" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-ORDCNF-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-ORDCNF-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId  		   |
+| SDDData       | orderconfirmationdetails |RxRefillAndMPInfo1 |
+
+Then "SDD-ORDCNF-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-11" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	  |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-11 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-ORDCNF-12
+Scenario: Verify checkout flow right navigation functionality and cart type verifications when Mail Plan Rx and New Rx(Pick Up) is in cart
+
+Given  "SDD-ORDCNF-12" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId         |
+| QC-SDD         | ORDCNF       | SDD-ORDCNF-12 |
+
+Given "SDD-ORDCNF-12" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      	 |
+| CommonData    | login      | MailPlanuser1 |
+
+And "SDD-ORDCNF-12" Customer Clears the Shopping Cart
+
+When  "SDD-ORDCNF-12" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When  "SDD-ORDCNF-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	  |
+| CACData       | RefillRx  | mailRx2     |
+
+Then "SDD-ORDCNF-12" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-ORDCNF-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-ORDCNF-12" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-ORDCNF-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-ORDCNF-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-ORDCNF-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-ORDCNF-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-ORDCNF-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName   		       | RowId  		    |
+| SDDData       | orderconfirmationdetails |RxRefillAndNewInfo1 |
+
+Then "SDD-ORDCNF-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SDD-ORDCNF-12" Customer finished testing the scenario:
+| InputFileName | SheetName   | RowId      	  |
+| QC-SDD 	    | ORDCNF	  | SDD-ORDCNF-12 |
+
+

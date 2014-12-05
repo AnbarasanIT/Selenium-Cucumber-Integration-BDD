@@ -1,0 +1,74 @@
+package walgreens.ecom.batch.automation.stepdefinitions.customerservice;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.csc.CSCCommonLibrary;
+import walgreens.ecom.batch.automation.library.csc.CSCCustomerValidationLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class CSCCommonSteps {
+
+    @Then("^\"([^\"]*)\" Customer selects the CSC Window$")
+    public void Customer_selects_the_CSC_Window(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the CSC Window");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCommonLibrary.switchToCSCWindow(browser, scenario, step);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the Default Window$")
+    public void Customer_selects_the_Default_Window(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the Default Window");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCommonLibrary.switchToDefaultWindow(browser, scenario, step);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer either accpets or rejects the Contact Lens Order from CSC:")
+    public void Customer_either_accpets_or_rejects_the_Contact_Lens_Order_from_CSC(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer either accpets or rejects the Contact Lens Order from CSC");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getCSCBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.accpetorRejectCLOrder(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

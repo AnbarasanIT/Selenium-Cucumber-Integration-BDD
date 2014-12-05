@@ -1,0 +1,175 @@
+package walgreens.ecom.batch.automation.library.remotesystems.unix;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.utils.RemoteShellUtils;
+
+public class UnixLibrary extends CommonLibrary {
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to ftp of a required file form local to Remote
+     *          Matchine(host) and vice versa
+     * @author - Siva Santhi Reddy
+     * @Created - 12 AUG 2013
+     * @Modified By - Siva
+     * @Modified Date -10 SEP 2013
+     ************************************************************************ 
+     */
+    public static void ftpFile(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String host = null, user = null, password = null, passphrase = null;
+	String remoteDir = null, remoteFileName = null, localDir = null, localFileName = null, ftpType = null, mapKeyName = null;
+	boolean isGetFileSuccessful = false;
+	boolean isPutFileSuccessful = false;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getSharedProperties = null;
+	String StoredFileName = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Remote Host Info
+		host = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "host");
+		user = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "user");
+		password = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "password");
+		passphrase = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "passphrase");
+		mapKeyName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "mapKeyName");
+		// FTP Parameters
+		remoteDir = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RemoteDir");
+		remoteFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RemoteFileName");
+		localDir = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "localDir");
+		localFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "localFileName");
+		ftpType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ftpType");
+
+		if (getSharedProperties != null) {
+		    StoredFileName = getSharedProperties.get(mapKeyName);
+		}
+		String[] currentDate = EcommTestRunner.currentDate.split("-");
+		// this is used to bypass '0' in the date if it starts with '0'
+		String date = currentDate[1];
+		if (date.startsWith("0")) {
+		    date = date.replace("0", "");
+		}
+		String CHInboundReadable = StoredFileName + "_CH_INBOUND_" + currentDate[2] + currentDate[0] + currentDate[1] + ".xml_READABLE_" + currentDate[0] + date + currentDate[2];
+		String CHInboundXML = StoredFileName + "_CH_INBOUND_" + currentDate[2] + currentDate[0] + currentDate[1] + ".xml";
+		getSharedProperties.put("CHInboundXML", CHInboundXML);
+		if (remoteFileName.equalsIgnoreCase("getFromHashMap")) {
+		    remoteFileName = StoredFileName;
+		}
+		if (localFileName.equalsIgnoreCase("getFromHashMap")) {
+		    localFileName = StoredFileName;
+		}
+		if (remoteFileName.equalsIgnoreCase("CHInboundReadable")) {
+		    remoteFileName = CHInboundReadable;
+		} else if (remoteFileName.equalsIgnoreCase("CHInboundXML")) {
+		    remoteFileName = CHInboundXML;
+		}
+		if (localFileName.equalsIgnoreCase("CHInboundReadable")) {
+		    localFileName = CHInboundReadable;
+		} else if (localFileName.equalsIgnoreCase("CHInboundXML")) {
+		    localFileName = CHInboundXML;
+		}
+		// Path is setup in the config folder.
+		localDir = System.getProperty("user.dir") + EcommTestRunner.config.getString("fulfillmentFilesPath");
+		if (ftpType != null && "put".equalsIgnoreCase(ftpType)) {
+		    isPutFileSuccessful = RemoteShellUtils.putFile(host, user, password, localDir, localFileName, remoteDir, passphrase);
+		    if (!isPutFileSuccessful) {
+			status = FAIL;
+			messagesMap.put("FTP-PUT", "Not able to SEND the files to the remote system");
+		    }
+		}
+		if (ftpType != null && "get".equalsIgnoreCase(ftpType)) {
+		    isGetFileSuccessful = RemoteShellUtils.getFile(host, user, password, localDir, remoteDir, remoteFileName, passphrase);
+		    if (!isGetFileSuccessful) {
+			status = FAIL;
+			messagesMap.put("FTP-GET", "Not able to GET the files from the remote system");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("FtpFile::Exception: ", "An Exception Occured:" + e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to run the batch job based on comamnds given in the
+     *          input.Excel sheet
+     * @author - Siva Santhi Reddy
+     * @Created -
+     * @Modified By - Siva Santhi Reddy
+     * @Modified Date -10-SEP-2013
+     ************************************************************************ 
+     */
+    public static void runBatchJob(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ExecutionCommand = null;
+	String SearchString = null;
+	int WaitTime = 0, j = 1;
+	String host = null, user = null, password = null, passphrase = null, saveFileName = null, modifyCommand = null, mapKeyName = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		host = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "host");
+		user = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "user");
+		password = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "password");
+		passphrase = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "passphrase");
+		saveFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "saveFileName");
+		modifyCommand = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "modifyCommand");
+		mapKeyName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "mapKeyName");
+
+		for (j = 1;; j++) {
+		    ExecutionCommand = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "command" + j);
+		    if (modifyCommand != null && modifyCommand.equalsIgnoreCase("Yes")) {
+			String modifyValue = sharedProperties.get(mapKeyName);
+			ExecutionCommand = ExecutionCommand.replace("XXXXX", modifyValue);
+		    }
+		    if (ExecutionCommand == null || "end".equalsIgnoreCase(ExecutionCommand)) {
+			break;
+		    } else {
+			SearchString = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "searchString" + j);
+			WaitTime = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "waitTime" + j));
+			System.out.println("Execution Command: " + ExecutionCommand);
+			if (RemoteShellUtils.runCommand(host, user, password, ExecutionCommand, SearchString, WaitTime, passphrase, saveFileName, sharedProperties).equals("2")) {
+			    messagesMap.put("Search String Message", "Not able to find the required search String " + SearchString);
+			    status = FAIL;
+			    break;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("RunBatchJob::Exception: ", "An Exception Occured:" + e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

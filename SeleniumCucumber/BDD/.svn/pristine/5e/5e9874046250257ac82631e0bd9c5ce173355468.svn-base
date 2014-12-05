@@ -1,0 +1,628 @@
+@checkout @pharmacy @CTAChatValidations
+Feature: Verify the functionality of Pharmacy chat while performing drug interaction.
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-1
+Scenario: Verify the functionality of Chat now link when Rx authenticated loyalty user Perform drug interaction
+
+Given  "RX-ChatValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId   			     |
+| QC-RX         | ChatValidations    | RX-ChatValidations-1  |
+
+Then "RX-ChatValidations-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  			  | RowId      	    |
+| EHSData       | CTAChatValidations      | Rxloyaltyuser   |
+
+Then "RX-ChatValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId     				 |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-1" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName  	     | RowId	  |
+| EHSData       | CTAChatValidations | Druginfo1  |
+
+Then "RX-ChatValidations-1" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage 		 |CTAChatboxDisplay  |
+|Yes   		   |ChatPopUpWindow  |-  				 |
+
+Then "RX-ChatValidations-1" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-ChatValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName			 | RowId   				   |
+| QC-RX         | ChatValidations    | RX-ChatValidations-1    |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-ChatValidations-2
+Scenario: Verify the CTA chat box is not displayed when Rx authenticated loyalty user does not get the interaction result
+
+Given  "RX-ChatValidations-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-2  |
+
+Then "RX-ChatValidations-2" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | Rxloyaltyuser   |
+
+Then "RX-ChatValidations-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-2" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo2 |
+
+Then "RX-ChatValidations-2" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-     |-  |No |
+
+Then "RX-ChatValidations-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-2  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-3
+Scenario: Verify the functionality of Chat now link when Rx authenticated admin loyalty user get the interaction result
+
+Given  "RX-ChatValidations-3" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-3  |
+
+Then "RX-ChatValidations-3" Customer login to the walgreens.com:
+| InputFileName | SheetName       | RowId      	  |
+| EHSData       | CTAChatValidations | Rxloyaltyfamilyuser   |
+
+Then "RX-ChatValidations-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-3" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo3  |
+ 
+Then "RX-ChatValidations-3" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|Yes     |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-3  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-4
+Scenario: Verify the functionality of chat now link when Rx authenticated family loyalty user get the interaction result
+
+Given  "RX-ChatValidations-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-4  |
+
+Then "RX-ChatValidations-4" Customer login to the walgreens.com:
+| InputFileName | SheetName        | RowId      	  |
+| EHSData       | CTAChatValidations  | Rxloyaltyfamilyuser   |
+
+Then "RX-ChatValidations-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-4" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo4  |
+ 
+Then "RX-ChatValidations-4" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|Yes     |ChatPopUpWindow  |-|
+ 
+Then "RX-ChatValidations-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-4  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-5
+Scenario: Verify the functionality of Chat now link when Rx authenticated loyalty user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-5" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-5  |
+
+Then "RX-ChatValidations-5" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | Rxloyaltyuser   |
+
+Then "RX-ChatValidations-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-5" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+
+Then "RX-ChatValidations-5" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  |CTAChatboxDisplay  |
+|Yes      |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-5  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-6
+Scenario: Verify the functionality of Chat now link when Rx authenticated non loyalty user Checks the drug interaction
+
+#This does not have to be executed anymore, as its covered in @RX-LoyaltyOverlayInDrugInteraction-2
+
+Given  "RX-ChatValidations-6" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-6  |
+
+Then "RX-ChatValidations-6" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom     |InputFileName | SheetName   | RowId      	  |
+| Pharmacy         |PharmcyHomePage  |  CommonData        | personalInfo      | personal1   | 
+
+Then "RX-ChatValidations-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-6" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo1  |
+
+Then "RX-ChatValidations-6" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|Yes     |LoyaltyRegistrationPage  |-     |
+
+Then "RX-ChatValidations-6" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | Yes                       | Yes      |
+
+Then "RX-ChatValidations-6" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  |CTAChatboxDisplay  |
+| -			 |ChatPopUpWindow    |-   |
+
+Then "RX-ChatValidations-6" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-6  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-7
+Scenario: Verify the CTA chat box is not displayed when Rx un-authenticated non loyalty user does not get the interaction result
+
+Given  "RX-ChatValidations-7" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-7  |
+
+Then "RX-ChatValidations-7" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom     |InputFileName | SheetName   | RowId      	  	|
+| Pharmacy         |PharmcyHomePage  |  Registration  | RxRegistration      | ChatRx1   |
+
+Then "RX-ChatValidations-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-7" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo2  |
+ 
+Then "RX-ChatValidations-7" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-     |-  |No |
+
+Then "RX-ChatValidations-7" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-7  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-8
+Scenario: Verify the functionality of Chat now link when Rx authenticated admin non loyalty user get the interaction result
+
+Given  "RX-ChatValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId   				 |
+| QC-RX         | ChatValidations    | RX-ChatValidations-8  |
+
+Then "RX-ChatValidations-8" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom     |InputFileName   | SheetName           | RowId     |
+| Pharmacy         |PharmcyHomePage  |  Registration  | RxRegistration      | ChatRx1   |
+
+Then "RX-ChatValidations-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId     				 |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-8" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName      	 | RowId	  |
+| EHSData       | CTAChatValidations | Druginfo3  |
+ 
+Then "RX-ChatValidations-8" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage 				 |CTAChatboxDisplay  |
+| yes		 |ChatPopUpWindow   		 |-					 |
+
+Then "RX-ChatValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId   				 |
+| QC-RX         | ChatValidations    | RX-ChatValidations-8  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-9
+Scenario: Verify the functionality of chat now link when Rx authenticated family non loyalty user get the interaction result
+
+Given  "RX-ChatValidations-9" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId   			     |
+| QC-RX         | ChatValidations    | RX-ChatValidations-9  |
+
+Then "RX-ChatValidations-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName   				| RowId      	 		   |
+| EHSData        | CTAChatValidations       | Rxfamilynonloyaltyuser   |
+
+Then "RX-ChatValidations-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId   				 |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-9" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName    		   | RowId		  |
+| EHSData       | CTAChatValidations   | Druginfo4    |
+ 
+Then "RX-ChatValidations-9" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage 	   |CTAChatboxDisplay  |
+|yes         |ChatPopUpWindow  |-				   |
+
+Then "RX-ChatValidations-9" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId    			  |
+| QC-RX         | ChatValidations    | RX-ChatValidations-9   |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-10
+Scenario: Verify the functionality of Chat now link when Rx authenticated non loyalty user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-10" Customer starts the scenario:
+| InputFileName | SheetName			 | RowId  			      |
+| QC-RX         | ChatValidations    | RX-ChatValidations-10  |
+
+Then "RX-ChatValidations-10" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom     |InputFileName   | SheetName           | RowId     |
+| Pharmacy         |PharmcyHomePage  |  Registration  | RxRegistration      | ChatRx1   |
+
+Then "RX-ChatValidations-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId   			     |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-10" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName          | RowId 	  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+
+Then "RX-ChatValidations-10" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage 		 |CTAChatboxDisplay  |
+|yes   		   |ChatPopUpWindow  |-					 |
+
+Then "RX-ChatValidations-10" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId   				   |
+| QC-RX         | ChatValidations    | RX-ChatValidations-10   |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-11
+Scenario: Perform drug interaction by not logged in Rx authenticated loyalty user
+
+Given  "RX-ChatValidations-11" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId   				   |
+| QC-RX         | ChatValidations    | RX-ChatValidations-11   |
+
+Then "RX-ChatValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId    				  |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions     |
+
+Then "RX-ChatValidations-11" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName          | RowId	  |
+| EHSData       | CTAChatValidations | Druginfo1  |
+
+Then "RX-ChatValidations-11" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  	  |CTAChatboxDisplay  |
+|yes 		  |ChatLoginPage  |-				  |
+
+Then "RX-ChatValidations-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName  			 | RowId      	   |
+| EHSData        | CTAChatValidations    | Rxloyaltyuser   |
+
+Then "RX-ChatValidations-11" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  		|CTAChatboxDisplay  |
+|yes 		  |ChatPopUpWindow  |-					|
+
+Then "RX-ChatValidations-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId   				   |
+| QC-RX         | ChatValidations    | RX-ChatValidations-11   |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-12
+Scenario: Verify the CTA chat box is not displayed when not logged in user does not get the interaction result
+
+Given  "RX-ChatValidations-12" Customer starts the scenario:
+| InputFileName | SheetName			 | RowId   			      |
+| QC-RX         | ChatValidations    | RX-ChatValidations-12  |
+
+Then "RX-ChatValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId    			     |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-12" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName          | RowId 	  |
+| EHSData       | CTAChatValidations | Druginfo2  |
+
+Then "RX-ChatValidations-12" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-   		   |-  			|No 				|
+
+Then "RX-ChatValidations-12" Customer finished testing the scenario:
+| InputFileName | SheetName			 | RowId			      |
+| QC-RX         | ChatValidations    | RX-ChatValidations-12  |
+#-------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-13
+Scenario: Verify the functionality of Chat now link when not logged in user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-13" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-13  |
+
+Then "RX-ChatValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-13" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+ 
+Then "RX-ChatValidations-13" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|yes   |ChatLoginPage  |-|
+
+Then "RX-ChatValidations-13" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | Rxloyaltyuser   |
+
+Then "RX-ChatValidations-13" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|-   |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-13" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-13  |
+#-------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-14
+Scenario: Verify the functionality of Chat now link when not logged in Rx authenticated non loyalty user Checks the drug interaction
+
+Given  "RX-ChatValidations-14" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-14  |
+
+Then "RX-ChatValidations-14" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom|InputFileName | SheetName   | RowId      	  |
+| Pharmacy         |PharmcyHomePage  |  Registration  | RxRegistration      | ChatRx1   |
+
+Then "RX-ChatValidations-14" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-ChatValidations-14" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-14" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo1  |
+ 
+Then "RX-ChatValidations-14" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|yes   |ChatLoginPage  |-|
+
+Then "RX-ChatValidations-14" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | RxNonloyaltyuser   |
+
+#Then "RX-ChatValidations-14" Customer create loyalty membership from drug interaction page:
+#|CreationType  |RewardsNumber  |
+#|NewMembership  |-     |
+
+#Then "RX-ChatValidations-14" Customer validate functionality of chat now link in cta chat box:
+#|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+#|-       |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-14" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-14  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-ChatValidations-15
+Scenario: Verify the functionality of Chat now link when not logged in Rx auth non loyalty user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-15" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-15  |
+
+Then "RX-ChatValidations-15" Customer performs Pharmacy Registration:
+| RegistrationType |RegisterFrom|InputFileName | SheetName   | RowId      	  |
+| Pharmacy         |PharmcyHomePage  |  Registration  | RxRegistration      | ChatRx1   |
+
+Then "RX-ChatValidations-15" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-ChatValidations-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-15" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+ 
+Then "RX-ChatValidations-15" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+|yes   |ChatLoginPage  |-|
+
+Then "RX-ChatValidations-15" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | RxNonloyaltyuser   |
+
+#Then "RX-ChatValidations-15" Customer create loyalty membership from drug interaction page:
+#|CreationType  |RewardsNumber  |
+#|NewMembership  |-     |
+
+#Then "RX-ChatValidations-15" Customer validate functionality of chat now link in cta chat box:
+#|ClickChatNow |TargetPage  |CTAChatboxDisplay  |
+#|-       |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-15" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-15  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-ChatValidations-16
+Scenario: Verify the functionality of Chat now link when light registered loyalty user get the interaction result
+
+Given  "RX-ChatValidations-16" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-16  |
+
+Then "RX-ChatValidations-16" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| No                 | -      | Yes      |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | MaybeLater     		 | -   	   | -  		 | -         | -       | -        | Yes      | CommonData    | personalInfo | lightuser1 |
+
+Then "RX-ChatValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId     				 |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-16" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       	 | RowId  	  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+ 
+Then "RX-ChatValidations-16" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage 	  |CTAChatboxDisplay  |
+|yes  		   |-			  |-				  |
+
+Then "RX-ChatValidations-16" Customer performs Pharmacy Registration:
+ |RegisterFrom  |InputFileName | SheetName    | RowId      |
+ |-				|  Registration  | RxRegistration | CompleteReg |
+ 
+ Then "RX-ChatValidations-16" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage 		 |CTAChatboxDisplay  |
+|-  		   |ChatPopUpWindow  |-					 |
+
+Then "RX-ChatValidations-16" Customer finished testing the scenario:
+| InputFileName | SheetName			 | RowId    			  |
+| QC-RX         | ChatValidations    | RX-ChatValidations-16  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-ChatValidations-17
+Scenario: Verify the functionality of Chat now link when light registered loyalty user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-17" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-17  |
+
+Then "RX-ChatValidations-17" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| NO                 | -    | yes       |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | MaybeLater     		 | -   	   | -  		 | -         | -       | -     	  | Yes      |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-17" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+
+Then "RX-ChatValidations-17" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|yes    |-  |-|
+
+Then "RX-ChatValidations-17" Customer performs Pharmacy Registration:
+ |RegisterFrom |InputFileName | SheetName    | RowId       | LoyaltyType  |
+ |-				|  Registration  | RxRegistration	 | CompleteReg 	    | CreateNew  |
+ 
+Then "RX-ChatValidations-17" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-    |ChatPopUpWindow  |-|
+ 
+
+Then "RX-ChatValidations-17" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-17  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-18
+Scenario: Verify the functionality of Chat now link when not logged in light registered user Checks the drug interaction
+
+Given  "RX-ChatValidations-18" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-18  |
+
+Then "RX-ChatValidations-18" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| No                 | -    | yes       |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-18" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | MaybeLater     		     | -   | -  | -       | -      | -     | Yes      |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-18" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-ChatValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-18" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+
+Then "RX-ChatValidations-18" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|yes   |ChatLoginPage  |-|
+
+Then "RX-ChatValidations-18" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | Lightuser   |
+
+Then "RX-ChatValidations-18" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-   |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-18" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-18  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-ChatValidations-19
+Scenario: Verify the functionality of Chat now link when not logged in light registered user get the severity as major/minor/medium/null/blank
+
+Given  "RX-ChatValidations-19" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-19  |
+
+Then "RX-ChatValidations-19" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| NO                 | -    | yes       |  CommonData    | login			 | loyaltyuser1 |
+
+Then "RX-ChatValidations-19" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | MaybeLater     		     | -   | -  | -       | -      | -     | Yes      |  Registration  | RxRegistration	 | CompleteReg 	    |
+
+Then "RX-ChatValidations-19" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-ChatValidations-19" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-ChatValidations-19" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       | RowId  |
+| EHSData       | CTAChatValidations | Druginfo5  |
+ 
+Then "RX-ChatValidations-19" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|yes   |ChatLoginPage  |-|
+
+Then "RX-ChatValidations-19" Customer login to the walgreens.com:
+| InputFileName | SheetName   | RowId      	  |
+| EHSData        | CTAChatValidations      | Lightuser   |
+
+Then "RX-ChatValidations-19" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow  |TargetPage  |CTAChatboxDisplay  |
+|-   |ChatPopUpWindow  |-|
+
+Then "RX-ChatValidations-19" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-RX        | ChatValidations    | RX-ChatValidations-19  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

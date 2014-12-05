@@ -1,0 +1,103 @@
+@pharmacy @HIVPageVerification
+Feature: All the scenarios in the feature are related to HIV Landing page, UI and links verification for all type of users
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HIVPage-1
+Scenario: Customer validates UI and Links navigation in the HIV Landing Page for Anonymous user
+
+Given "RX-HIVPage-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	    |
+| QC-RX	    	| HIVPage  		| RX-HIVPage-1 		|
+
+Then "RX-HIVPage-1" Customer clicks on an object and validates the expected results:
+| InputFileName  				 | SheetName    | RowId		     								|ClickObjectinTab     | TargetOverlay   |
+| PharmacyLinkVerification	 	 | HIVPage      | HIVSpecializedLinkinBodyofthePage				| -  				  | No    		    |
+| PharmacyLinkVerification	 	 | HIVPage      | MedicationandFinancialAssistinBodyofthePage	| -  				  | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | AdditionalServicesinBodyofthePage				| -  				  | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | WeAIDSLearnMoreLink							| -                   | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | HIVSpecializedLinkinLHS						| -                   | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | MedicationandFinancialAssistanceinLHS			| -                   | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | AdditionalServiceinLHS						| -                   | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | RefillwithRxNumber  						    | -  				  | No              |
+| PharmacyLinkVerification	 	 | HIVPage      | GuestUserRefillfromAccount					| -  				  | Yes   		    |
+| PharmacyLinkVerification	 	 | HIVPage      | GuestViewOrderStatus							| -  				  | No              |
+
+Then "RX-HIVPage-1" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId           |
+| QC-RX   		 | HIVPage   | RX-HIVPage-1    |
+#---------------------------------------------------------------------------------------------------------
+@RX-HIVPage-2
+Scenario: Customer validates UI and Links navigation in the HIV Landing Page for Light user
+
+Given  "RX-HIVPage-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-RX	    	| HIVPage   | RX-HIVPage-2 	|
+
+Given "RX-HIVPage-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       | 
+| CommonData 	 | login     | lightreg1   | 
+
+Then "RX-HIVPage-2" Customer clicks on an object and validates the expected results:
+| InputFileName  				 | SheetName    | RowId		     				|ClickObjectinTab     | TargetOverlay  |
+| PharmacyLinkVerification	 	 | HIVPage      | RefillwithRxNumber  			| -  				  | No             |
+| PharmacyLinkVerification	 	 | HIVPage      | NonRxUserRefillfromAccount    | -  				  | yes   		   |
+| PharmacyLinkVerification	 	 | HIVPage      | RxUserViewOrderStatus			| -  				  | No             |
+
+Then "RX-HIVPage-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HIVPage-2" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	  |
+| QC-RX   		 | HIVPage   | RX-HIVPage-2   |
+#---------------------------------------------------------------------------------------------------------
+@RX-HIVPage-3
+Scenario: Customer validates UI and Links navigation in the HIV Landing Page unauthenticated user
+
+Given  "RX-HIVPage-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        |
+| QC-RX	    	| HIVPage  		| RX-HIVPage-3 |
+
+Given "RX-HIVPage-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             | 
+| CommonData 	 | login     | unauthenticated1  | 
+
+Then "RX-HIVPage-3" Customer clicks on an object and validates the expected results:
+| InputFileName 				 | SheetName    | RowId		     				|ClickObjectinTab     | TargetOverlay  |
+| PharmacyLinkVerification	 	 | HIVPage      | RefillwithRxNumber  			| -  				  | No             |
+| PharmacyLinkVerification	 	 | HIVPage      | NonRxUserRefillfromAccount    | -  				  | yes   		   |
+| PharmacyLinkVerification	 	 | HIVPage      | RxUserViewOrderStatus			| -  				  | No             |
+
+Then "RX-HIVPage-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HIVPage-3" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	  |
+| QC-RX   		 | HIVPage   | RX-HIVPage-3   |
+#---------------------------------------------------------------------------------------------------------
+@RX-HIVPage-4
+Scenario: Customer validates UI and Links navigation in the HIV Landing Page for Authenticated user
+
+Given  "RX-HIVPage-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	|
+| QC-RX	    	| HIVPage  		| RX-HIVPage-4 	|
+
+Given "RX-HIVPage-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId            | 
+| CommonData 	 | login     | authenticated2   | 
+
+Then "RX-HIVPage-4" Customer clicks on an object and validates the expected results:
+| InputFileName  				 | SheetName    | RowId		     				|ClickObjectinTab     | TargetOverlay  |
+| PharmacyLinkVerification	 	 | HIVPage      | RefillwithRxNumber  			| -  				  | No             |
+| PharmacyLinkVerification	 	 | HIVPage      | RxUserRefillfromAccount       | -  				  | yes   		   |
+| PharmacyLinkVerification	 	 | HIVPage      | RxUserViewOrderStatus			| -  				  | No             |
+
+Then "RX-HIVPage-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HIVPage-4" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | HIVPage   | RX-HIVPage-4  |
+#---------------------------------------------------------------------------------------------------------

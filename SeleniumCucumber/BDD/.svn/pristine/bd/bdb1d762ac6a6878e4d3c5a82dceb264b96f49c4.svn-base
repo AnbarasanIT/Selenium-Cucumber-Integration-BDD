@@ -1,0 +1,2687 @@
+@pharmacy @RxCheckout
+Feature: Unauthenticated Customer validates Pharmacy related functionalities
+
+# Contains all Unauthenticated Rx functionality validation of QTP Migrated Scenarios as of now
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-7
+Scenario: Verify Matched User is able to pickup Transfer Rx Order from online pharmacy tour and verify Order details in Confirmation Page
+
+Given  "RX-UnAuthRxValidations-7" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-7	|
+
+Given "RX-UnAuthRxValidations-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "RX-UnAuthRxValidations-7" Customer verifies Online Pharmacy Tour Page Tabs:
+| InputFileName  | SheetName 			  | RowId                  |
+| Pharmacy  	 | OnlinePharmacyTour     | transferPrescription   |
+
+Then "RX-UnAuthRxValidations-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			        | SheetName 	   | RowId        		   |
+| PharmacyHomePageLinkVerification  | UnAuthenticated  | TransferPrescriptions |
+
+When "RX-UnAuthRxValidations-7" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-UnAuthRxValidations-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-7" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "RX-UnAuthRxValidations-7" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-7" Customer verifies Order details in the Order Review Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-7" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-7	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-LightRxValidations-7
+Scenario: Light user verifies the Transfer Prescription Page under onlinePharmacy Tour page
+
+Given  "RX-LightRxValidations-7" Customer starts the scenario:
+| InputFileName | SheetName 		     | RowId         		        |
+| QC-RX	        | LightRxValidations | RX-LightRxValidations-7  |
+
+Then "RX-LightRxValidations-7" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId    |
+| Global Register    | -      | -        |  Registration  | RxRegistration | CompleteReg |
+
+Then "RX-LightRxValidations-7" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	| DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   |RowId    |
+| -                           | MaybeLater   	     | -       |  -     | -         | -       | -        | Yes       |  Registration  | RxRegistration | CompleteReg |
+
+#And "RX-LightRxValidations-7" Customer verifies Online Pharmacy Tour Page Tabs:
+#| InputFileName  | SheetName 			  | RowId                  |
+#| Pharmacy  	 | OnlinePharmacyTour     | transferPrescription   |
+
+Then "RX-LightRxValidations-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			        | SheetName | RowId        		    |
+| PharmacyHomePageLinkVerification  | LightReg  | Transfer Prescription |
+#| PharmacyHomePageLinkVerification  | LightReg  | TransferRxContent     |
+#| PharmacyHomePageLinkVerification  | LightReg  | TransferRxHighlights  |
+
+And "RX-LightRxValidations-7" Customer performs Pharmacy Registration:
+| InputFileName | SheetName	   | RowId 	     | 
+|  Registration  | RxRegistration | CompleteReg |
+
+When "RX-LightRxValidations-7" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |AddHealthHistoryLink |
+| AccountDashboard	| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |Yes                  |  
+
+Then "RX-LightRxValidations-7" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-LightRxValidations-7" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-LightRxValidations-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-LightRxValidations-7" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-LightRxValidations-7" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-LightRxValidations-7" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-LightRxValidations-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-LightRxValidations-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-LightRxValidations-7" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | LightRxValidations  | RX-LightRxValidations-7 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-9
+Scenario: Anonymous user performs pharmacy registration via new Rx from pharmacy home page and Ships new Rx.
+
+Given  "RX-AnonymousRxValidations-9" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-9 |
+
+Then "RX-AnonymousRxValidations-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               		 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions 		 |
+
+And "RX-AnonymousRxValidations-9" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 	 |
+| Registration  | RxRegistration | UserData1	 |
+
+When  "RX-AnonymousRxValidations-9" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-9" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-9" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		   		  |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-9 |
+#----------------------------------------------------------------------------------
+
+@RX-AnonymousRxValidations-10
+Scenario: Anonymous user performs Pharmacy Registration via Transfer Rx from Pharmacy Home page and Ships Transfer Rx
+
+Given  "RX-AnonymousRxValidations-10" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-10 |
+
+Then "RX-AnonymousRxValidations-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-10" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData1  |
+
+When "RX-AnonymousRxValidations-10" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		   	    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 		| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             | Yes					 |
+ 
+Then "RX-AnonymousRxValidations-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-10" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-10	    |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@RX-AnonymousRxValidations-11
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page and picks up New Rx 
+
+Given  "RX-AnonymousRxValidations-11" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-11 |
+
+Then "RX-AnonymousRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               		 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions 		 |
+
+And "RX-AnonymousRxValidations-11" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 	 |  
+| Registration  | RxRegistration | UserData1	 |
+
+When  "RX-AnonymousRxValidations-11" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 					| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | AddHealthHistoryLink |
+| AccountDashboard	 	| HealthHistoryAndInsurance		| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				  |
+
+Then "RX-AnonymousRxValidations-11" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-11" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-11" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "RX-AnonymousRxValidations-11" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-11" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		   		  |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-11 |
+#----------------------------------------------------------------------------------
+
+@RX-AnonymousRxValidations-12
+Scenario: Anonymous user performs Pharmacy Registration through Transfer Rx from Pharmacy Home Page and picks up Transfer Rx 
+
+Given  "RX-AnonymousRxValidations-12" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-12 |
+
+Then "RX-AnonymousRxValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-12" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData1  |
+
+When "RX-AnonymousRxValidations-12" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 					| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance		| Healthinfo1 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |Yes				    |
+
+Then "RX-AnonymousRxValidations-12" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-12" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-12" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-12" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-12" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-12	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-13
+Scenario: Anonymous user performs Pharmacy Registration through Transfer Rx from Pharmacy Home Page and Ships Transfer Rx choosing Self Insurance
+
+Given  "RX-AnonymousRxValidations-13" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-13 |
+
+Then "RX-AnonymousRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-13" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-AnonymousRxValidations-13" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo2 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+Then "RX-AnonymousRxValidations-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-13" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-13" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-13	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-14
+Scenario: Anonymous user performs Pharmacy Registration through Transfer Rx from Pharmacy Home Page and picks up Transfer Rx choosing Self Insurance
+
+Given  "RX-AnonymousRxValidations-14" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-14 |
+
+Then "RX-AnonymousRxValidations-14" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-14" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-AnonymousRxValidations-14" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 					| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance		| Healthinfo2 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+
+Then "RX-AnonymousRxValidations-14" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-14" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PickupLocation	  |
+
+Then "RX-AnonymousRxValidations-14" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-14" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-14" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-14" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-14	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-15
+Scenario: Anonymous user performs Pharmacy Registration through Transfer Rx from Pharmacy Home Page and Ships Transfer Rx choosing Third Party Insurance
+
+Given  "RX-AnonymousRxValidations-15" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-15 |
+
+Then "RX-AnonymousRxValidations-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-15" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-AnonymousRxValidations-15" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+Then "RX-AnonymousRxValidations-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-15" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-15" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-15	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-16
+Scenario: Anonymous user performs Pharmacy Registration through Transfer Rx from Pharmacy Home Page and Pickup Transfer Rx choosing Third Party Insurance 
+
+Given  "RX-AnonymousRxValidations-16" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-16 |
+
+Then "RX-AnonymousRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-AnonymousRxValidations-16" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-AnonymousRxValidations-16" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes				     |
+
+Then "RX-AnonymousRxValidations-16" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-16" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-16" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-16" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-16" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-16	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-17
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page and Ships New Rx choosing Self Insurance
+
+Given  "RX-AnonymousRxValidations-17" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-17 |
+
+Then "RX-AnonymousRxValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-AnonymousRxValidations-17" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData2  |
+
+When  "RX-AnonymousRxValidations-17" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo2 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-17" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-17" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AnonymousRxValidations-17" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    | RowId     |
+| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-17	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-18
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page and Picks up New Rx choosing Self Insurance
+
+Given  "RX-AnonymousRxValidations-18" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-18 |
+
+Then "RX-AnonymousRxValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-AnonymousRxValidations-18" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | UserData2  |
+
+When  "RX-AnonymousRxValidations-18" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo2 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-18" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-18" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-18" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-18" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-18" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-18" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-18" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-18	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-19
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page and Ships New Rx choosing Third Party Insurance
+
+Given  "RX-AnonymousRxValidations-19" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-19 |
+
+Then "RX-AnonymousRxValidations-19" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-AnonymousRxValidations-19" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  | 
+
+When  "RX-AnonymousRxValidations-19" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-19" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AnonymousRxValidations-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AnonymousRxValidations-19" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-AnonymousRxValidations-19" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-19" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-AnonymousRxValidations-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-19	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-20
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page and Picks up New Rx choosing Third Party Insurance 
+
+Given  "RX-AnonymousRxValidations-20" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-20 |
+
+Then "RX-AnonymousRxValidations-20" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-AnonymousRxValidations-20" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  | 
+
+When  "RX-AnonymousRxValidations-20" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-20" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-20" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-20" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-20" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-20" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-20" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-20" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-20" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-20	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-21
+Scenario: Anonymous user performs Pharmacy Registration through New Rx from Pharmacy Home Page by clicking decline in the hippa  and Picks up New Rx choosing Third Party Insurance 
+
+Given  "RX-AnonymousRxValidations-21" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-21 |
+
+Then "RX-AnonymousRxValidations-21" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-AnonymousRxValidations-21" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData3  | 
+
+When  "RX-AnonymousRxValidations-21" Customer adds a New Prescription to the cart: 
+| InputFileName 	| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard	| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-AnonymousRxValidations-21" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-AnonymousRxValidations-21" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-AnonymousRxValidations-21" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-21" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AnonymousRxValidations-21" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-21" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-21" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo3 |
+
+Then "RX-AnonymousRxValidations-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AnonymousRxValidations-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          		|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-21	    |
+#----------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-22
+Scenario: Anonymous user performs Pharmacy Registration via Transfer Rx from Online phramcy tour Page and Pickup Transfer Rx choosing Third Party Insurance 
+
+Given  "RX-AnonymousRxValidations-22" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-22 |
+
+And "RX-AnonymousRxValidations-22" Customer verifies Online Pharmacy Tour Page Tabs:
+| InputFileName  | SheetName 			  | RowId      			   |ClickTab  |
+| Pharmacy  	 | OnlinePharmacyTour     | transferPrescription   |   Yes    | 
+
+Then "RX-AnonymousRxValidations-22" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId               		 |
+| PharmacyHomePageLinkVerification  | Anonymous  	| TransferPageUI			 |
+| PharmacyHomePageLinkVerification  | Anonymous  	| RightNavigationUI			 |
+| PharmacyHomePageLinkVerification  | Anonymous  	| TransferCreateAccount		 |
+
+And "RX-AnonymousRxValidations-22" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |   
+| Registration  | RxRegistration | Rxpharma4  |  
+
+When "RX-AnonymousRxValidations-22" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber | AddHealthHistoryLink |
+| AccountDashboard	| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes				     |
+
+Then "RX-AnonymousRxValidations-22" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AnonymousRxValidations-22" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "RX-AnonymousRxValidations-22" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-AnonymousRxValidations-22" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-22" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AnonymousRxValidations-22" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-AnonymousRxValidations-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-22	|
+#----------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-10
+Scenario: Verify Matched User is able to Ship New Rx Order and verify Order details in Confirmation Page
+
+Given  "RX-UnAuthRxValidations-10" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-10	|
+
+Given "RX-UnAuthRxValidations-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+When "RX-UnAuthRxValidations-10" Customer adds a New Prescription to the cart:
+| InputFileName 	| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | 
+| AccountDashboard	| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-UnAuthRxValidations-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-UnAuthRxValidations-10" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    | RowId     |
+|Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-10" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-10	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-6
+Scenario: Authenticated user performs Transfer Rx Checkout for Admin User and Family Member using Pickup .
+
+Given  "RX-AuthRxValidations-6" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-6  |
+
+Then "RX-AuthRxValidations-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+Then "RX-AuthRxValidations-6" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login		 | loyaltyuser1 |
+
+When "RX-AuthRxValidations-6" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-AuthRxValidations-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName                | RowId 	        	              |
+| PharmacyHomePageLinkVerification | Authenticated            | TransferPrescriptionsShoppingCart | 
+
+When "RX-AuthRxValidations-6" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+|  1                 | no           |test          | 123-404-3285  |Transfer RX          | 987456             |
+
+Then "RX-AuthRxValidations-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AuthRxValidations-6" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AuthRxValidations-6" Customer selects rx pick up date and time and click on continue
+
+Then "RX-AuthRxValidations-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AuthRxValidations-6" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo4 |
+
+Then "RX-AuthRxValidations-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-6" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		   |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-6 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-8
+Scenario: Authenticated user performs New Rx Checkout using Pickup .
+
+Given  "RX-AuthRxValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-8  |
+
+Then "RX-AuthRxValidations-8" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+Then "RX-AuthRxValidations-8" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login			 | loyaltyuser1 |
+
+When  "RX-AuthRxValidations-8" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-AuthRxValidations-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AuthRxValidations-8" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-AuthRxValidations-8" Customer selects rx pick up date and time and click on continue
+
+Then "RX-AuthRxValidations-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AuthRxValidations-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		   |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-8 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-11
+Scenario: Unmatched user Ships New Rx checkout choosing Third Party Insurance  
+
+Given  "RX-UnAuthRxValidations-11" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations	 | RX-UnAuthRxValidations-11 	|
+
+Then "RX-UnAuthRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-UnAuthRxValidations-11" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |   
+| Registration  | RxRegistration | UserData2  |  
+
+When  "RX-UnAuthRxValidations-11" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-UnAuthRxValidations-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-UnAuthRxValidations-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	             |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions                |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow			                 |No		   |Yes				  |
+
+Then "RX-UnAuthRxValidations-11" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+When  "RX-UnAuthRxValidations-11" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+ 
+Then "RX-UnAuthRxValidations-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-UnAuthRxValidations-11" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-11		|
+#----------------------------------------------------------------------------------
+
+@RX-UnAuthRxValidations-12
+Scenario: Unmatched user performs New Rx checkout via Pickup choosing Third Party Insurance 
+
+Given  "RX-UnAuthRxValidations-12" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations 	 | RX-UnAuthRxValidations-12 	|
+
+Then "RX-UnAuthRxValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions				 |
+
+And "RX-UnAuthRxValidations-12" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |   
+| Registration  | RxRegistration | UserData2  |  
+
+When  "RX-UnAuthRxValidations-12" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "RX-UnAuthRxValidations-12" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-UnAuthRxValidations-12" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-UnAuthRxValidations-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|- |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-12" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-12" Customer selects rx pick up date and time and click on continue
+
+Then "RX-UnAuthRxValidations-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	             |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions                |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow			                 |No		   |Yes				  |
+
+Then "RX-UnAuthRxValidations-12" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+When  "RX-UnAuthRxValidations-12" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-UnAuthRxValidations-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-12" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "RX-UnAuthRxValidations-12" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-12" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-UnAuthRxValidations-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo3 |
+
+Then "RX-UnAuthRxValidations-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-12		|
+
+
+#----------------------------------------------------------------------------------
+
+@RX-UnAuthRxValidations-13
+Scenario: Unmatched user performs Transfer Rx checkout via pickup choosing Third Party Insurance  
+
+Given  "RX-UnAuthRxValidations-13" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations 	 | RX-UnAuthRxValidations-13 	|
+
+Then "RX-UnAuthRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-UnAuthRxValidations-13" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-UnAuthRxValidations-13" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+Then "RX-UnAuthRxValidations-13" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-UnAuthRxValidations-13" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-UnAuthRxValidations-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|- |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-13" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-13" Customer selects rx pick up date and time and click on continue
+
+Then "RX-UnAuthRxValidations-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	             |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions                |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow			                 |No		   |Yes				  |
+
+Then "RX-UnAuthRxValidations-13" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+When "RX-UnAuthRxValidations-13" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-UnAuthRxValidations-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-13" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-13" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-13" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-13" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-13		|
+#----------------------------------------------------------------------------------
+
+@RX-UnAuthRxValidations-15
+Scenario: Unmatched user performs Transfer Rx checkout via Shipping by choosing Third Party Insurance  
+
+Given  "RX-UnAuthRxValidations-15" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations	 | RX-UnAuthRxValidations-15 	|
+
+Then "RX-UnAuthRxValidations-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-UnAuthRxValidations-15" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-UnAuthRxValidations-15" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+Then "RX-UnAuthRxValidations-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-UnAuthRxValidations-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-15" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	             |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions                |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow			                 |No		   |Yes				  |
+
+Then "RX-UnAuthRxValidations-15" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+When "RX-UnAuthRxValidations-15" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	
+
+Then "RX-UnAuthRxValidations-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-UnAuthRxValidations-15" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-15" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-15		|
+#----------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-16
+Scenario: Unmatched user performs Transfer Rx checkout from online pharmacy tour via pick up by choosing Third Party Insurance  
+
+Given  "RX-UnAuthRxValidations-16" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | UnAuthRxValidations 	 | RX-UnAuthRxValidations-16 	|
+
+Then "RX-UnAuthRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               			 |
+| PharmacyLinkVerification  | Anonymous  	| Transfer Prescriptions		 |
+
+And "RX-UnAuthRxValidations-16" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  | 
+| Registration  | RxRegistration | UserData2  |
+
+When "RX-UnAuthRxValidations-16" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |	Yes					 |
+
+Then "RX-UnAuthRxValidations-16" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChooseaStoreLink |
+
+Then "RX-UnAuthRxValidations-16" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection17 |
+
+Then "RX-UnAuthRxValidations-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-             |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-16" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-16" Customer selects rx pick up date and time and click on continue
+
+Then "RX-UnAuthRxValidations-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-UnAuthRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	             |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions                |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow			                 |No		   |Yes				  |
+
+Then "RX-UnAuthRxValidations-16" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType  |
+| Unmatched |
+
+#And "RX-UnAuthRxValidations-16" Customer verifies Online Pharmacy Tour Page Tabs:
+#| InputFileName  | SheetName 			  | RowId      			   |
+#| Pharmacy  	 | OnlinePharmacyTour     | transferPrescription   | 
+
+Then "RX-UnAuthRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 		| RowId               			 |
+| PharmacyHomePageLinkVerification  | Authenticated  	| TransferPrescriptions			 |
+
+When "RX-UnAuthRxValidations-16" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 				| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |	
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-UnAuthRxValidations-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-16" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-16" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-16" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#| Pharmacy      | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	          	    | RowId      	 	          	|
+| QC-RX 	    | UnAuthRxValidations      	    | RX-UnAuthRxValidations-16		|
+#----------------------------------------------------------------------------------
+@RX-AuthRxValidations-13
+Scenario: Authenticated user Picks New ,Transfer and Refill Rx for Admin and Family Member.
+
+Given  "RX-AuthRxValidations-13" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-13 |
+
+Then "RX-AuthRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription             |
+
+Then "RX-AuthRxValidations-13" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login		 | RefillRx6    |
+
+When  "RX-AuthRxValidations-13" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| SELF              | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-AuthRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName                        | RowId 	        	                  |
+| PharmacyHomePageLinkVerification         | Authenticated            | RefillAnotherPrescriptionShoppingCart | 
+
+When  "RX-AuthRxValidations-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |AutoRefill |
+| CACData       | RefillRx  | retailRx8      |Yes		 |
+
+Then "RX-AuthRxValidations-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName                | RowId 	        	              |
+| PharmacyHomePageLinkVerification | Authenticated            | TransferPrescriptionsShoppingCart |
+
+
+When "RX-AuthRxValidations-13" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 1                | no           |test          | 123-404-3285  |Transfer RX          | 987456             |
+
+Then "RX-AuthRxValidations-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AuthRxValidations-13" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore2	 |
+
+Then "RX-AuthRxValidations-13" Customer selects rx pick up date and time and click on continue
+
+Then "RX-AuthRxValidations-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AuthRxValidations-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-13" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		   |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-13 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-14
+Scenario: Authenticated user performs Refill Checkout using Pickup
+
+Given  "RX-AuthRxValidations-14" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-14 |
+
+#Then "RX-AuthRxValidations-14" Customer clicks on an object and validates the expected results:
+#| InputFileName	   	                       | SheetName            | RowId 	        	         |
+#| PharmacyHomePageLinkVerification         | Authenticated        | RefillPrescription		     |
+
+And "RX-AuthRxValidations-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+|  CommonData   | login		| RefillRx6  			 |Overlay  |
+
+When  "RX-AuthRxValidations-14" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | retailRx8    |
+
+Then "RX-AuthRxValidations-14" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AuthRxValidations-14" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore4	 |
+
+Then "RX-AuthRxValidations-14" Customer selects rx pick up date and time and click on continue
+
+Then "RX-AuthRxValidations-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AuthRxValidations-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-14" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-14 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-15
+Scenario: Authenticated user Ships New Rx checkout for a Family Member
+
+Given  "RX-AuthRxValidations-15" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-15  |
+
+Then "RX-AuthRxValidations-15" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription             |
+
+Then "RX-AuthRxValidations-15" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId   	    |
+| -                  | Yes    | -        |  Pharmacy      | login		 | RefillRx6    |
+
+When  "RX-AuthRxValidations-15" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| 1                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-AuthRxValidations-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AuthRxValidations-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AuthRxValidations-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AuthRxValidations-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-AuthRxValidations-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AuthRxValidations-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-15" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-15 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-19
+Scenario: Verify Matched User is able to Pickup New Rx Order and verify Order details in Confirmation Page
+
+Given  "RX-UnAuthRxValidations-19" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-19	|
+
+Given "RX-UnAuthRxValidations-19" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Matcheduser1			 |
+
+When "RX-UnAuthRxValidations-19" Customer adds a New Prescription to the cart:
+| InputFileName 	| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | 
+| AccountDashboard	| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-UnAuthRxValidations-19" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-19" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-19" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-19" Customer verifies Order details in the Order Review Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-UnAuthRxValidations-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-19" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo3 |
+
+Then "RX-UnAuthRxValidations-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-19" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-19	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-20
+Scenario: Verify Matched User is able to Ship Transfer Rx Order and verify Order details in Confirmation Page
+
+Given  "RX-UnAuthRxValidations-20" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-20	|
+
+Given "RX-UnAuthRxValidations-20" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Matcheduser1			 |
+
+When "RX-UnAuthRxValidations-20" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-UnAuthRxValidations-20" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-UnAuthRxValidations-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-UnAuthRxValidations-20" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-UnAuthRxValidations-20" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "RX-UnAuthRxValidations-20" Customer verifies Order details in the Order Review Page:
+#| InputFileName  | SheetName    | RowId     |
+#| Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-20" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo2 |
+
+Then "RX-UnAuthRxValidations-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-20" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-20	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-21
+Scenario: Verify Matched User is able to pickup Transfer Rx Order and verify Order details in Confirmation Page
+
+Given  "RX-UnAuthRxValidations-21" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-21	|
+
+Given "RX-UnAuthRxValidations-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Matcheduser1			 |
+
+When "RX-UnAuthRxValidations-21" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-UnAuthRxValidations-21" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-UnAuthRxValidations-21" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore3	 |
+
+Then "RX-UnAuthRxValidations-21" Customer selects rx pick up date and time and click on continue
+
+#Then "RX-UnAuthRxValidations-21" Customer verifies Order details in the Order Review Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-UnAuthRxValidations-21" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo1 |
+
+Then "RX-UnAuthRxValidations-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-21" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-21	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-11
+Scenario: Authenticated user Ships New ,Refill and Transfer Rx for Admin and Family Member .
+
+Given  "RX-AuthRxValidations-11" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-11 |
+
+Then "RX-AuthRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                      | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification        | Authenticated        | New Prescription              |
+
+Then "RX-AuthRxValidations-11" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login			 | RefillRx5    |
+
+When  "RX-AuthRxValidations-11" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| 1                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-AuthRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName                | RowId 	        	                  |
+| PharmacyHomePageLinkVerification         | Authenticated            | RefillAnotherPrescriptionShoppingCart | 
+
+When  "RX-AuthRxValidations-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	  |
+| CACData       | RefillRx  | VariNameRx1  |
+
+Then "RX-AuthRxValidations-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName                | RowId 	        	              |
+| PharmacyHomePageLinkVerification         | Authenticated            | TransferPrescriptionsShoppingCart | 
+
+When "RX-AuthRxValidations-11" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| self                | no           |test          | 123-404-3285  |Transfer RX         | 987456             |
+
+Then "RX-AuthRxValidations-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AuthRxValidations-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AuthRxValidations-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AuthRxValidations-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+
+Then "RX-AuthRxValidations-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AuthRxValidations-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo4 |
+
+Then "RX-AuthRxValidations-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-11 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-12
+Scenario: Authenticated user Ships Transfer Rx for Admin and Family member.
+
+Given  "RX-AuthRxValidations-12" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-12  |
+
+Then "RX-AuthRxValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification         | Authenticated        | Transfer Prescription        |
+
+Then "RX-AuthRxValidations-12" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login			 | loyaltyuser1 |
+
+When "RX-AuthRxValidations-12" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-AuthRxValidations-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName                | RowId 	        	              |
+| PharmacyHomePageLinkVerification         | Authenticated            | TransferPrescriptionsShoppingCart | 
+
+When "RX-AuthRxValidations-12" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+|  1                 | no           |test          | 123-404-3285  |Transfer RX          | 987456             |
+
+Then "RX-AuthRxValidations-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AuthRxValidations-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AuthRxValidations-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AuthRxValidations-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-AuthRxValidations-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AuthRxValidations-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo4 |
+
+Then "RX-AuthRxValidations-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-12" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-12 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-16
+Scenario: Authenticated user Ships Transfer Rx for Admin User.
+
+Given  "RX-AuthRxValidations-16" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-16  |
+
+Then "RX-AuthRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+Then "RX-AuthRxValidations-16" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId   	    |
+| -                  | Yes    | -        |  CommonData    | login		 | loyaltyuser1 |
+
+When "RX-AuthRxValidations-16" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "RX-AuthRxValidations-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName                | RowId 	        	              |
+| PharmacyHomePageLinkVerification | Authenticated            | TransferPrescriptionsShoppingCart | 
+
+When "RX-AuthRxValidations-16" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+|  -                 | no           |test          | 123-404-3285  |Transfer RX          | 987456             |
+
+Then "RX-AuthRxValidations-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "RX-AuthRxValidations-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AuthRxValidations-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-AuthRxValidations-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-AuthRxValidations-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-AuthRxValidations-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName    | RowId     |
+#|Pharmacy       | OrderDetails |orderinfo4 |
+
+Then "RX-AuthRxValidations-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-16" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		   |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-16 |
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-1
+Scenario: Authenticated user logs in from Global Header and picks New Rx Checkout.
+
+Given  "CHECKOUT-RxCheckout-1" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-1 |
+
+Given "CHECKOUT-RxCheckout-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| Pharmacy  	 | login     | AuthenticatedUser |
+
+And "CHECKOUT-RxCheckout-1" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-1" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+#Then "CHECKOUT-RxCheckout-1" Customer changes rx store or selects new store in pickup options page:
+#| InputFileName | SheetName | RowId      |
+#| CACData       | RXpickup  | rxStore1	 |
+
+Then "CHECKOUT-RxCheckout-1" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "CHECKOUT-RxCheckout-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName         | SheetName    | RowId                |
+#| CheckoutOrderDetails  | OrderIds     |CHECKOUT-RxCheckout-1 |
+
+Then "CHECKOUT-RxCheckout-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-1" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-1 |
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-2
+Scenario: enticated user ships New Rx Checkout with Standard shipping method.
+
+Given  "CHECKOUT-RxCheckout-2" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-2  |
+
+Given "CHECKOUT-RxCheckout-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| CommonData    | login     | Rxuser1	 |
+#| Pharmacy  	 | login     | AuthenticatedUser2 |
+
+And "CHECKOUT-RxCheckout-2" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-2" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "CHECKOUT-RxCheckout-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CHECKOUT-RxCheckout-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+
+Then "CHECKOUT-RxCheckout-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId                |
+| CheckoutOrderDetails  | OrderIds     |CHECKOUT-RxCheckout-2 |
+
+Then "CHECKOUT-RxCheckout-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-2" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-2 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-3
+Scenario: Authenticated user ships New Rx Checkout with Overnight shipping method.
+
+Given  "CHECKOUT-RxCheckout-3" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-3 |
+
+Given "CHECKOUT-RxCheckout-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| CommonData    | login     | Rxuser1	 |
+
+And "CHECKOUT-RxCheckout-3" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-3" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "CHECKOUT-RxCheckout-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| overnight       |           -              |       -	 	            |
+
+Then "CHECKOUT-RxCheckout-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+
+Then "CHECKOUT-RxCheckout-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId                |
+| CheckoutOrderDetails  | OrderIds     |CHECKOUT-RxCheckout-3 |
+
+Then "CHECKOUT-RxCheckout-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-3" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-3 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-18
+Scenario: Customer is able to checkout the combination of DC item, New Rx,CL,Pre-Order,CH item and PSC
+
+Given  "CHECKOUT-RxCheckout-18" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-18 |
+
+Given "CHECKOUT-RxCheckout-18" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       |
+| CommonData  	 | login     | NewRxLogin1 |
+
+And "CHECKOUT-RxCheckout-18" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "CHECKOUT-RxCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | DC1    |
+
+Then "CHECKOUT-RxCheckout-18" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-RxCheckout-18" Customer clicks on an object and validates the expected results:
+| InputFileName	 | SheetName        | RowId 	        	|
+|	CSLR         | LinkNavigation   | NewPrescriptionLink   |
+
+Then "CHECKOUT-RxCheckout-18" Customer login through the dynamic login section and validates destination page:
+| InputFileName   | SheetName      | RowId   	    |
+| CommonData      |   DynamicLogin | NewRxLogin1	|
+
+When  "CHECKOUT-RxCheckout-18" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+And "CHECKOUT-RxCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PreOrder1   |
+
+Then "CHECKOUT-RxCheckout-18" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | CH1	 |
+
+Then "CHECKOUT-RxCheckout-18" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-18" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "CHECKOUT-RxCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "CHECKOUT-RxCheckout-18" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CHECKOUT-RxCheckout-18" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then "CHECKOUT-RxCheckout-18" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-18" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-18" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-18" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CHECKOUT-RxCheckout-18" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CHECKOUT-RxCheckout-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		          | standard                 | standard			        |
+
+Then "CHECKOUT-RxCheckout-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | 
+| CreditCard    | -              | -                     | -                  | 
+
+Then "CHECKOUT-RxCheckout-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-18" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId                 |
+| CheckoutOrderDetails  | OrderIds     |CHECKOUT-RxCheckout-18 |
+
+Then "CHECKOUT-RxCheckout-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-18" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-18 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-19
+Scenario: To verify display of comment box in pickup page for refil pickup happy path for -county name St Louis North  proceed and submit order in JS version
+
+Given  "CHECKOUT-RxCheckout-19" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-19 |
+
+Given "CHECKOUT-RxCheckout-19" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-19" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-19" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CHECKOUT-RxCheckout-19" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-19" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId     		 |
+| CACData       | RXpickup  | rxPilotCBStore1	 |
+
+Then "CHECKOUT-RxCheckout-19" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	Yes 	  |  -			|
+
+Then "CHECKOUT-RxCheckout-19" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-19" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-19 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-20
+Scenario: To verify display of comment box  in pickup page for refil pickup pilot store St Louis South change 
+store to non pilot store in pickup page change back to original pilot store  check for comment box section proceed and submit order in JS version
+
+Given  "CHECKOUT-RxCheckout-20" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-20 |
+
+Given "CHECKOUT-RxCheckout-20" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-20" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-20" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CHECKOUT-RxCheckout-20" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-20" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId  		     |
+| CACData       | RXpickup  | rxPilotCBStore1	 |
+
+Then "CHECKOUT-RxCheckout-20" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	Yes 	  |  -			|
+
+Then "CHECKOUT-RxCheckout-20" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId   				 |
+| CACData       | RXpickup  | rxNonPilotCBStore1	 |
+
+Then "CHECKOUT-RxCheckout-20" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|	No	   |	-   	  |  -			|
+
+Then "CHECKOUT-RxCheckout-20" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId     		 |
+| CACData       | RXpickup  | rxPilotCBStore1	 |
+
+Then "CHECKOUT-RxCheckout-20" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	-   	  |  -			|
+
+Then "CHECKOUT-RxCheckout-20" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-20" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-20 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-21
+Scenario: To verify display of comment box  in pickup page for refil pickup pilot store
+county name Atlanta East click on change link from review order page change store to non pilot store  change back to original pilot store 
+proceed and submit order in JS version
+
+Given  "CHECKOUT-RxCheckout-21" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-21 |
+
+Given "CHECKOUT-RxCheckout-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-21" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-21" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CHECKOUT-RxCheckout-21" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-21" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId   			 |
+| CACData       | RXpickup  | rxPilotCBStore1	 |
+
+Then "CHECKOUT-RxCheckout-21" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	Yes 	  |  -			|
+
+Then "CHECKOUT-RxCheckout-21" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| -		      | Yes                     | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-21" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId     		 |
+| CACData       | RXpickup  | rxNonPilotCBStore1 |
+
+Then "CHECKOUT-RxCheckout-21" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+| No	   |	-   	  |  -			|
+
+
+Then "CHECKOUT-RxCheckout-21" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId     		 |
+| CACData       | RXpickup  | rxPilotCBStore1 	 |
+
+Then "CHECKOUT-RxCheckout-21" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	-   	  |  -			|
+
+Then "CHECKOUT-RxCheckout-21" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-21" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-21 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-22
+Scenario: To verify display of comment box  in pickup page for Rx refil pickup county name Atlanta West  go up till 
+review order page come back to cart and navigate to pickup page-comments should be there   proceed and submit order in JS version
+
+Given  "CHECKOUT-RxCheckout-22" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-22 |
+
+Given "CHECKOUT-RxCheckout-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-22" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-22" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CHECKOUT-RxCheckout-22" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-22" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      	  |
+| CACData       | RXpickup  | rxPilotCBStore1 |
+
+Then "CHECKOUT-RxCheckout-22" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	Yes 	  |  -			|
+
+Then "CHECKOUT-RxCheckout-22" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-22" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CHECKOUT-RxCheckout-22" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-22" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	-    	  |  Yes	    |
+
+Then "CHECKOUT-RxCheckout-22" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-22" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-22" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-22 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-23
+Scenario: To verify display of comment box  in pickup page for Rx refil pickup  -county name Atlanta South go up till review order page 
+come back to cart change the store to pilot store and navigate to pickup page-comments section will be there  proceed and submit order 
+in JS version
+
+Given  "CHECKOUT-RxCheckout-23" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-23 |
+
+Given "CHECKOUT-RxCheckout-23" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-23" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-23" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+Then "CHECKOUT-RxCheckout-23" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-23" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      	  |
+| CACData       | RXpickup  | rxPilotCBStore1 |
+
+Then "CHECKOUT-RxCheckout-23" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	Yes 	  |  -			|
+
+Then "CHECKOUT-RxCheckout-23" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-23" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CHECKOUT-RxCheckout-23" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption  |
+|ChangeStore   |
+
+Then "CHECKOUT-RxCheckout-23" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		          |
+| SDDData       | storedetails   | storeselection21		  |
+
+Then "CHECKOUT-RxCheckout-23" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-23" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|Yes	   |	-   	  |  -			|
+
+Then "CHECKOUT-RxCheckout-23" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-23" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-23" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-23" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-23 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-24
+Scenario: To verify display of comment box in pickup page for Rx new+transfer+refill pickup -county name Oklahoma City North- no comment box   
+proceed and submit order in JS version
+
+Given  "CHECKOUT-RxCheckout-24" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-24 |
+
+Given "CHECKOUT-RxCheckout-24" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | RXUser80     |
+
+And "CHECKOUT-RxCheckout-24" Customer Clears the Shopping Cart
+
+When  "CHECKOUT-RxCheckout-24" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX221 |
+
+When "CHECKOUT-RxCheckout-24" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CHECKOUT-RxCheckout-24" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-24" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-24" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      	  |
+| CACData       | RXpickup  | rxPilotCBStore1 |
+
+Then "CHECKOUT-RxCheckout-24" Customer verifies the Comment box in pickup page and Enters the text:
+|CommentBox|EnterComments |CompareText	|
+|	No	   |	-   	  |  -			|
+
+Then "CHECKOUT-RxCheckout-24" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-24" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-24" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-24" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-CHECKOUT   | RxCheckout |CHECKOUT-RxCheckout-24 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-17
+Scenario: Authenticated 90 day user validates the Transfer Rx page and places the order for self and family member
+
+Given  "RX-AuthRxValidations-17" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations |RX-AuthRxValidations-17  |
+
+Given "RX-AuthRxValidations-17" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      	   |
+| CommonData 	 | login     | NewPrescription |
+
+Then "RX-AuthRxValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	           |TargetOverlay		|ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Authenticated        | NewTransferPrescription        |-					|-					|
+#| PharmacyHomePageLinkVerification | Authenticated        | 90DayQuickLookIcon			   |Yes					|-					|
+#| PharmacyHomePageLinkVerification | Authenticated        | CloseWindow					   |-					|Yes				|
+
+When "RX-AuthRxValidations-17" Customer adds multiple Transfer Prescriptions to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |SelectRxFromList|RemoveRx|
+| 1                  | no           | cvs          | 123-323-3234  | Aspirin		     | 123654             |Yes			   |-		|
+| 1                  | no           | -            | - 			   | Transfer RX         | 987456             |-			   |-		|
+| 1                  | no           | -            | - 			   | CVS Transfer RX     | 987456             |-			   |Yes		|
+	
+Then "RX-AuthRxValidations-17" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-AuthRxValidations-17" Customer selects rx pick up date and time and click on continue
+
+Then "RX-AuthRxValidations-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-AuthRxValidations-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-17" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-17 |
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-18
+Scenario: Authenticated 90 day user validates the New Rx page and places the order for self and family member
+
+Given "RX-AuthRxValidations-18" Customer starts the scenario:
+| InputFileName  | SheetName 	           | RowId      	         |
+| QC-RX   		 | AuthRxValidations	   | RX-AuthRxValidations-18 |
+
+Then "RX-AuthRxValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |Overlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no	  |
+| PharmacyHomePageLinkVerification         | Authenticated  | OrderPrescriptionForm	  |no	  |
+| PharmacyHomePageLinkVerification         | Authenticated  | GlobalSignIn			  |no	  |
+
+Given "RX-AuthRxValidations-18" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData  	| login   	| NewPrescription |
+
+Then "RX-AuthRxValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |Overlay|TargetOverlay |ClickObjectOverlay |
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no	  |-			 |		-			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | OrderPrescriptionForm	  |no	  |-			 |		-			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no	  |-			 |		-			 |
+#| PharmacyHomePageLinkVerification         | Authenticated  | 90DayQuickLookIcon	  |no	  |Yes			 |		-			 |
+#| PharmacyHomePageLinkVerification         | Authenticated  | NewRxCloseWindow		  |no	  |-			 |		Yes			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | GenericQuickLookIcon	  |no	  |Yes			 |		-			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | NewRxCloseWindow		  |no	  |-			 |		Yes			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | NewRxCancel			  |no	  |-			 |		-			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no	  |-			 |		-			 |
+| PharmacyHomePageLinkVerification         | Authenticated  | NewRxErrorAddtoCart	  |no	  |-			 |		-			 |
+
+When  "RX-AuthRxValidations-18" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "RX-AuthRxValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |Overlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no	  |
+
+Then "RX-AuthRxValidations-18" Customer selects a family member:
+| FamilyMemberOption    |1|
+
+Then "RX-AuthRxValidations-18" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |Overlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | NewRxErrorAddtoCart	  |no	  |
+
+When  "RX-AuthRxValidations-18" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 20 Mg       | 12           |
+
+Then "RX-AuthRxValidations-18" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-AuthRxValidations-18" Customer finished testing the scenario:
+| InputFileName  | SheetName 	           | RowId     	                |
+| QC-RX   		 | AuthRxValidations	   | RX-AuthRxValidations-18	|
+
+#-----------------------------------------------------------------------------------------------------------

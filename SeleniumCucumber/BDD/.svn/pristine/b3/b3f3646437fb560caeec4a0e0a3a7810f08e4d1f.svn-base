@@ -1,0 +1,1245 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.pharmacy_health;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import com.thoughtworks.selenium.Wait.WaitTimedOutException;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class ManageFamilyMemberLibrary extends CommonLibrary {
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to Verify the zero family member state and Add/Remove
+	 *          Adult member to the user account
+	 * @author - Chezhiyan E
+	 * @Created -
+	 * @Modified By -Saravanan M
+	 * @Modified Date -04-Jan-12
+	 ************************************************************* 
+	 */
+
+	public static void ManageAdultMember(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String ProcessType = null;
+		String AddVia = null;
+		String PharmacyAndHealth_LNK = "//li[2]/span/a[contains(text(),'Pharmacy')]~XPATH";
+		String FamilyPrescriptions_LNK = "//li[3]/a[contains(text(),'Family Prescriptions')]~XPATH";
+		String AddFamilyMember_LNK = "//div[@class='pharmacyModuleHt']//a[@title='Add family member']~XPATH";
+		String AddAdult_BTN = "//a/img[@title='Add an adult']~XPATH";
+		String AccountHome_LNK = "a[title='Your Account']~CSS";
+		String FirstName_TXT = "input[id*='firstname']~CSS", FirstName = null;
+		String LastName_TXT = "input[id*='lastname']~CSS", LastName = null;
+		String DOBMonth_LST = "select[id*='Month']~CSS";
+		String DOBDay_LST = "select[id*='Day']~CSS";
+		String DOBYear_LST = "select[id*='Year']~CSS";
+		String EmailAddr_TXT = "input[id*='emailAddress']~CSS", EMail = null;
+		String ConfirmEmailAddr_TXT = "input[id*='remail']~CSS";
+		String AdditionalMsg_TXT = "textarea#additional_message~CSS", AdditionalMsg = null;
+		String AddMemberContinue_BTN = "input[title*='Continue']~CSS";
+		String WhoCanYouAdd_H = "//h2[contains(text(),'Who Can You Add?')]~XPATH";
+		String BannerVerification = null;
+		String AdditionalMsgErrorMsg_ELM = "//div[@id='add_msg']/p[contains(text(),\"The information you've entered is invalid. Please try again.\")]~XPATH";
+		String RefillRx_LNK = "//ul/li/ul/li/a[contains(@title,'Refill Prescriptions')]~XPATH";
+		String ManageYourFamilyHealth_LBL = "//p[contains(text(),'Manage your family')][contains(text(),'s health information quickly and securely.')]~XPATH";
+		String ManageYourFamilyRXInfo_H = "//h2[contains(text(),'Manage Your Family')][contains(text(),'Prescription Health Information')]~XPATH";
+		String AddYourFirstFamilyMember_LNK = "//a[@title='Add you first family member']~XPATH";
+		String AddAnAdult_H = "//h2[contains(text(),'Add an Adult to Your Family Prescriptions')]~XPATH";
+		String AdultMust_LBL = "//strong[contains(text(),'The adult must:')]~XPATH";
+		String AdultMust1_LBL = "//li[contains(text(),'Be at least 18')]~XPATH";
+		String AdultMust2_LBL = "//li[contains(text(),'Have a registered online Walgreens pharmacy account')]~XPATH";
+		String AdultMust3_LBL = "//li[contains(text(),'Possess a unique email address')]~XPATH";
+		String AdultWithoutAcc_LBL = "//p[contains(text(),'If the adult doesn')][contains(text(),'t have an account, then we')]~XPATH";
+		String MandatoryFields_LBL = "//strong[contains(text(),'All fields are required unless marked optional.')]~XPATH";
+		String Cancel_LNK = "//strong/a[@title='Cancel']~XPATH";
+		String AddanAdultDesc_LBL = "//p[contains(text(),' Use this form to add an adult to the Family Prescriptions section of your')][contains(text(),'online Walgreens pharmacy account.')]~XPATH";
+		String HOH_LBL = "//p[2]/b[contains(text(),'Head of Household')]";
+		String InvitePending_LBL = "//p[contains(text(),'Invite Pending')]";
+		String Confirm_BTN = "input[title='Confirm']~CSS";
+		String DisabledResend_BTN = "//img[@title='Resend Invitation']";
+		String InviteSuccessMsgHeader_H = "//strong[contains(text(),'Family Member Added and Invitation Sent')]~XPATH";
+		String EditAccountAccess_LNK = "a[title='Edit Account Access']~CSS";
+		String OvlyTurnOffAccess_BTN = "input[title='Turn Off Access']~CSS";
+		String AccessDeactivationMsg_LBL = "//b[contains(text(),'Account Access Deactivated')]";
+		String YourAccount_LNK="a[title*='Your Account']~CSS";
+		String Messages_LNK = "a[title='Messages']~CSS";
+		String RemoveFamilyMember_BTN = "input#delinkMember~CSS";
+		String RemovalMsg_LBL = "//div[@class='info']/p[contains(text(),'We have successfully removed ')]~XPATH";
+		String CancelInvite_BTN = "input#cancelInvite~CSS";
+		String CancelledMsg_LBL = "//p/strong[contains(text(),'Your Invitation Has Been Cancelled')]~XPATH";
+		String RefillRxLST_LNK="//li[2]/a[@title='Refill Prescriptions']~XPATH";
+		String Continue = null;
+		String Cancel = null;
+		String DOB = null;
+		String ValidationType = null;
+		String IsUserWithoutWagAcc = null;
+		String CancelInvitation = null;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+				String DelinkBy = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DelinkBy");
+				String SenderFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SenderFirstName");
+				FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberLastName");
+				AddVia = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddVia");
+				ProcessType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ProcessType");
+				Continue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Continue");
+				Cancel = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+				ValidationType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ValidationType");
+				IsUserWithoutWagAcc = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "IsUserWithoutWagAcc");
+				CancelInvitation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CancelInvitation");
+
+				if (!ValidationType.equalsIgnoreCase("Zero State")) {
+					getElementByProperty(AccountHome_LNK, browser).click();
+
+					if (!AddVia.equals("-")) {
+						if (AddVia.equalsIgnoreCase("Add Family Member")) {
+							if (!isElementPresentVerifyClick(AddFamilyMember_LNK, browser)) {
+								messagesMap.put("Add Family Member", "Unable to find Add Family Member link");
+								status = WARNING;
+							}
+						} else if (AddVia.equalsIgnoreCase("Family Prescriptions")) {
+							browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+							//			    if(!performHoverClickAction(getElementByProperty(PharmacyAndHealth_LNK,browser), FamilyPrescriptions_LNK, browser)){
+							//				messagesMap.put("Family Prescriptions","Unable to click Family Prescriptions link from Pharmacy & Health tab");
+							//				status = WARNING;
+							//			    }
+						}
+					} else {
+						throw new Exception("Add via link should not be empty/null, please enter the link name in Test Data");
+					}
+					// Enters information for the add adult section
+					if (ProcessType.equalsIgnoreCase("Link")) {
+
+						String AddanAdultUI[] = { AddAnAdult_H, AddanAdultDesc_LBL, MandatoryFields_LBL, AdultMust_LBL, AdultMust1_LBL, AdultMust2_LBL, AdultMust3_LBL, AdultWithoutAcc_LBL, Cancel_LNK };
+						EMail = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberEMail");
+						AdditionalMsg = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AdditionalMsg");
+						DOB = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberDOB");
+						// Clicking on the Add Adult button
+						if (!isElementPresentVerifyClick(AddAdult_BTN, browser)) {
+							throw new Exception("Unable to click on 'Add Adult' button");
+						}
+						// verifying Add an Adult page UI
+						for (int j = 0; j < AddanAdultUI.length; j++) {
+							if (!isElementPresentVerification(AddanAdultUI[j], browser)) {
+								messagesMap.put(AddanAdultUI[j], "In Add an Adult page " + AddanAdultUI[j] + " is not present");
+								status = WARNING;
+							}
+						}
+						if (!FirstName.equalsIgnoreCase("-")) {
+							if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+								messagesMap.put("Add Adult verification", "Unable to enter value in First Name Field");
+								status = WARNING;
+							}
+						}
+						if (!LastName.equalsIgnoreCase("-")) {
+							if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+								messagesMap.put("Add Adult verification", "Unable to enter value in Last Name Field");
+								status = WARNING;
+							}
+						}
+						if (!EMail.equalsIgnoreCase("-")) {
+							if (!clearAndEnterText(EmailAddr_TXT, EMail, browser)) {
+								messagesMap.put("Add Adult verification", "Unable to enter value in Email Field");
+								status = WARNING;
+							}
+
+							if (!clearAndEnterText(ConfirmEmailAddr_TXT, EMail, browser)) {
+								messagesMap.put("Add Adult verification", "Unable to enter value in Confirm Email Field");
+								status = WARNING;
+							}
+						}
+						if (!DOB.equalsIgnoreCase("-")) {
+							new Select(getElementByProperty(DOBMonth_LST, browser)).selectByVisibleText(DOB.split("-")[0]);
+							new Select(getElementByProperty(DOBDay_LST, browser)).selectByValue(DOB.split("-")[1]);
+							new Select(getElementByProperty(DOBYear_LST, browser)).selectByValue(DOB.split("-")[2]);
+						}
+
+						if (!AdditionalMsg.equals("-")) {
+							if (!clearAndEnterText(AdditionalMsg_TXT, AdditionalMsg, browser)) {
+								messagesMap.put("Add Adult verification", "Unable to enter value in Additional Message Field");
+								status = WARNING;
+							}
+						}
+						if (!Continue.equalsIgnoreCase("-")) {
+							if (isElementPresentVerifyClick(AddMemberContinue_BTN, browser)) {
+								if (isElementPresentVerifyClick(Confirm_BTN, browser)) {
+
+									if (!isElementPresentVerification(InviteSuccessMsgHeader_H, browser)) {
+										messagesMap.put("Invite Success Message", "Invitation to Add an Adult is not displayed");
+										status = WARNING;
+									}
+									WebElement Admin = getElementByProperty("//div[5]/div[6]/div", browser);
+									WebElement Child = getElementByProperty("//div[5]/div[6]/div[2]", browser);
+									if ((Admin.findElement(By.xpath(HOH_LBL)) != null)) {
+										if (!(((Child.findElement(By.xpath("//h3/strong[contains(text(),'" + FirstName + "')]"))) != null)
+												&& ((Child.findElement(By.xpath(InvitePending_LBL)) != null)) && ((Child.findElement(By.xpath(DisabledResend_BTN)) != null)))) {
+											messagesMap.put("Family member 1+ state", "Adult Adding is failed");
+											status = WARNING;
+										}
+									}
+								} else {
+									throw new Exception("Unable to click on Confirm in add family member section");
+								}
+							} else {
+								throw new Exception("Unable to click on Continue in add family member section");
+							}
+						}
+						if (!Cancel.equalsIgnoreCase("-")) {
+							if (isElementPresentVerifyClick(Cancel_LNK, browser)) {
+								if (!(isElementPresentVerification(AddAdult_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+									messagesMap.put("Zero Family Members", "Zero family members page is not displayed");
+									status = WARNING;
+								}
+							} else {
+								messagesMap.put("Cancel Adding an Adult", "Unable to Cancel");
+								status = WARNING;
+							}
+						}
+						// Error validation is done only when invalid data is
+						// specified
+						if (ValidationType.equalsIgnoreCase("INVALID")) {
+							if (!isElementPresentVerification(AdditionalMsgErrorMsg_ELM, browser)) {
+								messagesMap.put("Add Adult verification", "Error Message is not dispalyed for additional message section, on entering invalid data");
+								status = WARNING;
+							}
+						}
+					} else {
+						// Member delinks/turns off the Admin as a prescription
+						// manager
+						if (DelinkBy.equalsIgnoreCase("Member")) {
+							if (!isElementPresentVerifyClick(EditAccountAccess_LNK, browser)) {
+								throw new Exception("Unable to click on the Edit Account Access link from member account");
+							}
+							WebElement AccAcesssTable = getElementByProperty("//table/tbody", browser);
+							int NoOfRows = AccAcesssTable.findElements(By.tagName("tr")).size();
+							for (int rowInc = 1; rowInc <= NoOfRows; rowInc++) {
+								if (getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[1]", browser).getText().contains(SenderFirstName)) {
+									getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[4]/a", browser).click();
+									switchToOverlay(browser);
+									isElementPresentVerifyClick(OvlyTurnOffAccess_BTN, browser);
+									switchToDefault(browser);
+									if (!isElementPresentVerification(AccessDeactivationMsg_LBL, browser)) {
+										messagesMap.put("Access Deactivation", "Unable to deactivate the Access of" + SenderFirstName);
+										status = WARNING;
+									}
+								}
+							}
+						} else if (DelinkBy.equalsIgnoreCase("Admin")) {
+							// Admin cancels the invitation sent to the member
+							for (int k = 2; k <= 10; k++) {
+								if (getElementByProperty("//div[5]/div[5]/div[" + k + "]/div/h3/strong", browser).getText().split(" ")[0].equals(FirstName)) {
+									if (IsUserWithoutWagAcc.equalsIgnoreCase("Yes") || CancelInvitation.equalsIgnoreCase("Yes")) {
+										browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+										if (isElementPresentVerifyClick("//div[5]/div[5]/div[" + k + "]/div[3]/div/div/p/a", browser)) {
+											switchToOverlay(browser);
+											getElementByProperty(CancelInvite_BTN, browser).click();
+											switchToDefault(browser);
+											if (!isElementPresentVerification(CancelledMsg_LBL, browser)) {
+												messagesMap.put("Cancel Invitation", "Unable to cancel the invite");
+												status = WARNING;
+											}
+
+										} else {
+											messagesMap.put("Cancel Invite", "Unable to clik on Remove link");
+											status = WARNING;
+										}
+									} else {
+										// Verifying the Full Access after the
+										// member is linked fully with the
+										// account
+										if (!isElementPresentVerification("//div[5]/div[5]/div[" + k + "]/div[2]/div/div/p[contains(text(),'Full Access')]", browser)) {
+											messagesMap.put("Full Access", "Unable to locate Full Access Text in Adult's Block who accepted invitation");
+											status = WARNING;
+										}
+										// Admin removes the family member
+										if (isElementPresentVerifyClick("//div[5]/div[5]/div[" + k + "]/div[2]/div/div/p/a", browser)) {
+											switchToOverlay(browser);
+											getElementByProperty(RemoveFamilyMember_BTN, browser).click();
+											switchToDefault(browser);
+											if (!isElementPresentVerification(RemovalMsg_LBL, browser)) {
+												messagesMap.put("Delink Adult", "Unable to Remove Adult");
+												status = WARNING;
+											}
+
+										} else {
+											messagesMap.put("Delink Child", "Unable to clik on Remove link");
+											status = WARNING;
+										}
+									}
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					BannerVerification = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "BannerVerification");
+					// Verifying zero family member state by clicking Family
+					// Prescriptions link
+					// if(performHoverClickAction(getElementByProperty(PharmacyAndHealth_LNK,
+					// browser), FamilyPrescriptions_LNK, browser)){
+					browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+					if (!(isElementPresentVerification(AddAdult_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+						messagesMap.put("Zero Family Members", "Zero family members page is not displayed");
+						status = WARNING;
+					}
+					// }else{
+					// messagesMap.put("Family Prescriptions",
+					// "Unable to click Family Prescriptions link from Pharmacy & Health tab");
+					// status = WARNING;
+					// }
+					getElementByProperty(AccountHome_LNK, browser).click();
+					// Verifying zero family member state by clicking Add Family
+					// Member link
+					if (isElementPresentVerifyClick(AddFamilyMember_LNK, browser)) {
+						if (!(isElementPresentVerification(AddAdult_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+							messagesMap.put("Zero Family Members", "Zero family members page is not displayed");
+							status = WARNING;
+						}
+					} else {
+						messagesMap.put("Add Family Member", "Unable to click Add Family Member link");
+						status = WARNING;
+					}
+					if (DelinkBy.equalsIgnoreCase("Member")) {
+						// Removing the Admin as a prescription manager
+						if (performHoverClickAction(getElementByProperty(YourAccount_LNK, browser), Messages_LNK, browser)) {
+							WebElement table = getElementByProperty("//table/tbody", browser);
+							int NoOfMessageRows = table.findElements(By.tagName("tr")).size();
+							for (int rowInc = 1; rowInc <= NoOfMessageRows; rowInc++) {
+								if (getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[3]", browser).getText().contains("You have been removed as " + FirstName + "'s manager.")) {
+									if (!isElementPresentVerifyClick("//table/tbody/tr[" + rowInc + "]/td[3]/p/strong/a", browser)) {
+										messagesMap.put("Removed as Manager Message", "Unable to Find the Removal Message");
+										status = WARNING;
+									}
+								}
+								break;
+							}
+
+						} else {
+							messagesMap.put("Messages link", "Unable to Click on the Messages Link");
+							status = WARNING;
+						}
+					} else if (DelinkBy.equalsIgnoreCase("Declined")) {
+						// Verifying the inviation declined by member
+						// notification message in members messages section
+						if (performHoverClickAction(getElementByProperty(YourAccount_LNK, browser), Messages_LNK, browser)) {
+							WebElement table = getElementByProperty("//table/tbody", browser);
+							int NoOfMessageRows = table.findElements(By.tagName("tr")).size();
+							for (int rowInc = 1; rowInc <= NoOfMessageRows; rowInc++) {
+								if (getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[3]", browser).getText().equalsIgnoreCase(FirstName + " Declined Your Invitation")) {
+									if (!isElementPresentVerifyClick("//table/tbody/tr[" + rowInc + "]/td[3]/p/strong/a", browser)) {
+										messagesMap.put("Removed as Manager Message", "Unable to Find the Removal Message");
+										status = WARNING;
+									}
+								}
+								break;
+							}
+
+						} else {
+							messagesMap.put("Messages link", "Unable to Click on the Messages Link");
+							status = WARNING;
+						}
+					}
+					// Verifying the Add Family member message in Refill hub
+					// Page
+					if (!BannerVerification.equals("-")) {
+						getElementByProperty(AccountHome_LNK, browser).click();
+						if (performHoverClickAction(getElementByProperty(AccountHome_LNK, browser), RefillRxLST_LNK, browser)) {
+							browser.get(browser.getCurrentUrl());
+							Thread.sleep(10000);
+							if (!(isElementPresentVerification(ManageYourFamilyHealth_LBL, browser) && isElementPresentVerification(ManageYourFamilyRXInfo_H, browser) && isElementPresentVerification(
+									AddYourFirstFamilyMember_LNK, browser))) {
+								messagesMap.put("Manage Your Family's health information banner", "Banner is not displayed");
+								status = WARNING;
+							}
+						} else {
+							messagesMap.put("Prescription Refills", "Unable to click Prescription Refills link from Pharmacy & Health tab");
+							status = WARNING;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to add/remove Child member to the user account
+	 * @author - Saravanan M
+	 * @Created -APR-23-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+
+	public static void ManageChildMember(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String ProcessType = null;
+		String AddVia = null;
+		String PharmacyAndHealth_LNK = "//li[2]/span/a[contains(text(),'Pharmacy')]~XPATH";
+		String FamilyPrescriptions_LNK = "li:nth-child(3)>a:contains('Family Prescriptions')~CSS";
+		String AddFamilyMember_LNK = "a[title='Add family member']~CSS";
+		String AddChild_BTN = "//a/img[@title='Add a child']~XPATH";
+		String AccountHome_LNK = "a[title='Your Account']~CSS";
+		String FirstName_TXT = "input[id*='firstname']~CSS", FirstName = null;
+		String LastName_TXT = "input[id*='lastname']~CSS", LastName = null;
+		String DOBMonth_LST = "select[id*='Month']~CSS";
+		String DOBDay_LST = "select[id*='Day']~CSS";
+		String DOBYear_LST = "select[id*='Year']~CSS";
+		String AddMemberContinue_BTN = "input[title*='Continue']~CSS";
+		String WhoCanYouAdd_H = "//h2[contains(text(),'Who Can You Add?')]~XPATH";
+		String FamilyMemberAddedScuccessMsg_LBL = "//strong[contains(text(),'Family Member Added')]~XPATH";
+		String Cancel_LNK = "a[title='Cancel']~CSS";
+		String HOH_LBL = "//p[2]/b[contains(text(),'Head of Household')]";
+		String Confirm_BTN = "input[title='Confirm']~CSS";
+		String FullAcces_LBL = "//div[2]/div/div/p[contains(text(),'Full Access')]";
+		String PrescriptionNumber_TXT = "input#prescriptionno1~CSS";
+		String RxStoreNumber_TXT = "input#prescriptionno2~CSS";
+		String PrescriptionNumber = null;
+		String Continue = null;
+		String Cancel = null;
+		String DOB = null;
+		String EditInfo = null;
+		String ConfirmMail = null;
+		String EditInfo_LNK = "a[title='Edit Information']~CSS";
+		String AddMoreFamilyMembers_LNK = "a[title='Add more family members']~CSS";
+		String RemoveFamilyMember_BTN = "input#delinkMember~CSS";
+		String RemovalMsg_LBL = "//strong[contains(text(),'Family Member Removed')]";
+		String AgeLimitExceeded_LBL = "//b[contains(text(),'Age Limit Exceeded:')]~XPATH";
+		String AddAdult_LNK = "//a[contains(text(),'Add Adult')]~XPATH";
+		String AddAnAdult_H = "//h2[contains(text(),'Add an Adult to Your Family Prescriptions')]~XPATH";
+		String ConfirmEmail_TXT = "input#remail_myacc~CSS";
+		String Email_TXT = "input#emailAddress_myacc~CSS";
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberLastName");
+				AddVia = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddVia");
+				ProcessType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ProcessType");
+				Continue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Continue");
+				Cancel = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+				PrescriptionNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrescriptionNumber");
+				EditInfo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EditInfo");
+				ConfirmMail = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberEMail");
+				if (ProcessType.equalsIgnoreCase("Link")) {
+					if (!AddVia.equals("-")) {
+						if (AddVia.equalsIgnoreCase("Add Family Member")) {
+							if (!isElementPresentVerifyClick(AddFamilyMember_LNK, browser)) {
+								messagesMap.put("Add Family Member", "Unable to find Add Family Member link");
+								status = WARNING;
+							}
+						} else if (AddVia.equalsIgnoreCase("Family Prescriptions")) {
+							browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+							// if(!performHoverClickAction(getElementByProperty(PharmacyAndHealth_LNK,
+							// browser), FamilyPrescriptions_LNK, browser)){
+							// messagesMap.put("Family Prescriptions",
+							// "Unable to click Family Prescriptions link from Pharmacy & Health tab");
+							// status = WARNING;
+							// }
+						}
+					} else {
+						throw new Exception("Add via link should not be empty/null, please enter the link name in Test Data");
+					}
+					// Enters information for the add child section
+
+					DOB = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberDOB");
+					// Clicking on the Add child button and entering the
+					// information
+					if (!isElementPresentVerifyClick(AddChild_BTN, browser)) {
+						throw new Exception("Unable to click on 'Add Child' button");
+					}
+					if (!FirstName.equalsIgnoreCase("-")) {
+						if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in First Name Field");
+							status = WARNING;
+						}
+					}
+					if (!LastName.equalsIgnoreCase("-")) {
+						if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Last Name Field");
+							status = WARNING;
+						}
+					}
+					if (!DOB.equalsIgnoreCase("-")) {
+						new Select(getElementByProperty(DOBMonth_LST, browser)).selectByVisibleText(DOB.split("-")[0]);
+						new Select(getElementByProperty(DOBDay_LST, browser)).selectByValue(DOB.split("-")[1]);
+						new Select(getElementByProperty(DOBYear_LST, browser)).selectByValue(DOB.split("-")[2]);
+					}
+
+					if (!PrescriptionNumber.equals("-")) {
+						if (!clearAndEnterText(PrescriptionNumber_TXT, PrescriptionNumber.split("-")[0].trim(), browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Prescription Number Field");
+							status = WARNING;
+						}
+						if (!clearAndEnterText(RxStoreNumber_TXT, PrescriptionNumber.split("-")[1].trim(), browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Store Number Field");
+							status = WARNING;
+						}
+					}
+
+					if (!Continue.equalsIgnoreCase("-")) {
+						if (isElementPresentVerifyClick(AddMemberContinue_BTN, browser)) {
+							// Verifying the prepoulation of the given data by
+							// clicking the Edit Information
+							if (EditInfo.equalsIgnoreCase("Yes")) {
+								getElementByProperty(EditInfo_LNK, browser).click();
+								if (!getElementByProperty(FirstName_TXT, browser).getAttribute("Value").equals(FirstName)) {
+									messagesMap.put("Add Child Form", "Value in First Name Field is wrongly populated");
+									status = WARNING;
+								}
+								if (!getElementByProperty(LastName_TXT, browser).getAttribute("Value").equals(LastName)) {
+									messagesMap.put("Add Child Form", "Value in Last Name Field is wrongly populated");
+									status = WARNING;
+								}
+								if (!getElementByProperty(PrescriptionNumber_TXT, browser).getAttribute("value").equals(PrescriptionNumber.split("-")[0].trim())) {
+									messagesMap.put("Add Child Form", "Value in Prescription number Field is wrongly populated");
+									status = WARNING;
+								}
+								if (!getElementByProperty(RxStoreNumber_TXT, browser).getAttribute("value").equals(PrescriptionNumber.split("-")[1])) {
+									messagesMap.put("Add Child Form", "Value in Store number Field is wrongly populated");
+									status = WARNING;
+								}
+
+								if ((new Select(getElementByProperty(DOBMonth_LST, browser)).getFirstSelectedOption().equals(DOB.split("-")[0]))
+										&& (new Select(getElementByProperty(DOBDay_LST, browser)).getFirstSelectedOption().equals(DOB.split("-")[1]))
+										&& (new Select(getElementByProperty(DOBYear_LST, browser)).getFirstSelectedOption().equals(DOB.split("-")[2]))) {
+									messagesMap.put("Add Child Form", "Value in DOB Field is wrongly populated");
+									status = WARNING;
+								}
+
+								isElementPresentVerifyClick(AddMemberContinue_BTN, browser);
+							}
+							if (!ConfirmMail.equalsIgnoreCase("-")) {
+
+								if (!clearAndEnterText(Email_TXT, ConfirmMail, browser)) {
+									messagesMap.put("Add Child verification", "Unable to enter value in Email Field");
+									status = WARNING;
+								}
+								if (!clearAndEnterText(ConfirmEmail_TXT, ConfirmMail, browser)) {
+									messagesMap.put("Add Child verification", "Unable to enter value in Confirm Email Field");
+									status = WARNING;
+								}
+								isElementPresentVerifyClick(AddMemberContinue_BTN, browser);
+							}
+
+							if (isElementPresentVerifyClick(Confirm_BTN, browser)) {
+								if (!(isElementPresentVerification(FamilyMemberAddedScuccessMsg_LBL, browser))) {
+									messagesMap.put("Member linked Success Message", "Success Message for Add a Child is not displayed");
+									status = WARNING;
+								}
+								WebElement Admin = getElementByProperty("//div[5]/div[6]/div", browser);
+								WebElement Child = getElementByProperty("//div[5]/div[6]/div[2]", browser);
+								// Confirming the linking of the member
+								if ((Admin.findElement(By.xpath(HOH_LBL)) != null)) {
+									if (!Child.findElement(By.xpath("//div/h3/strong[contains(text(),'" + FirstName + "')]")).getText().split(" ")[0].equalsIgnoreCase(FirstName)) {
+										messagesMap.put("Family member 1+ state", "Child Adding is failed");
+										status = WARNING;
+									}
+
+									if (!(Child.findElement(By.xpath(FullAcces_LBL)) != null)) {
+										messagesMap.put("Full Access", "Added child is not given with full access");
+										status = WARNING;
+									}
+								}
+							} else {
+								throw new Exception("Unable to click on Confirm in add family member section");
+							}
+						} else {
+							throw new Exception("Unable to click on Continue in add family member section");
+						}
+					}
+					// Cancelling the linking of the Child Member
+					if (!Cancel.equalsIgnoreCase("-")) {
+						if (isElementPresentVerifyClick(Cancel_LNK, browser)) {
+							if (!(isElementPresentVerification(AddChild_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+								messagesMap.put("Zero Family Members", "Zero family members page is not displayed");
+								status = WARNING;
+							}
+						} else {
+							messagesMap.put("Cancel Adding a Child", "Unable to Cancel");
+							status = WARNING;
+						}
+					}
+					// Delinking the Child
+				} else if (ProcessType.equalsIgnoreCase("Delink")) {
+					FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+					isElementPresentVerifyClick(AccountHome_LNK, browser);
+					if (!isElementPresentVerifyClick(AddMoreFamilyMembers_LNK, browser)) {
+						throw new Exception("Unable to click on Add More Family Members link in add family member section");
+					}
+					for (int k = 2; k <= 10; k++) {
+						if (getElementByProperty("//div[5]/div[5]/div[" + k + "]/div/h3/strong", browser).getText().split(" ")[0].equalsIgnoreCase(FirstName)) {
+							if (isElementPresentVerifyClick("//div[5]/div[5]/div[" + k + "]/div[2]/div/div/p/a", browser)) {
+								switchToOverlay(browser);
+								getElementByProperty(RemoveFamilyMember_BTN, browser).click();
+								switchToDefault(browser);
+								if (!isElementPresentVerification(RemovalMsg_LBL, browser)) {
+									messagesMap.put("Delink Child", "Unable to Remove Child");
+									status = WARNING;
+								}
+							} else {
+								messagesMap.put("Delink Child", "Unable to clik on Remove link");
+								status = WARNING;
+							}
+							break;
+						}
+					}
+					// Verifying the Age limit for the Child user
+				} else if (ProcessType.equalsIgnoreCase("Age Validation")) {
+					DOB = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberDOB");
+					isElementPresentVerifyClick(AccountHome_LNK, browser);
+
+					if (!(isElementPresentVerifyClick(AddFamilyMember_LNK, browser) || isElementPresentVerifyClick(AddMoreFamilyMembers_LNK, browser))) {
+						throw new Exception("Unable to click on Add More Family Members link in add family member section");
+					}
+
+					if (!isElementPresentVerifyClick(AddChild_BTN, browser)) {
+						throw new Exception("Unable to click on 'Add Child' button");
+					}
+
+					new Select(getElementByProperty(DOBMonth_LST, browser)).selectByVisibleText(DOB.split("-")[0]);
+					new Select(getElementByProperty(DOBDay_LST, browser)).selectByValue(DOB.split("-")[1]);
+					new Select(getElementByProperty(DOBYear_LST, browser)).selectByValue(DOB.split("-")[2]);
+
+					isElementPresentVerifyClick(AddMemberContinue_BTN, browser);
+
+					if (isElementPresentVerification(AgeLimitExceeded_LBL, browser)) {
+						getElementByProperty(AddAdult_LNK, browser).click();
+						if (!isElementPresentVerification(AddAnAdult_H, browser)) {
+							messagesMap.put("Add Adult Form", "Unable to navigate to Add an Adult form");
+							status = WARNING;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to add/remove Pet member to the user account
+	 * @author - Saravanan M
+	 * @Created -APR-24-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+
+	public static void ManagePetMember(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String ProcessType = null;
+		String AddVia = null;
+		String PharmacyAndHealth_LNK = "//li[2]/span/a[contains(text(),'Pharmacy')]~XPATH";
+		String FamilyPrescriptions_LNK = "li:nth-child(3)>a:contains('Family Prescriptions')~CSS";
+		String AddFamilyMember_LNK = "a[title='Add family member']~CSS";
+		String AddPet_BTN = "//a/img[@title='Add a pet']~XPATH";
+		String AccountHome_LNK = "a[title='Your Account']~CSS";
+		String FirstName_TXT = "input[id*='firstname']~CSS", FirstName = null;
+		String LastName_TXT = "input[id*='lastname']~CSS", LastName = null;
+		String AddMemberContinue_BTN = "input[title*='Continue']~CSS";
+		String WhoCanYouAdd_H = "//h2[contains(text(),'Who Can You Add?')]~XPATH";
+		String FamilyMemberAddedScuccessMsg_LBL = "//strong[contains(text(),'Family Member Added')]~XPATH";
+		String Cancel_LNK = "a[title='Cancel']~CSS";
+		String HOH_LBL = "//p[2]/b[contains(text(),'Head of Household')]";
+		String Confirm_BTN = "input[title='Confirm']~CSS";
+		String FullAcces_LBL = "//div[2]/div/div/p[contains(text(),'Full Access')]";
+		String AccessExpires_TXT = "//div[2]/div/p[contains(text(),'Never')]";
+		String SuccessMsg_LBL = "//p[contains(text(),' We have included ')]~XPATH";
+		String PrescriptionNumber_TXT = "input#prescriptionno1~CSS";
+		String RxStoreNumber_TXT = "input#prescriptionno2~CSS";
+		String PrescriptionNumber = null;
+		String Continue = null;
+		String Cancel = null;
+		String EditInfo = null;
+		String EditInfo_LNK = "a[title='Edit Information']~CSS";
+		String AddMoreFamilyMembers_LNK = "a[title='Add more family members']~CSS";
+		String RemoveFamilyMember_BTN = "input#delinkMember~CSS";
+		String RemovalMsg_LBL = "//strong[contains(text(),'Family Member Removed')]";
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberLastName");
+				AddVia = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddVia");
+				ProcessType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ProcessType");
+				Continue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Continue");
+				Cancel = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+				PrescriptionNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrescriptionNumber");
+				EditInfo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EditInfo");
+				if (ProcessType.equalsIgnoreCase("Link")) {
+					if (!AddVia.equals("-")) {
+						if (AddVia.equalsIgnoreCase("Add Family Member")) {
+							if (!isElementPresentVerifyClick(AddFamilyMember_LNK, browser)) {
+								messagesMap.put("Add Family Member", "Unable to find Add Family Member link");
+								status = WARNING;
+							}
+						} else if (AddVia.equalsIgnoreCase("Family Prescriptions")) {
+							browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+							// if(!performHoverClickAction(getElementByProperty(PharmacyAndHealth_LNK,
+							// browser), FamilyPrescriptions_LNK, browser)){
+							// messagesMap.put("Family Prescriptions",
+							// "Unable to click Family Prescriptions link from Pharmacy & Health tab");
+							// status = WARNING;
+							// }
+						}
+					} else {
+						throw new Exception("Add via link should not be empty/null, please enter the link name in Test Data");
+					}
+					// Enters information for the add Pet section
+					// Clicking on the Add Pet button
+					if (!isElementPresentVerifyClick(AddPet_BTN, browser)) {
+						throw new Exception("Unable to click on 'Add a Pet' button");
+					}
+					if (!FirstName.equalsIgnoreCase("-")) {
+						if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+							messagesMap.put("Add Pet Form", "Unable to enter value in First Name Field");
+							status = WARNING;
+						}
+					}
+					if (!LastName.equalsIgnoreCase("-")) {
+						if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Last Name Field");
+							status = WARNING;
+						}
+					}
+					if (!PrescriptionNumber.equals("-")) {
+						if (!clearAndEnterText(PrescriptionNumber_TXT, PrescriptionNumber.split("-")[0].trim(), browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Prescription Number Field");
+							status = WARNING;
+						}
+						if (!clearAndEnterText(RxStoreNumber_TXT, PrescriptionNumber.split("-")[1].trim(), browser)) {
+							messagesMap.put("Add Child Form", "Unable to enter value in Store Number Field");
+							status = WARNING;
+						}
+					}
+
+					if (!Continue.equalsIgnoreCase("-")) {
+						if (isElementPresentVerifyClick(AddMemberContinue_BTN, browser)) {
+
+							if (EditInfo.equalsIgnoreCase("Yes")) {
+								// Verifying the prepopulation of the
+								// information given by clicking the Edit
+								// information link
+								getElementByProperty(EditInfo_LNK, browser).click();
+								if (!getElementByProperty(FirstName_TXT, browser).getAttribute("Value").equals(FirstName)) {
+									messagesMap.put("Add Pet Form", "Value in First Name Field is wrongly populated");
+									status = WARNING;
+								}
+
+								if (!getElementByProperty(LastName_TXT, browser).getAttribute("Value").equals(LastName)) {
+									messagesMap.put("Add Pet Form", "Value in Last Name Field is wrongly populated");
+									status = WARNING;
+								}
+								if (!getElementByProperty(PrescriptionNumber_TXT, browser).getAttribute("value").equals(PrescriptionNumber.split("-")[0])) {
+									messagesMap.put("Add Pet Form", "Value in Prescription number Field is wrongly populated");
+									status = WARNING;
+								}
+								if (!getElementByProperty(RxStoreNumber_TXT, browser).getAttribute("value").equals(PrescriptionNumber.split("-")[1])) {
+									messagesMap.put("Add Pet Form", "Value in Store number Field is wrongly populated");
+									status = WARNING;
+								}
+								isElementPresentVerifyClick(AddMemberContinue_BTN, browser);
+							}
+
+							if (isElementPresentVerifyClick(Confirm_BTN, browser)) {
+								if (!(isElementPresentVerification(FamilyMemberAddedScuccessMsg_LBL, browser) && getElementByProperty(SuccessMsg_LBL, browser).getText().contains(FirstName))) {
+									messagesMap.put("Member linked Success Message", "Success Message for Add a Pet is not displayed");
+									status = WARNING;
+								}
+								WebElement Admin = getElementByProperty("//div[5]/div[6]/div", browser);
+								WebElement Child = getElementByProperty("//div[5]/div[6]/div[2]", browser);
+								// Confirming the linking of Family member to
+								// the account
+								if ((Admin.findElement(By.xpath(HOH_LBL)) != null)) {
+									if (!(((Child.findElement(By.xpath("//div/h3/strong[contains(text(),'" + FirstName + "')]"))).getText().split(" ")[0].trim().equalsIgnoreCase(FirstName))
+											&& ((Child.findElement(By.xpath(FullAcces_LBL)) != null)) && ((Child.findElement(By.xpath(AccessExpires_TXT)) != null)))) {
+										messagesMap.put("Family member 1+ state", "Pet Adding is failed");
+										status = WARNING;
+									}
+								}
+							} else {
+								throw new Exception("Unable to click on Confirm in add family member section");
+							}
+						} else {
+							throw new Exception("Unable to click on Continue in add family member section");
+						}
+					}
+					if (!Cancel.equalsIgnoreCase("-")) {
+						// Cancelling the linking of Pet member
+						if (isElementPresentVerifyClick(Cancel_LNK, browser)) {
+							if (!(isElementPresentVerification(AddPet_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+								messagesMap.put("Zero Family Members", "Zero family members page is not displayed");
+								status = WARNING;
+							}
+						} else {
+							messagesMap.put("Cancel Adding a Pet", "Unable to Cancel");
+							status = WARNING;
+						}
+					}
+				} else if (ProcessType.equalsIgnoreCase("Delink")) {
+					FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+					String IsLastMember = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "IsLastMember");
+
+					if(!isElementPresentVerification(AddMoreFamilyMembers_LNK, browser)){
+						isElementPresentVerifyClick(AccountHome_LNK, browser);
+						if (!isElementPresentVerifyClick(AddMoreFamilyMembers_LNK, browser)) {
+							throw new Exception("Unable to click on Add More Family Members link in add family member section");
+						}
+					}
+					for (int k = 2; k <= 10; k++) {
+						// Finding the member who needs to be removed and
+						// delinking the member
+						if (getElementByProperty("//div[5]/div[5]/div[" + k + "]/div/h3/strong[contains(text(),'" + FirstName + "')]", browser) != null) {
+							if (isElementPresentVerifyClick("//div[5]/div[5]/div[" + k + "]/div[2]/div/div/p/a", browser)) {
+								switchToOverlay(browser);
+								getElementByProperty(RemoveFamilyMember_BTN, browser).click();
+								switchToDefault(browser);
+								if (!isElementPresentVerification(RemovalMsg_LBL, browser)) {
+									messagesMap.put("Delink Pet", "Unable to clik on Remove Pet");
+									status = WARNING;
+								}
+
+								if (IsLastMember.equalsIgnoreCase("Yes")) {
+									// Verifying the Zero State if the user is
+									// the last member in the family
+									// prescriptions
+									if (!(isElementPresentVerification(AddPet_BTN, browser) && isElementPresentVerification(WhoCanYouAdd_H, browser))) {
+										messagesMap.put("Delink-Last Family Member", "Zero family members page is not displayed");
+										status = WARNING;
+									}
+								}
+							} else {
+								messagesMap.put("Delink Pet", "Unable to clik on Remove link");
+								status = WARNING;
+							}
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to verify the Add/Remove notification mails
+	 * @author - Saravanan M
+	 * @Created -APR-25-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+
+	public static void AddOrRemoveFamilyMemberNotificationVerification(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String YahooInbox_LNK = "a>*[id*='inbox']~CSS";
+		String SenderFirstName = null;
+		String NotificationMailType = null;
+		String AcceptInvitation = null;
+		String AcceptFrom = null;
+		String YourAccount_LNK="a[title*='Your Account']~CSS";
+		String JoinInvitationMailSubject = "//span[contains(text(),'Join')] [contains(text(),'Family Prescriptions Account')] [contains(text(),'ABC')]";
+		String SignInToYourAcc_LNK = "//a[contains(text(),'Sign in to your account')]~XPATH";
+		String YahooCheckBox_CHK = "//input[@title='Select this email']";
+		String YahooInboxTable_ELM = "//div[@id='inboxcontainer']/div/div/div[2]~XPATH";
+		String Messages_LNK = "a[title='Messages']~CSS";
+		String AcceptOrDeclineInvite_LNK = "//a[contains(text(),'Please either accept or decline this invitation')]~XPATH";
+		String MailRegisterInWalgreens_LNK = "//a[contains(text(),'register for a Walgreens.com pharmacy account')]~XPATH";
+		String AccountRemoved_H = "//h1[contains(text(),'Account Removed')]~XPATH";
+		WebElement YahooInboxtable = null;
+		String IsUserWithoutWagAcc = null;
+		String notificationMsgType = null;
+		String MemberFirstName = null;
+		String MemberLastName = null;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				SenderFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SenderFirstName");
+				NotificationMailType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NotificationMailType");
+				AcceptInvitation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AcceptInvitation");
+				AcceptFrom = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AcceptFrom");
+				IsUserWithoutWagAcc = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "IsUserWithoutWagAcc");
+				notificationMsgType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "notificationMsgType");
+				MemberFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				MemberLastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberLastName");
+
+				if (!AcceptFrom.equalsIgnoreCase("Message")) {
+					// Clicking on the Yahoo Inbox link
+					// getElementByProperty(YahooInbox_LNK, browser).click();
+					boolean isTabPresent = false;
+
+					do {
+						if ((YahooInboxtable = getElementByProperty(YahooInboxTable_ELM, browser)) != null) {
+							isTabPresent = true;
+						} else {
+							getUrl(browser, browser.getCurrentUrl());
+						}
+					} while (!isTabPresent);
+
+					int NoOfRows = YahooInboxtable.findElements(By.xpath(YahooCheckBox_CHK)).size();
+
+					for (int row = 1; row <= NoOfRows; row++) {
+						if (NotificationMailType.equalsIgnoreCase("Join")) {
+							if (isElementPresentVerifyClick("//div[contains(@class,'list-view-item')]/div[" + row + "]" + JoinInvitationMailSubject.replace("ABC", SenderFirstName), browser)) {
+								if (AcceptInvitation.equalsIgnoreCase("Yes")) {
+									if (!IsUserWithoutWagAcc.equalsIgnoreCase("Yes")) {
+										// Verifying and clicking the Sign in to
+										// your account link in the invitation
+										// mail
+										if (isElementPresentVerifyClick(SignInToYourAcc_LNK, browser)) {
+											switchToWindow("Sign In or Register to Get Started Using Walgreens.com | Walgreens", browser);
+											break;
+										} else {
+											messagesMap.put("Sign In to your Account link", "Unable to find the Sign In to your Account link in Invitation Mail ");
+											status = WARNING;
+										}
+									} else {
+										// Verifying the registration link in
+										// the invitation mail who has no wag
+										// account
+										if (!isElementPresentVerification(MailRegisterInWalgreens_LNK, browser)) {
+											messagesMap.put("register for a Walgreens.com pharmacy account link",
+													"Unable to find the 'register for a Walgreens.com pharmacy account' link in Invitation Mail ");
+											status = WARNING;
+										}
+									}
+								}
+								break;
+							} else {
+								messagesMap.put("Join Family Member Invitation Mail", "Unable to find the Invitation mail");
+								status = WARNING;
+							}
+						} else if (NotificationMailType.equalsIgnoreCase("RemoveByMember")) {
+							// Verifying the removal notification mail in
+							// Admin's Mail Account (Admin Removed by Member)
+							if (isElementPresentVerifyClick("//div[contains(@class,'list-view-item')]/div[" + row + "]//span[contains(text(),'You have been removed as " + MemberFirstName + " "
+									+ MemberLastName + "')] [contains(text(),'Family Prescriptions manager')]", browser)) {
+								if (!isElementPresentVerification(AccountRemoved_H, browser)) {
+									messagesMap.put("Account Removed Header", "Unable to find the Account Removed Header in notification Mail ");
+									status = WARNING;
+								}
+								break;
+							}
+						}
+					}
+				} else {
+					if (performHoverClickAction(getElementByProperty(YourAccount_LNK, browser), Messages_LNK, browser)) {
+						WebElement table = getElementByProperty("//table/tbody", browser);
+						int NoOfMessageRows = table.findElements(By.tagName("tr")).size();
+						for (int rowInc = 1; rowInc <= NoOfMessageRows; rowInc++) {
+							if (!notificationMsgType.equalsIgnoreCase("RemovalMsg")) {
+								// Verifying the join family member invitation
+								// message in member's account
+								if (getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[3]", browser).getText().contains("Join " + SenderFirstName + "'s Family Prescriptions Account")) {
+									if (!isElementPresentVerifyClick("//table/tbody/tr[" + rowInc + "]/td[3]/p/strong/a", browser)) {
+										messagesMap.put("Join Family Member Invitation Message", "Unable to Open the Invitation Message");
+										status = WARNING;
+									}
+									getElementByProperty(AcceptOrDeclineInvite_LNK, browser).click();
+								} else {
+									messagesMap.put("Join Family Member Invitation Message", "Unable to find the invitation Message");
+									status = WARNING;
+								}
+							} else {
+								// Verifying the removal message in member's
+								// account(Family member removed by Admin)
+								if (getElementByProperty("//table/tbody/tr[" + rowInc + "]/td[3]", browser).getText().contains(
+										"You Have Been Removed from " + SenderFirstName + "'s Family Prescriptions Account.")) {
+									String Link="//strong/a[contains(text(),'Removed')]";
+									System.out.println("Link="+Link);
+									if (!isElementPresentVerifyClick("//table/tbody/tr[" + rowInc + "]/td[3]"+Link, browser)) {
+										messagesMap.put("Family Member Removal Message", "Unable to Open the Removal Message");
+										status = WARNING;
+									}
+								}
+							}
+							break;
+						}
+
+					} else {
+						messagesMap.put("Messages link", "Unable to Click on the Messages Link");
+						status = WARNING;
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to accept/decline the Join family member invitation
+	 *          from mail/PSM message
+	 * @author - Saravanan M
+	 * @Created -APR-25-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+
+	public static void AcceptorRejectJoinFamilyMemberInvitation(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String AuthorizationPageHeader_H = "//h2[contains(text(),'Authorization - For Release of Information to Personal Representative')]~XPATH";
+		String Accept_BTN = "input[title='Accept']~CSS";
+		String Password_TXT = "input#txt_pass~CSS";
+		String AuthorizationSuccessMsg_LBL = "//strong[contains(text(),'Authorization Complete:')]~XPATH";
+		String ManageYourAccSection_ELM = "//div[@id='managedAccountDetails']~XPATH";
+		String YourAccountManage_LBL = "//p[contains(text(),'Your account is managed by:')]~XPATH";
+		String Decline_LNK = "strong> a[title='Decline']~CSS";
+		String DeclineMsg_LBL = "//*[contains(text(),'Authorization Declined')]~XPATH";
+		String AuthorizationErrorMsg_LBL = "//p[contains(text(),'Your invitation to join')]~XPATH";
+		String SenderFirstName = null;
+		String ReceiverFirstName = null;
+		String Password = null;
+		String Acceptance = null;
+		String CancelInvitation = null;
+		String AuthorizationError = null;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				SenderFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SenderFirstName");
+				ReceiverFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				Password = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Password");
+				Acceptance = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Acceptance");
+				CancelInvitation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CancelInvitation");
+				AuthorizationError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AuthorizationError");
+				// If the Join Family member invitation is cancelled already
+				// then authorization error message should be verified
+				if (CancelInvitation.equalsIgnoreCase("Cancelled")) {
+					if (!getElementByProperty(AuthorizationErrorMsg_LBL, browser).getText().equals(AuthorizationError)) {
+						messagesMap.put("Invite Cancelled-Authorization Error", "Authorization Error message is displayed wrongly");
+						status = WARNING;
+					}
+				} else {
+					// Verifying the Authorization page
+					if (isElementPresentVerification("//strong[contains(text(),'" + SenderFirstName + "')]", browser)
+							&& isElementPresentVerification("//strong[contains(text(),'" + ReceiverFirstName + "')]", browser) && isElementPresentVerification(AuthorizationPageHeader_H, browser)) {
+						if (!Password.equalsIgnoreCase("-")) {
+							if (!clearAndEnterText(Password_TXT, Password, browser)) {
+								messagesMap.put("Authorization Password", "Unable to enter value in Password Field");
+								status = WARNING;
+							}
+						}
+
+						if (!Acceptance.equalsIgnoreCase("Decline")) {
+							// Accepting the invitation
+							if (isElementPresentVerifyClick(Accept_BTN, browser)) {
+								if (isElementPresentVerification(AuthorizationSuccessMsg_LBL, browser)) {
+									browser.get(EcommTestRunner.config.getString("walgreensURL") + "/pharmacy/familyaccount/managefamilyaccounts.jsp?sectionName=pharmacy&selectedlink=3");
+									// if(!performHoverClickAction(getElementByProperty(PharmacyAndHealth_LNK,
+									// browser), FamilyPrescriptions_LNK,
+									// browser)){
+									// messagesMap.put("Family Prescriptions",
+									// "Unable to click Family Prescriptions link from Pharmacy & Health tab");
+									// status = WARNING;
+									// }
+									if (!(getElementByProperty(ManageYourAccSection_ELM, browser).getText().contains(SenderFirstName) && isElementPresentVerification(YourAccountManage_LBL, browser))) {
+										messagesMap.put("Manage Your Account Section", "Manage Your Account Section is not displayed in Family Prescriptions Page");
+										status = WARNING;
+									}
+								} else {
+									messagesMap.put("Authorization Success Message", "Unable to find authorization success message");
+									status = WARNING;
+								}
+							} else {
+								messagesMap.put("Authorization Accept button", "Unable to click on Accept button");
+								status = WARNING;
+							}
+						} else {
+							// Declining the Join Family Member invitation
+							if (isElementPresentVerifyClick(Decline_LNK, browser)) {
+								if (!isElementPresentVerification(DeclineMsg_LBL, browser)) {
+									messagesMap.put("Decline Success Message", "Unable to find decline success message");
+									status = WARNING;
+								}
+							}
+						}
+					} else {
+						messagesMap.put("Join Family Member Invitation Authorization", "Unable to find the Authorization Page");
+						status = WARNING;
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method to verify the presence of linked family member in
+	 *          family member toggle who has full access
+	 * @author - Saravanan M
+	 * @Created -APR-30-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+
+	public static void FamilyMemberToggleVerification(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String PharmacyTab_LNK = "a[title='Pharmacy & Health']~CSS";
+		String ManageYourRx_LNK = "a[title='Manage & Refill Prescriptions']~CSS";
+		String PrintRxRecords_LNK = "//ul/li[3]//a[@title='Print Prescription Records']~XPATH";
+		String FamilyMemberDropDown_LST = "select#selectMemberView~CSS";
+		String FamilyMemberSelector_SELECT = "//div[contains(@class,'FamilyMember')]//ul[contains(@class,'Options')]";
+		String FamilyMemberSelectArrow_BTN="//span[contains(@class,'selectArrow')]~XPATH]";
+		String FamilyMemberCurrentlySelected_ELM="//div[contains(@class,'FamilyMember')]//span[contains(@class,'selected')]~XPATH";
+		String RefillAddFamilyMember="//div[contains(@class,'FamilyMember')]//ul/li[contains(@class,'selectOption lastAddMember')]/a~XPATH";
+		String FamilyPrescriptions_H="//h1[contains(text(),'Family Prescriptions')]~XPATH";
+		String MemberFirstName = null;
+		String MemberLastName = null;
+		String[] ToggleVerificationPage = null;
+		String FamilyMemberList = null;
+		int TotalMembers = 0;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				MemberFirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberFirstName");
+				MemberLastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MemberLastName");
+				ToggleVerificationPage = (getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ToggleVerificationPage")).split(":");
+				for (int k = 0; k < ToggleVerificationPage.length; k++) {
+					if (isElementPresentVerifyClick(PharmacyTab_LNK, browser)) {
+						if (ToggleVerificationPage[k].equalsIgnoreCase("Refill Hub")) {
+							// Navigating to Refill hub page
+							if (!isElementPresentVerifyClick(ManageYourRx_LNK, browser)) {
+								messagesMap.put("Refill Hub Page", "Unable to navigate to Refill Hub Page");
+								status = WARNING;
+							}
+
+							if (!isElementPresentVerification(FamilyMemberSelector_SELECT, browser)){
+								throw new Exception("Unable to Find Family member toggle");
+							}
+							getElementByProperty(FamilyMemberSelectArrow_BTN, browser).click();
+							List<WebElement> familyMemberSelector = browser.findElements(By.xpath(FamilyMemberSelector_SELECT+"/li[contains(@class,'selectOption')]/a"));
+							TotalMembers=familyMemberSelector.size();
+							boolean flag=false;
+							for(int l=0;l<TotalMembers;l++){
+								if(familyMemberSelector.get(l).getText().contains(MemberFirstName+" "+MemberLastName)){
+									flag=true;
+								}
+							}
+							getElementByProperty(FamilyMemberSelectArrow_BTN, browser).click();
+							if(!flag){
+								messagesMap.put("Family member Toggle", "Toggle is not contains the added family member");
+								status = WARNING;
+							}
+
+							if(dataMap.get("AddMember")!=null && dataMap.get("AddMember").get(0).equalsIgnoreCase("Yes")){
+								getElementByProperty(FamilyMemberSelectArrow_BTN, browser).click();
+								Thread.sleep(OBJECT_WAIT_THRESHOLD);
+								getElementByProperty(FamilyMemberSelector_SELECT+"/li[contains(@class,'selectOption lastAddMember')]/a", browser).click();
+
+								if(!isElementPresentVerification(FamilyPrescriptions_H, browser)){
+									throw new Exception("Unable to navigate to Family Prescriptions page from Refill hub page");
+								}
+							}
+
+
+						} else if (ToggleVerificationPage[k].equalsIgnoreCase("Print Rx Records")) {
+							// Navigate to Print Prescriptions records page
+							if (!isElementPresentVerifyClick(PrintRxRecords_LNK, browser)) {
+								messagesMap.put("Print Rx Records Page", "Unable to navigate to Print Rx Records Page");
+								status = WARNING;
+							}
+							// Fetching the Family Member list from the Print
+							// Prescriptions rescords page family member toggle
+							FamilyMemberList = getElementByProperty(FamilyMemberDropDown_LST, browser).getText();
+							// verifying the presence of added family member who has
+							// full access in the family member list fetched from the
+							// family member toggle
+							if (!FamilyMemberList.contains(MemberFirstName + " " + MemberLastName)) {
+								messagesMap.put("Family Member toggle", "Toggle in" + ToggleVerificationPage[k] + " doesn't contain the added family member in list");
+								status = WARNING;
+							}
+						}
+					} else {
+						throw new Exception("Unable navigate to Pharmacy Home page");
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+}

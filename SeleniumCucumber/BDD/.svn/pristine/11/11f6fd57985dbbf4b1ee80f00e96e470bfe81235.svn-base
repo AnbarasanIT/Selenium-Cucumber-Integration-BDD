@@ -1,0 +1,113 @@
+@checkout @pharmacyCheckout @NewPrescriptionCheckout
+Feature: I want to verify that Customer can add a new Prescriptions to the cart
+
+@newprescription1
+Scenario: Customer adds a New Prescription to the cart and checkout using Shipping
+
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+When  "" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage     |
+| ShipToYou      | Shipping Information   |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+|ShippingAddressType|SaveShippingAddress|VerifyYourCounty|FirstName|LastName|StreetAddress|City|State|ZipCode|EmailAddress|PhoneNumber|
+|homeaddress|-|-|-|-|-|-|-|-|-|-|
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+|RxShippingSpeed|DailyLivingShippingSpeed|ContactLensShippingSpeed|
+|standard|-|-|
+
+#(Old Credit card/Old billing address)
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#(Old Credit Card/New Billing Address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName | CustomerRowId |
+#| CreditCard    | NewBillingAddress | -                     | -                  | CACData               | CustomerBilling   | cb1           |
+
+#(Old Credit card/Home address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+#| CreditCard    | HomeAddress    | -                     | -                  |
+
+#(New Credit card/Old billing address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#(New Credit card/Home address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | HomeAddress    | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#(New Credit card/New Billing Address / Same As Shipping Address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | NewBillingAddress | true                  | -                  | CACData         | CreditCard  | cc1     |
+
+#(New Credit card/New Billing Address / Same As Shipping Address / Save Billing Address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | NewBillingAddress | true                  | true               | CACData         | CreditCard  | cc1     |
+
+#(New Credit card/new billing address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName | CustomerRowId | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | NewBillingAddress | -                     | -                  | CACData               | CustomerBilling   | cb1           | CACData         | CreditCard  | cc1     |
+
+#(New Credit card/new billing address and Save Billing Address)
+#Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName | CustomerRowId | CCInputFileName | CCSheetName | CCRowId |
+#| NewCreditCard | NewBillingAddress | -                     | true               | CACData               | CustomerBilling   | cb1           | CACData         | CreditCard  | cc1     |
+
+# Customer submits the order
+Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+@newprescription2
+Scenario: Customer adds a New Prescription to the cart and checkout using Pickup
+
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+When  "" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage |
+| PickUpInStore  | Pickup Location    |
+
+Then "" Customer selects rx pick up date and time and click on continue
+
+# Customer change the Pickup time for Store Pickup
+Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| -           | yes                     | -                         | -                    | -                        | 
+
+# Customer submits the order for Store Pickup
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+

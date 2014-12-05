@@ -1,0 +1,108 @@
+package walgreens.ecom.batch.framework.common.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.rowset.CachedRowSet;
+import org.apache.commons.lang.StringUtils;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+
+public class QualityCenterDBManager extends AutomationDBManager {
+
+    private static Connection remoteDbConnection = null;
+    private static Connection qualityCenterFileConnection = null;
+    private static Map<String, Connection> qcFileConnectionsMap = null;
+
+    public static synchronized Connection getQualityCenterFileConnection(String fileName) {
+	String INPUT_FILE_NAME = fileName + ".xls";
+
+	// RAM 12/27/12 - EcommTestRunner.scenarioControllerPath - To handle
+	// scenario controller sheets seperately
+
+	try {
+	    if (qcFileConnectionsMap == null) {
+		qcFileConnectionsMap = new HashMap<String, Connection>();
+	    }
+
+	    if (qcFileConnectionsMap.get(INPUT_FILE_NAME) == null) {
+		qualityCenterFileConnection = DriverManager.getConnection((new StringBuilder("jdbc:odbc:Driver={Microsoft Excel Driver (*.xls)};DBQ=")).append(EcommTestRunner.scenarioControllerPath)
+			.append(INPUT_FILE_NAME).append(";READONLY=FALSE").toString());
+		qcFileConnectionsMap.put(INPUT_FILE_NAME, qualityCenterFileConnection);
+	    } else {
+		qualityCenterFileConnection = qcFileConnectionsMap.get(INPUT_FILE_NAME);
+		if (qualityCenterFileConnection.isClosed()) // RAM - 2/8/13 - To
+							    // avoid fatal error
+							    // if connection is
+							    // closed by put
+							    // data
+		    qualityCenterFileConnection = DriverManager.getConnection((new StringBuilder("jdbc:odbc:Driver={Microsoft Excel Driver (*.xls)};DBQ="))
+			    .append(EcommTestRunner.scenarioControllerPath).append(INPUT_FILE_NAME).append(";READONLY=FALSE").toString());
+		qcFileConnectionsMap.put(INPUT_FILE_NAME, qualityCenterFileConnection);
+	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+	return qualityCenterFileConnection;
+    }
+
+    public static synchronized String getQCFileData(String inputFileName, String dataSheetName, String rowID, String columnName) throws Exception {
+	String query = (new StringBuilder("SELECT [")).append(columnName).append("]").append(" FROM [").append(dataSheetName).append("$]").append(" WHERE ID = '").append(rowID).append("'").toString();
+	CachedRowSet queryOutput = AutomationDBManager.executeQuery(query, getQualityCenterFileConnection(inputFileName));
+	if (queryOutput.size() == 0) {
+	    throw new Exception((new StringBuilder("No Row found in the Excel Sheet for the current Row ID = ")).append(rowID).toString());
+	}
+	queryOutput.next();
+	return queryOutput.getString(columnName);
+    }
+
+    public static synchronized void addScenarioData(ScenarioBean scenarioBean) {
+	String[] scenarioNumber = null;
+	String fileName = null;
+	String sheetName = null;
+	String scenarioId = null;
+	try {
+	    if (StringUtils.isNotBlank(scenarioBean.getScenarioNumber())) {
+		scenarioNumber = scenarioBean.getScenarioNumber().split("-");
+		fileName = "QC-" + scenarioNumber[0];
+		sheetName = scenarioNumber[1];
+		scenarioId = scenarioBean.getScenarioNumber();
+		scenarioBean.setScenarioId(scenarioId);
+		String scenarioQuery = (new StringBuilder("SELECT *")).append(" FROM [").append(sheetName).append("$]").append(" WHERE ID = '").append(scenarioId).append("'").toString();
+		CachedRowSet scenarioResultSet = executeQuery(scenarioQuery, getQualityCenterFileConnection(fileName));
+		scenarioResultSet.next();
+		// Scenario Data
+		scenarioBean.setScenarioDescription(scenarioResultSet.getString("ScenarioDescription"));
+		scenarioBean.setScenarioFeatureName(scenarioResultSet.getString("ScenarioFeatureName"));
+		scenarioBean.setScenarioTagName(scenarioResultSet.getString("ID"));
+	    } else {
+		// Scenario Data
+		scenarioBean.setScenarioDescription("Development Scenario");
+		scenarioBean.setScenarioFeatureName("Development Scenario");
+		scenarioBean.setScenarioTagName("Development Scenario");
+	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    public static Connection getRemoteDBConnection() {
+	try {
+	    if (remoteDbConnection == null) {
+		String username = EcommTestRunner.serverProp.getProperty("jdbc.username");
+		String password = EcommTestRunner.serverProp.getProperty("jdbc.password");
+		String host = EcommTestRunner.serverProp.getProperty("jdbc.host");
+		String port = EcommTestRunner.serverProp.getProperty("jdbc.port");
+		String schema = EcommTestRunner.serverProp.getProperty("jdbc.schema");
+		String dbUrl = "jdbc:mysql://" + host + ":" + port + "/" + schema + "?user=" + username + "&password=" + password;
+		Class.forName("com.mysql.jdbc.Driver");
+		remoteDbConnection = DriverManager.getConnection(dbUrl);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return remoteDbConnection;
+    }
+}

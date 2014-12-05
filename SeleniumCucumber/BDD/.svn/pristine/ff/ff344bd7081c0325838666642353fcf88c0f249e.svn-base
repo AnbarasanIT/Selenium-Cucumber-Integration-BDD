@@ -1,0 +1,188 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout_sdd;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout_sdd.SDDCheckoutLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.constants.IGlobalVariables;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class SDDCheckoutSteps implements IGlobalVariables {
+
+    @Then("^\"([^\"]*)\" Customer validates the Store Information:$")
+    public void Customer_validates_the_Store_Information(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates the Store Information:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.verifyStoreDetails(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies Items Subtotal section from Shopping Cart page:$")
+    public void Customer_verifies_Items_Subtotal_section_from_Shopping_Cart_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies Items Subtotal section from Shopping Cart page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.verifyItemsSubtotalinCart(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects a new store or changes store option from Shopping Cart:$")
+    public void Customer_selects_a_new_store_or_changes_store_option_from_Shopping_Cart(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects a new store or changes store option from Shopping Cart");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		SDDCheckoutLibrary.selectOrChangeStore(browser, scenario, step, dataMap);
+	    } else {
+		System.out.println("This Step is not Required to Choose a Store in cart when SDD is OFF");
+	    }
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies the PickUp Window Details from Pickup Information page:$")
+    public void Customer_verifies_the_PickUp_Window_Details_from_Pickup_Information_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies the PickUp Window Details from Pickup Information page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.verifyPickUPWindowDetails(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the product delivery option and updates the quantity from Shopping Cart page:$")
+    public void Customer_selects_the_product_delivery_option_and_updates_the_quantity_from_Shopping_Cart_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the product delivery option and updates the quantity from Shopping Cart page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.selectDeliveryOptionandUpdateProductQuatity(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates links, Product and Contact Details from Pickup Information page:$")
+    public void Customer_validates_links_Product_and_Contact_Details_from_Pickup_Information_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates links, Product and Contact Details from Pickup Information page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.verifyLinksAndProductDetailsinPickupPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies available Ship Method Options or links in the Shipping Method Page:$")
+    public void Customer_verifies_available_Ship_Method_Options_or_links_in_the_Shipping_Method_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies available Ship Method Options or links in the Shipping Method Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.verifyLinksAndShipMethodOptionsinShipMethodPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates the Delivery Details in the Ship Method or Delivery Details page:$")
+    public void Customer_validates_the_Delivery_Details_in_the_Ship_Method_or_Delivery_Details_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates the Delivery Details in the Ship Method or Delivery Details page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDCheckoutLibrary.validateDeliveryDetailsinShipMethodPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

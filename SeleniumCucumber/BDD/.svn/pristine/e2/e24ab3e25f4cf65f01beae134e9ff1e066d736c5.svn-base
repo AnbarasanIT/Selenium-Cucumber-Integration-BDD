@@ -1,0 +1,26 @@
+@db
+Feature: Customer is able to query the database
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@QUERY-DB-1
+Scenario: Query the Database to Select, Update or Delete records.
+
+Given  "QUERY-DB-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-QUERY      | DB        | QUERY-DB-1 |
+
+Then "QUERY-DB-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  |
+|  DataBase     | Query      | DBSelectQuery1 |
+
+# Query type is "Select" or "insert" or "Delete" or "update"
+# the above should create execute the following query against the DB:
+# select firstName from Profile where patId = '621456' and meId = '985478';
+# If there is a value given in lookColumnValueValidation, then the step should only pass, if DB returns the value as given in this column
+# If "-" is given, then no need to validate the value from the DB.
+# Add a new hashmap field in the StepBean, which should be able to hold the value from the above step for later use in the Scenario.
+
+Then "QUERY-DB-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-QUERY      | DB        | QUERY-DB-1 |
+

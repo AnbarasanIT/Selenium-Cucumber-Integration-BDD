@@ -1,0 +1,89 @@
+package walgreens.ecom.batch.automation.library.marketingRemaining;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class ContactUsPageVerificationLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - UI validation in Prescription Issues page under Contact Us
+     * @author - Mohana Janakavalli K
+     * @Created - 06-02-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void PrescriptionIssuesFormValidation(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String PrescriptionIssuesForm_TABLE = "//*[@id='full_902']~XPATH";
+	String Submit_BTN = "input[id='formsubmitbutton']~CSS";
+	String MessageBox_TXT = "//textarea[@id='message_con']~XPATH";
+	String MessageBox = null;
+	String ErrorMsg_TXT = "//p[contains(text(),'We have detected 1 error(s) with your form. Please review the fields marked red and make all necessary changes before submitting this form again.')]~XPATH";
+	String UPCErrorMsg_TXT = "//p[contains(text(),'Please enter an 11-digit UPC number.')]~XPATH";
+	String ThankYouMessage_TXT = "//h1[contains(text(),'Thank you for contacting us')]~XPATH";
+
+	String[] Textboxdata, TextboxObjects = null;
+	List<WebElement> textboxitems;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String flagVal = null;
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int count = 0; count < totalRowCount; count++) {
+		Textboxdata = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "TextBoxDetails").split(";");
+		TextboxObjects = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "TextBoxObjects").split(";");
+		flagVal = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "Flag");
+		textboxitems = getElementByProperty(PrescriptionIssuesForm_TABLE, browser).findElements(By.cssSelector("input[type='text']"));
+		for (int i = 0; i < textboxitems.size(); i++) {
+		    if (textboxitems.get(i) != null) {
+			textboxitems.get(i).clear();
+			textboxitems.get(i).sendKeys(Textboxdata[i]);
+			TextboxObjects[i] = Textboxdata[i];
+			MessageBox = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MessageBox");
+			if (!clearAndEnterText(MessageBox_TXT, MessageBox, browser)) {
+			    throw new Exception("Not able to Enter message in the text box");
+			}
+		    }
+		}
+		if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		    throw new Exception("Not able to click submit button");
+		}
+		if (flagVal.equalsIgnoreCase("Invalid")) {
+		    if (!isElementPresentVerification(ErrorMsg_TXT, browser)) {
+			messagesMap.put("Error message", "Error message for invalid entry not present");
+			status = WARNING;
+		    }
+		    else if (!isElementPresentVerification(UPCErrorMsg_TXT, browser)) {
+			messagesMap.put("Error message", "Error message for invalid UPC number not present");
+			status = WARNING;
+		    }
+		    
+		} else if (flagVal.equalsIgnoreCase("Valid")) {
+		    if (!isElementPresentVerification(ThankYouMessage_TXT, browser)) {
+			messagesMap.put("Thank you Message", "Thank you message not present");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+}

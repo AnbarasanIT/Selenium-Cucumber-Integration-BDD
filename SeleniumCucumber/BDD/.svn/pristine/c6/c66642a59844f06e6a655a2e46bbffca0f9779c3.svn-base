@@ -1,0 +1,37 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutLibrary;
+import walgreens.ecom.batch.automation.library.checkout.ShippingRuleLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.And;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class ShippingRuleVerificationSteps {
+
+    @Then("^\"([^\"]*)\" Customer verify the shipping cost in the order review page:$")
+    public void Customer_verify_the_shipping_cost_in_order_review_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verify the shipping cost in the order review page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    ShippingRuleLibrary.shippingRuleVerification(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

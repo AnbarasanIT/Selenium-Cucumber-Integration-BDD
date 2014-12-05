@@ -1,0 +1,147 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout_sdd;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout_sdd.SDDBrowseAndSearchLibrary;
+import walgreens.ecom.batch.automation.library.checkout_sdd.SDDCheckoutLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.constants.IGlobalVariables;
+import cucumber.annotation.en.And;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class SDDBrowseAndSearchSteps implements IGlobalVariables {
+    @Then("^\"([^\"]*)\" Customer selects an option to choose between all products or local delivery from search results page:$")
+    public void Customer_selects_an_option_to_choose_between_all_products_or_local_delivery_from_search_results_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects an option to choose between all products or local delivery from search results page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDBrowseAndSearchLibrary.selectFilterOptionFromSearchResults(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:$")
+    public void Customer_follows_the_store_selection_overlay_to_select_a_store_based_upon_the_Store_Offerings_from_search_results_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		SDDBrowseAndSearchLibrary.selectStoreBasedOnStoreOfferings(browser, scenario, step, dataMap);
+	    } else {
+		System.out.println("This Step is not Required to Choose a Store in cart when SDD is OFF");
+	    }
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies Store Details in Store Selection Overlay:$")
+    public void Customer_verifies_Store_Details_in_Store_Selection_Overlay(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies Store Details in Store Selection Overlay:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDBrowseAndSearchLibrary.verifyStoreDetailsinStoreDetailsOverlay(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates Product status and selects Delivery option from the VPD page:$")
+    public void Customer_validates_Product_status_and_selects_Delivery_option_from_the_VPD_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates Product status and selects Delivery option from the VPD page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDBrowseAndSearchLibrary.verifyProductDeliveryOptionsAndStatusinVPDPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects new store or changes store from the VPD page:$")
+    public void Customer_selects_new_store_or_changes_store_from_the_VPD_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects new store or changes store from the VPD page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDBrowseAndSearchLibrary.selectorChangeStoreFromVPDPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates required Product Delivery Option type from Shopping Cart:$")
+    public void Customer_validates_required_Product_Delivery_Option_type_from_Shopping_Cart(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates required Product Delivery Option type from Shopping Cart:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SDDBrowseAndSearchLibrary.verifyProductDeliveryOptionsinShoppingCart(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

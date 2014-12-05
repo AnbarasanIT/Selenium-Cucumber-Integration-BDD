@@ -1,0 +1,659 @@
+@pharmacy @HohCheckout
+Feature: All the scenarios in the feature are related Refill Hub check out
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-1
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId            |
+| QC-RX	    	| HohCheckout   | RX-HohCheckout-1 |
+
+Given "RX-HohCheckout-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser    |
+
+And "RX-HohCheckout-1" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-1" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  		 |
+| Pharmacy      | HOHCheckoutData   | MSStore1		 |
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore2 |
+
+Then "RX-HohCheckout-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Shipping Information |
+
+Then "RX-HohCheckout-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | -         | -         | 104 Wilmot Road| Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-1   |
+
+Then "RX-HohCheckout-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-1" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 		  |
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-1    |
+
+#---------------------------------------------------------------------------------------------------------
+
+@RX-HohCheckout-2
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        	   |
+| QC-RX	    	| HohCheckout   | RX-HohCheckout-2 |
+
+Given "RX-HohCheckout-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      	  | 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-2" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-2" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  		 |
+| Pharmacy      | HOHCheckoutData   | MHOHMSStore1	 |
+
+Then "RX-HohCheckout-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Shipping Information |
+
+Then "RX-HohCheckout-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | -         | -         | 104 Wilmot Road| Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId      	    |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-2    |
+
+Then "RX-HohCheckout-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-2" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-2      |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-3
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        	   |
+| QC-RX	    	| HohCheckout   | RX-HohCheckout-3 |
+
+Given "RX-HohCheckout-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		 | 
+| CommonData 	 | login     | BatmanHOHUser     |
+
+And "RX-HohCheckout-3" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-3" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    	   		 |
+| Pharmacy      | HOHCheckoutData   | MHOHMSStore2 		 |
+| Pharmacy      | HOHCheckoutData   | MHOHFamilyMSStore2 |
+
+Then "RX-HohCheckout-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Shipping Information |
+
+Then "RX-HohCheckout-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  	| City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | -         | -         | US Teritory PO box | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-3   |
+
+Then "RX-HohCheckout-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-3" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      		 	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-3      |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-4
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId               |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-4 |
+
+Given "RX-HohCheckout-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  	  |
+
+And "RX-HohCheckout-4" Customer Clears the Shopping Cart
+
+And "RX-HohCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "RX-HohCheckout-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "RX-HohCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC3      |
+
+Then "RX-HohCheckout-4" Customer adds Daily Living items to the cart from search.
+
+Then  "RX-HohCheckout-4" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    			|
+| Pharmacy      | HOHCheckoutData   | MSStore1 			|
+| Pharmacy      | HOHCheckoutData   | MSStore2 			|
+| Pharmacy      | HOHCheckoutData   | RetailSHOH		|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore1	|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore2	|
+| Pharmacy      | HOHCheckoutData   | RetailSHOHFamily	|
+
+Then "RX-HohCheckout-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage  |
+|-			   |Pickup Location	 	|
+
+Then "RX-HohCheckout-4" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "RX-HohCheckout-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "RX-HohCheckout-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test      | Test      | PO Box 123    | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-4   |
+
+Then "RX-HohCheckout-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-4" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-4      |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-5
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-5" Customer starts the scenario:
+| InputFileName | SheetName	   | RowId            |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-5 |
+
+Given "RX-HohCheckout-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-5" Customer Clears the Shopping Cart
+
+And "RX-HohCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC3      |
+
+Then "RX-HohCheckout-5" Customer adds Daily Living items to the cart from search.
+
+Then  "RX-HohCheckout-5" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    			|
+| Pharmacy      | HOHCheckoutData   | MSStore1 			|
+| Pharmacy      | HOHCheckoutData   | MSStore2 			|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore1	|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore2	|
+
+Then "RX-HohCheckout-5" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Shipping Information |
+
+Then "RX-HohCheckout-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress 				 | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation|
+| newshippingaddress  | -                   | -                | Test	   | Test      | 1000 AVE EL CONQUISTADOR    | FAJARDO	 | 43    | 00738   | -             | -            |UnionTerritory |
+
+Then "RX-HohCheckout-5" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-5      |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-6
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-6" Customer starts the scenario:
+| InputFileName | SheetName		 | RowId            |
+| QC-RX	    	| HohCheckout    | RX-HohCheckout-6 |
+
+Given "RX-HohCheckout-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-6" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-6" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    			|
+| Pharmacy      | HOHCheckoutData   | MSStore1 			|
+| Pharmacy      | HOHCheckoutData   | MSStore2 			|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore1	|
+| Pharmacy      | HOHCheckoutData   | FamilyMSStore2	|
+
+And "RX-HohCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "RX-HohCheckout-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "RX-HohCheckout-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage  |
+|-			   |Doctor Information 	|
+
+Then "RX-HohCheckout-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "RX-HohCheckout-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "RX-HohCheckout-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress 				 | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation|
+| newshippingaddress  | -                   | -                | Test      | Test  	   | 1000 AVE EL CONQUISTADOR    | FAJARDO	 | 43    | 00738   | -             | -            |UnionTerritory |
+
+Then "RX-HohCheckout-6" Customer finished testing the scenario:
+| InputFileName  | SheetName	  | RowId      	 		|
+| QC-RX   		 | HohCheckout    | RX-HohCheckout-6    |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-7
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-7" Customer starts the scenario:
+| InputFileName | SheetName    | RowId  	       |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-7  |
+
+Given "RX-HohCheckout-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-7" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-7" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    	 |
+| Pharmacy      | HOHCheckoutData   | MSStore1 	 |
+| Pharmacy      | HOHCheckoutData   |RetailSHOH  |
+
+Then "RX-HohCheckout-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage |
+|-			   |Pickup Location    |
+
+Then "RX-HohCheckout-7" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-HohCheckout-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| overnight       |           -              |       -	 	            |
+
+Then "RX-HohCheckout-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| CreditCard    | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId     		     |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-7     |
+
+Then "RX-HohCheckout-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-7" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-7      |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-8
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-8" Customer starts the scenario:
+| InputFileName | SheetName    | RowId            |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-8 |
+
+Given "RX-HohCheckout-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-8" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-8" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    	 |
+| Pharmacy      | HOHCheckoutData   | MSStore1 	 |
+| Pharmacy      | HOHCheckoutData   | RetailSHOH |
+
+Then "RX-HohCheckout-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage |
+|-			   |Pickup Location    |
+
+Then "RX-HohCheckout-8" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | -         | -         | 104 Wilmot Road | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-8" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-8   |
+
+Then "RX-HohCheckout-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-8" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-8      |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-9
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-9" Customer starts the scenario:
+| InputFileName | SheetName    | RowId            |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-9 |
+
+Given "RX-HohCheckout-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		| 
+| CommonData 	 | login     | BatmanHOHUser  |
+
+And "RX-HohCheckout-9" Customer Clears the Shopping Cart
+
+Then  "RX-HohCheckout-9" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId    	 |
+| Pharmacy      | HOHCheckoutData   | MSStore1 	 |
+| Pharmacy      | HOHCheckoutData   | MSStore2 	 |
+| Pharmacy      | HOHCheckoutData   | RetailSHOH |
+
+Then "RX-HohCheckout-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage |
+|-			   |Pickup Location    |
+
+Then "RX-HohCheckout-9" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   	| City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | -         | -         | US Teritory PO box | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "RX-HohCheckout-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| CreditCard    | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-9   |
+
+Then "RX-HohCheckout-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-9" Customer finished testing the scenario:
+| InputFileName  | SheetName    | RowId      	    	|
+| QC-RX   		 | HohCheckout  | RX-HohCheckout-9      |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-10
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-10" Customer starts the scenario:
+| InputFileName | SheetName    | RowId             |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-10 |
+
+Given "RX-HohCheckout-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      	 	  | 
+| CommonData 	 | login     | BatmanHOHUser    |
+
+And "RX-HohCheckout-10" Customer Clears the Shopping Cart
+
+And "RX-HohCheckout-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "RX-HohCheckout-10" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "RX-HohCheckout-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC3      |
+
+Then "RX-HohCheckout-10" Customer adds Daily Living items to the cart from search.
+
+Then  "RX-HohCheckout-10" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName			| RowId    					|
+| Pharmacy      | HOHCheckoutData   | MHOHMSStore1 	 			|
+| Pharmacy      | HOHCheckoutData   | RetailMHOH 	 			|
+| Pharmacy      | HOHCheckoutData   | MHOHFamilyMSStore1 		|
+| Pharmacy      | HOHCheckoutData   | RetailMHOHFamily 	 		|
+| Pharmacy      | HOHCheckoutData   | MHOHOtherFamilyMSStore1 	|
+| Pharmacy      | HOHCheckoutData   | RetailMHOHOtherFamily 	|
+
+Then "RX-HohCheckout-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage |
+|-			   |Pickup Location    |
+
+Then "RX-HohCheckout-10" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-10" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "RX-HohCheckout-10" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "RX-HohCheckout-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName   | LastName  | StreetAddress   	| City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test        | Test      | US Teritory PO box | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "RX-HohCheckout-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| CreditCard    | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId      	    |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-10   |
+
+Then "RX-HohCheckout-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-10" Customer finished testing the scenario:
+| InputFileName  | SheetName	  | RowId      		 	|
+| QC-RX   		 | HohCheckout    | RX-HohCheckout-10   |
+
+#---------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------
+@RX-HohCheckout-11
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-HohCheckout-11" Customer starts the scenario:
+| InputFileName | SheetName    | RowId  	        |
+| QC-RX	    	| HohCheckout  | RX-HohCheckout-11  |
+
+Given "RX-HohCheckout-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      		  | 
+| CommonData 	 | login     | BatmanHOHUser    |
+
+And "RX-HohCheckout-11" Customer Clears the Shopping Cart
+
+And "RX-HohCheckout-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "RX-HohCheckout-11" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "RX-HohCheckout-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | DLProducts2      |
+
+Then "RX-HohCheckout-11" Customer adds Daily Living items to the cart from search.
+
+Then  "RX-HohCheckout-11" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId    					|
+| Pharmacy      | HOHCheckoutData   | MHOHMSStore1 	 			|
+| Pharmacy      | HOHCheckoutData   | MHOHMSStore2 	 			|
+| Pharmacy      | HOHCheckoutData   | RetailMHOH 	 			|
+| Pharmacy      | HOHCheckoutData   | MHOHFamilyMSStore1 		|
+| Pharmacy      | HOHCheckoutData   | MHOHFamilyMSStore2		|
+| Pharmacy      | HOHCheckoutData   | RetailMHOHFamily 	 		|
+| Pharmacy      | HOHCheckoutData   | MHOHOtherFamilyMSStore1 	|
+| Pharmacy      | HOHCheckoutData   | MHOHOtherFamilyMSStore2 	|
+| Pharmacy      | HOHCheckoutData   | RetailMHOHOtherFamily		|
+
+Then "RX-HohCheckout-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage |
+|-			   |Pickup Location    |
+
+Then "RX-HohCheckout-11" Customer selects rx pick up date and time and click on continue
+
+Then "RX-HohCheckout-11" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "RX-HohCheckout-11" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "RX-HohCheckout-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   	| City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test      | Test      | US Teritory PO box | Deerfield | 16    | 60015   | -             | -            |
+
+Then "RX-HohCheckout-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| overnight       |           -              |       -	 	            |
+
+Then "RX-HohCheckout-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-HohCheckout-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-HohCheckout-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId             |
+| CheckoutOrderDetails  | OrderIds     |RX-HohCheckout-11  |
+
+Then "RX-HohCheckout-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-HohCheckout-11" Customer finished testing the scenario:
+| InputFileName  | SheetName	  | RowId  	    	 	|
+| QC-RX   		 | HohCheckout    | RX-HohCheckout-11   |
+
+#---------------------------------------------------------------------------------------------------------

@@ -1,0 +1,90 @@
+@pharmacy @NewPrescriptionMailPlan
+Feature: verify the presence of "Which type of new prescription do you want?" for the Mail plan user
+#-----------------------------------------------------------------------------------------------------------
+@RX-NewPrescriptionMailPlan-1
+Scenario: verify the presence of Overlay for the Mail plan user in the Request new prescription page
+
+Given "RX-NewPrescriptionMailPlan-1" Customer starts the scenario:
+| InputFileName  | SheetName 	           | RowId      	              |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-1 |
+
+Given "RX-NewPrescriptionMailPlan-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData  	| login   	| NewPrescription |
+
+Then "RX-NewPrescriptionMailPlan-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName      | RowId                  |Overlay |ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Authenticated  | RequestNewPrescription |yes     |no                 |
+| PharmacyHomePageLinkVerification | Authenticated  | Overlay                |no      |yes                |
+| PharmacyHomePageLinkVerification | Authenticated  | RequestNewPrescription |yes     |no                 |
+| PharmacyHomePageLinkVerification | Authenticated  | Overlay1               |no      |yes                |
+
+Then "RX-NewPrescriptionMailPlan-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	           | RowId     	                 |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-1|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-NewPrescriptionMailPlan-2
+Scenario: verify the presence of Overlay for the Retail user's Mail plan family member in the Request new prescription page
+
+Given "RX-NewPrescriptionMailPlan-2" Customer starts the scenario:
+| InputFileName  | SheetName 	           | RowId      	              |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-2 |
+
+Given "RX-NewPrescriptionMailPlan-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData  	| login   	| NewPrescription1 |
+
+Then "RX-NewPrescriptionMailPlan-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |
+
+Then "RX-NewPrescriptionMailPlan-2" Customer selects a family member:
+| FamilyMemberOption    |2|
+
+Then "RX-NewPrescriptionMailPlan-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |ClickObjectOverlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | Overlay1                |yes               |
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no                |
+
+Then "RX-NewPrescriptionMailPlan-2" Customer selects a family member:
+| FamilyMemberOption    |2|
+
+Then "RX-NewPrescriptionMailPlan-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId   |Overlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | Overlay |no     |yes               |
+
+Then "RX-NewPrescriptionMailPlan-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	           | RowId     	                 |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-2|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-NewPrescriptionMailPlan-3
+Scenario: Verify the absence of Overlay for the Mail plan user's Retail family member in the Request new prescription page
+
+Given "RX-NewPrescriptionMailPlan-3" Customer starts the scenario:
+| InputFileName  | SheetName 	           | RowId      	              |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-3 |
+
+Given "RX-NewPrescriptionMailPlan-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData  	| login   	| NonMSUser       |
+
+Then "RX-NewPrescriptionMailPlan-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName      | RowId                   |Overlay|
+| PharmacyHomePageLinkVerification         | Authenticated  | RequestNewPrescription1 |no|
+
+Then "RX-NewPrescriptionMailPlan-3" Customer selects a family member:
+| FamilyMemberOption    |1|
+
+Then "RX-NewPrescriptionMailPlan-3" Validate the absence of overlay in new prescriptions page:
+
+Then "RX-NewPrescriptionMailPlan-3" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-NewPrescriptionMailPlan-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	           | RowId     	                 |
+| QC-RX   		 | NewPrescriptionMailPlan | RX-NewPrescriptionMailPlan-3|
+
+#-----------------------------------------------------------------------------------------------------------

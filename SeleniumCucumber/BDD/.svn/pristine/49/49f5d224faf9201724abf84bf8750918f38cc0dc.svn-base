@@ -1,0 +1,465 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class PrintRxRecordsLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validating the new columns of the prescription records table
+     *          and the sorting functionality for the same
+     * @author - Kenneth T. Royen
+     * @Created -21-Mar-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void printPrescriptionRecordsTableValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String PrescriptionRecordsTableFillDateColumn_LNK = "a[title='FillDate']~CSS";
+	String PrescriptionRecordsTablePrescriptionColumn_LNK = "a[title='Prescription']~CSS";
+	String PrescriptionRecordsTableNDCColumn_ELM = "//*/th[3][contains(text(),'NDC')]~XPATH";
+	String PrescriptionRecordsTableQtyColumn_ELM = "//*/th[4][contains(text(),'Qty')]~XPATH";
+	String PrescriptionRecordsTablePharmacistColumn_ELM = "//*/th[5][contains(text(),'Pharmacist')]~XPATH";
+	String PrescriptionRecordsTablePrescriberColumn_LNK = "a[title='Prescriber']~CSS";
+	String PrescriptionRecordsTablePriceColumn_LNK = "a[title='Price']~CSS";
+	String PrescriptionRecordsTableInsuranceColumn_LNK = "a[title='Insurance']~CSS";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String[] PrescriptionsRecordPageElements = { PrescriptionRecordsTableFillDateColumn_LNK, PrescriptionRecordsTablePrescriptionColumn_LNK, PrescriptionRecordsTableNDCColumn_ELM,
+		    PrescriptionRecordsTableQtyColumn_ELM, PrescriptionRecordsTablePharmacistColumn_ELM, PrescriptionRecordsTablePrescriberColumn_LNK, PrescriptionRecordsTableInsuranceColumn_LNK,
+		    PrescriptionRecordsTablePriceColumn_LNK };
+	    // Verifying coumn names of Prescription Records table
+	    for (int j = 0; j < PrescriptionsRecordPageElements.length; j++) {
+		if (!isElementPresentVerification(PrescriptionsRecordPageElements[j], browser)) {
+		    messagesMap.put(PrescriptionsRecordPageElements[j], "Object is Missing");
+		    status = WARNING;
+		}
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String ColumnToValidate = dataMap.get("ColumnToValidate").get(i);
+		String OrderType = dataMap.get("OrderType").get(i);
+		String NoofTimesToClickTableHeader = dataMap.get("NoofTimesToClickTableHeader").get(i);
+		if (ColumnToValidate.equalsIgnoreCase("Date")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    // Clicking on Fill Date link to sort the column
+			    if (!(isElementPresentVerifyClick(PrescriptionRecordsTableFillDateColumn_LNK, browser))) {
+				throw new Exception("Not able to click on Fill Date Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		    // Verifying the sorting of the columns by Fill date
+		    if (!TableSortByFillDate(browser, OrderType)) {
+			messagesMap.put("Fill Date Sort", "Fill Dates are not sorted correctly in the given sorting type: " + OrderType);
+			status = WARNING;
+		    }
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Prescription")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    // clicking on Prescription link to sort the column
+			    if (!(isElementPresentVerifyClick(PrescriptionRecordsTablePrescriptionColumn_LNK, browser))) {
+				throw new Exception("Not able to click on Prescription Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		    // Verifying the sorting of the columns by Prescription
+		    // names
+		    if (!TableSortByPrescription(browser, OrderType)) {
+			messagesMap.put("Prescription Sort", "Prescriptions are not sorted correctly in the given sorting type: " + OrderType);
+			status = WARNING;
+		    }
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Prescriber")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    // clicking on Presciber link to sort the column
+			    if (!(isElementPresentVerifyClick(PrescriptionRecordsTablePrescriberColumn_LNK, browser))) {
+				throw new Exception("Not able to click on Prescriber Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		    // Verifying the sorting of the columns by Prescriber names
+		    if (!TableSortByPrescriber(browser, OrderType)) {
+			messagesMap.put("Prescriber Sort", "Prescriber names are not sorted correctly in the given sorting type: " + OrderType);
+			status = WARNING;
+		    }
+		}
+		if (ColumnToValidate.equalsIgnoreCase("InsuranceDtls")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    // clicking on Insurance Details link to sort the
+			    // column
+			    if (!(isElementPresentVerifyClick(PrescriptionRecordsTableInsuranceColumn_LNK, browser))) {
+				throw new Exception("Not able to click on Insurance details Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		    // Verifying the sorting of the columns by Insurance Details
+		    if (!TableSortByInsuranceDtls(browser, OrderType)) {
+			messagesMap.put("Insurance Details Sort", "Insurance Details are not sorted correctly in the given sorting type: " + OrderType);
+			status = WARNING;
+		    }
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Price")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    // clicking on Insurance Price link to sort the
+			    // column
+			    if (!(isElementPresentVerifyClick(PrescriptionRecordsTablePriceColumn_LNK, browser))) {
+				throw new Exception("Not able to click on Price Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		    // Verifying the sorting of the columns by Price
+		    if (!TableSortByPrice(browser, OrderType)) {
+			messagesMap.put("Price Values Sort", "Price Values are not sorted correctly in the given sorting type: " + OrderType);
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to sort the prescription records table by Presciber
+     *          name in ascending or decensing order
+     * @author - Kenneth T Royen
+     * @Created - 25-03-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static boolean TableSortByPrescriber(EventFiringWebDriver browser, String OrderType) throws Exception {
+
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String PrescriberText = null, NextPrescriberText = null;
+	int flag = 0;
+	boolean isSortedCorrectly = false;
+	try {
+	    for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+		// setting value of the first row of the table
+		CurrentRow = RowCounter + 1;
+		// setting value of the next row of the table to be compared
+		NextRowPosition = CurrentRow + 1;
+		if (NextRowPosition <= NoOfRows - 1) {
+		    // Fetching the value of the first prescriber row in the
+		    // table
+		    PrescriberText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[6]")).getText().replace(",", "");
+		    // Fetching the value of the next prescriber row in the
+		    // table
+		    NextPrescriberText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[6]")).getText().replace(",", "");
+		    if (OrderType.equalsIgnoreCase("Descending")) {
+			// Verifying if the prescriber names are sorte in
+			// Descending Order
+			if ((PrescriberText.compareToIgnoreCase(NextPrescriberText) < 0)) {
+			    flag = flag + 1;
+			    break;
+			} else if (OrderType.equalsIgnoreCase("Ascending")) {
+			    // Verifying if the prescriber names are sorte in
+			    // Ascending Order
+			    if (!(PrescriberText.compareToIgnoreCase(NextPrescriberText) < 0)) {
+				flag = flag + 1;
+				break;
+			    }
+			}
+			if (flag > 0) {
+			    isSortedCorrectly = false;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (flag == 0) {
+		isSortedCorrectly = true;
+	    }
+	} catch (Exception e) {
+	    isSortedCorrectly = false;
+	}
+	return isSortedCorrectly;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to sort the prescription records table by Fill Date in
+     *          ascending or decensing order
+     * @author - Kenneth T Royen
+     * @Created - 25-03-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static boolean TableSortByFillDate(EventFiringWebDriver browser, String OrderType) throws Exception {
+
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String DateStr = null, NextDateStr = null;
+	int flag = 0;
+	boolean isSortedCorrectly = false;
+	try {
+	    for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+
+		// setting value of the first row of the table
+		CurrentRow = RowCounter + 1;
+		// // setting value of the next row of the table to be compared
+		NextRowPosition = CurrentRow + 1;
+		if (NextRowPosition <= NoOfRows - 1) {
+		    // Fetching the value of the first fill date row in the
+		    // table
+		    DateStr = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[1]")).getText();
+		    // Fetching the value of the next fill date row in the table
+		    NextDateStr = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[1]")).getText();
+		    Date firstDate = dateFormat.parse(DateStr);
+		    Date nextDate = dateFormat.parse(NextDateStr);
+		    if (OrderType.equalsIgnoreCase("Descending")) {
+			// Verifying if the Fill Dates are Sorted in Descending
+			// Order
+			if (!(firstDate.compareTo(nextDate) >= 0)) {
+			    flag = flag + 1;
+			    break;
+			} else if (OrderType.equalsIgnoreCase("Ascending")) {
+			    // Verifying if the Fill Dates are Sorted in
+			    // Ascending Order
+			    if (!(firstDate.compareTo(nextDate) <= 0)) {
+				flag = flag + 1;
+				break;
+			    }
+			}
+			if ((flag > 0)) {
+			    isSortedCorrectly = false;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (flag == 0) {// verifying if none of the sorting conditions fail
+			    // and returning true for the method
+		isSortedCorrectly = true;
+	    }
+	} catch (Exception e) {
+	    isSortedCorrectly = false;
+	}
+	return isSortedCorrectly;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to sort the prescription records table by prescription
+     *          name in ascending or descending order
+     * @author - Kenneth T Royen
+     * @Created - 26-03-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static boolean TableSortByPrescription(EventFiringWebDriver browser, String OrderType) throws Exception {
+
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String RxName = null, NextRxName = null;
+	int flag = 0;
+	boolean isSortedCorrectly = false;
+	try {
+	    for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+		// setting value of the first row of the table
+		CurrentRow = RowCounter + 1;
+		// setting value of the next row of the table to be compared
+		NextRowPosition = CurrentRow + 1;
+		if (NextRowPosition <= NoOfRows - 1) {
+		    // Fetching the value of the first prescription row in the
+		    // table
+		    RxName = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[2]")).getText().split("RX#:")[0].trim();
+		    // Fetching the value of the next prescription row in the
+		    // table
+		    NextRxName = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[2]")).getText().split("RX#:")[0].trim();
+		    if (OrderType.equalsIgnoreCase("Descending")) {
+			// Verifying if the Prescriptions are sorted in
+			// Descending Order
+			if ((RxName.compareToIgnoreCase(NextRxName) < 0)) {
+			    flag = flag + 1;
+			    break;
+			} else if (OrderType.equalsIgnoreCase("Ascending")) {
+			    // Verifying if the Prescriptions are sorted in
+			    // Ascending Order
+			    if (!(RxName.compareToIgnoreCase(NextRxName) < 0)) {
+				flag = flag + 1;
+				break;
+			    }
+			}
+			if (flag > 0) {
+			    isSortedCorrectly = false;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (flag == 0) {// verifying if none of the sorting conditions fail
+			    // and returning true for the method
+		isSortedCorrectly = true;
+	    }
+	} catch (Exception e) {
+	    isSortedCorrectly = false;
+	}
+	return isSortedCorrectly;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to sort the prescription records table by Insurance
+     *          Details in ascending or descending order
+     * @author - Kenneth T Royen
+     * @Created - 26-03-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static boolean TableSortByInsuranceDtls(EventFiringWebDriver browser, String OrderType) throws Exception {
+
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String InsuranceDtlsText = null, NextInsuranceDtlsText = null;
+	int flag = 0;
+	boolean isSortedCorrectly = false;
+	try {
+	    for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+		// setting value of the first row of the table
+		CurrentRow = RowCounter + 1;
+		// setting value of the next row of the table to be compared
+		NextRowPosition = CurrentRow + 1;
+		if (NextRowPosition <= NoOfRows - 1) {
+		    // Fetching the value of the first insurance details row in
+		    // the table
+		    InsuranceDtlsText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[7]")).getText().split("/")[0].trim();
+		    // Fetching the value of the next insurance details row in
+		    // the table
+		    NextInsuranceDtlsText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[7]")).getText().split("/")[0].trim();
+		    if (OrderType.equalsIgnoreCase("Descending")) {
+			// Verifying if the Insurance Details are sorted in
+			// Descending Order
+			if ((InsuranceDtlsText.compareToIgnoreCase(NextInsuranceDtlsText) < 0)) {
+			    flag = flag + 1;
+			    break;
+			} else if (OrderType.equalsIgnoreCase("Ascending")) {
+			    // Verifying if the Insurance Details are sorted in
+			    // Ascending Order
+			    if (!(InsuranceDtlsText.compareToIgnoreCase(NextInsuranceDtlsText) < 0)) {
+				flag = flag + 1;
+				break;
+			    }
+			}
+			if (flag > 0) {
+			    isSortedCorrectly = false;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (flag == 0) {// verifying if none of the sorting conditions fail
+			    // and returning true for the method
+		isSortedCorrectly = true;
+	    }
+	} catch (Exception e) {
+	    isSortedCorrectly = false;
+	}
+	return isSortedCorrectly;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to sort the prescription records table by pice values
+     *          in ascending or descending order
+     * @author - Kenneth T Royen
+     * @Created - 26-03-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static boolean TableSortByPrice(EventFiringWebDriver browser, String OrderType) throws Exception {
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String PriceVal = null, NextPriceVal = null;
+	int flag = 0;
+	boolean isSortedCorrectly = false;
+	try {
+	    for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+		// setting value of the first row of the table
+		CurrentRow = RowCounter + 1;
+		// setting value of the next row of the table to be compared
+		NextRowPosition = CurrentRow + 1;
+		if (NextRowPosition <= NoOfRows - 1) {
+		    // Fetching the value of the first Price row in the table
+		    PriceVal = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[8]")).getText().replace("$", "");
+		    // Fetching the value of the next Price row in the table
+		    NextPriceVal = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[8]")).getText().replace("$", "");
+		    Float Pricevalue = new Float(PriceVal);
+		    Float NextPricevalue = new Float(NextPriceVal);
+		    // Verifying if the Price values are sorted in Descending
+		    // Order
+		    if (OrderType.equalsIgnoreCase("Descending")) {
+			if (!(Pricevalue >= NextPricevalue)) {
+			    flag = flag + 1;
+			    break;
+			}
+			// Verifying if the Price values are sorted in Ascending
+			// Order
+			else if (OrderType.equalsIgnoreCase("Ascending")) {
+			    if (!(Pricevalue <= NextPricevalue)) {
+				flag = flag + 1;
+				break;
+			    }
+			}
+			if (flag > 0) {
+			    isSortedCorrectly = false;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (flag == 0) {// verifying if none of the sorting conditions fail
+			    // and returning true for the method
+		isSortedCorrectly = true;
+	    }
+	} catch (Exception e) {
+	    isSortedCorrectly = false;
+	}
+	return isSortedCorrectly;
+    }
+
+}

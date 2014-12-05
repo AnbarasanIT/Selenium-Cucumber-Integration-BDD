@@ -1,0 +1,65 @@
+@printPrescriptionRecord @PrintPrescriptionRecord
+Feature:  Customer validates printing Prescription Record functionality from his account
+#------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-10
+Scenario: Admin user validates Print Prescripion Record functionality from Pharmacy home page.
+
+Given "RX-AuthRxValidations-10" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-10 |
+
+Given "RX-AuthRxValidations-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      |
+| Pharmacy  	 | login     | RefillRx6  |
+
+Then "RX-AuthRxValidations-10" Customer clicks on an object and validates the expected results:
+| InputFileName 		         	| SheetName      | RowId   	      		  |
+| PharmacyHomePageLinkVerification  | Authenticated  | New Prescription		  |
+| PharmacyHomePageLinkVerification  | Authenticated  | RefillFastOvlyClose	  |
+
+And "RX-AuthRxValidations-10" Customer selects a family member:
+|FamilyMemberOption|1 |
+
+Then "RX-AuthRxValidations-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			        | SheetName      | RowId   	          |
+| PharmacyHomePageLinkVerification  |Authenticated   | RefillPrescription |
+
+#And "RX-AuthRxValidations-10" Customer verifies Online Pharmacy Tour Page Tabs:
+#| InputFileName  | SheetName 			  | RowId        |
+#| Pharmacy  	 | OnlinePharmacyTour     | whyWalgreens |
+
+And "RX-AuthRxValidations-10" Customer verifies Prescription Records in Print Prescription Records Page:
+| InputFileName  | SheetName                | RowId            |
+| Pharmacy  	 | PrintPrescriptionRecord  | prescriptionInfo |
+
+Then "RX-AuthRxValidations-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-10" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-10	|
+#------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-19
+Scenario: Authenticated user validates the Print Prescription records page and get the records for self and family member
+
+Given "RX-AuthRxValidations-19" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-19 |
+
+Given "RX-AuthRxValidations-19" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      |
+| Pharmacy  	 | login     | AutoRefilluser1  |
+
+And "RX-AuthRxValidations-19" Customer verifies Prescription Records in Print Prescription Records Page:
+| InputFileName  | SheetName                | RowId            |ErrorValidation |CalenderVerification 	|UIValidation	 |
+| Pharmacy  	 | PrintPrescriptionRecord  | prescriptionInfo |Yes				|Yes					|Yes			 |
+
+Then "RX-AuthRxValidations-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-19" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-19	|
+#------------------------------------------------------------------------------------------------

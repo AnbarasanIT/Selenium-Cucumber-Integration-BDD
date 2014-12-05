@@ -1,0 +1,106 @@
+package walgreens.ecom.batch.automation.library.checkout_sdd;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutLoyaltyLibrary_SDD_ON extends CheckoutLibrary_SDD_ON {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Indicators (Loyalty Icons &
+     *          Membersave Text Message) for the required products in Shopping
+     *          Cart When SDD is ON
+     * @author - Siva
+     * @Created - 27-MAR-2013
+     * @Modified By -Siva
+     * @Modified Date -01-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyIndicators(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ProdutCart_Table = "//table[contains(@class,'cartProdTable')]/tbody~XPATH";
+	int NoofRows = 0, Flag = 0;
+	String ProductName = null;
+	String MemberSaveTextMsgOne = null;
+	String MemberSaveTextMsgTwo = null;
+	Map<String, String> messagesMap = null;
+	try {
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		MemberSaveTextMsgOne = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgOne_SDD_ON", "Message");
+		MemberSaveTextMsgTwo = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgTwo_SDD_ON", "Message");
+	    } else {
+		MemberSaveTextMsgOne = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgOne", "Message");
+		MemberSaveTextMsgTwo = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgTwo", "Message");
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int counter = 0; counter < totalRowCount; counter++) {
+		if (messagesMap == null) {
+		    messagesMap = new HashMap<String, String>();
+		    stepBean.setStepStatusMessages(messagesMap);
+		}
+		ProductName = getTestData(dataMap.get("InputFileName").get(counter), dataMap.get("SheetName").get(counter), dataMap.get("RowId").get(counter), "Keyword2");
+		List<WebElement> TableRows = getElementByProperty(ProdutCart_Table, browser).findElements(By.tagName("tr"));
+		NoofRows = TableRows.size();
+		for (int ssrow = 4; ssrow <= NoofRows; ssrow = ssrow + 4) {
+		    String ProductNameDivText = browser.findElement(By.xpath("//table[contains(@class,'cartProdTable')]/tbody/tr[" + ssrow + "]/td")).getText();
+		    String ProductPriceDivText = browser.findElement(By.xpath("//table[contains(@class,'cartProdTable')]/tbody/tr[" + ssrow + "]/td[3]")).getText();
+		    if (ProductNameDivText.contains(ProductName)) {
+			Flag = Flag + 1;
+			boolean isLoyaltyIconFound = false;
+			List<WebElement> imgtagElements = TableRows.get(ssrow - 1).findElements(By.tagName("img"));
+			for (int k = 0; k < imgtagElements.size(); k++) {
+			    if (imgtagElements.get(k).getAttribute("alt").equals("Loyalty")) {
+				isLoyaltyIconFound = true;
+				break;
+			    }
+			}
+			if (dataMap.get("LoyaltyIcon").get(counter).equalsIgnoreCase("Yes")) {
+			    if (!isLoyaltyIconFound) {
+				messagesMap.put("Loyalty Icon", "object is missing");
+				status = WARNING;
+			    }
+			} else if (dataMap.get("LoyaltyIcon").get(counter).equalsIgnoreCase("No")) {
+			    if (isLoyaltyIconFound) {
+				messagesMap.put("Loyalty Icon", "object is missing");
+				status = WARNING;
+			    }
+			}
+			if (dataMap.get("MemberSaveMoreText").get(counter).equalsIgnoreCase("Yes")) {
+			    if (!ProductPriceDivText.contains(MemberSaveTextMsgOne) || !ProductPriceDivText.contains(MemberSaveTextMsgTwo)) {
+				messagesMap.put("Member Save More Text", "object(Text message) is missing");
+				status = WARNING;
+			    }
+			} else if (dataMap.get("MemberSaveMoreText").get(counter).equalsIgnoreCase("No")) {
+			    if (ProductPriceDivText.contains(MemberSaveTextMsgOne) || ProductPriceDivText.contains(MemberSaveTextMsgTwo)) {
+				messagesMap.put("Member Save More Text", "object(Text message) should not be displyed");
+				status = WARNING;
+			    }
+			}
+			break;
+		    }
+		}
+		if (Flag == 0) {
+		    messagesMap.put("Required Product in Cart", "Not able to find the required Product in Cart");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,310 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class OnlinePharmacyTourLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Validates all the Tabs in Online Pharmacy Tour page and if
+     *          required it clicks the required Tab
+     * @author - Ygnash
+     * @Created -
+     * @Modified By -
+     * @Modified Date -28-Dec-12
+     ************************************************************* 
+     */
+    public static void validateOnlinePharmacyTourTabs(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OnLinePharmacyTabName = null;
+	String OnlinePharmacyTabHeading = null;
+	String Pharmacy_ELM = "a[title='Pharmacy & Health']~CSS";
+	String OnlinePharmacyTour_IMG = "img[alt='Online Pharmacy Tour']~CSS";
+	String DisabledPreviousbutton_BTN="a[id='leftbutton'][class='inactive']~CSS";
+	String SelectedWhyWalgreens_ELM ="a[class='selected'][href='#why']~CSS";
+	String WhyWalgreensContent_ELM = "div[id='why']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Navigates to Pharmacy Home page
+	    if (!isElementPresentVerifyClick(Pharmacy_ELM, browser)) {
+		throw new Exception("Not able to click Pharmacy Tab in home page");
+	    }
+	    // Clicks online pharmacy tour button in pharmacy home page and
+	    // navigates to online pharmacy page.
+	    if (!isElementPresentVerifyClick(OnlinePharmacyTour_IMG, browser)) {
+		throw new Exception("Not able to click Online Pharmacy Tour button in Pharmacy home page");
+	    }
+	    //Validates the UI of online Pharmacy Tour Home Page
+	    if (!isElementPresentVerification(DisabledPreviousbutton_BTN, browser)){
+		messagesMap.put("Disabled Previous button", "Not found by default  in online pharmacy tour page");
+		status = WARNING;
+	    }
+             if (!isElementPresentVerification(SelectedWhyWalgreens_ELM, browser)){
+        	 messagesMap.put("Why Walgreens Tab ", " Is Not selected by default in online pharmacy tour page");
+			status = WARNING;	
+            	    }
+             if (!isElementPresentVerification(WhyWalgreensContent_ELM, browser)){
+        	 messagesMap.put("Why walgreens page content and pharmacy highlights", "Not found the contents in online pharmacy tour page");
+			status = WARNING;
+             }
+	    
+	    
+	    // Based on user input validates the existence of a particular tab/
+	    // navigates to a particular tab page
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String TabName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "TabHrefValue");
+		String clickTab = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "clickTab");
+		String ExpectedPage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpectedTargetPageHeader");
+		OnLinePharmacyTabName = "//a[@href='" + TabName + "']~XPATH";
+		OnlinePharmacyTabHeading = "//strong[contains(text(),'" + ExpectedPage + "')]~XPATH";
+		if (!isElementPresentVerification(OnLinePharmacyTabName, browser)) {
+		    messagesMap.put("Tab Verification in Online Pharmacy Tour Page", "Not found Tab  " + TabName + " in online pharmacy tour page");
+		    status = WARNING;
+		}
+		if (clickTab.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(OnLinePharmacyTabName, browser)) {
+			throw new Exception("Not able to click" + TabName + "Tab in online pharmacy tour page");
+		    }
+		    if (!isElementPresentVerification(OnlinePharmacyTabHeading, browser)) {
+			messagesMap.put("Expected Page heading", "Not found Tab  page heading " + TabName + " in online pharmacy tour page");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validates Order refills Tab functionality in Pharmacy Tour for
+     *          different type of users
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date -18-Dec-12
+     ************************************************************* 
+     */
+    public static void orderRefillsTabValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderRefills_LNK = "//a[contains(text(),'Order Refills')]~XPATH";
+	String OrderRefillselected_LNK = "//a[@class='selected']~XPATH";
+	String GuestcreateAccount_IMG = "//div[@id='order']/div[3]/div[2]/a/img[@alt='Create an Account']~XPATH";
+	String Highlights_DIV = "div[class='highlights']~CSS";
+	String CreateAccountpage_ELM = "//h1[contains(text(),'Create Your Walgreens.com Account')]~XPATH";
+	String RefillButton_IMG = "//img[@alt='Refill Prescriptions']~XPATH";
+	String AutomaticRefills_LNK = "//a[@title='Automatic Refills']~XPATH";
+	String VerifyYourIdentity_ELM = "//h1[contains(text(),'Last Step: Verify Your Identity')]~XPATH";
+	String CreateOnlinePharmacy_IMG = "//div[@id='order']/div[3]/a~XPATH";
+	String CreateYourAccountPage_ELM = "//h1[contains(text(),'Complete Your Walgreens.com Account')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String UserType = dataMap.get("UserType").get(0);
+	    if (!isElementPresentVerifyClick(OrderRefills_LNK, browser)) {
+		throw new Exception("Not able to click orders refill link");
+	    }
+	    if (!isElementPresentVerification(OrderRefillselected_LNK, browser)) {
+		messagesMap.put("Expected page", "Order refills TAB is not selected");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Highlights_DIV, browser)) {
+		messagesMap.put("Expected page", "Order refills TAB Higlights section not displayed");
+		status = WARNING;
+	    }
+	    if (UserType.equalsIgnoreCase("ANONYMOUS")) {
+		if (!isElementPresentVerifyClick(GuestcreateAccount_IMG, browser)) {
+		    throw new Exception("Not able to click Create account button for Anonymous user");
+		}
+		if (!isElementPresentVerification(CreateAccountpage_ELM, browser)) {
+		    messagesMap.put("Expected page", "Create your walgreens account page is not displayed");
+		    status = WARNING;
+		}
+	    } else if (UserType.equalsIgnoreCase("MATCHED")) {
+		if (!isElementPresentVerifyClick(RefillButton_IMG, browser)) {
+		    throw new Exception("Not able to click refill prescriptions button for Matched user in Order Refills TAB");
+		}
+		if (!isElementPresentVerification(VerifyYourIdentity_ELM, browser)) {
+		    messagesMap.put("Expected page", "Verify your identity page is not displayed");
+		    status = WARNING;
+		}
+		// go to previous page
+		browser.navigate().back();
+		if (!isElementPresentVerifyClick(AutomaticRefills_LNK, browser)) {
+		    throw new Exception("Not able to click refill prescriptions button for Matched user in Order Refills TAB");
+		}
+		if (!isElementPresentVerification(VerifyYourIdentity_ELM, browser)) {
+		    messagesMap.put("Expected page", "Verify your identity page is not displayed after clicking Automatic refills link");
+		    status = WARNING;
+		}
+		// Verification lightuser(tlghttestuser123@testebiz.com)
+	    } else if (UserType.equalsIgnoreCase("LIGHT")) {
+		if (!isElementPresentVerifyClick(CreateOnlinePharmacy_IMG, browser)) {
+		    throw new Exception("Not able to click Create online pharmacy account button for light user in Order Refills TAB");
+		}
+		if (!isElementPresentVerification(CreateYourAccountPage_ELM, browser)) {
+		    messagesMap.put("Expected page", "Create your walgreens.com account page is not displayed after clicking Automatic refills link");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - validates the UI of Instore express refill page
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -Ygnash
+     * @Modified Date -28/12/12
+     ************************************************************* 
+     */
+    public static void linksVerificationInstoreExpressRefillTab(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Refill_BTN = "//input[@id='refill' or @title='Continue']~XPATH";
+	String SignUpForPrescriptionTextAlerts_LINK = "a[title*='sign up for Prescription Text Alerts']~CSS";
+	String EditTextMsgPreferencesPg_Heading = "//h1[contains(text(),'Edit Text Message Preferences')]~XPATH";
+	String CompleteYourwalgreensAccountPg_Heading = "h1[contains(text(),'Complete Your Walgreens.com Account')]~XPATH";
+	String SignInPg_Heading = "//h1[contains(text(),'Sign In or Register to Edit Your Text Message Preferences')]~XPATH";
+	String ExpressRefillHighlights_ELM = "//b[contains(text(),'Express Refill Highlights')]";
+	String Content_ELM = "//p[2][contains(text(),'All you have to do is enter the prescription number found on')]~XPATH";
+	String ExpressRxNumber_TXT = "input[id*='prescription-number']~CSS";
+	String InStoreExpressRefillPg_Heading = "//div[contains(@id,'header')]/h1[contains(text(),'Refill with Rx number')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ExpressRxNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "rxNumber1");
+	    String TextAlerts = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TextAlerts");
+	    String ExpectedTargetPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedTargetPage");
+	    String RefillRx = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RefillRx");
+
+	    /*if (!isElementPresentVerification(ExpressRefillHighlights_ELM, browser)) {
+		messagesMap.put("in store express refill", "Not able to find Express refill highlights");
+		status = WARNING;
+	    }*/
+
+	    /*if (!isElementPresentVerification(Content_ELM, browser)) {
+		messagesMap.put("in store express refill", "Not able to find pg content");
+		status = WARNING;
+	    }*/
+	    if (TextAlerts.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(SignUpForPrescriptionTextAlerts_LINK, browser)) {
+		    throw new Exception("Not able to click on Signup Text alers link");
+		}
+		if (ExpectedTargetPage.equalsIgnoreCase("SigninPage")) {
+		    if (!isElementPresentVerification(SignInPg_Heading, browser)) {
+			messagesMap.put("Expected page", "SignIn page is not displayed");
+			status = WARNING;
+		    }
+		} else if (ExpectedTargetPage.equalsIgnoreCase("TextAlertsPage")) {
+		    if (!isElementPresentVerification(EditTextMsgPreferencesPg_Heading, browser)) {
+			messagesMap.put("Expected page", "Edit text message preferences page is not displayed");
+			status = WARNING;
+		    } else if (ExpectedTargetPage.equalsIgnoreCase("CompleteYourAccount")) {
+			if (!isElementPresentVerification(CompleteYourwalgreensAccountPg_Heading, browser)) {
+			    messagesMap.put("Expected page", "complete your walgreens.com account page is not displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+		browserBack(browser);
+	    }
+	    if (RefillRx.equalsIgnoreCase("Yes")) {
+		if (!clearAndEnterText(ExpressRxNumber_TXT, ExpressRxNumber, browser)) {
+		    messagesMap.put("In Store express refill tab page", "Express refill prescription text box is not found");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Refill_BTN, browser)) {
+		    throw new Exception("Not able to click on Refill button in in store express refill tab page");
+		}
+		if (!isElementPresentVerification(InStoreExpressRefillPg_Heading, browser)) {
+		    messagesMap.put("In Store express refill page", "In store express refill page is not displayed");
+		    status = WARNING;
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method only Validates for Newly Registered user CLicking
+     *          Chat Live with Walgreens Pharmacy Professional button
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date -27-Dec-12
+     ************************************************************* 
+     */
+    public static void PharmacyLiveChatValidation(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String Overlayclose_LNK = "//p/a[@id='back']~XPATH";
+	String PharmacyLiveChat_IMG = "//img[@alt='Chat Live with Walgreens Pharmacy Professional']~XPATH";
+	String PharmacyChatPage_ELM = "//h1[contains(text(),'Is Your Question Regarding')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(PharmacyLiveChat_IMG, browser)) {
+		throw new Exception("Not able to click Pharmacy chat live button in online pharmacy tour page");
+	    }
+	    switchToOverlay(browser);
+	    // Click Close button in overlay
+	    if (isElementPresentVerification(Overlayclose_LNK, browser)) {
+		if (!isElementPresentVerifyClick(Overlayclose_LNK, browser)) {
+		    throw new Exception("Not able to click Close Button in the overlay");
+		}
+
+	    }
+	    switchToDefault(browser);
+	    // Check for Pharmacy chat page
+	    if (!isElementPresentVerification(PharmacyChatPage_ELM, browser)) {
+		messagesMap.put("Expected page", "Pharmacy chat page is not displayed");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

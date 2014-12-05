@@ -1,0 +1,673 @@
+@checkout @pharmacyCheckout @TwoDayFreeShippingValidations
+
+Feature: Customer verifies the shopping cart, shipping method, review order and order confirmation pages for Free two day shipping
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-1
+Scenario: 2DS Changes for New  in cart for JS , US AK Address Exp Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-1 	|
+
+Given "CAC-TwoDayFreeShippingValidations-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| CommonData 	 | login     | NonLoyaltyUser	  |
+
+And "CAC-TwoDayFreeShippingValidations-1" Customer Clears the Shopping Cart
+
+When "CAC-TwoDayFreeShippingValidations-1" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress     | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | -         | -         | 1140 W Parks Hwy  | Wasilla   | 2	   | 99654   |  -     |		-		  | -			 |  - 	       |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			 |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| Expedited 	|
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|Expedited		|
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-1	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-2
+
+Scenario: 2DS Changes for New and SS and CL  in cart for JS , US IL Address Standard Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-2" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-2 	|
+
+Given "CAC-TwoDayFreeShippingValidations-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       |
+| CommonData 	 | login     | Rxuserauth3 |
+
+And "CAC-TwoDayFreeShippingValidations-2" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer adds Daily Living items to the cart from search.
+
+And "CAC-TwoDayFreeShippingValidations-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CAC-TwoDayFreeShippingValidations-2" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Test      | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -	   |siva@testebiz.com  | 8471234567   |  -          |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| standard   	|
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|standard		|
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-2" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-2	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-3
+
+Scenario: 2DS Changes for New  and SS   in cart for JS , US HI Address Overnight Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-3" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-3 	|
+
+Given "CAC-TwoDayFreeShippingValidations-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | NonLoyaltyUser |
+
+And "CAC-TwoDayFreeShippingValidations-3" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer adds Daily Living items to the cart from search.
+
+When "CAC-TwoDayFreeShippingValidations-3" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress     | City      | State | ZipCode |ZipExtn | EmailAddress  		| PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | test      | test      | 91-2040 Pahuhu Pl | Ewa Beach | 14    | 99654   |  -     |siva@testebiz.com    | 8471234567   |  -          |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| overnight       |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| overnight 	|
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|overnight		|
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-3" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-3	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-4
+
+Scenario: 2DS Changes for New  and CL  in cart for JS , US IL Address Expedited Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-4" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-4 	|
+
+Given "CAC-TwoDayFreeShippingValidations-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       |
+| CommonData 	 | login     | Rxuserauth3 |
+
+And "CAC-TwoDayFreeShippingValidations-4" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CAC-TwoDayFreeShippingValidations-4" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Test      | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com  | 8471234567   |  -		    |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| Expedited 	|
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|Expedited		|
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-4" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-4	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-5
+Scenario: 2DS Changes for New and Refill RX   in cart for JS , US IL Address Overnight Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-5" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-5 	|
+
+Given "CAC-TwoDayFreeShippingValidations-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2	  |
+
+And "CAC-TwoDayFreeShippingValidations-5" Customer Clears the Shopping Cart
+
+When  "CAC-TwoDayFreeShippingValidations-5" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-TwoDayFreeShippingValidations-5" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | -	       | -         | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -	   |	-			   |	 -   	  |  -	       |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| overnight       |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| overnight 	|
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|overnight		|
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-5" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-5	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-6
+Scenario: 2DS Changes for New and Transfer  and SS and CL  in cart for JS , US IL Address Standard Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-6" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-6 	|
+
+Given "CAC-TwoDayFreeShippingValidations-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | NonLoyaltyUser |
+
+And "CAC-TwoDayFreeShippingValidations-6" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer adds Daily Living items to the cart from search.
+
+And "CAC-TwoDayFreeShippingValidations-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CAC-TwoDayFreeShippingValidations-6" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+When "CAC-TwoDayFreeShippingValidations-6" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Test      | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com  | 8471234567   |  -		    |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| standard  	|
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|standard		|
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-6" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-6	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-7
+Scenario: 2DS Changes for New and Refill RX and Transfer and SS  in cart for JS , US IL Address Expedited Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-7" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-7 	|
+
+Given "CAC-TwoDayFreeShippingValidations-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| CommonData 	 | login     | NonLoyaltyUser	  |
+
+And "CAC-TwoDayFreeShippingValidations-7" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer adds Daily Living items to the cart from search.
+
+When "CAC-TwoDayFreeShippingValidations-7" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+When "CAC-TwoDayFreeShippingValidations-7" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  Yes		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Test      | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com  | 8471234567   |  - 	       |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  Yes		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  Yes		| standard  	|
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  Yes		|standard		|
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-7" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-7	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-8
+Scenario: 2DS Changes for Mail Plan  in cart for JS , US AK Address Standard Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-8 	|
+
+Given "CAC-TwoDayFreeShippingValidations-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | MailPlanUser2  |
+
+And "CAC-TwoDayFreeShippingValidations-8" Customer Clears the Shopping Cart
+
+When  "CAC-TwoDayFreeShippingValidations-8" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | mailrx9   |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  NO		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress     | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | -         | -         | 1140 W Parks Hwy  | Wasilla   | 2	   | 99654   |  -     |		-		  | -			 |  - 	       |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  No		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  No		| standard 	    |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  No       |standard		|
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-8	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-TwoDayFreeShippingValidations-9
+Scenario: 2DS Changes for Refill RX and SS and CL in cart for JS , US HI Address Expedited Shipping JS
+
+Given  "CAC-TwoDayFreeShippingValidations-9" Customer starts the scenario:
+| InputFileName | SheetName 		  			  | RowId      							    |
+| QC-CAC	    | TwoDayFreeShippingValidations   | CAC-TwoDayFreeShippingValidations-9 	|
+
+Given "CAC-TwoDayFreeShippingValidations-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | RXUser80       |
+
+And "CAC-TwoDayFreeShippingValidations-9" Customer Clears the Shopping Cart
+
+And "CAC-TwoDayFreeShippingValidations-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer adds Daily Living items to the cart from search.
+
+And "CAC-TwoDayFreeShippingValidations-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "CAC-TwoDayFreeShippingValidations-9" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | refillRX220 |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Shopping Cart	|  No		|	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress     | City      | State | ZipCode |ZipExtn | EmailAddress  | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | test      | test      | 91-2040 Pahuhu Pl | Ewa Beach | 14    | 99654   |  -     |		-		  | -			 |  - 	       |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	 |FreeTwoDay |ShippingMethod |
+|Shipping Method |  No		 |	 -			|
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       |           -              |       -	 	            |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   	|FreeTwoDay |ShippingMethod |
+|Review Order	|  No		| Expedited 	|
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer validates the Free Shipping Message for New Rx:
+|TargetPage   		|FreeTwoDay |ShippingMethod |
+|Order Confirmation	|  No		|Expedited		|
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-TwoDayFreeShippingValidations-9" Customer finished testing the scenario:
+| InputFileName | SheetName						   |	 RowId      			 	   			|
+| QC-CAC	    | TwoDayFreeShippingValidations    | CAC-TwoDayFreeShippingValidations-9	 	|

@@ -1,0 +1,121 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout;
+
+import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout.SpecialtyLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.And;
+import cucumber.table.DataTable;
+
+public class SpecialtyCheckoutSteps {
+
+    @And("^\"([^\"]*)\" Customer validates Specialty Information in the shopping cart page:$")
+    public void Customer_validates_Specialty_Information_in_the_shopping_cart_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates Specialty Information in the shopping cart page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SpecialtyLibrary.verificationOfSpecialtyRxInfoinCart(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @And("^\"([^\"]*)\" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:$")
+    public void Customer_validates_Specialty_Rx_Info_and_selects_delivery_date_in_Shipping_Method_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    Map<String, String> sharedStepProperties = new HashMap<String, String>();
+	    scenario.setSharedStepProperties(sharedStepProperties);
+	    
+	    step.setStepName("Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SpecialtyLibrary.verificationAndDeliverydateSelectionOfSpecialtyRxInfoinShipMethodPage(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @And("^\"([^\"]*)\" Customer Verifies the Note message about Specialty Rx in the Payment Options Page:$")
+    public void Customer_Verifies_the_Note_message_about_Specialty_Rx_in_the_Payment_Options_Page(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Verifies the Note message about Specialty Rx in the Payment Options Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SpecialtyLibrary.verifyingNoteMsginPaymentOptionsPage(browser, step);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @And("^\"([^\"]*)\" Customer validates Specialty Rx Info in the Order Confirmation page:$")
+    public void Customer_validates_Specialty_Rx_Info_in_the_Order_Confirmation_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer validates Specialty Rx Info in the Order Confirmation page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SpecialtyLibrary.verifySpecialtyRxInfoInOrderConfirmPage(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @And("^\"([^\"]*)\" Customer validates Specialty Rx Info in the Order Review page:$")
+    public void Customer_validates_Specialty_Rx_Info_in_the_Order_Review_page(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer validates Specialty Rx Info in the Order Review page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    SpecialtyLibrary.verifySpecialtyRxInfoInOrderReviewPage(browser, step);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

@@ -1,0 +1,315 @@
+@pharmacy @HealthInsuranceValidations
+Feature: To validate various Health Insurance related functionality. 
+
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-1 
+Scenario: Customer validates health insurance information section in Prescription insurance information page for user with no insurance information on file
+#User : Authenticated Pharma User with no insurance information on file
+
+Given  "RX-HealthInsurance-1" Customer starts the scenario:
+| InputFileName | SheetName 		    | RowId      		        |
+| QC-RX	    	| HealthInsurance  		| RX-HealthInsurance-1 		|
+
+Given "RX-HealthInsurance-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                | 
+| CommonData 	 | login     | PharmaUser007	    | 
+
+Then "RX-HealthInsurance-1" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink 	        |		Yes		     |		No     |    No             |
+| AccountDashboard  | LinkNavigation  	| NoInsuranceInProfileMessage    	        |		No		     |		No     |    No             |
+| AccountDashboard	| LinkNavigation	| AddInsurancePlan                          |	    No			 |      Yes    |    No             |
+
+Then "RX-HealthInsurance-1" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllFieldsEmpty          	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-1" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard	| LinkNavigation	| PendingInsuranceMessage                   |		No			 |      No     |	No			   |
+
+Then "RX-HealthInsurance-1" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-1" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-HealthInsurance-1" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-1    |
+
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-2 
+Scenario: Customer validates health insurance information section in Prescription insurance information page for user with one insurance information on file
+#User : Authenticated Pharma User with insurance information on file
+
+Given  "RX-HealthInsurance-2" Customer starts the scenario:
+| InputFileName | SheetName 		    | RowId      		        |
+| QC-RX	    	| HealthInsurance  		| RX-HealthInsurance-2 		|
+
+Given "RX-HealthInsurance-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                            | 
+| CommonData 	 | login     | UserWithInsuranceOnProfile1	    | 
+
+Then "RX-HealthInsurance-2" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			   | ClickObjectinTab    |TargetOverlay|
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink    |		Yes		     |		No     |
+| AccountDashboard	| LinkNavigation	| AddNewPlan	                   |	    No			 |      Yes    |
+
+#Note : Valid data that is to added as Prescription insurance information must be unique from the one that is already present in the front end
+
+Then "RX-HealthInsurance-2" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName        | RowId                 	|
+| Pharmacy        | RxInsuranceInfo  | AllFieldsEmpty          	|
+| Pharmacy        | RxInsuranceInfo  | InvalidDetails1          |
+| Pharmacy        | RxInsuranceInfo  | InvalidDetails2          |
+| Pharmacy        | RxInsuranceInfo  | AllDataPresent          	|
+
+Then "RX-HealthInsurance-2" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | 
+| AccountDashboard	| LinkNavigation	| PendingInsuranceMessage                   |
+
+Then "RX-HealthInsurance-2" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|	
+
+Then "RX-HealthInsurance-2" Customer logout from walgreens:
+| Source |
+| Global |	
+
+Then "RX-HealthInsurance-2" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-2    |
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-3
+Scenario: Customer validates cancel button and related functionalities in Health Insurance Overlay
+
+Given "RX-HealthInsurance-3" Customer starts the scenario:
+| InputFileName | SheetName 		    | RowId      		        |
+| QC-RX	    	| HealthInsurance  		| RX-HealthInsurance-3 		|
+
+Given "RX-HealthInsurance-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                | 
+| CommonData 	 | login     | PharmaUser007	    | 
+
+Then "RX-HealthInsurance-3" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink 	        |		Yes		     |		No     |    No             |
+| AccountDashboard	| LinkNavigation	| AddInsurancePlan                          |	    No			 |      Yes    |    No             |
+| AccountDashboard	| LinkNavigation	| CancelInsurance                           |	    No			 |      No     |	Yes			   |
+| AccountDashboard  | LinkNavigation  	| NoInsuranceInProfileMessage    	        |		No		     |		No     |	No             |
+
+Then "RX-HealthInsurance-3" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-HealthInsurance-3" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-3    |
+
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-4
+
+Scenario: Customer validates Add Prescription Insurance Overlay for family member with no insurance on file
+
+Given "RX-HealthInsurance-4" Customer starts the scenario:
+| InputFileName  | SheetName        |  RowId                   |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-4    |
+
+Given "RX-HealthInsurance-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                            | 
+| CommonData 	 | login     | UserWithInsuranceOnProfile1	    |
+
+Then "RX-HealthInsurance-4" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	         		        |
+| PharmacyLinkVerification   |DestinationPageURL  | YourAccountFamilyPrescriptionURL   	|
+
+#Note: Please check in which order the user is displayed in front end and use the appropriate locator from the sheet
+
+Then "RX-HealthInsurance-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			 | SheetName  		  | RowId      	                     |
+| AccountDashboard           | LinkNavigation  	  | ThirdMemberAddInsurancePlan  	 |		
+
+Then "RX-HealthInsurance-4" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName        | RowId                 	|
+| Pharmacy        | RxInsuranceInfo  | AllDataPresent          	|
+
+Then "RX-HealthInsurance-4" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | 
+| AccountDashboard	| LinkNavigation	| PendingInsuranceMessage                   |
+
+Then "RX-HealthInsurance-4" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|	
+
+Then "RX-HealthInsurance-4" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-HealthInsurance-4" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-4    |
+
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-5
+Scenario: Customer validates Add Prescription Insurance Overlay for family member with one insurance on file
+
+Given "RX-HealthInsurance-5" Customer starts the scenario:
+| InputFileName  | SheetName        |  RowId                   |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-5    |
+
+Given "RX-HealthInsurance-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                            | 
+| CommonData 	 | login     | UserWithInsuranceOnProfile1	    |
+
+Then "RX-HealthInsurance-5" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	         		        |
+| PharmacyLinkVerification   |DestinationPageURL  | YourAccountFamilyPrescriptionURL   	|
+
+#Note: Please check in which order the user is displayed in front end and use the appropriate locator from the sheet
+
+Then "RX-HealthInsurance-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			 | SheetName  		  | RowId      	                     |
+| AccountDashboard           | LinkNavigation  	  | SecondMemberAddInsurancePlan  	 |
+
+Then "RX-HealthInsurance-5" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName        | RowId                 	|
+| Pharmacy        | RxInsuranceInfo  | AllDataPresent          	|
+
+Then "RX-HealthInsurance-5" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | 
+| AccountDashboard	| LinkNavigation	| PendingInsuranceMessageNewStore           |
+
+Then "RX-HealthInsurance-5" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|	
+
+Then "RX-HealthInsurance-5" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-HealthInsurance-5" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-5    |
+
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-6
+Scenario: Customer validates the Add Prescription Insurance Overlay for admin member with no insurance information and one insurance and validate the success message after the addding insurance information 
+
+Given "RX-HealthInsurance-6" Customer starts the scenario:
+| InputFileName  | SheetName        |  RowId                   |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-6    |
+
+Given "RX-HealthInsurance-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   				 | 
+| CommonData 	 | login     | InsuranceUser1	  	 |
+
+Then "RX-HealthInsurance-6" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink 	        |		Yes		     |		No     |    No             |
+| AccountDashboard	| LinkNavigation	| AddInsurancePlan                          |	    No			 |      Yes    |    No             |
+
+Then "RX-HealthInsurance-6" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-6" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-6" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId       | ClickObjectinTab |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard	| LinkNavigation	| AddNewPlan  |	    No			 |      Yes    |    No             |
+
+Then "RX-HealthInsurance-6" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-6" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-6" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			| ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| AccountDashboard  | LinkNavigation  	| MyWalgreensStoreLink 	        |		Yes		     |		No     |    No             |
+
+Then "RX-HealthInsurance-6" Customer validates Success message after entering the information in the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-6" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-6    |
+#-----------------------------------------------------------------------------------------------------------------
+@RX-HealthInsurance-7
+Scenario: Customer validates Store Locator Overlay for the User without preferred store while adding insurance information
+
+Given "RX-HealthInsurance-7" Customer starts the scenario:
+| InputFileName  | SheetName        |  RowId                   |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-7    |
+
+And "RX-HealthInsurance-7" Customer clicks on an object and validates the expected results:
+| InputFileName  		   | SheetName | RowId      	        |
+| PharmacyLinkVerification | Anonymous | Transfer Prescriptions |
+
+And "RX-HealthInsurance-7" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 		      | SaveUserNameFlag |
+| Registration  | RxRegistration | MatchedUnauthenticated | Yes				 |
+
+And "RX-HealthInsurance-7" Customer clicks on an object and validates the expected results:
+| InputFileName  		   | SheetName 	     | RowId      	      	|
+| PharmacyLinkVerification | UnAuthenticated | UnauthRefillRx	    |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration |
+
+Then "RX-HealthInsurance-7" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType |
+| Registration  | RxRegistration | MatchedUnauthenticated | Yes 				| MATCHED  |
+
+Given "RX-HealthInsurance-7" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "RX-HealthInsurance-7" Customer selects the CSC Window
+
+And "RX-HealthInsurance-7" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+| Registration  | RxRegistration | MatchedUnauthenticated |
+
+Then "RX-HealthInsurance-7" Customer selects the Default Window
+
+And "RX-HealthInsurance-7" Customer clicks on an object and validates the expected results:
+| InputFileName  		   | SheetName 	     | RowId      	      	|
+| PharmacyLinkVerification | UnAuthenticated | UnauthRefillRx	    |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration |
+| HomepageLinks            | RxPage          | Manage Prescriptions |
+
+Then "RX-HealthInsurance-7" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	        | ClickObjectinTab   |TargetOverlay|ClickObjectOverlay |
+| HomepageLinks     | Homepage        	| Your Account		 						|		No		     |		No     |    No             |
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink 	        |		Yes		     |		No     |    No             |
+| AccountDashboard	| LinkNavigation	| AddInsurancePlan                          |	    No			 |      Yes    |    No             |
+
+Then "RX-HealthInsurance-7" Customer Validates the Errors and Adds value on the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-7" Customer Validates Store Locator Overlay after entering the information in the Add prescription insurance info overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-7" Customer validates entered information in the Add Insurance Overlay:
+| InputFileName	  | SheetName       | RowId                 	|
+| Pharmacy        | RxInsuranceInfo | AllDataPresent          	|
+
+Then "RX-HealthInsurance-7" Customer verify whether Store is selected is reflected in account home page:
+| InputFileName  | SheetName 		| RowId        	  | 
+| Pharmacy       | RxInsuranceInfo	| AllDataPresent  |
+
+Then "RX-HealthInsurance-7" Customer finished testing the scenario:
+| InputFileName  | SheetName        |  RowId      	 	       |
+| QC-RX   		 | HealthInsurance  |  RX-HealthInsurance-7    |
+#-----------------------------------------------------------------------------------------------------------------
+ 

@@ -1,0 +1,2328 @@
+@checkout @sdd @CARTMIXCheckoutPart2
+Feature: This feature Contains different validations of mix cart in checkout.
+
+#Scenarios are starting from 3rd row to 28th row in the  Mixed Cart Checkout File
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-1
+Scenario: Customer is able to place the Rx Refill Pickup Order
+
+Given "SDD-CARTMIXPART2-1" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-1|
+
+Given "SDD-CARTMIXPART2-1" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   |
+| CommonData 	| login 	   |SDDuser5 |
+
+And "SDD-CARTMIXPART2-1" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId    |
+| CommonData    | login      | SDDuser5 |
+
+And "SDD-CARTMIXPART2-1" Customer Clears the Shopping Cart
+
+When  "SDD-CARTMIXPART2-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx20 |
+
+Then "SDD-CARTMIXPART2-1" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	            |
+| SDDData       | subTotaldetails | RxRefillPickupinfo2 |
+
+Then "SDD-CARTMIXPART2-1" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PickupLocation	  |
+
+Then "SDD-CARTMIXPART2-1" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-1" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId               |
+|  SDDData      | orderreviewdetails |RxRefillPickupinfo2  |
+
+Then "SDD-CARTMIXPART2-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |RxRefillPickupinfo2   |
+
+Then "SDD-CARTMIXPART2-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-1" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    |
+| CommonData     | login     | SDDuser5 |
+
+Then "SDD-CARTMIXPART2-1" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	           |
+|    SDDData    | orderconfirmationdetails |  RxRefillPickupinfo2  |
+
+Then "SDD-CARTMIXPART2-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-1 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-2
+Scenario: Customer is able to place the Rx Transfer Ship Order
+
+Given "SDD-CARTMIXPART2-2" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-2|
+
+Given "SDD-CARTMIXPART2-2" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      |
+| CommonData 	| login 	   |Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-2" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-2" Customer Clears the Shopping Cart
+
+When "SDD-CARTMIXPART2-2" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "SDD-CARTMIXPART2-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		     |
+| SDDData       | Product Details  | RxTransferInfo1 |
+
+Then "SDD-CARTMIXPART2-2" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	            |
+| SDDData       | subTotaldetails | RxTransferShipInfo1 |
+
+Then "SDD-CARTMIXPART2-2" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-CARTMIXPART2-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-CARTMIXPART2-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SDD-CARTMIXPART2-2" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId               |
+|  SDDData      | orderreviewdetails |RxTransferShipInfo1  |
+
+Then "SDD-CARTMIXPART2-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |RxTransferShipInfo1   |
+
+Then "SDD-CARTMIXPART2-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-2" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-2" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	           |
+|    SDDData    | orderconfirmationdetails |  RxTransferShipInfo1  |
+
+Then "SDD-CARTMIXPART2-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-2 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@SDD-CARTMIXPART2-3
+Scenario: Customer is able to place DL(ship) order
+
+Given "SDD-CARTMIXPART2-3" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-3|
+
+Given "SDD-CARTMIXPART2-3" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      |
+| CommonData 	| login 	   |Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-3" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-3" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-3" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-CARTMIXPART2-3" Customer Goes to the Shopping Cart
+
+Then "SDD-CARTMIXPART2-3" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	       |
+| SDDData       | subTotaldetails | DLWebOnlyInfo1 |
+
+Then "SDD-CARTMIXPART2-3" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-CARTMIXPART2-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+|   -	          |    standard              |       -	 	            |
+
+Then "SDD-CARTMIXPART2-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | 
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-3" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId          |
+|  SDDData      | orderreviewdetails |DLWebOnlyInfo1  |
+
+Then "SDD-CARTMIXPART2-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	   |
+| SDDData       | orderconfirmationdetails |DLWebOnlyInfo1 |
+
+Then "SDD-CARTMIXPART2-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-3" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-3" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	      |
+|    SDDData    | orderconfirmationdetails |  DLWebOnlyInfo1  |
+
+Then "SDD-CARTMIXPART2-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-3 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-4
+Scenario: Customer is able to place CL order
+
+Given "SDD-CARTMIXPART2-4" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-4|
+
+Given "SDD-CARTMIXPART2-4" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      |
+| CommonData 	| login 	   |Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-4" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-4" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-4" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-CARTMIXPART2-4" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	|
+| SDDData       | subTotaldetails | CLinfo1 |
+
+Then "SDD-CARTMIXPART2-4" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -		                 | overnight                |
+
+Then "SDD-CARTMIXPART2-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-4" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId   |
+|  SDDData      | orderreviewdetails |CLinfo1  |
+
+Then "SDD-CARTMIXPART2-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId  |
+| SDDData       | orderconfirmationdetails |CLinfo1 |
+
+Then "SDD-CARTMIXPART2-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-4" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-4" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId     |
+|    SDDData    | orderconfirmationdetails |  CLinfo1  |
+
+Then "SDD-CARTMIXPART2-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-4 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-5
+Scenario: Customer is able to place MP Rx order
+
+Given "SDD-CARTMIXPART2-5" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-5|
+
+Given "SDD-CARTMIXPART2-5" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-5" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-5" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId     		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-5" Customer Clears the Shopping Cart
+
+When  "SDD-CARTMIXPART2-5" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	  |
+| CACData       | RefillRx  | mailRx5     |
+
+Then "SDD-CARTMIXPART2-5" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	  |
+| SDDData       | subTotaldetails | MPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-5" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage    |
+| Shipping Information	|
+
+Then "SDD-CARTMIXPART2-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-CARTMIXPART2-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-5" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId     |
+|  SDDData      | orderreviewdetails |MPRXInfo1  |
+
+Then "SDD-CARTMIXPART2-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-5" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    |
+| SDDData       | orderconfirmationdetails |MPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-5" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-5" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      |
+|    SDDData    | orderconfirmationdetails |  MPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-5 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-6
+Scenario: Customer is able to place Refill Rx Pickup and MP Rx order
+
+Given "SDD-CARTMIXPART2-6" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-6|
+
+Given "SDD-CARTMIXPART2-6" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-6" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-6" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-6" Customer Clears the Shopping Cart
+
+When  "SDD-CARTMIXPART2-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	  |
+| CACData       | RefillRx  | mailRx5     |
+| CACData       | RefillRx  | retailRx17  |
+
+Then "SDD-CARTMIXPART2-6" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	           |
+| SDDData       | subTotaldetails | RxRefillAndMPInfo2 |
+
+Then "SDD-CARTMIXPART2-6" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-6" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "SDD-CARTMIXPART2-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-6" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId              |
+|  SDDData      | orderreviewdetails |RxRefillAndMPInfo2  |
+
+Then "SDD-CARTMIXPART2-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-6" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId             |
+| SDDData       | orderconfirmationdetails |RxRefillAndMPInfo2 |
+
+Then "SDD-CARTMIXPART2-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-6" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-6" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId               |
+|    SDDData    | orderconfirmationdetails |  RxRefillAndMPInfo2 |
+
+Then "SDD-CARTMIXPART2-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-6 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-7
+Scenario: Customer is able to place DL and CL order for ship
+
+Given "SDD-CARTMIXPART2-7" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-7|
+
+Given "SDD-CARTMIXPART2-7" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      |
+| CommonData 	| login 	   |Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-7" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-7" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-7" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-7" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-CARTMIXPART2-7" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	         |
+| SDDData       | subTotaldetails | DLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-7" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |     standard             |      standard            |
+
+Then "SDD-CARTMIXPART2-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-7" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId            |
+|  SDDData      | orderreviewdetails |DLAndCLshipInfo1  |
+
+Then "SDD-CARTMIXPART2-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId           |
+| SDDData       | orderconfirmationdetails |DLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-7" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-7" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId             |
+|    SDDData    | orderconfirmationdetails |  DLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-7 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-8
+Scenario: Customer is able to place DL (ship)and Rx order for pickup
+
+Given "SDD-CARTMIXPART2-8" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-8|
+
+Given "SDD-CARTMIXPART2-8" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       |
+| CommonData 	| login 	   |Rxuserauth3  |
+
+And "SDD-CARTMIXPART2-8" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-8" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-8" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-8" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-8" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "SDD-CARTMIXPART2-8" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	                  |
+| SDDData       | subTotaldetails | NewRxPickUpandDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-8" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-8" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |     standard             |      -                   |
+
+Then "SDD-CARTMIXPART2-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-8" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId                     |
+|  SDDData      | orderreviewdetails |NewRxPickUpandDLShipInfo1  |
+
+Then "SDD-CARTMIXPART2-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-8" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId          	  	 |
+| SDDData       | orderconfirmationdetails |NewRxPickUpandDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-8" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-8" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId               	    |
+|    SDDData    | orderconfirmationdetails |  NewRxPickUpandDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-8 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-9
+Scenario: Customer is able to place Rx Pick up and CL order.
+
+Given "SDD-CARTMIXPART2-9" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-9|
+
+Given "SDD-CARTMIXPART2-9" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       |
+| CommonData 	| login 	   |Rxuserauth3  |
+
+And "SDD-CARTMIXPART2-9" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-9" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | Rxuserauth3 |
+
+And "SDD-CARTMIXPART2-9" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-9" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "SDD-CARTMIXPART2-9" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	              |
+| SDDData       | subTotaldetails | NewRxPickUpandCLInfo1 |
+
+Then "SDD-CARTMIXPART2-9" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-9" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-9" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |     -                    |     standard             |
+
+Then "SDD-CARTMIXPART2-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-9" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId                 |
+|  SDDData      | orderreviewdetails |NewRxPickUpandCLInfo1  |
+
+Then "SDD-CARTMIXPART2-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId          	  |
+| SDDData       | orderconfirmationdetails |NewRxPickUpandCLInfo1 |
+
+Then "SDD-CARTMIXPART2-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-9" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId       |
+| CommonData     | login     | Rxuserauth3 |
+
+Then "SDD-CARTMIXPART2-9" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId               	|
+|    SDDData    | orderconfirmationdetails |  NewRxPickUpandCLInfo1 |
+
+Then "SDD-CARTMIXPART2-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		 |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-9 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-10
+Scenario: Customer is able to place DL and Rx(refill) order for ship
+
+Given "SDD-CARTMIXPART2-10" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-10|
+
+Given "SDD-CARTMIXPART2-10" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-10" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-10" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-10" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-10" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-10" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx18 |
+
+Then "SDD-CARTMIXPART2-10" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		       |
+| SDDData       | Product Details  | RefillRxShipInfo2 |
+
+Then "SDD-CARTMIXPART2-10" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	         |
+| SDDData       | subTotaldetails | RxAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-10" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SDD-CARTMIXPART2-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |    standard              |     -                    |
+
+Then "SDD-CARTMIXPART2-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-10" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId            |
+|  SDDData      | orderreviewdetails |RxAndDLShipInfo1  |
+
+Then "SDD-CARTMIXPART2-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId           |
+| SDDData       | orderconfirmationdetails |RxAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-10" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+Then "SDD-CARTMIXPART2-10" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId             |
+|    SDDData    | orderconfirmationdetails |  RxAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-10 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-11
+Scenario: Customer is able to place CL and Rx(refill) order for ship
+
+Given "SDD-CARTMIXPART2-11" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-11|
+
+Given "SDD-CARTMIXPART2-11" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-11" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-11" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-11" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-11" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx18 |
+
+Then "SDD-CARTMIXPART2-11" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		       |
+| SDDData       | Product Details  | RefillRxShipInfo2 |
+
+Then "SDD-CARTMIXPART2-11" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	         |
+| SDDData       | subTotaldetails | RxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-11" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-11" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-11" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |    -                     |   standard               |
+
+Then "SDD-CARTMIXPART2-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-11" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId            |
+|  SDDData      | orderreviewdetails |RxAndCLShipInfo1  |
+
+Then "SDD-CARTMIXPART2-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId           |
+| SDDData       | orderconfirmationdetails |RxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-11" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+Then "SDD-CARTMIXPART2-11" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId             |
+|    SDDData    | orderconfirmationdetails |  RxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-11 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-12
+Scenario: Customer is able to place DL and MP Rx order for ship
+
+Given "SDD-CARTMIXPART2-12" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-12|
+
+Given "SDD-CARTMIXPART2-12" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    		    |
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-12" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-12" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId     		  |
+| CommonData    | login      | MultiRefillRxUser1 |
+
+And "SDD-CARTMIXPART2-12" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-12" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   |
+| CACData       | RefillRx  | mailRx5 |
+
+Then "SDD-CARTMIXPART2-12" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	           |
+| SDDData       | subTotaldetails | MPRXAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-12" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SDD-CARTMIXPART2-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |    standard              |     -                    |
+
+Then "SDD-CARTMIXPART2-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-12" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId            |
+|  SDDData      | orderreviewdetails |MPRXAndDLShipInfo1|
+
+Then "SDD-CARTMIXPART2-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId             |
+| SDDData       | orderconfirmationdetails |MPRXAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-12" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-12" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId               |
+|    SDDData    | orderconfirmationdetails |  MPRXAndDLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-12 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-13
+Scenario: Customer is able to place DL(Ship), Refill Rx Pickup and MP Rx order
+
+Given "SDD-CARTMIXPART2-13" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		|
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-13|
+
+Given "SDD-CARTMIXPART2-13" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     		    |
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-13" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-13" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId     		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-13" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-13" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	  |
+| CACData       | RefillRx  | mailRx5     |
+| CACData       | RefillRx  | retailRx17  |
+
+Then "SDD-CARTMIXPART2-13" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	             |
+| SDDData       | subTotaldetails | RxRefillDLAndMPInfo1 |
+
+Then "SDD-CARTMIXPART2-13" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-13" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |          standard        |       -	 	            |
+
+Then "SDD-CARTMIXPART2-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-13" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId               |
+|  SDDData      | orderreviewdetails |RxRefillDLAndMPInfo1 |
+
+Then "SDD-CARTMIXPART2-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-13" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId               |
+| SDDData       | orderconfirmationdetails |RxRefillDLAndMPInfo1 |
+
+Then "SDD-CARTMIXPART2-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-13" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-13" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId                 |
+|    SDDData    | orderconfirmationdetails |  RxRefillDLAndMPInfo1 |
+
+Then "SDD-CARTMIXPART2-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-13 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-14
+Scenario: Customer is able to place Rx(Refill) Pickup,DL and CL order for ship
+
+Given "SDD-CARTMIXPART2-14" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-14|
+
+Given "SDD-CARTMIXPART2-14" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    |
+| CommonData 	| login 	   |SDDuser5  |
+
+And "SDD-CARTMIXPART2-14" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-14" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId     |
+| CommonData    | login      | SDDuser5  |
+
+And "SDD-CARTMIXPART2-14" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-14" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-14" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-14" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx20 |
+
+Then "SDD-CARTMIXPART2-14" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	                 |
+| SDDData       | subTotaldetails | RxPickupDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-14" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-14" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-14" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-14" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |     standard             |      standard            |
+
+Then "SDD-CARTMIXPART2-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-14" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		            |
+|  SDDData      | orderreviewdetails |RxPickupDLAndCLshipInfo1  |
+
+Then "SDD-CARTMIXPART2-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-14" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId                   |
+| SDDData       | orderconfirmationdetails |RxPickupDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-14" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    |
+| CommonData     | login     | SDDuser5 |
+
+Then "SDD-CARTMIXPART2-14" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId           		   |
+|    SDDData    | orderconfirmationdetails |  RxPickupDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-14 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-15
+Scenario: Customer is able to place Rx(Refill),DL and CL order for ship
+
+Given "SDD-CARTMIXPART2-15" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-15|
+
+Given "SDD-CARTMIXPART2-15" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-15" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-15" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-15" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-15" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-15" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-15" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx18 |
+
+Then "SDD-CARTMIXPART2-15" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		       |
+| SDDData       | Product Details  | RefillRxShipInfo2 |
+
+Then "SDD-CARTMIXPART2-15" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	           |
+| SDDData       | subTotaldetails | RxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-15" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-CARTMIXPART2-15" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-15" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |     standard             |      standard            |
+
+Then "SDD-CARTMIXPART2-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-15" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		      |
+|  SDDData      | orderreviewdetails |RxDLAndCLshipInfo1  |
+
+Then "SDD-CARTMIXPART2-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-15" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId             |
+| SDDData       | orderconfirmationdetails |RxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-15" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId       		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+Then "SDD-CARTMIXPART2-15" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId           	 |
+|    SDDData    | orderconfirmationdetails |  RxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-15 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-16
+Scenario: Customer is able to place CL and MP Rx order for ship
+
+Given "SDD-CARTMIXPART2-16" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-16|
+
+Given "SDD-CARTMIXPART2-16" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    		    |
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-16" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-16" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId    		  |
+| CommonData    | login      | MultiRefillRxUser1 |
+
+And "SDD-CARTMIXPART2-16" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-16" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-16" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   |
+| CACData       | RefillRx  | mailRx5 |
+
+Then "SDD-CARTMIXPART2-16" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	           |
+| SDDData       | subTotaldetails | MPRxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-16" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-16" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-16" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |    -                     |   standard               |
+
+Then "SDD-CARTMIXPART2-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-16" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId             |
+|  SDDData      | orderreviewdetails |MPRxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId             |
+| SDDData       | orderconfirmationdetails |MPRxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-16" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-16" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId               |
+|    SDDData    | orderconfirmationdetails |  MPRxAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-16 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-17
+Scenario: Customer is able to place MP Rx,DL and CL order for ship
+
+Given "SDD-CARTMIXPART2-17" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-17|
+
+Given "SDD-CARTMIXPART2-17" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     		    |
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-17" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-17" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-17" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-17" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-17" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-17" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   |
+| CACData       | RefillRx  | mailRx5 |
+
+Then "SDD-CARTMIXPART2-17" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	             |
+| SDDData       | subTotaldetails | MPRxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-17" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-CARTMIXPART2-17" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-17" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |     standard             |      standard            |
+
+Then "SDD-CARTMIXPART2-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-17" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		       |
+|  SDDData      | orderreviewdetails |MPRxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-17" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId               |
+| SDDData       | orderconfirmationdetails |MPRxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-17" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId      		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-17" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId           	   |
+|    SDDData    | orderconfirmationdetails |  MPRxDLAndCLshipInfo1 |
+
+Then "SDD-CARTMIXPART2-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-17 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-18
+Scenario: Customer is able to place Rx(Refill) Pickup, MP Rx and CL order for ship
+
+Given "SDD-CARTMIXPART2-18" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-18|
+
+Given "SDD-CARTMIXPART2-18" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     			|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-18" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-18" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-18" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-18" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-18" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | mailRx5    |
+| CACData       | RefillRx  | retailRx17 |
+
+Then "SDD-CARTMIXPART2-18" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	                   |
+| SDDData       | subTotaldetails | RxPickupMPRXAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-18" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-18" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-18" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-18" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-18" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |     -                    |      standard            |
+
+Then "SDD-CARTMIXPART2-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-18" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		       		 |
+|  SDDData      | orderreviewdetails |RxPickupMPRXAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-18" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId           		   |
+| SDDData       | orderconfirmationdetails |RxPickupMPRXAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-18" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     		  |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-18" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId           	 		 |
+|    SDDData    | orderconfirmationdetails |  RxPickupMPRXAndCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-18 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-19
+Scenario: Customer is able to place Rx(Refill) Pickup, MP Rx,DL and CL order for ship
+
+Given "SDD-CARTMIXPART2-19" Customer starts the scenario:
+| InputFileName | SheetName 	|RowId        		 |
+| QC-SDD		| CARTMIXPART2	| SDD-CARTMIXPART2-19|
+
+Given "SDD-CARTMIXPART2-19" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId      		|
+| CommonData 	| login 	   |MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-19" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-CARTMIXPART2-19" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      		   |
+| CommonData    | login      | MultiRefillRxUser1  |
+
+And "SDD-CARTMIXPART2-19" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-19" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-19" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-19" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | mailRx5    |
+| CACData       | RefillRx  | retailRx17 |
+
+Then "SDD-CARTMIXPART2-19" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	                     |
+| SDDData       | subTotaldetails | RxPickupMPRXAndDLCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-19" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-19" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-19" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-19" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress    	  | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-CARTMIXPART2-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |    standard              |      standard            |
+
+Then "SDD-CARTMIXPART2-19" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-19" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		       		   |
+|  SDDData      | orderreviewdetails |RxPickupMPRXAndDLCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-19" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId           		     |
+| SDDData       | orderconfirmationdetails |RxPickupMPRXAndDLCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-19" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId   		      |
+| CommonData     | login     | MultiRefillRxUser1 |
+
+Then "SDD-CARTMIXPART2-19" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId           	 		   |
+|    SDDData    | orderconfirmationdetails |  RxPickupMPRXAndDLCLShipInfo1 |
+
+Then "SDD-CARTMIXPART2-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        		  |
+| QC-SDD        | CARTMIXPART2	| SDD-CARTMIXPART2-19 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-20
+Scenario: Specialty User Adds only Specialty to cart and does checkout
+
+Given  "SDD-CARTMIXPART2-20" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-20 |
+
+Given "SDD-CARTMIXPART2-20" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       	|
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-20" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-20" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-20" Customer Clears the Shopping Cart
+
+When  "SDD-CARTMIXPART2-20" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+
+Then "SDD-CARTMIXPART2-20" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	  |
+| SDDData       | subTotaldetails | SPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-20" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-20" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage      |
+| Shipping Information	  |
+
+Then "SDD-CARTMIXPART2-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-20" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   Yes			|
+
+Then "SDD-CARTMIXPART2-20" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  	|
+|  SDDData      | orderreviewdetails |SPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-20" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    |
+| SDDData       | orderconfirmationdetails |SPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-20" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-20" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId       |
+|    SDDData    | orderconfirmationdetails |  SPRXInfo1  |
+
+Then "SDD-CARTMIXPART2-20" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-20  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-21
+Scenario: Customer place Rx(Refill) Pickup and SP Rx Order
+
+Given  "SDD-CARTMIXPART2-21" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-21 |
+
+Given "SDD-CARTMIXPART2-21" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-21" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-21" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-21" Customer Clears the Shopping Cart
+
+When  "SDD-CARTMIXPART2-21" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+| CACData       | RefillRx  | retailRx21   |
+
+Then "SDD-CARTMIXPART2-21" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-CARTMIXPART2-21" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection15 |
+
+Then "SDD-CARTMIXPART2-21" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	             |
+| SDDData       | subTotaldetails | RxPickupAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-21" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-21" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-21" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-21" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   yes			|
+
+Then "SDD-CARTMIXPART2-21" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  			   |
+|  SDDData      | orderreviewdetails |RxPickupAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-21" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   			 |
+| SDDData       | orderconfirmationdetails |RxPickupAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-21" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-21" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      		   |
+|    SDDData    | orderconfirmationdetails |  RxPickupAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-21" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-21  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-22
+Scenario: Customer place Rx(Refill) Pickup, DL and SP Rx Order for ship
+
+Given  "SDD-CARTMIXPART2-22" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-22 |
+
+Given "SDD-CARTMIXPART2-22" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-22" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-22" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-22" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-22" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-22" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+| CACData       | RefillRx  | retailRx21   |
+
+Then "SDD-CARTMIXPART2-22" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-CARTMIXPART2-22" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection15 |
+
+Then "SDD-CARTMIXPART2-22" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	               |
+| SDDData       | subTotaldetails | RxPickupAndDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-22" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-22" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-22" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-22" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-22" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   -			|
+
+Then "SDD-CARTMIXPART2-22" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |    standard              |      -                   |
+
+Then "SDD-CARTMIXPART2-22" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-22" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  			     |
+|  SDDData      | orderreviewdetails |RxPickupAndDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-22" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-22" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   			   |
+| SDDData       | orderconfirmationdetails |RxPickupAndDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-22" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-22" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      		 	 |
+|    SDDData    | orderconfirmationdetails |  RxPickupAndDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-22" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-22  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-23
+Scenario: Customer place Rx(Refill) Pickup, DL ,CL and SP Rx Order for ship
+
+Given  "SDD-CARTMIXPART2-23" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-23 |
+
+Given "SDD-CARTMIXPART2-23" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-23" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-23" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-23" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-23" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-23" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-23" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+| CACData       | RefillRx  | retailRx21   |
+
+Then "SDD-CARTMIXPART2-23" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-CARTMIXPART2-23" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection15 |
+
+Then "SDD-CARTMIXPART2-23" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	                 |
+| SDDData       | subTotaldetails | RxPickupAndCLDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-23" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-23" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-CARTMIXPART2-23" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-CARTMIXPART2-23" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-23" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-23" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-23" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   -			|
+
+Then "SDD-CARTMIXPART2-23" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |    standard              |     standard             |
+
+Then "SDD-CARTMIXPART2-23" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-23" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  			       |
+|  SDDData      | orderreviewdetails |RxPickupAndCLDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-23" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-23" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   				 |
+| SDDData       | orderconfirmationdetails |RxPickupAndCLDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-23" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-23" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-23" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      			   |
+|    SDDData    | orderconfirmationdetails |  RxPickupAndCLDLSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-23" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-23  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-24
+Scenario: Customer place DL and SP Rx Order for ship
+
+Given  "SDD-CARTMIXPART2-24" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-24 |
+
+Given "SDD-CARTMIXPART2-24" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-24" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-24" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-24" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-24" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-CARTMIXPART2-24" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+
+Then "SDD-CARTMIXPART2-24" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	       |
+| SDDData       | subTotaldetails | SPRXAndDLInfo1 |
+
+Then "SDD-CARTMIXPART2-24" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-24" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage    |
+| Shipping Information	|
+
+Then "SDD-CARTMIXPART2-24" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-24" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   -			|
+
+Then "SDD-CARTMIXPART2-24" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |    standard              |     -                    |
+
+Then "SDD-CARTMIXPART2-24" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-24" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		 |
+|  SDDData      | orderreviewdetails |SPRXAndDLInfo1 |
+
+Then "SDD-CARTMIXPART2-24" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-24" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   	   |
+| SDDData       | orderconfirmationdetails |SPRXAndDLInfo1 |
+
+Then "SDD-CARTMIXPART2-24" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-24" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-24" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      	 |
+|    SDDData    | orderconfirmationdetails |  SPRXAndDLInfo1 |
+
+Then "SDD-CARTMIXPART2-24" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-24  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-25
+Scenario: Customer place CL and SP Rx Order for ship
+
+Given  "SDD-CARTMIXPART2-25" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-25 |
+
+Given "SDD-CARTMIXPART2-25" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-25" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-25" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-25" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-25" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-25" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+
+Then "SDD-CARTMIXPART2-25" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	       |
+| SDDData       | subTotaldetails | CLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-25" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-25" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-25" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-25" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-25" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-25" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   -			|
+
+Then "SDD-CARTMIXPART2-25" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |    -	                 |     standard             |
+
+Then "SDD-CARTMIXPART2-25" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-25" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		 |
+|  SDDData      | orderreviewdetails |CLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-25" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-25" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   	   |
+| SDDData       | orderconfirmationdetails |CLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-25" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-25" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-25" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      	 |
+|    SDDData    | orderconfirmationdetails |  CLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-25" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-25  |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-CARTMIXPART2-26
+Scenario: Customer place DL,CL and SP Rx Order for ship
+
+Given  "SDD-CARTMIXPART2-26" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         		 |
+| QC-SDD        | CARTMIXPART2 | SDD-CARTMIXPART2-26 |
+
+Given "SDD-CARTMIXPART2-26" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId     	   |
+| CommonData 	| login 	   |MailPlanuser1  |
+
+And "SDD-CARTMIXPART2-26" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-CARTMIXPART2-26" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    		|
+| CommonData      | login       | MailPlanuser1 |
+
+And "SDD-CARTMIXPART2-26" Customer Clears the Shopping Cart
+
+And "SDD-CARTMIXPART2-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | sdd_web_dc1	 |
+
+Then "SDD-CARTMIXPART2-26" Customer adds Daily Living items to the cart from search.
+
+And "SDD-CARTMIXPART2-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-CARTMIXPART2-26" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-CARTMIXPART2-26" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | RefillRx  | SpecialtyRx5 |
+
+Then "SDD-CARTMIXPART2-26" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	         |
+| SDDData       | subTotaldetails | DLCLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-26" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-CARTMIXPART2-26" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-CARTMIXPART2-26" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-CARTMIXPART2-26" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-CARTMIXPART2-26" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "SDD-CARTMIXPART2-26" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  25  | April    |    2013   |   -			|
+
+Then "SDD-CARTMIXPART2-26" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |  standard                |     standard             |
+
+Then "SDD-CARTMIXPART2-26" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard 	| -              | -                     | -                  |
+
+Then "SDD-CARTMIXPART2-26" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId  		   |
+|  SDDData      | orderreviewdetails |DLCLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-26" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-CARTMIXPART2-26" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId   	     |
+| SDDData       | orderconfirmationdetails |DLCLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-26" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-CARTMIXPART2-26" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId     	 |
+| CommonData     | login     | MailPlanuser1 |
+
+Then "SDD-CARTMIXPART2-26" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId      	   |
+|    SDDData    | orderconfirmationdetails |  DLCLAndSPRXInfo1 |
+
+Then "SDD-CARTMIXPART2-26" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId      		   |
+| QC-SDD        | CARTMIXPART2  | SDD-CARTMIXPART2-26  |

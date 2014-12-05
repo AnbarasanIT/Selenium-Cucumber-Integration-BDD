@@ -1,0 +1,683 @@
+package walgreens.ecom.batch.automation.library.marketing.homePageValidations;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.*;
+
+public class FooterLinkvalidationsLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify invalid Email in Email text box in the footer
+     * @author - Fyrose
+     * @Created - 22-jan-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateFooterEmail(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Email_TXT = "//input[@id='email']~XPATH";
+	String Signup_BTN = "//input[@id='email-sign-up']~XPATH";
+	String Errormesage_DIV = "//span[contains(text(),'Please enter a valid email address')]~XPATH";
+	String Validationtype = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Validationtype = getTestData(dataMap.get("InputFileName").get(0),
+	    // dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+	    // "Validation");
+	    Validationtype = dataMap.get("ValidationType").get(0);
+	    if (Validationtype.equalsIgnoreCase("ErrorValidation")) {
+		// Verify for Invalid Characters
+		if (!clearAndEnterText(Email_TXT, "@@--*", browser)) {
+		    throw new Exception("Not able to enter Invalid Characters in Email Field");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+		if (!isElementPresentVerification(Errormesage_DIV, browser)) {
+		    messagesMap.put("Required Message", "Error Message is not displayed");
+		    status = WARNING;
+		}
+		// Verify with blank value
+		if (!clearAndEnterText(Email_TXT, "", browser)) {
+		    throw new Exception("Not able to Leav it as blank");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+		if (!isElementPresentVerification(Errormesage_DIV, browser)) {
+		    messagesMap.put("Required Message", "Error Message is not displayed for blank email address");
+		    status = WARNING;
+		}
+		// Verify non Email Format
+		if (!clearAndEnterText(Email_TXT, "testuser-yahoo.com", browser)) {
+		    throw new Exception("Not able to enter Invalid Characters in Email Field");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+		if (!isElementPresentVerification(Errormesage_DIV, browser)) {
+		    messagesMap.put("Required Message", "Error Message is not displayed for Non email format values");
+		    status = WARNING;
+		}
+
+	    } else if (Validationtype.equalsIgnoreCase("EmailSignup")) {
+		String Email = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email");		
+		if (!clearAndEnterText(Email_TXT, Email, browser)) {
+		    throw new Exception("Not able to enter Given Email in EmailAddress Text box");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+	    } else if (Validationtype.equalsIgnoreCase("NewEmailSignup")) {
+		String Email = randomEmailGenerator();
+		TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email", Email);
+		if (!clearAndEnterText(Email_TXT, Email, browser)) {
+		    throw new Exception("Not able to enter Given Email in EmailAddress Text box");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Method to verify invalid Email in Email text box in the footer
+     * @author - Fyrose
+     * @Created - 22-jan-2013
+     * @Modified By -Rukmani , Fyrose
+     * @Modified Date -17-JUL-2013 , 26-Jul-2013
+     ************************************************************* */
+
+    public static void validateSpecialEmailOffer(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Email_TXT = "//input[@id='emailsignup']~XPATH";
+	String Zip_TXT = "//input[@id='zip']~XPATH";
+	String Signup_BTN = "//input[@alt='Sign up']~XPATH";
+	//String ThankyouForSingUpMessage_ELM = "//h1[contains(text(),'Thank you for signing up!')]~XPATH";
+	String SuccessMessage_ELM = "//p[contains(text(),'Thanks for signing up')]~XPATH";	//Rukmani - Changed object
+	String Errormesage_DIV = null;
+	String Validationtype = null;
+	String EmailText = null;
+	String Zipcode = null;
+	String EmailSubscriptions = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		Validationtype = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Validation");
+		EmailText = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EmailText");
+		Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		EmailSubscriptions = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EmailSubscriptions");
+		Errormesage_DIV = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorMessageObject");
+
+		if (EmailText != null && EmailText.equalsIgnoreCase("random")) {
+		    EmailText = randomEmailGenerator();
+		}
+		if (!clearAndEnterText(Email_TXT, EmailText, browser)) {
+		    messagesMap.put("Email text box", "Not able to enter value in Email text box");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Zip_TXT, Zipcode, browser)) {
+		    messagesMap.put("zipcode text box", "Not able to enter value in zipcode text box");
+		    status = WARNING;
+		}
+		if (EmailSubscriptions != null && !EmailSubscriptions.equals("-")) {
+		    String[] SubscriptionOptions = EmailSubscriptions.split(":");
+		    for (int k = 0; k < SubscriptionOptions.length; k++) {
+			String Requiredsubscription_CHK = "//*[@id='" + SubscriptionOptions[k] + "']~XPATH";
+			if (!checkBoxSelection(browser, Requiredsubscription_CHK, "SELECT")) {
+			    messagesMap.put(SubscriptionOptions[k], "Not able to Seelct the checkbox");
+			    status = WARNING;
+			}
+		    }
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Clcik Sign up button");
+		}
+		if (Validationtype != null && Validationtype.equalsIgnoreCase("ErrorValidation")) {
+		    if (!isElementPresentVerification(Errormesage_DIV, browser)) {
+			messagesMap.put("Required Message", "Error Message is not displayed");
+			status = WARNING;
+		    }
+		    //Added else loop to manage error validations 26-July-2013
+		    else
+		    {
+			//do nothing
+		    }
+		    //Commenting this piece of code since this functionality of thank you message is removed in Mustang as a part of EHS-4958
+//		} else {
+//		    if (!isElementPresentVerification(ThankyouForSingUpMessage_ELM, browser)) {
+//			messagesMap.put("Thank you Note Mesage Message", "Message is missing");
+//			status = WARNING;
+//		    }
+		}
+		    else
+		    {
+		    if (!isElementPresentVerification(SuccessMessage_ELM, browser)) {
+			messagesMap.put("Save Changes Success Message", "Message is missing");
+			status = WARNING;
+		    }
+		    if (EmailSubscriptions != null && !EmailSubscriptions.equals("-")) {
+			String[] SubscriptionOptions = EmailSubscriptions.split(":");
+			for (int k = 0; k < SubscriptionOptions.length; k++) {
+			    String Requiredsubscription_CHK = "//*[@id='" + SubscriptionOptions[k] + "']~XPATH";
+			    if (isElementPresentVerification(Requiredsubscription_CHK, browser)) {
+				messagesMap.put(SubscriptionOptions[k], "check box Should not be Present");
+				status = WARNING;
+			    }
+			}
+		    }
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify invalid and valid Email in Email text box in
+     *          the footer
+     * @author - Fyrose
+     * @Created - 22-jan-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void EmailSignupValidations(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Validationtype = null;
+	String AlreadySubscribed_DIV = "//strong[contains(text(),'Already Subscribed')]~XPATH";
+	String SignedUp_DIV = "//strong[contains(text(),'Signed up')]~XPATH";
+	String HealthandPharmacy_CHK = "//input[@id='Health and Pharmacy Newsletter']~XPATH";
+	String WPhoto_CHK = "//input[@id='W Photo News and Offers']~XPATH";
+	String Diabetes_CHK = "//input[@id='Diabetes Newsletter']~XPATH";
+	String Signup_BTN = "//input[@alt='Sign up']~XPATH";
+	// String Cancel_IMG="//img[@alt='Close Window']~XPATH";
+	// String COMMON_CHK="//input[@type='checkbox']~XPATH";
+	String Success_DIV = "//div[@class='success']~XPATH";
+	String Close_IMG = "//img[@alt='Close Window']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // String UserEmail=randomEmailGenerator();
+	    String MailType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MailType");
+	    if (MailType.equalsIgnoreCase("ValidEmail")) {
+		String CurrentWindowTitle = browser.getWindowHandle(); // Current
+								       // Window
+								       // Handle
+		switchToWindow("Confirmation", browser);
+		if (!isElementPresentVerification(SignedUp_DIV, browser)) {
+		    messagesMap.put("Mail Confirmation Window", "Signed Up message is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(HealthandPharmacy_CHK, browser)) {
+		    throw new Exception("Not able to Select Health and pharmacy Newsletters Checkbox");
+		}
+		if (!isElementPresentVerifyClick(WPhoto_CHK, browser)) {
+		    throw new Exception("Not able to Select WPhoto and offers Newsletters Checkbox");
+		}
+		if (!isElementPresentVerifyClick(Diabetes_CHK, browser)) {
+		    throw new Exception("Not able to select Diabetes Newsletters Checkbox");
+		}
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Click Signup button");
+		}
+		// Check Success Message
+		if (!isElementPresentVerification(Success_DIV, browser)) {
+		    messagesMap.put("Mail Confirmation Window", "Signed Up message is not displayed after selecting all Checkboxes");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Close_IMG, browser)) {
+		    messagesMap.put("Mail Confirmation Window", "not able to click Close button");
+		    status = WARNING;
+		}
+
+		browser.switchTo().window(CurrentWindowTitle);
+
+	    } else if (MailType.equalsIgnoreCase("AlreadyScbscribed")) {
+		String CurrentWindowTitle = browser.getWindowHandle(); // Current
+								       // Window
+								       // Handle
+		switchToWindow("Confirmation", browser);
+		if (!isElementPresentVerification(AlreadySubscribed_DIV, browser)) {
+		    messagesMap.put("Mail Confirmation Window", "Already Subscribed Message is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Close_IMG, browser)) {
+		    messagesMap.put("Mail Confirmation Window", "not able to click Close button");
+		    status = WARNING;
+		}
+		browser.switchTo().window(CurrentWindowTitle);
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Customer navigates to weekly ad page by entering zipcode and
+     *          selects HTML Site instead of Flash content
+     * @author - Fyrose
+     * @Created - 7 - Feb - 2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* */
+
+    public static void weeklyAdVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String WeeklyAd_LNK = "//a[@title='Weekly Ad']~XPATH";
+	String selectHTML_LNK = "//a[contains(text(),'take me to the HTML')]~XPATH";
+	String Zipcode_TXT = "//input[@id='CityStateZip']~XPATH";
+	String Submit_BTN = "//input[@title='Submit Zip Code']~XPATH";
+	String WeeklyAdpage_LNK = "//a[contains(text(),'Your Local Weekly Ad')]~XPATH";
+	String SignupWeeklAd_IMG = "//img[@title='Sign up for the Walgreens Weekly Ad Sneak Peek!']~XPATH";
+	String SignupPage_DIV = "//h1[contains(text(),'Email Offers')]~XPATH";
+	String Email_TXT = "//input[@id='emailsignup']~XPATH";
+	String Zip_TXT = "//input[@id='zip']~XPATH";
+	String Signup_BTN = "//input[@alt='Sign up']~XPATH";
+	String HealthandPharmacy_CHK = "//input[@id='Health and Pharmacy Newsletter']~XPATH";
+	String WPhoto_CHK = "//input[@id='W Photo News and Offers']~XPATH";
+	String Diabetes_CHK = "//input[@id='Diabetes Newsletter']~XPATH";
+	String ChangesSaved_DIV = "//p[contains(text(),'Thanks for signing up')]~XPATH";
+	String WeeklyAdsignup = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ZipVal = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    WeeklyAdsignup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WeeklyAdSignup");
+	    if (!isElementPresentVerifyClick(WeeklyAd_LNK, browser)) {
+		throw new Exception("Unable to click weekly ad link");
+	    }
+	    if (!isElementPresentVerifyClick(selectHTML_LNK, browser)) {
+		throw new Exception("unable to click Select HTML site link in weel;y ad page");
+	    }
+	    if (isElementPresentVerification(Zipcode_TXT, browser)) {
+		if (!clearAndEnterText(Zipcode_TXT, ZipVal, browser)) {
+		    throw new Exception("Not able to enter zipcode in weekly ad page");
+		}
+		if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		    throw new Exception("Not able to Click Submit button");
+		}
+	    }
+	    browser.navigate().refresh();
+	    if (!isElementPresentVerification(WeeklyAdpage_LNK, browser)) {
+		messagesMap.put("Weekly Ad Page", "Your Local Weekly Ad page not found");
+		status = WARNING;
+	    }
+	    if (WeeklyAdsignup.equalsIgnoreCase("YES")) {
+		if (!isElementPresentVerifyClick(SignupWeeklAd_IMG, browser)) {
+		    throw new Exception("Not able to Click Weekly Ad Signup Image on left side of weekly Ad page");
+		}
+		String CurrentWindowTitle = browser.getWindowHandle(); // Current
+								       // Window
+								       // Handle
+		switchToWindow("Email Signup", browser);
+		if (!isElementPresentVerification(SignupPage_DIV, browser)) {
+		    messagesMap.put("Email offer SIgnup page", "Sigup for Email offers page is not displayed");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Email_TXT, randomEmailGenerator(), browser)) {
+		    throw new Exception("Not able to Enter Email in Text box");
+		}
+		if (!clearAndEnterText(Zip_TXT, ZipVal, browser)) {
+		    throw new Exception("Not able to Enter Zipcode in Textbox");
+		}
+		if (!isElementPresentVerifyClick(HealthandPharmacy_CHK, browser)) {
+		    messagesMap.put("Email offer SIgnup page", "No able to click Health and pharmacy Checkbox");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(WPhoto_CHK, browser)) {
+		    messagesMap.put("Email offer SIgnup page", "No able to click Photo Checkbox");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Diabetes_CHK, browser)) {
+		    messagesMap.put("Email offer SIgnup page", "No able to click Diabetes Checkbox");
+		    status = WARNING;
+		}
+		// Click Signup and verify Success message
+		if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+		    throw new Exception("Not able to Click Signup button");
+		}
+		if (!isElementPresentVerification(ChangesSaved_DIV, browser)) {
+		    messagesMap.put("Email offer SIgnup page", "Successfully saved message is not displayed");
+		    status = WARNING;
+		}
+		browser.switchTo().window(CurrentWindowTitle);
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Method to te and verify Weekly Ad pageNavigaverify Press room
+     *          search
+     * @author - Fyrose
+     * @Created - 7 - Feb - 2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* */
+
+    public static void verifyPressRoomSearch(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Search_TXT = "//input[@id='keyword']~XPATH";
+	String Go_BTN = "//input[@name='submit']~XPATH";
+	String SearchResults_TBL = "//table[@class='dataTable']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!clearAndEnterText(Search_TXT, "walgreens", browser)) {
+		throw new Exception("Not able to enter text in Search text box in investor relations");
+	    }
+	    if (!isElementPresentVerifyClick(Go_BTN, browser)) {
+		throw new Exception("Not able to Click GO button in investor relations");
+	    }
+	    if (!isElementPresentVerification(SearchResults_TBL, browser)) {
+		messagesMap.put("Investor relations search results", "Search results is not displayed for given text");
+		status = WARNING;
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Method to validate Coupons functionality in Store Coupons Page
+     * @author - Mohana Janakavalli K
+     * @Created - 12Feb-2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     **/
+    public static void validateStoreCoupons(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String CouponsTable_TABLE = "//div[@id='OffersPageInnerContent']~XPATH";
+	String CouponCart_DIV = "//div[@id='ciCouponCart']~XPATH";
+	String PrintCoupon_BTN = "input[title='Print Coupons']~CSS";
+	String InstallCouponPrinter_BTN = "input[title='Install Coupon Printer']~CSS";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    List<WebElement> Coupons = getElementByProperty(CouponsTable_TABLE, browser).findElements(By.className("ciPodClipBtn"));
+	    for (int i = 1; i <= 2; i++) {
+		Coupons.get(i).click();
+		if (!getElementByProperty(CouponCart_DIV, browser).getText().contains("Coupons:\n" + i)) {
+		    messagesMap.put("No.of coupons selected", "Mismatch in the no of coupons selected");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(PrintCoupon_BTN, browser)) {
+		throw new Exception("Not able to click Print coupons button");
+	    }
+	    if (!isElementPresentVerification(InstallCouponPrinter_BTN, browser)) {
+		messagesMap.put("Install Coupon printer", "Install coupon button not present");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**************************************************************
+     * @Purpose - Method to login media section and perform search in News room
+     *          page search
+     * @author - Fyrose
+     * @Created - 7 - Feb - 2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* */
+
+    public static void loginandVerifyVerifyNewsRoom(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Search_TXT = "//input[@id='keywords']~XPATH";
+	String Go_BTN = "//input[@title='Submit']~XPATH";
+	String SearchResults_TBL = "//td[@class='searchResults']~XPATH";
+	String AdvancedSearch_IMG = "//img[@title='Advanced Search']~XPATH";
+	String AdvancedSearchPage_DIV = "//h1[contains(text(),'Advanced Search')]~XPATH";
+	String Login_TXT = "//input[@id='login_id']~XPATH";
+	String Password_TXT = "//input[@id='site_pass']~XPATH";
+	String Login_BTN = "//input[@alt='Login']~XPATH";
+	String Logout_LNK = "//a[@title='Logout']~XPATH";
+	String NewsRoom_LNK = "//h1[contains(text(),'Walgreens Newsroom')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    // Enter userName and Password
+	    if (!clearAndEnterText(Login_TXT, UserName, browser)) {
+		throw new Exception("Not able to enter UserName in login textbox");
+	    }
+	    if (!clearAndEnterText(Password_TXT, Password, browser)) {
+		throw new Exception("Not able to enter text in Password Text box");
+	    }
+	    if (!isElementPresentVerifyClick(Login_BTN, browser)) {
+		throw new Exception("Not able to Click Login Button");
+	    }
+	    if (!isElementPresentVerification(Logout_LNK, browser)) {
+		messagesMap.put("News room Login", "Login Failed. logout link Not found");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(NewsRoom_LNK, browser)) {
+		throw new Exception("Not able to Click  News room Link");
+	    }
+	    if (isElementPresentVerification(Search_TXT, browser)) {
+		    getElementByProperty(Search_TXT, browser).sendKeys("Testing");
+		    getElementByProperty(Search_TXT, browser).submit();	
+		    Thread.sleep(8000);
+		//browser.switchTo().alert().
+		if (!isElementPresentVerification(SearchResults_TBL, browser)) {
+		    messagesMap.put("News room searc", "Search results is not displayed for given text");
+		    status = WARNING;
+		}
+		// Verify Advanced Search
+		if (!isElementPresentVerifyClick(AdvancedSearch_IMG, browser)) {
+		    messagesMap.put("News room Advanced Search", "Advanced Search image is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(AdvancedSearchPage_DIV, browser)) {
+		    messagesMap.put("News room search", "SAdvanced Search Page is not displayed");
+		    status = WARNING;
+		}
+	    }
+	    else
+	    {
+		  throw new Exception("Not able to enter text in Search text box in investor relations");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Method to Search using keywords
+     * @author - Fyrose
+     * @Created - 1 - Mar - 2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* */
+
+    public static void homePageSearch(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String Search_TXT = "//input[@id='query']~XPATH";
+	String Go_BTN = "//input[@title='Search']~XPATH";
+	String AcuvueHeader_DIV = "//h1[contains(text(),'Acuvue oasys')]~XPATH";
+	String ProdImage_DIV = "//div[@class='image-container']~XPATH";
+	String RadioHeader_DIV = "//h1[contains(text(),'radio')]~XPATH";
+	String PampersHeader_DIV = "//h1[contains(text(),'pampers baby wipes')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!clearAndEnterText(Search_TXT, "Acuvue oasys", browser)) {
+		throw new Exception("Not able to enter text in Search text box in homepage");
+	    }
+	    if (!isElementPresentVerifyClick(Go_BTN, browser)) {
+		throw new Exception("Not able to Click GO button in investor relations");
+	    }
+	    if (!isElementPresentVerification(AcuvueHeader_DIV, browser) && !isElementPresentVerification(ProdImage_DIV, browser)) {
+		messagesMap.put("Home page Search", "Search results is not getting displayed for keyword Acuvue oasys");
+		status = WARNING;
+	    }
+	    // Search with Keyword RADIO
+	    if (!clearAndEnterText(Search_TXT, "Radio", browser)) {
+		throw new Exception("Not able to enter text in Search text box in homepage");
+	    }
+	    if (!isElementPresentVerifyClick(Go_BTN, browser)) {
+		throw new Exception("Not able to Click GO button in investor relations");
+	    }
+	    if (!isElementPresentVerification(RadioHeader_DIV, browser) && !isElementPresentVerification(ProdImage_DIV, browser)) {
+		messagesMap.put("Home page Search", "Search results is not getting displayed for keyword Radio");
+		status = WARNING;
+	    }
+	    // Search with Keyword Pampers Baby wipes
+	    if (!clearAndEnterText(Search_TXT, "pampers baby wipes", browser)) {
+		throw new Exception("Not able to enter text in Search text box in homepage");
+	    }
+	    if (!isElementPresentVerifyClick(Go_BTN, browser)) {
+		throw new Exception("Not able to Click GO button in investor relations");
+	    }
+	    if (!isElementPresentVerification(PampersHeader_DIV, browser) && !isElementPresentVerification(ProdImage_DIV, browser)) {
+		messagesMap.put("Home page Search", "Search results is not getting displayed for keyword pampers baby wipes");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**************************************************************
+     * @Purpose - Method to click and verify home page links using mouse hover
+     *          method
+     * @author - Fyrose
+     * @Created - 4 - Mar - 2103
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* */
+
+    public static void clickandverifyhomepagelinks(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String PharmacyHealth_LNK = "//a[@class='menu_Pharmacy']~XPATH";
+	String Takecare_LNK = "a[href*='/common/takeCareOverlay']~CSS";
+	String Healthinfo_LNK = "ul[class='menu_pharm_ui'] li a[title='Health Information']~CSS";
+	String OverlayContinue_IMG = "//img[@title='Continue to Take Care Clinic']";
+	String Takcarepage_DIV = "//a[@class='locations ']~XPATH";
+	String HealthinfoPage_DIV = "//h1[contains(text(),'Health Information')~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    performHoverClickAction(getElementByProperty(PharmacyHealth_LNK, browser), Takecare_LNK, browser);
+	    switchToOverlay(browser);
+	    if (isElementPresentVerification(OverlayContinue_IMG, browser)) {
+		getElementByProperty(OverlayContinue_IMG, browser).click();
+		switchToDefault(browser);
+		if (!isElementPresentVerification(Takcarepage_DIV, browser)) {
+		    messagesMap.put("Home page Links", "Take care clinic page not found");
+		    status = WARNING;
+		}
+	    } else {
+		messagesMap.put("Home page Links", "Take care clinic link not found");
+		status = WARNING;
+	    }
+
+	    performHoverClickAction(getElementByProperty(PharmacyHealth_LNK, browser), Healthinfo_LNK, browser);
+	    if (!isElementPresentVerification(HealthinfoPage_DIV, browser)) {
+		messagesMap.put("Home page Links", "Health information page not found");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

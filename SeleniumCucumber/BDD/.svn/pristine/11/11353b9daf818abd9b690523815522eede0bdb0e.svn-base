@@ -1,0 +1,642 @@
+@pharmacy @PSCCheckout
+Feature: Customer Validates Prescription savings club related checkouts
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-24
+Scenario: Anonymous user Enrolls for PSC membership and does a PSC checkout 
+
+Given  "RX-AnonymousRxValidations-24" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-RX	        | AnonymousRxValidations | RX-AnonymousRxValidations-24	|
+
+Then "RX-AnonymousRxValidations-24" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "RX-AnonymousRxValidations-24" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "RX-AnonymousRxValidations-24" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType |
+|Individual     | Guest    |
+
+And "RX-AnonymousRxValidations-24" Customer performs Pharmacy Registration:
+| InputFileName | SheetName	   | RowId |   
+| Pharmacy      | Registration | PSCrx | 
+
+Then "RX-AnonymousRxValidations-24" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "RX-AnonymousRxValidations-24" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information   |
+
+Then "RX-AnonymousRxValidations-24" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-AnonymousRxValidations-24" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "RX-AnonymousRxValidations-24" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-AnonymousRxValidations-24" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "RX-AnonymousRxValidations-24" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "RX-AnonymousRxValidations-24" Customer finished testing the scenario:
+| InputFileName | SheetName 		       | RowId         		         |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-24| 
+
+#----------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-4
+Scenario: Customer places an walgreens dotcom order with following item combination(1BAGB+1DC+1CL+1PSC+1RX)
+
+Given  "CHECKOUT-RxCheckout-4" Customer starts the scenario:
+| InputFileName   | SheetName 	    | RowId                 |
+| QC-CHECKOUT     | RxCheckout      | CHECKOUT-RxCheckout-4 |
+
+Given "CHECKOUT-RxCheckout-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	        |
+| Pharmacy      | login     | AuthenticatedUser |
+
+And "CHECKOUT-RxCheckout-4" Customer Clears the Shopping Cart
+
+And "CHECKOUT-RxCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BAGB1    |
+
+Then "CHECKOUT-RxCheckout-4" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-RxCheckout-4" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-RxCheckout-4" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-4" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-4" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-4" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-4" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+#Then "CHECKOUT-RxCheckout-4" Customer changes rx store or selects new store in pickup options page:
+#| InputFileName | SheetName | RowId      |
+#| CACData       | RXpickup  | rxStore1	 |
+
+Then "CHECKOUT-RxCheckout-4" Customer selects rx pick up date and time and click on continue
+
+
+Then "CHECKOUT-RxCheckout-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 					|   - 					   |
+
+Then "CHECKOUT-RxCheckout-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |    -		 		 |  -	  	  |     -         |  -	 	      |  -		           | -      		|   - 			| Yes 	   |  -			  		  |  ShippingInfoPage	|
+
+Then "CHECKOUT-RxCheckout-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     standard		        |
+
+Then "CHECKOUT-RxCheckout-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-4" Customer logout from walgreens:
+|Source  |
+| Global |
+Then "CHECKOUT-RxCheckout-4" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-4 |
+
+#----------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-5
+Scenario: Customer Places an walgreens Dotcom order with following Item Combination(1CH+1DC+1CL+1PO+1PSC+1RX)
+
+Given  "CHECKOUT-RxCheckout-5" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-5 |
+
+Given "CHECKOUT-RxCheckout-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	        |
+| Pharmacy      | login     | AuthenticatedUser |
+
+And "CHECKOUT-RxCheckout-5" Customer Clears the Shopping Cart
+
+And "CHECKOUT-RxCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-RxCheckout-5" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | PreOrder1 |
+
+Then "CHECKOUT-RxCheckout-5" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-RxCheckout-5" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-RxCheckout-5" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-5" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-5" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-5" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+#Then "CHECKOUT-RxCheckout-5" Customer clicks on an object and validates the expected results:
+#| InputFileName	   	               | SheetName            | RowId 	        	  |
+#| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-5" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-5" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+#Then "CHECKOUT-RxCheckout-5" Customer changes rx store or selects new store in pickup options page:
+#| InputFileName | SheetName | RowId      |
+#| CACData       | RXpickup  | rxStore1	 |
+
+Then "CHECKOUT-RxCheckout-5" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CHECKOUT-RxCheckout-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "CHECKOUT-RxCheckout-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+Then "CHECKOUT-RxCheckout-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-RxCheckout-5" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-5 |
+#----------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-6
+Scenario: Customer places a walgreens dotcom order with following item combination(1CH+1DC Color product+1CL+1PO+1PSC+1RX)
+
+Given  "CHECKOUT-RxCheckout-6" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-6 |
+
+Given "CHECKOUT-RxCheckout-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	        |
+| Pharmacy      | login     | AuthenticatedUser |
+
+And "CHECKOUT-RxCheckout-6" Customer Clears the Shopping Cart
+
+And "CHECKOUT-RxCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-RxCheckout-6" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | PreOrder1     |
+
+Then "CHECKOUT-RxCheckout-6" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | ColorProduct |
+
+Then "CHECKOUT-RxCheckout-6" Customer Adds Color or Size variation Product to Cart or Shopping List:
+|AddItem|ItemType|ExpectedPage|UIvalidation|
+|Cart   |Color   | -          | -          |
+
+And "CHECKOUT-RxCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-RxCheckout-6" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-6" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-6" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-6" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-6" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-6" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "CHECKOUT-RxCheckout-6" Customer selects rx pick up date and time and click on continue
+
+
+Then "CHECKOUT-RxCheckout-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 					|   - 					   |
+
+Then "CHECKOUT-RxCheckout-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |    -		 		 |  -	  	  |     -         |  -	 	      |  -		           | -      		|   - 			| Yes 	   |  -			  		  |  ShippingInfoPage	|
+
+Then "CHECKOUT-RxCheckout-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     standard		        |
+
+Then "CHECKOUT-RxCheckout-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-6" Customer logout from walgreens:
+|Source  |
+| Global |
+Then "CHECKOUT-RxCheckout-6" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-6 |
+
+#----------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-7
+Scenario: Customer places a walgreens dotcom order with following item combination(1CH+1DC color & size product+1CL+1PO+1PSC+1RX)
+
+Given  "CHECKOUT-RxCheckout-7" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-7 |
+
+Given "CHECKOUT-RxCheckout-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	        |
+| Pharmacy      | login     | AuthenticatedUser2|
+
+And "CHECKOUT-RxCheckout-7" Customer Clears the Shopping Cart
+
+And "CHECKOUT-RxCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-RxCheckout-7" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | PreOrder1 |
+
+Then "CHECKOUT-RxCheckout-7" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId               |
+| CommonData    | search    | ColorAndSizeProduct |
+
+Then "CHECKOUT-RxCheckout-7" Customer Adds Color or Size variation Product to Cart or Shopping List:
+|AddItem|ItemType     |ExpectedPage|UIvalidation|
+|Cart   |ColorAndSize | -          | -          |
+
+And "CHECKOUT-RxCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-RxCheckout-7" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-7" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-7" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-7" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-7" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription      |
+
+When  "CHECKOUT-RxCheckout-7" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-7" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "CHECKOUT-RxCheckout-7" Customer selects rx pick up date and time and click on continue
+
+
+Then "CHECKOUT-RxCheckout-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 					|   - 					   |
+
+Then "CHECKOUT-RxCheckout-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |    -		 		 |  -	  	  |     -         |  -	 	      |  -		           | -      		|   - 			| Yes 	   |  -			  		  |  ShippingInfoPage	|
+
+Then "CHECKOUT-RxCheckout-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     standard		        |
+
+Then "CHECKOUT-RxCheckout-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-RxCheckout-7" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-7 |
+
+#----------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-8
+Scenario: Customer Places a walgreens dotcom order with the following item combination(1CH+1DC+1CL+1PSC)
+
+Given  "CHECKOUT-RxCheckout-8" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-8 |
+
+Given "CHECKOUT-RxCheckout-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	        |
+| Pharmacy      | login     | AuthenticatedUser |
+
+And "CHECKOUT-RxCheckout-8" Customer Clears the Shopping Cart
+
+And "CHECKOUT-RxCheckout-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-RxCheckout-8" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-RxCheckout-8" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-RxCheckout-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-RxCheckout-8" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-RxCheckout-8" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-8" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-8" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-8" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Doctor Information	 |
+
+Then "CHECKOUT-RxCheckout-8" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 					|   - 					   |
+
+Then "CHECKOUT-RxCheckout-8" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |    -		 		 |  -	  	  |     -         |  -	 	      |  -		           | -      		|   - 			| Yes 	   |  -			  		  |  ShippingInfoPage	|
+
+Then "CHECKOUT-RxCheckout-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     standard		        |
+
+Then "CHECKOUT-RxCheckout-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-RxCheckout-8" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-8 |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-RxCheckout-25
+Scenario: Customer places an walgreens PSC order and checks the email
+
+Given  "CHECKOUT-RxCheckout-25" Customer starts the scenario:
+| InputFileName   | SheetName 	    | RowId                 |
+| QC-CHECKOUT     | RxCheckout      | CHECKOUT-RxCheckout-25 |
+
+Given "CHECKOUT-RxCheckout-25" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId       |
+| CommonData    | login     | PSCAuthuser |
+
+And "CHECKOUT-RxCheckout-25" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "CHECKOUT-RxCheckout-25" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	  |
+| CommonData    | login     | PSCAuthuser |
+
+And "CHECKOUT-RxCheckout-25" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-25" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "CHECKOUT-RxCheckout-25" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "CHECKOUT-RxCheckout-25" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "CHECKOUT-RxCheckout-25" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "CHECKOUT-RxCheckout-25" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Authenticated	| PSCShipDuration		 |
+
+Then "CHECKOUT-RxCheckout-25" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information   |
+
+Then "CHECKOUT-RxCheckout-25" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-RxCheckout-25" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		    	  | -		        		 |     -		        |
+
+Then "CHECKOUT-RxCheckout-25" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "CHECKOUT-RxCheckout-25" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-RxCheckout-25" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Authenticated	| PSCOrderConfirmation    |
+
+Then "CHECKOUT-RxCheckout-25" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName				 | SheetName    			   | RowId    			     |
+| CheckoutOrderDetails       | OrderIds					   |CHECKOUT-RxCheckout-25   |
+
+Then "CHECKOUT-RxCheckout-25" Customer logout from walgreens:
+|Source  |
+| Global |
+
+And "CHECKOUT-RxCheckout-25" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName   | RowId       |
+| CommonData   	 | login 	   | PSCAuthuser |
+
+Then "CHECKOUT-RxCheckout-25" Customer verifies order confirmation mail in yahoo:
+| InputFileName 			| SheetName    		       | RowId    	           |
+| CheckoutOrderDetails      | OrderIds			      |CHECKOUT-RxCheckout-25   |
+
+Then "CHECKOUT-RxCheckout-25" Customer finished testing the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | RxCheckout      | CHECKOUT-RxCheckout-25 |
+
+#----------------------------------------------------------------------------------------------------------------------

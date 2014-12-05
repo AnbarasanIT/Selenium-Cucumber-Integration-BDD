@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://v1.webservices.service.calendarAvailability.enterpriseScheduling.opv.walgreens.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://base.canonical.opv.walgreens.com/" name="CalendarAvailabilityService" targetNamespace="http://v1.webservices.service.calendarAvailability.enterpriseScheduling.opv.walgreens.com/">
+	<wsdl:documentation><description>This wsdl file is defined for walgreens EnterpriseScheduling GetCalendarAvailability for HighLevel WMB Service Request/Response</description><version>1.0</version><author>One Walgreens</author></wsdl:documentation>
+	<wsdl:types>
+		<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://base.canonical.opv.walgreens.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xsd:include schemaLocation="OPV_ENTERPRISE_SCHEDULING.xsd"/>
+			<xs:include schemaLocation="NCR_CalendarInfo.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="SubHeader">
+		<wsdl:part name="SubHeader" element="tns1:SubHeader"/>
+	</wsdl:message>
+	<wsdl:message name="OPVException">
+		<wsdl:part name="OPVException" element="tns1:OPVException"/>
+	</wsdl:message>
+	<wsdl:message name="GetCalendarAvailabilityRequestMessage">
+		<wsdl:part name="parameters" element="tns1:GetCalendarAvailabilityRequest"/>
+	</wsdl:message>
+	<wsdl:message name="GetCalendarAvailabilityResponseMessage">
+		<wsdl:part name="parameters" element="tns1:GetAvailabilityResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="GetCalendarAvailabilityWS">
+		<wsdl:operation name="getCalendarAvailability">
+			<wsdl:input name="GetCalendarAvailabilityRequest" message="tns:GetCalendarAvailabilityRequestMessage">
+			</wsdl:input>
+			<wsdl:output name="GetCalendarAvailabilityResponse" message="tns:GetCalendarAvailabilityResponseMessage">
+			</wsdl:output>
+			<wsdl:fault name="OPVException" message="tns:OPVException">
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="GetCalendarAvailabilityServiceSoapBinding" type="tns:GetCalendarAvailabilityWS">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getCalendarAvailability">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="GetCalendarAvailabilityRequest">
+				<soap:body use="literal"/>
+				<soap:header message="tns:SubHeader" part="SubHeader" use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="GetCalendarAvailabilityResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="OPVException">
+				<soap:fault name="OPVException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CalendarAvailabilityService">
+		<wsdl:port name="GetCalendarAvailabilityWSPort" binding="tns:GetCalendarAvailabilityServiceSoapBinding">
+			<soap:address location="http://tonemq1:17087/GetCalendarAvailabilityWSPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

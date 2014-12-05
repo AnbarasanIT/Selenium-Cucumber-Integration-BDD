@@ -1,0 +1,1995 @@
+@checkout @loyaltyRegistration
+Feature: All the scenarios in this feature are to validate the Loyalty Registeration
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-01
+Scenario: Non-Loyalty Light Registered walgreens.com customer registers for Loyalty
+
+Given  "LTY-REG-01" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-01 	|
+
+And "LTY-REG-01" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "LTY-REG-01" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+And "LTY-REG-01" Customer Clears the Shopping Cart
+
+And "LTY-REG-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-01" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-01" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-01" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-01" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-REG-01" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | -                         | -      |
+
+Then "LTY-REG-01" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| -                           | -         		     | 60015   | 8471234567 | NOV       | 11      | 1986     |       -    | -             | -         | -     | 
+
+Then "LTY-REG-01" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-REG-01" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-01" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-01  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-02
+Scenario: Non-Loyalty Light Registered customer activates and links the existing loyalty rewards membership
+
+Given  "LTY-REG-02" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-02 	|
+
+And "LTY-REG-02" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "LTY-REG-02" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "LTY-REG-02" Customer Clears the Shopping Cart
+
+And "LTY-REG-02" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			   |
+| CommonData    | search    | loyaltybonuspoints1  |
+
+Then "LTY-REG-02" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-02" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-02" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-02" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | Yes         | -        |
+
+Then "LTY-REG-02" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                   | Yes         | -                         | -      |
+
+Then "LTY-REG-02" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser | 
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |   -		 |
+
+Then "LTY-REG-02" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "LTY-REG-02" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-REG-02" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-02" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-02  |
+
+
+################################ Fully Registered / Pharmacy User Scenarios #####################################################
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-03
+Scenario: Non-Loyalty existing walgreens.com customer registers for Loyalty
+
+Given  "LTY-REG-03" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-03 	|
+
+Given "LTY-REG-03" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma5 |
+
+And "LTY-REG-03" Customer Clears the Shopping Cart
+
+And "LTY-REG-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-03" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-03" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-03" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-03" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-REG-03" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | -                         | -      |
+
+Then "LTY-REG-03" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| -                           | -           		 | 60015   | 8471234567 | NOV       | 11      | 1986     |  -         | -             | -         | -     |
+	
+Then "LTY-REG-03" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-REG-03" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-03" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-03  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-04
+Scenario: Non-Loyalty existing walgreens.com customer activates and links the existing loyalty rewards membership
+
+Given  "LTY-REG-04" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-04 	|
+
+Given "LTY-REG-04" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma7 |
+
+And "LTY-REG-04" Customer Clears the Shopping Cart
+
+And "LTY-REG-04" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-04" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-04" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-04" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-04" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | Yes         | -        |
+
+Then "LTY-REG-04" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                   | Yes         | -                         | -      |
+
+Then "LTY-REG-04" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| 7120121064828               | -        		     | 78456   | -     | OCT       | 10      | 1974     |  -         | -             | -         | -     |
+
+Then "LTY-REG-04" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-REG-04" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| Activation	|
+
+Then "LTY-REG-04" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-04" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-04  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-05
+Scenario: Non-Loyalty customer registers for Loyalty using already saved Personal Info
+
+Given  "LTY-REG-05" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-05 	|
+
+Given "LTY-REG-05" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma5 |
+
+And "LTY-REG-05" Customer Clears the Shopping Cart
+
+And "LTY-REG-05" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-05" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-05" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-05" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-05" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-REG-05" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| yes                 | -           | -                         | Yes    |
+
+Then "LTY-REG-05" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| New			|
+
+Then "LTY-REG-05" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-05" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-05  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-06
+Scenario: Non-Loyalty customer activates and links the existing loyalty rewards membership by using already saved Personal Info
+
+Given  "LTY-REG-06" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-06 	|
+
+Given "LTY-REG-06" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma8 |
+
+And "LTY-REG-06" Customer Clears the Shopping Cart
+
+And "LTY-REG-06" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-06" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-06" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-06" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-06" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | Yes         | -        |
+
+Then "LTY-REG-06" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName | RowId |
+| 7120121064935               | -          			 | -       | -     | -         | -       | -        |  -        | -             | -         | -     |
+
+Then "LTY-REG-06" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|   Yes   		   |  -     |  Yes   |
+
+Then "LTY-REG-06" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| Activation	|
+
+Then "LTY-REG-06" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-06" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-06  |
+
+################################ Guest User Scenarios #####################################################
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-07
+Scenario: Guest customer Registers For Loyalty
+
+Given  "LTY-REG-07" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-07 	|
+
+And "LTY-REG-07" Customer Clears the Shopping Cart
+
+And "LTY-REG-07" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-07" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-07" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-07" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-07" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | - 	   |
+
+Then "LTY-REG-07" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId |
+| -		             | -      | Yes	     | -             | -         | -     |
+
+Then "LTY-REG-07" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | -        		     | 60015   | 8471234567  | NOV       | 11      | 1986     | Yes      | CommonData    | personalInfo | lightuser1 |
+
+Then "LTY-REG-07" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| New			|
+
+Then "LTY-REG-07" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-07" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-07  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-08
+Scenario: Light Reg customer login into walgreens after adding item to cart and Registers For Loyalty
+
+Given  "LTY-REG-08" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-08 	|
+
+And "LTY-REG-08" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "LTY-REG-08" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |saveUserNameAndPasswordInDataSheet|
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser3 | 				Yes				    |
+
+Then "LTY-REG-08" Customer logout from walgreens:
+|Source|
+|Global|
+
+And "LTY-REG-08" Customer Clears the Shopping Cart
+
+And "LTY-REG-08" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-08" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-08" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-08" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-08" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-08" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName            | RowId     |
+| -                  | Yes    | -        |  LoyaltyLogin  | LoyaltyRegistrationLogin | lightreg3 |
+
+Then "LTY-REG-08" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| -                           | -       		     | 60015   | 8471234567 | NOV       | 11      | 1986    |  -         | -             | -         | -     |
+
+Then "LTY-REG-08" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| New	 		|
+
+Then "LTY-REG-08" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-08" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-08  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-09
+Scenario: Light Reg customer login into walgreens after adding item to cart and Activates Loyalty Account
+
+Given  "LTY-REG-09" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-09 	|
+
+And "LTY-REG-09" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "LTY-REG-09" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |saveUserNameAndPasswordInDataSheet|
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser4 | 				Yes				    |
+
+Then "LTY-REG-09" Customer logout from walgreens:
+|Source|
+|Global|
+
+And "LTY-REG-09" Customer Clears the Shopping Cart
+
+And "LTY-REG-09" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-09" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-09" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-09" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-09" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-09" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName 			 | RowId     |
+| -                  | Yes    | -        |  LoyaltyLogin  | LoyaltyRegistrationLogin | lightreg4 |
+
+Then "LTY-REG-09" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser | 
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |   -		 |
+
+Then "LTY-REG-09" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|   Yes   		   | Yes    |  -     |
+
+Then "LTY-REG-09" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| Activation	|
+
+Then "LTY-REG-09" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-09" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-09  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-10
+Scenario: Pharmacy Reg customer login into walgreens after adding item to cart and Register for Loyalty Account
+
+Given  "LTY-REG-10" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-10 	|
+
+Given "LTY-REG-10" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |SaveUserNameFlag |
+| Registration  | RxRegistration | RxPharma6 |  Yes			   |
+
+Then "LTY-REG-10" Customer logout from walgreens:
+|Source|
+|Global|
+
+And "LTY-REG-10" Customer Clears the Shopping Cart
+
+And "LTY-REG-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-10" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-10" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-10" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-10" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-10" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName 	| RowId     |
+| -                  | Yes    | -        | Registration  | RxRegistration   | RxPharma6 |
+
+Then "LTY-REG-10" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | -                         | -      |
+
+Then "LTY-REG-10" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName | RowId |
+| -                           | -        		     | 60015   | 8471234567 | NOV       | 11      | 1986     | -         | -             | -         | -     |
+
+Then "LTY-REG-10" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| New			|
+
+Then "LTY-REG-10" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-10" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-10  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-11
+Scenario: Pharmacy Reg customer login into walgreens after adding item to cart and Activates Loyalty Account
+
+Given  "LTY-REG-11" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-11 	|
+
+Given "LTY-REG-11" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     | SaveUserNameFlag |
+| Registration  | RxRegistration | RxPharma9 |    Yes			|
+
+Then "LTY-REG-11" Customer logout from walgreens:
+|Source|
+|Global|
+ 
+And "LTY-REG-11" Customer Clears the Shopping Cart
+
+And "LTY-REG-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-11" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-11" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-11" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-11" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-11" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName 	| RowId      |
+| -                  | Yes    | -        | Registration  |   RxRegistration | RxPharma9  |
+
+Then "LTY-REG-11" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                   | Yes         | -                         | -		 |
+
+Then "LTY-REG-11" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName | RowId |
+| 7120121064891               | -        		     | 94523   | -     | DEC       | 12      | 1945     | -         | - 	 	    | -	        | -     |
+
+Then "LTY-REG-11" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|   Yes   		   | Yes    |  -     |
+
+Then "LTY-REG-11" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+| Activation	|
+
+Then "LTY-REG-11" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-11" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-11  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-12
+Scenario: Guest User Registers for Loyalty From Order Confirmation Page
+
+Given  "LTY-REG-12" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-12 	|
+
+And "LTY-REG-12" Customer Clears the Shopping Cart
+
+And "LTY-REG-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-REG-12" Customer adds Daily Living items to the cart from search.
+
+And "LTY-REG-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-12" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-12" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-REG-12" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "LTY-REG-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "LTY-REG-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "LTY-REG-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "LTY-REG-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "LTY-REG-12" Customer finds Loyalty Banner section in the Order confirmation page:
+|LtyBanner  | JoinNow | ActivateNow |LearnMore |
+| DLBanner  | Yes     |    -        |   -      |
+
+Then "LTY-REG-12" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId |
+| -		             | -      | Yes	     | -             | -         | -     |
+
+Then "LTY-REG-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | -         	         | 60015   | 8471234567  | NOV       | 11      | 1986     |Yes       | CommonData    | personalInfo | lightuser1 |
+
+Then "LTY-REG-12" Customer Verifies UI information in the Balance Rewards Congrats Message page:
+|InputFileName | SheetName    | RowId     			   | MembeshipType  | RegisteredAs |
+|CommonData    | GenaralInfo  | AnonymouscreateMbrship |  NewMembership | Anonymous	   |
+
+Then "LTY-REG-12" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-12  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-13
+Scenario: Non-Loyalty User  Registers For Loyalty From  Order Confirmation Page
+
+Given  "LTY-REG-13" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-13 	|
+
+Given "LTY-REG-13" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma5 |  
+
+And "LTY-REG-13" Customer Clears the Shopping Cart
+
+When  "LTY-REG-13" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "LTY-REG-13" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption 	   |
+|ChooseaStoreLink  |
+
+Then "LTY-REG-13" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		          |
+| SDDData       | storedetails   | storeselection17		  |
+
+Then "LTY-REG-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "LTY-REG-13" Customer selects rx pick up date and time and click on continue
+
+Then "LTY-REG-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "LTY-REG-13" Customer finds Loyalty Banner section in the Order confirmation page:
+|LtyBanner  | JoinNow | ActivateNow |LearnMore |
+| RxBanner  | Yes     |    -        |   -      |
+
+Then "LTY-REG-13" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | -                         | -      |
+
+Then "LTY-REG-13" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName | RowId |
+| -                           | -                    | 60015   | 8471234567 | NOV       | 11      | 1986     |  -        | -             | -         | -     |
+
+Then "LTY-REG-13" Customer Verifies UI information in the Balance Rewards Congrats Message page:
+|InputFileName | SheetName    | RowId     			   | MembeshipType  | RegisteredAs |
+|CommonData    | GenaralInfo  | PharmacyCreateMbrship  |  NewMembership | pharmacy	   |
+
+Then "LTY-REG-13" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-13  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-14
+Scenario: Guest Custmoers register for Walgreens by selecting Balance Rewards option as May be later from Proceed to Checkout Page
+
+Given  "LTY-REG-14" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-14 	|
+
+And "LTY-REG-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-14" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-14" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-14" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | -                     |
+
+Then "LTY-REG-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| -					 |
+
+Then "LTY-REG-14" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-14" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | Activation | GuestUser | InputFileName | SheetName 	| RowId 	 |
+| -                           | MaybeLater	         | -       | -     | -	       | -       | -        | -          | Yes       | CommonData    | personalInfo | lightuser1 |
+
+And "LTY-REG-14" Customer Verifies Walgreens account creation success message in the overlay:
+
+Then "LTY-REG-14" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-14  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-15
+Scenario: Loyalty User tries to Register for Balance Rewards and finds the Dupe Message
+
+Given  "LTY-REG-15" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-15 	|
+
+And "LTY-REG-15" Customer Clears the Shopping Cart
+
+And "LTY-REG-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-REG-15" Customer adds Daily Living items to the cart from search.
+
+And "LTY-REG-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-15" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-15" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-REG-15" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "LTY-REG-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "LTY-REG-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "LTY-REG-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "LTY-REG-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "LTY-REG-15" Customer finds Loyalty Banner section in the Order confirmation page:
+|LtyBanner  | JoinNow | ActivateNow |LearnMore |
+| DLBanner  | Yes     |    -        |   -      |
+
+Then "LTY-REG-15" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName 			| RowId           |
+| -                  | Yes    | -        | LoyaltyLogin  | LoyaltyRegistrationLogin | loyaltyuser1    |
+
+Then "LTY-REG-15" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |DupeMessage |MembershipType |
+| - 		  |  Yes	   |      -	       |
+
+Then "LTY-REG-15" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-15  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-16
+Scenario: To verify whether no special character is accepted by Balance rewards or phone number field and also verify the field validation and error messaging  via Activate niow button in shopping cart page for Logged in user 
+
+Given  "LTY-REG-16" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-16 	|
+
+Given "LTY-REG-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | BatmanRxUser   |
+
+And "LTY-REG-16" Customer Clears the Shopping Cart
+
+And "LTY-REG-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-16" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-16" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-16" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | Yes         | -        |
+
+Then "LTY-REG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		8471234              | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-16" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan10digitError | Lessthan10digit      |  -      |   -     |
+
+Then "LTY-REG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		12345678901          | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-16" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan13digitError | Lessthan13digit      |  -      |   -     |
+
+Then "LTY-REG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		1234567890123        | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-16" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Invalid13digitError  | Invalid13digit       |  -      |   -     |
+
+#Marked as NA since it is allwoing special charaters-CSLR-1796
+#Then "LTY-REG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+#| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+#| 		@$^                  | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+#Then "LTY-REG-16" Customer verifies the error validation in Loyalty account creation Page:
+#| InputFileName | SheetName   | RowId    |BalanceRewardsorPhone | Phone   | Zipcode |
+#| -             | -           | -        | SpecialCharacters    |  -      |   -     |
+
+Then "LTY-REG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		                     | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-16" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    					|BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | BalanceRewardsNoEntryError  |NoEntry               |  -      |   -     |
+ 
+Then "LTY-REG-16" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-16  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-17
+Scenario: To verify whether no special character is accepted by Balance rewards or phone number field and also verify the field validation and error messaging  via Activate niow button in shopping cart page for Logged in user 
+
+Given  "LTY-REG-17" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-17 	|
+
+And "LTY-REG-17" Customer Clears the Shopping Cart
+
+And "LTY-REG-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-17" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-17" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-REG-17" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "LTY-REG-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "LTY-REG-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "LTY-REG-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "LTY-REG-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "LTY-REG-17" Customer finds Loyalty Banner section in the Order confirmation page:
+|LtyBanner  | JoinNow | ActivateNow |LearnMore |
+| DLBanner  | Yes     |    -        |   -      |
+
+Then "LTY-REG-17" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId |
+| -		             | -      | Yes	     | -             | -         | -     |
+
+Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName    | RowId       |Submit |
+| 	7144567891012            | ActivateNow		    | 60015   | -      | NOV       | 11      | 1986     |   Yes    | CommonData    | personalInfo | lightuser1  | Yes   |
+
+Then "LTY-REG-17" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  -	 |	 		-				  |			-					|
+
+Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 	7144567                  | ActivateNow		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-17" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan10digitError | Lessthan10digit      |  -      |   -     |
+
+Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		12345678901          | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-17" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan13digitError | Lessthan13digit      |  -      |   -     |
+
+Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		1234567890123        | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-17" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Invalid13digitError  | Invalid13digit       |  -      |   -     |
+
+#Marked as NA since it is allwoing special charaters-CSLR-1796
+#Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+#| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+#| 		@$^                  | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+#Then "LTY-REG-17" Customer verifies the error validation in Loyalty account creation Page:
+#| InputFileName | SheetName   | RowId    |BalanceRewardsorPhone | Phone   | Zipcode |
+#| -             | -           | -        | SpecialCharacters    |  -      |   -     |
+
+Then "LTY-REG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName | RowId |Submit |
+| 		                     | -         		    | 60015   | -      | NOV       | 11      | 1986     |       -  | -             | -         | -     | -     |
+
+Then "LTY-REG-17" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    					|BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | BalanceRewardsNoEntryError  |NoEntry               |  -      |   -     |
+ 
+Then "LTY-REG-17" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-17  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-18
+Scenario: To verify whether no special character is accepted by phone number field and also verify the field validation and error messaging  via Join now button in shopping cart page for logged in user 
+
+Given  "LTY-REG-18" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-18 	|
+
+And "LTY-REG-18" Customer Clears the Shopping Cart
+
+And "LTY-REG-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-18" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-18" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-18" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | - 	   |
+
+Then "LTY-REG-18" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName            | RowId     |
+| -                  | Yes    | -        |  LoyaltyLogin  | LoyaltyRegistrationLogin | lightreg6 |
+
+Then "LTY-REG-18" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	   | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |Submit|
+| -                           | -       		     | 60015   | 84712345  | NOV       | 11      | 1986     |  -         | -             | -         | -     | -    |
+
+Then "LTY-REG-18" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			  |BalanceRewardsorPhone | Phone   			  | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan10digitError  |		-                |  Lessthan10digit   |   -     |
+
+#Marked as NA since it is allwoing special charaters-CSLR-1796
+#Then "LTY-REG-18" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+#| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |Submit|
+#| -                           | -       		     | 60015   | @$^     | NOV       | 11      | 1986     |  -         | -             | -         | -     | -    |
+
+#Then "LTY-REG-18" Customer verifies the error validation in Loyalty account creation Page:
+#| InputFileName | SheetName | RowId  |BalanceRewardsorPhone | Phone   		    | Zipcode |
+#| -             | -	     | -	  |		-            	 |  SpecialCharacter |   -     |
+
+Then "LTY-REG-18" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-18  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-19
+Scenario: To verify whether no special character is accepted by phone number field and also verify the field validation and error messaging  via Proceed to checkout 
+
+Given  "LTY-REG-19" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-19 	|
+
+And "LTY-REG-19" Customer Clears the Shopping Cart
+
+And "LTY-REG-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-19" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-19" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-REG-19" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-REG-19" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	   | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |Submit|
+| -                           | CreateNew            | 60015   | 84712345  | NOV       | 11      | 1986     |  -         | -             | -         | -     | -    |
+
+Then "LTY-REG-19" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			  |BalanceRewardsorPhone | Phone   			  | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan10digitError  |		-                |  Lessthan10digit   |   -     |
+
+#Marked as NA since it is allwoing special charaters-CSLR-1796
+#Then "LTY-REG-19" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+#| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |Submit|
+#| -                           | CreateNew		     | 60015   | @$^     | NOV       | 11      | 1986     |  -         | -             | -         | -     | -    |
+
+#Then "LTY-REG-19" Customer verifies the error validation in Loyalty account creation Page:
+#| InputFileName | SheetName | RowId  |BalanceRewardsorPhone | Phone   		    | Zipcode |
+#| -             | -	        | -		 |		-               |  SpecialCharacter |   -     |
+
+Then "LTY-REG-19" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-19  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-20
+Scenario: To verify whether the text is displayed in FAQ section when user lands in Sign in or Register page via Log in button from the Shopping cart page 
+
+Given  "LTY-REG-20" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-20 	|
+
+And "LTY-REG-20" Customer Clears the Shopping Cart
+
+And "LTY-REG-20" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-20" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-20" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-20" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -	      | -           | Yes      |
+
+Then "LTY-REG-20" Customer Verifies UI and links navigation in Sign in or Register Page:
+|LoyaltyText |Getstarted |PrivacySecurityPolicy |
+|  Yes 		 |  Yes      |      -				|
+
+Then "LTY-REG-20" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-20  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-21
+Scenario: Guest User , SS and CL items , New registration Join now (banner) register , activate rewards JS version in Dotcom
+
+Given  "LTY-REG-21" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-21 	|
+
+And "LTY-REG-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-21" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       	      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-21" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-21" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-21" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-21" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId     |
+| -                  | -      |  Yes     | -			 | 			-			| -			|
+
+Then "LTY-REG-21" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId   		 | MembershipType  |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLRegActivate1|  	Activate   |-          	  |  Yes   |
+
+Then "LTY-REG-21" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-REG-21" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-REG-21" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-21" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-21" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-21 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-22
+Scenario: Guest User , SS and CL items , New registration Join now (banner), register, Create rewards JS version in Dotcom
+
+Given  "LTY-REG-22" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-22 	|
+
+And "LTY-REG-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-22" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-22" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-22" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-22" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| yes     | -           | -		   |
+
+Then "LTY-REG-22" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-22" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId    | MembershipType  |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLRegNew1|  	New			  |-          	  |  Yes   |
+
+Then "LTY-REG-22" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-REG-22" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-22" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-22" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-22 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-23
+Scenario: Guest User,  SS  loyalty items , items Proceed to Checkout, register , Activate rewards JS version in Dotcom
+
+Given  "LTY-REG-23" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-23 	|
+
+And "LTY-REG-23" Customer Clears the Shopping Cart
+
+And "LTY-REG-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-REG-23" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-23" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-23" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "LTY-REG-23" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-23" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |Yes       | CommonData    | personalInfo | lightuser2 |
+
+Then "LTY-REG-23" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-REG-23" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-REG-23" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId               | 
+|CommonData    | TargetPage | Shipping Information|
+
+Then "LTY-REG-23" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "LTY-REG-23" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-23" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-23 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-24
+Scenario: Guest User, CL and SS loyalty items ,  items Proceed to Checkout, register, create  rewards JS version in Dotcom
+
+Given  "LTY-REG-24" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-24 	|
+
+And "LTY-REG-24" Customer Clears the Shopping Cart
+
+And "LTY-REG-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-24" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-REG-24" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-24" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-24" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "LTY-REG-24" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-24" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId    | MembershipType  |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLRegNew1|  	New			  |-          	  |  Yes   |
+
+Then "LTY-REG-24" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-REG-24" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId                  | 
+|CommonData    | TargetPage | PatientAndDoctorDetails|
+
+Then "LTY-REG-24" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "LTY-REG-24" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-24" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-24 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-25
+Scenario: Logged in Non Member , SS and CL items , New registration Activate (banner) register , activate rewards JS version in Dotcom
+
+Given  "LTY-REG-25" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-25 	|
+
+Then "LTY-REG-25" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| NO                 | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-25" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "LTY-REG-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-25" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   	          |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-25" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-25" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-25" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-25" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | yes         | -        |
+
+Then "LTY-REG-25" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                   | Yes         | -                         | -      |
+
+Then "LTY-REG-25" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| 6128058080                  | ActivateNow          | 68686   | -		    | MAR       | 12      | 1971    |    -       | -             | -         | -     | 
+
+Then "LTY-REG-25" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-REG-25" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation   |
+
+Then "LTY-REG-25" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-25" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-25" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-25 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-26
+Scenario:Logged in Non Member , SS and CL items , New registration Activate(banner) register , Create rewards JS version in Dotcom
+
+Given  "LTY-REG-26" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-26 	|
+
+Then "LTY-REG-26" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| NO                 | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-26" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+And "LTY-REG-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-26" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-26" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-26" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-26" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-26" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | Yes         | -        |
+
+Then "LTY-REG-26" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| Yes                 | -           | -                         | -      |
+
+Then "LTY-REG-26" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| -                           | -         		     | 60015   | 8471234567 | NOV       | 11      | 1986     |       -    | -             | -         | -     | 
+
+Then "LTY-REG-26" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-REG-26" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-26" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-26" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-26 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-27
+Scenario: Guest User , CL and SS loyalty items , New registration Sign in(banner) register , log in as Loyalty Member JS version in Dotcom
+
+Given  "LTY-REG-27" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-27 	|
+
+
+And "LTY-REG-27" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-27" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-27" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-27" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-27" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-27" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes      |
+
+Then "LTY-REG-27" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName            | RowId           |
+| -                  | Yes    | -        |  LoyaltyLogin  | LoyaltyRegistrationLogin | lightreg3       |
+
+Then "LTY-REG-27" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-27" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-27 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-28
+Scenario: Guest User , SS an CL items loyalty items , New registration Sign in(banner) , log in as Non Loyalty Member JS version in Dotcom
+
+Given  "LTY-REG-28" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-28 	|
+
+And "LTY-REG-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-28" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-28" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-28" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-28" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes      |
+
+Then "LTY-REG-28" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName   | RowId           |
+| -                  | Yes    | -        |  CommonData    | login			| nonloyaltyuser1 |
+
+Then "LTY-REG-28" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-28" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-28 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-29
+Scenario: Guest User , CL and SS loyalty items , New registration Join now(banner) , log in as Loyalty Member JS version in Dotcom
+
+Given  "LTY-REG-29" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-29 	|
+
+And "LTY-REG-29" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-29" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-29" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   	   		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-29" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-29" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-29" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-REG-29" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName            | RowId     |
+| -                  | Yes    | -        |  LoyaltyLogin  | LoyaltyRegistrationLogin | lightreg3 |
+
+Then "LTY-REG-29" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-29" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-29 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-30
+Scenario: Guest User , SS an CL items loyalty items , New registration Join Now (banner) , log in as Non Loyalty Member JS version in Dotcom
+
+Given  "LTY-REG-30" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-30 	|
+
+And "LTY-REG-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-30" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-30" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-30" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-30" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-REG-30" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName  | RowId           |
+| -                  | Yes    | -        |  CommonData    | 	login 	   | nonloyaltyuser1 |
+
+Then "LTY-REG-30" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-30" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-30 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-31
+Scenario: Guest User, CL and SS loyalty items ,  items Proceed to Checkout, Register May be Later JS version in Dotcom
+
+Given  "LTY-REG-31" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-31 	|
+
+And "LTY-REG-31" Customer Clears the Shopping Cart
+
+And "LTY-REG-31" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-31" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-31" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-REG-31" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-31" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-31" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "LTY-REG-31" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-31" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId         | MembershipType  |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLRegActivate1|  	Maybelater |-          	  |  Yes   |
+
+Then "LTY-REG-31" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId                  | 
+|CommonData    | TargetPage | PatientAndDoctorDetails|
+
+Then "LTY-REG-31" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "LTY-REG-31" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-31" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-31 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-32
+Scenario: Guest User , SS  loyalty items , New registration Sign in(banner) register , activate No Match and Failure JS version in Dotcom
+
+Given  "LTY-REG-32" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-32 	|
+
+And "LTY-REG-32" Customer Clears the Shopping Cart
+
+And "LTY-REG-32" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-32" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-32" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-32" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-32" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-32" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName    | RowId       |Submit |
+| 	7144567891012            | ActivateNow		    | 60015   | -      | NOV       | 11      | 1986     |   Yes    | CommonData    | personalInfo | lightuser1  | Yes   |
+
+Then "LTY-REG-32" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  Yes	 |	 	Yes 				  |			-					|
+
+Then "LTY-REG-32" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-32" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-32" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-32 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-33
+Scenario: Guest User , SS and CL items , New registration Join now (banner) register , activate No Match and Failure JS version in Dotcom
+
+Given  "LTY-REG-33" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-33 	|
+
+And "LTY-REG-33" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-33" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-33" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-33" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-33" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-33" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | Yes	   |
+
+Then "LTY-REG-33" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-33" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId    | MembershipType  |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLRegNew1|  	Activate      |-   			  |  Yes   |
+
+Then "LTY-REG-33" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  Yes	 |	 	Yes 				  |			-					|
+
+Then "LTY-REG-33" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-33" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-33" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-33 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-34
+Scenario: Guest User,  SS  loyalty items , items Proceed to Checkout, register , activate No Match and Failure JS version in Dotcom
+
+Given  "LTY-REG-34" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-34 	|
+
+And "LTY-REG-34" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-34" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-34" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-34" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "LTY-REG-34" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-34" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber| BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |GuestUser | InputFileName | SheetName    | RowId       |Submit |
+| 	7144567891012            | ActivateNow		    | 60015   | -      | NOV       | 11      | 1986     |   Yes    | CommonData    | personalInfo | lightuser1  | Yes   |
+
+Then "LTY-REG-34" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  Yes	 |	 	Yes 				  |			-					|
+
+Then "LTY-REG-34" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId              | 
+|CommonData    | TargetPage |Shipping Information|
+
+Then "LTY-REG-34" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "LTY-REG-34" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-34" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-34 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-35
+Scenario: Logged in Non Member , SS  loyalty items ,New registration Join now (banner) register , activate No Match and Failure JS version in Dotcom
+
+Given  "LTY-REG-35" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-35 	|
+
+Then "LTY-REG-35" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| NO                 | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-35" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "LTY-REG-35" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   	   	      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-35" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-35" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-35" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     |-            | -        |
+
+Then "LTY-REG-35" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| 7896541235                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971    |    -       | -             | -         | -     | 
+
+Then "LTY-REG-35" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  Yes	 |	 	Yes 				  |			-					|
+
+Then "LTY-REG-35" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-35" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-35" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-35 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-36
+Scenario: Logged in Non Member , SS and CL items , New registration Activate (banner) register , activate rewards JS version in Dotcom
+
+Given  "LTY-REG-36" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-36 	|
+
+Then "LTY-REG-36" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| NO                 | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-36" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+And "LTY-REG-36" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-REG-36" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "LTY-REG-36" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-36" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-36" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-36" Customer finds Loyalty Information in the Loyalty Summary Box on the shopping cart page:
+| BalanceRewardsLogo | LoyaltySavingMessage | LoyaltyBonusPointsMessage | JoinNowButtonPresent | ActivateButtonPresent |
+| Yes                | -                    | -                         | Yes                  | Yes                   |
+
+Then "LTY-REG-36" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | yes         | -        |
+
+Then "LTY-REG-36" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | InputFileName | SheetName | RowId |
+| 7896541235                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971    |    -       | -             | -         | -     | 
+
+Then "LTY-REG-36" Customer finds no match found error message in the Application:
+|nomatcherrorMsg |Submit | NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+| Yes  			 |  Yes	 |	 	Yes 				  |			-					|
+
+Then "LTY-REG-36" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-36" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-36" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-36 	|
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-REG-37
+Scenario: Guest User , SS  loyalty items , New registration Sign in(banner) register , activate rewards JS version in Dotcom
+
+Given  "LTY-REG-37" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-37 	|
+
+And "LTY-REG-37" Customer Clears the Shopping Cart
+
+And "LTY-REG-37" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-REG-37" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-REG-37" Customer Goes to the Shopping Cart
+
+Then "LTY-REG-37" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | - 	   |
+
+Then "LTY-REG-37" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| -                  | -      |  Yes     | -			 | 			-			| -				  |
+
+Then "LTY-REG-37" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |Yes       | CommonData    | personalInfo | lightuser2 |
+
+Then "LTY-REG-37" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-REG-37" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-REG-37" Customer close the Currently Opened Overlay to go back to the Main Page:
+|InputFileName | SheetName  | RowId        | 
+|CommonData    | TargetPage | Shopping Cart|
+
+Then "LTY-REG-37" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-REG-37" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-37 	|
+
+#------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,2647 @@
+@dailyliving @DailyLivingCheckout
+Feature: Customer is able to do different kinds of Daily living items check out
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-1
+Scenario: Add Product as Guest and Proceed till review order and sign in
+
+Given  "DL-CHECKOUT-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-1|
+
+And "DL-CHECKOUT-1" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "DL-CHECKOUT-1" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-1" Customer Goes to the Shopping Cart
+
+# DO NOT REMOVE - SDD UPDATE FLAG
+#Then "DL-CHECKOUT-1" Customer clicks on proceed to checkout button in the cart:
+#| ExpectedTargetPage     | SDD |
+#| SigninorRegister		 | yes  |
+
+Then "DL-CHECKOUT-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "DL-CHECKOUT-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-CHECKOUT-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  Yes	     |
+
+Then "DL-CHECKOUT-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "DL-CHECKOUT-1" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "DL-CHECKOUT-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "DL-CHECKOUT-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId 		     |
+| -		             | yes    | -	     | CommonData    | login     | NonLoyaltyUser	 |
+
+Then "DL-CHECKOUT-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "DL-CHECKOUT-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+# Customer submits the order
+Then "DL-CHECKOUT-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-1   |
+
+Then "DL-CHECKOUT-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-CHECKOUT-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-1
+Scenario: Customer ships 2 DC and 2 CH items using Standard Shipping
+
+Given  "CHECKOUT-DLCheckout-1" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-1|
+
+Given "CHECKOUT-DLCheckout-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "CHECKOUT-DLCheckout-1" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-DLCheckout-1" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "CHECKOUT-DLCheckout-1" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-1" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-1" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-1" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+#Then "CHECKOUT-DLCheckout-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName 		| SheetName    | RowId     			   |
+#| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-1  |
+
+Then "CHECKOUT-DLCheckout-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-1" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                 |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-1|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-2
+Scenario: Guest User performs Express Checkout(2 DC + 2 CH items)
+
+Given  "CHECKOUT-DLCheckout-2" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-2    |
+
+And "CHECKOUT-DLCheckout-2" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-DLCheckout-2" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "CHECKOUT-DLCheckout-2" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-2" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-2" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-2" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CHECKOUT-DLCheckout-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CHECKOUT-DLCheckout-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-2" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-2|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-3
+Scenario: Customer ships 2 DC and 2 CH items using BML as Payment method
+
+Given  "CHECKOUT-DLCheckout-3" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-3|
+
+Given "CHECKOUT-DLCheckout-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | localuser1      |
+
+And "CHECKOUT-DLCheckout-3" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-DLCheckout-3" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "CHECKOUT-DLCheckout-3" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-3" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-3" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-3" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK  | 9690 DEERECO RD	| TIMONIUM             | 23    | 21093   |   -	  |karen@merchant.com  | 4439211900   |  No	       |
+
+Then "CHECKOUT-DLCheckout-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CHECKOUT-DLCheckout-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-3  |
+
+Then "CHECKOUT-DLCheckout-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-3" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                 |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-3|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-4
+Scenario: Customer ships 1 CH items using Standard Shipping
+
+Given  "CHECKOUT-DLCheckout-4" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-4|
+
+Given "CHECKOUT-DLCheckout-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "CHECKOUT-DLCheckout-4" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-4" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-4" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-4" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                 |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-4|
+#-----------------------------------------------------------------------------------------------------------
+
+
+@CHECKOUT-DLCheckout-5
+Scenario: Logged in User performs Credit card check out for CL item
+
+Given  "CHECKOUT-DLCheckout-5" Customer starts the scenario:
+| InputFileName 	 | SheetName 		 | RowId         			|
+| QC-CHECKOUT        | DLCheckout        | CHECKOUT-DLCheckout-5	|
+
+Given "CHECKOUT-DLCheckout-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | localuser1	 |
+
+And "CHECKOUT-DLCheckout-5" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CHECKOUT-DLCheckout-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "CHECKOUT-DLCheckout-5" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CHECKOUT-DLCheckout-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 						|   - 							 |
+
+Then "CHECKOUT-DLCheckout-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |   -	 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  -			|  Yes 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "CHECKOUT-DLCheckout-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CHECKOUT-DLCheckout-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CHECKOUT-DLCheckout-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-DLCheckout-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-5" Customer finished testing the scenario:
+| InputFileName 	 | SheetName 		 | RowId      				|
+| QC-CHECKOUT        | DLCheckout        | CHECKOUT-DLCheckout-5	|
+
+#------------------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-6
+Scenario: Logged in User performs Credit card Checkout for pre order item
+
+Given  "CHECKOUT-DLCheckout-6" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-6    |
+
+Given "CHECKOUT-DLCheckout-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	|
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-6" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		 |
+| CommonData    | search    | PreOrder1      |
+
+Then "CHECKOUT-DLCheckout-6" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-6" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 604 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8476234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-6" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-6|
+
+#-----------------------------------------------------------------------------------------------------------
+
+
+@CHECKOUT-DLCheckout-7
+Scenario: Logged in User performs BML Checkout for pre order item 
+
+Given  "CHECKOUT-DLCheckout-7" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-7    |
+
+Given "CHECKOUT-DLCheckout-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	|
+| CommonData    | login     | localuser1			|
+
+And "CHECKOUT-DLCheckout-7" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId      |
+| CommonData    | search    | PreOrder1  |
+
+Then "CHECKOUT-DLCheckout-7" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-7" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  			  | City      		  | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS         | MERCHANTK  | 10332 LAVA WEST		  	  | LAVA HOT SPRINGS  | 15    | 83246   |   -	 |MARCUS@MERCHANT.COM  | 2082082590   |  No	        |
+
+Then "CHECKOUT-DLCheckout-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption              | BillingAddress              | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment   |
+| BillMeLater     			 |NewBillingAddress      	   | true                  | -                  | CACData               | CustomerBilling      | BML1           | -			 	|
+
+Then "CHECKOUT-DLCheckout-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-7" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-7|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-8
+Scenario: Customer place an order(1 CH item) Using BML as payement mode
+
+Given  "CHECKOUT-DLCheckout-8" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-8|
+
+Given "CHECKOUT-DLCheckout-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1       |
+
+And "CHECKOUT-DLCheckout-8" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-8" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-8" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS        | MERCHANTK  | 10332 LAVA WEST	| LAVA HOT SPRINGS | 15    | 83246   |   -	  |MARCUS@MERCHANT.COM  | 2082082590   |  No	       |
+
+Then "CHECKOUT-DLCheckout-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CHECKOUT-DLCheckout-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-8" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                 |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-8|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-9
+Scenario: Logged in User performs Credit card Checkout for Held queue item
+
+Given  "CHECKOUT-DLCheckout-9" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-9    |
+
+Given "CHECKOUT-DLCheckout-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	|
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-9" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | HQ1      |
+
+Then "CHECKOUT-DLCheckout-9" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-9" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 604 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8476234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-9" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-9|
+
+#-----------------------------------------------------------------------------------------------------------
+
+
+@CHECKOUT-DLCheckout-10
+Scenario: Logged in User performs BML Checkout for Held queue item
+
+Given  "CHECKOUT-DLCheckout-10" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-10    |
+
+Given "CHECKOUT-DLCheckout-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	|
+| CommonData    | login     | localuser1		    |
+
+And "CHECKOUT-DLCheckout-10" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | HQ1      |
+
+Then "CHECKOUT-DLCheckout-10" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-10" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS        | MERCHANTK  | 10332 LAVA WEST	| LAVA HOT SPRINGS | 15    | 83246   |   -	  |MARCUS@MERCHANT.COM  | 2082082590   |  No	       |
+
+Then "CHECKOUT-DLCheckout-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "CHECKOUT-DLCheckout-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-10" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-10|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+@CHECKOUT-DLCheckout-11
+Scenario: Logged in User performs PayPal Checkout for pre order item
+
+Given  "CHECKOUT-DLCheckout-11" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-11   |
+
+#Given "CHECKOUT-DLCheckout-11" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData		      | Paypal	      | paypal1	    |
+
+Given "CHECKOUT-DLCheckout-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	   	|
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-11" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | PreOrder1     |
+
+Then "CHECKOUT-DLCheckout-11" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-11" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode  |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1104 WILMOT RD | DEERFIELD | 16    | 60015    |   5121 |siva@testebiz.com | 847112345117    |  No	        |
+
+Then "CHECKOUT-DLCheckout-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "CHECKOUT-DLCheckout-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-11" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-11|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-12
+Scenario: Logged in User performs PayPal Checkout for CH item
+
+Given  "CHECKOUT-DLCheckout-12" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-12   |
+
+#Given "CHECKOUT-DLCheckout-12" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData		      | Paypal	      | paypal1	    |
+
+Given "CHECKOUT-DLCheckout-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   		    |
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-12" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-12" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-12" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode  |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015   | 5121   |siva@testebiz.com | 847122345127    |  No	        |
+
+Then "CHECKOUT-DLCheckout-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "CHECKOUT-DLCheckout-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-12" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-12|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-13
+Scenario: Logged in User performs PayPal Checkout for 2-CH,2-DC item
+
+Given  "CHECKOUT-DLCheckout-13" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-13   |
+
+#Given "CHECKOUT-DLCheckout-13" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData		      | Paypal	      | paypal1	    |
+
+Given "CHECKOUT-DLCheckout-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	    |
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-13" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "CHECKOUT-DLCheckout-13" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "CHECKOUT-DLCheckout-13" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-13" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-13" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-13" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode  |ZipExtn  | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1304 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121  |siva@testebiz.com | 847132345137    |  No	        |
+
+Then "CHECKOUT-DLCheckout-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "CHECKOUT-DLCheckout-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-13" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-13|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-14
+Scenario: Logged in User performs PayPal Checkout for 2-pre order,1-CH item
+
+Given  "CHECKOUT-DLCheckout-14" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-14   |
+
+#Given "CHECKOUT-DLCheckout-14" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData		      | Paypal	      | paypal1	    |
+
+Given "CHECKOUT-DLCheckout-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    		    |
+| CommonData    | login     | authenticated1	|
+
+And "CHECKOUT-DLCheckout-14" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder1|
+
+Then "CHECKOUT-DLCheckout-14" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder2|
+
+Then "CHECKOUT-DLCheckout-14" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-14" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-14" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode  |ZipExtn   | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1404 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121   |siva@testebiz.com | 847142345147    |  No	        |
+
+Then "CHECKOUT-DLCheckout-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-DLCheckout-14" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                 |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-14|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-15
+Scenario: Anonymous User performs Credit card Checkout for 2-pre order,1-CH item
+
+Given  "CHECKOUT-DLCheckout-15" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-15   |
+
+And "CHECKOUT-DLCheckout-15" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder1|
+
+Then "CHECKOUT-DLCheckout-15" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder2|
+
+Then "CHECKOUT-DLCheckout-15" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-15" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-15" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CHECKOUT-DLCheckout-15" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "CHECKOUT-DLCheckout-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-15" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-15 |
+
+Then "CHECKOUT-DLCheckout-15" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                 |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-15|
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CHECKOUT-DLCheckout-16
+Scenario: Anonymous User performs Paypal Checkout for 2-pre order,1-CH item
+
+Given  "CHECKOUT-DLCheckout-16" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-CHECKOUT         | DLCheckout    | CHECKOUT-DLCheckout-16   |
+
+#Given "CHECKOUT-DLCheckout-16" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData		      | Paypal	      | paypal1	    |
+
+And "CHECKOUT-DLCheckout-16" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder1 |
+
+Then "CHECKOUT-DLCheckout-16" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PreOrder2|
+
+Then "CHECKOUT-DLCheckout-16" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-16" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-16" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CHECKOUT-DLCheckout-16" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "CHECKOUT-DLCheckout-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "CHECKOUT-DLCheckout-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-16 |
+
+Then "CHECKOUT-DLCheckout-16" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                 |
+| QC-CHECKOUT          | DLCheckout      | CHECKOUT-DLCheckout-16|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-17
+Scenario: Customer Peroforms  checkout for BOGOLEP items and chooses BML as payment Option
+
+Given  "CHECKOUT-DLCheckout-17" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-17|
+
+Given "CHECKOUT-DLCheckout-17" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1       |
+
+And "CHECKOUT-DLCheckout-17" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGO1    |
+
+And "CHECKOUT-DLCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | BOGOLEP1  |
+
+Then "CHECKOUT-DLCheckout-17" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-17" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-17" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-17" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  			  | City      		  | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS         | MERCHANTK  | 10332 LAVA WEST		  	  | LAVA HOT SPRINGS  | 15    | 83246   |   -	 |MARCUS@MERCHANT.COM  | 2082082590   |  No	        |
+
+Then "CHECKOUT-DLCheckout-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress         | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment   |
+| BillMeLater      | NewBillingAddress      | true                  | -                  | CACData               | CustomerBilling      | BML1           | -			 |
+
+# Customer submits the order
+Then "CHECKOUT-DLCheckout-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-17" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-1  |
+
+Then "CHECKOUT-DLCheckout-17" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-17" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                 |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-17|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-18
+Scenario: Customer Peroforms  checkout for BOGOLEP items and chooses Credit Card as payment Option
+
+Given  "CHECKOUT-DLCheckout-18" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-18|
+
+Given "CHECKOUT-DLCheckout-18" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "CHECKOUT-DLCheckout-18" Customer Clears the Shopping Cart
+
+And "CHECKOUT-DLCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGO1    |
+
+Then "CHECKOUT-DLCheckout-18" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | BOGOLEP1  |
+
+Then "CHECKOUT-DLCheckout-18" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "CHECKOUT-DLCheckout-18" Customer adds Daily Living items to the cart from search.
+
+And "CHECKOUT-DLCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH2      |
+
+Then "CHECKOUT-DLCheckout-18" Customer adds Daily Living items to the cart from search.
+
+Then "CHECKOUT-DLCheckout-18" Customer Goes to the Shopping Cart
+
+Then "CHECKOUT-DLCheckout-18" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-18" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-1  |
+
+Then "CHECKOUT-DLCheckout-18" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-18" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                  |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-18|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-DLCheckout-19
+Scenario: Customer Peroforms SS checkout by adding product from Quicklook Overlay using Credit Card as Payment Method
+
+Given  "CHECKOUT-DLCheckout-19" Customer starts the scenario:
+| InputFileName       | SheetName 	    | RowId                 |
+| QC-CHECKOUT         | DLCheckout      | CHECKOUT-DLCheckout-19|
+
+And "CHECKOUT-DLCheckout-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGO1    |
+
+And "CHECKOUT-DLCheckout-19" Customer selects the required option from Product Quicklook Overlay:
+| InputFileName | SheetName   | RowId         |
+| CACData       | QuickLook   | QuickLook1    |
+
+Then "CHECKOUT-DLCheckout-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CHECKOUT-DLCheckout-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "CHECKOUT-DLCheckout-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CHECKOUT-DLCheckout-19" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CHECKOUT-DLCheckout-19" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			   |
+| CheckoutOrderDetails  | OrderIds 	   |CHECKOUT-DLCheckout-1  |
+
+Then "CHECKOUT-DLCheckout-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CHECKOUT-DLCheckout-19" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CHECKOUT-DLCheckout-19" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  | RowId                  |
+| QC-CHECKOUT         | DLCheckout     | CHECKOUT-DLCheckout-19|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-2
+Scenario: Logged in user checkouts DL products and verifies the order details
+
+Given  "DL-CHECKOUT-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-2 |
+
+Given "DL-CHECKOUT-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | DLUser1    |
+
+And "DL-CHECKOUT-2" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DLProducts1   |
+
+Then "DL-CHECKOUT-2" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DLProducts2   |
+
+Then "DL-CHECKOUT-2" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-2" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-CHECKOUT-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn  | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| shippingaddress	  | -                   | -                | -        	   | -    	     | -  			  | -    	  | -     | -       |   -     |-    			  | -    	     |  -          |
+
+
+Then "DL-CHECKOUT-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-CHECKOUT-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-2   |
+
+Then "DL-CHECKOUT-2" Customer verifies the order details in the order status and history page:
+| InputFileName 		| SheetName    | RowId     		| OrderQuantity | OrderStatus | ShippingMethod | OrderType  |
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-2   |  2			| In Progress |  Standard	   |	DL		|
+
+Then "DL-CHECKOUT-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-2 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-3
+Scenario: Logged in user checkouts DL products and verifies the order details
+
+Given  "DL-CHECKOUT-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-3 |
+
+Given "DL-CHECKOUT-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | DLUser2    |
+
+And "DL-CHECKOUT-3" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DLProducts1   |
+
+Then "DL-CHECKOUT-3" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DLProducts3   |
+
+Then "DL-CHECKOUT-3" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-3" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-CHECKOUT-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn  | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| shippingaddress	  | -                   | -                | -        	   | -    	     | -  			  | -    	  | -     | -       |   -     |-    			  | -    	     |  -          |
+
+
+Then "DL-CHECKOUT-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-CHECKOUT-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-2   |
+
+Then "DL-CHECKOUT-3" Customer verifies the order details in the order status and history page:
+| InputFileName 		| SheetName    | RowId     		| OrderQuantity | OrderStatus | ShippingMethod | OrderType  |
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-2   |  2			| In Progress |  Standard	   |	DL		|
+
+Then "DL-CHECKOUT-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-3 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-4
+Scenario: Logged in user checkouts CL products and verifies the order details
+
+Given  "DL-CHECKOUT-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-4 |
+
+Given "DL-CHECKOUT-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                    |
+| CommonData    | login     | DLUser1                  |
+
+And "DL-CHECKOUT-4" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "DL-CHECKOUT-4" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "DL-CHECKOUT-4" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "DL-CHECKOUT-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-CHECKOUT-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "DL-CHECKOUT-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "DL-CHECKOUT-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | Overnight                |
+
+Then "DL-CHECKOUT-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-CHECKOUT-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |CL-CHECKOUT-1   |
+
+Then "DL-CHECKOUT-4" Customer verifies the order details in the order status and history page:
+| InputFileName 		| SheetName    | RowId     		| OrderQuantity | OrderStatus| ShippingMethod | OrderType   |
+| CheckoutOrderDetails  | OrderIds 	   |CL-CHECKOUT-1   |  2			| In Progress|  Overnight	  |	CL			|
+
+Then "DL-CHECKOUT-4" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-4 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-5
+Scenario: Guest User checkouts DC and CH products
+
+Given  "DL-CHECKOUT-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-5 |
+
+And "DL-CHECKOUT-5" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DCProduct1    |
+
+Then "DL-CHECKOUT-5" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CHProduct1    |
+
+Then "DL-CHECKOUT-5" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-5" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "DL-CHECKOUT-5" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-CHECKOUT-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  Yes	     |
+
+Then "DL-CHECKOUT-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "DL-CHECKOUT-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-5 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-6
+Scenario: Loggged in user checkouts DC, CH and CL products which are not eligible for Expedited shipping
+
+Given  "DL-CHECKOUT-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-6 |
+
+Given "DL-CHECKOUT-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | DLUser1    |
+
+And "DL-CHECKOUT-6" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DCProduct1    |
+
+Then "DL-CHECKOUT-6" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CHProduct1    |
+
+Then "DL-CHECKOUT-6" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "DL-CHECKOUT-6" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "DL-CHECKOUT-6" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "DL-CHECKOUT-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | 		SheetName 		| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-CHECKOUT-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "DL-CHECKOUT-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "DL-CHECKOUT-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |ExpVerification |
+| -      	      | standard		         |     -			        |Yes			 |
+
+Then "DL-CHECKOUT-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-CHECKOUT-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-6" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-6 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-7
+Scenario: Authenticated user checkouts the SS+CL products and verifies the weight and Price threshold for shipping
+
+Given  "DL-CHECKOUT-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-7 |
+
+Given "DL-CHECKOUT-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | DLUser1    |
+
+And "DL-CHECKOUT-7" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  	  	 |
+| CommonData    | search    | SSProduct1     |
+
+Then "DL-CHECKOUT-7" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | search    | CLProducts1   |
+
+Then "DL-CHECKOUT-7" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "DL-CHECKOUT-7" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-7" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation18 |
+
+Then "DL-CHECKOUT-7" Customer verifies weight threshold in shopping cart page:
+| InputFileName | SheetName 	  | RowId    	|
+| CACData       | ProductDetails  | Product1	|
+
+And "DL-CHECKOUT-7" Customer Clears the Shopping Cart
+
+Then "DL-CHECKOUT-7" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-7 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-8
+Scenario: Authenticated user checkouts the SS products alone and verifies the weight and Price threshold for shipping
+
+Given  "DL-CHECKOUT-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-8 |
+
+Given "DL-CHECKOUT-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | DLUser1    |
+
+And "DL-CHECKOUT-8" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		 |
+| CommonData    | search    | SSProduct1     |
+
+Then "DL-CHECKOUT-8" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-8" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-8" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation18 |
+
+Then "DL-CHECKOUT-8" Customer verifies weight threshold in shopping cart page:
+| InputFileName | SheetName 	  | RowId    	|
+| CACData       | ProductDetails  | Product1	|
+
+And "DL-CHECKOUT-8" Customer Clears the Shopping Cart
+
+Then "DL-CHECKOUT-8" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-CHECKOUT-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-DL         | CHECKOUT      | DL-CHECKOUT-8 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-9
+Scenario: Authenticated user performs Transfer Rx Checkout for Self
+
+Given  "CHECKOUT-RxCheckout-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		    |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-9  |
+
+Given "CHECKOUT-RxCheckout-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	   			|
+| CommonData    | login     | AuthenticatedUser1        |
+
+And "CHECKOUT-RxCheckout-9" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-9" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-9" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-9" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		 |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-9   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-10
+Scenario: Authenticated user performs Transfer Rx Checkout for family member
+
+Given  "CHECKOUT-RxCheckout-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      			   |
+| QC-CHECKOUT   | RxCheckout	|CHECKOUT-RxCheckout-10    |
+
+Given "CHECKOUT-RxCheckout-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	     		|
+| CommonData    | login     | AuthenticatedUser1        |
+
+And "CHECKOUT-RxCheckout-10" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-10" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-10" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 1                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-10" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CHECKOUT-RxCheckout-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId        			 |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-10  |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-11
+Scenario: Authenticated medicare/medicaid user performs Transfer Rx Checkout for Self and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-11  |
+
+Given "CHECKOUT-RxCheckout-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | MedicareSingleUser    |
+
+And "CHECKOUT-RxCheckout-11" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-11" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-11" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-11   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-12
+Scenario: Authenticated medicare/medicaid user performs combination of Transfer Rx with new and refill rxs Checkout for Self and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-12  |
+
+Given "CHECKOUT-RxCheckout-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | MedicareSingleUser    |
+
+And "CHECKOUT-RxCheckout-12" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-12" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-12" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | retailRx28    |No		    |
+
+Then "CHECKOUT-RxCheckout-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-12" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-12   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-13
+Scenario: Authenticated user performs combination of 90 day Transfer Rx with new and refill rxs Checkout for Self in a store at Arkansas state and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-13  |
+
+Given "CHECKOUT-RxCheckout-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | AuthenticatedUser1   	|
+
+And "CHECKOUT-RxCheckout-13" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-13" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay   | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-13" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | RxRetail28    |No			|
+
+Then "CHECKOUT-RxCheckout-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-13" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId    			  |
+| CACData       | RXpickup  | rxArkansasStore	  |
+
+Then "CHECKOUT-RxCheckout-13" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-13   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-14
+Scenario: Authenticated user performs combination of 90 day Transfer Rx with new and refill rxs Checkout for Self in a store at massachusetts state and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-14  |
+
+Given "CHECKOUT-RxCheckout-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | AuthenticatedUser1   	|
+
+And "CHECKOUT-RxCheckout-14" Customer Clears the Shopping Cart
+
+#Then "CHECKOUT-RxCheckout-14" Customer clicks on an object and validates the expected results:
+#| InputFileName	   	               | SheetName            | RowId 	        	         |
+#| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-14" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay   | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-14" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-14" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-14" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-14" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | RxRetail99    |No			|
+
+Then "CHECKOUT-RxCheckout-14" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-14" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId    				  |
+| CACData       | RXpickup  | rxMassachusettsStore	  |
+
+Then "CHECKOUT-RxCheckout-14" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-14   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-15
+Scenario: Authenticated user performs combination of 90 day Transfer Rx with new and refill rxs Checkout for Self in a store at Newyork state and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-15  |
+
+Given "CHECKOUT-RxCheckout-15" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | AuthenticatedUser1   	|
+
+And "CHECKOUT-RxCheckout-15" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-15" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-15" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay   | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-15" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-15" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-15" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-15" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | RxRetail99    |No			|
+
+Then "CHECKOUT-RxCheckout-15" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-15" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId    			  |
+| CACData       | RXpickup  | rxNewyorkStore	  |
+
+Then "CHECKOUT-RxCheckout-15" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-15   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-16
+Scenario: Authenticated user performs combination of 90 day Transfer Rx with new and refill rxs Checkout for Self in a store at New Jersey state and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-16  |
+
+Given "CHECKOUT-RxCheckout-16" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | AuthenticatedUser1   	|
+
+And "CHECKOUT-RxCheckout-16" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-16" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay   | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-16" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-16" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-16" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | RxRetail99    |No			|
+
+Then "CHECKOUT-RxCheckout-16" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-16" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId    			  |
+| CACData       | RXpickup  | rxNewJersseyStore	  |
+
+Then "CHECKOUT-RxCheckout-16" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-16   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CHECKOUT-RxCheckout-17
+Scenario: Authenticated user performs combination of 90 day Transfer Rx with new and refill rxs Checkout for Self in a store at Mississippi state and verifies the absence of Walgreens $25 Coupon
+
+Given  "CHECKOUT-RxCheckout-17" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		     |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-17  |
+
+Given "CHECKOUT-RxCheckout-17" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      			|
+| CommonData    | login     | AuthenticatedUser1   	|
+
+And "CHECKOUT-RxCheckout-17" Customer Clears the Shopping Cart
+
+Then "CHECKOUT-RxCheckout-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	         |
+| PharmacyHomePageLinkVerification | Authenticated        | Transfer Prescription        |
+
+When "CHECKOUT-RxCheckout-17" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay   | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CHECKOUT-RxCheckout-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	    |
+| PharmacyHomePageLinkVerification | Authenticated        | New Prescription        |
+
+When  "CHECKOUT-RxCheckout-17" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CHECKOUT-RxCheckout-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	      					  	   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillAnotherPrescriptionShoppingCart  |
+
+When  "CHECKOUT-RxCheckout-17" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |AutoRefill |
+| CACData       | RefillRx  | RxRetail99    |No			|
+
+Then "CHECKOUT-RxCheckout-17" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CHECKOUT-RxCheckout-17" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId    				  |
+| CACData       | RXpickup  | rxMississippiStore	  |
+
+Then "CHECKOUT-RxCheckout-17" Customer selects rx pick up date and time and click on continue
+
+Then "CHECKOUT-RxCheckout-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "CHECKOUT-RxCheckout-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CHECKOUT-RxCheckout-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  		  |
+| QC-CHECKOUT	| RxCheckout	|CHECKOUT-RxCheckout-17   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-9
+Scenario: Customer is able to Checkout the combination of CH , Preorder, CL, PSC and DC items using Credit Card
+
+Given  "DL-CHECKOUT-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	 |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-9   |
+
+Given "DL-CHECKOUT-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      		|
+| CommonData    | login     | authenticated2   	|
+
+And "DL-CHECKOUT-9" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | CH1   |
+
+Then "DL-CHECKOUT-9" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PreOrder1   |
+
+Then "DL-CHECKOUT-9" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "DL-CHECKOUT-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "DL-CHECKOUT-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "DL-CHECKOUT-9" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "DL-CHECKOUT-9" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then "DL-CHECKOUT-9" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+And "DL-CHECKOUT-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | DC1   |
+
+Then "DL-CHECKOUT-9" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-9" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "DL-CHECKOUT-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "DL-CHECKOUT-9" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "DL-CHECKOUT-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "DL-CHECKOUT-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |       standard           |       standard           |
+
+Then "DL-CHECKOUT-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-CHECKOUT-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "DL-CHECKOUT-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     	   |
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-9  |
+
+Then "DL-CHECKOUT-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-CHECKOUT-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-9   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-10
+Scenario: Customer is able to Checkout the combination of CH , Preorder, CL, PSC and DC items using Credit Card
+
+Given  "DL-CHECKOUT-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-10   |
+
+And "DL-CHECKOUT-10" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | CH1   |
+
+Then "DL-CHECKOUT-10" Customer selects the required option from Product Quicklook Overlay:
+| InputFileName | SheetName   | RowId         |
+| SelfService   | QuickLook   | QuickLook3    |
+
+Then "DL-CHECKOUT-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "DL-CHECKOUT-10" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-CHECKOUT-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  Yes	     |
+
+Then "DL-CHECKOUT-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-CHECKOUT-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |WagCouponVerify|
+| yes         | -                       | -                         | -                    | -                        | yes			  |
+
+Then "DL-CHECKOUT-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     	    |
+| CheckoutOrderDetails  | OrderIds 	   |DL-CHECKOUT-10  |
+
+
+Then "DL-CHECKOUT-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-10   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@DL-CHECKOUT-11
+Scenario: Loyalty User adds SpecialtyRX,RefillRX,SS,CL items to cart.Verifies loyalty related messages in various pages and verfies links in Order confirmation E-mail. 
+
+Given "DL-CHECKOUT-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-11   |
+
+Then "DL-CHECKOUT-11" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	        |
+| CommonData    | login        | SpecialtyUser2		|
+
+And "DL-CHECKOUT-11" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-CHECKOUT-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      		|
+| CommonData    | login     | SpecialtyUser2	|
+
+And "DL-CHECKOUT-11" Customer Clears the Shopping Cart
+
+Then "DL-CHECKOUT-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId         |
+| CACData       | RefillRx  | SpecialtyRX66 |
+
+Then "DL-CHECKOUT-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId        |
+| CACData       | RefillRx  | refillRX122  |
+
+Then "DL-CHECKOUT-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId 				    |
+| CommonData    | search    | LoyaltyPointsEligible11   |
+
+Then "DL-CHECKOUT-11" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "DL-CHECKOUT-11" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "DL-CHECKOUT-11" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation20 |
+
+And "DL-CHECKOUT-11" Customer clicks on an object and validates the expected results:
+| InputFileName             | 	SheetName 		      | 		RowId                |
+| PharmacyLinkVerification  |   AdditionalLinks       |LoyaltyBannerVerificationCart |
+
+Then "DL-CHECKOUT-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails       |
+
+Then "DL-CHECKOUT-11" Customer selects rx pick up date and time and click on continue
+
+Then "DL-CHECKOUT-11" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "DL-CHECKOUT-11" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info1 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		| Shipping Information |
+
+Then "DL-CHECKOUT-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  			| PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test      | Test      | 29 Kuhio Street | Hilo      | 14     | 96720  | abcdtest@etstebiz.com  | 1234567890   |
+
+And "DL-CHECKOUT-11" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date  	  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRX66 | 	-			  |Default    | 	-    |   -       |   -  		 |
+
+Then "DL-CHECKOUT-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |       standard           |       standard           |
+
+Then "DL-CHECKOUT-11" Customer Verifies the Note message about Specialty Rx in the Payment Options Page:
+
+Then "DL-CHECKOUT-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			|
+
+Then "DL-CHECKOUT-11" Customer validates Specialty Rx Info in the Order Review page:
+
+Then "DL-CHECKOUT-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "DL-CHECKOUT-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	      |
+| SDDData       | orderconfirmationdetails |DL-CHECKOUT-11    |
+
+And "DL-CHECKOUT-11" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	    |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRX66 |  yes		   |			yes		   |		yes		 |
+
+And "DL-CHECKOUT-11" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	        |
+| CommonData    | login        | SpecialtyUser2		|
+
+Then "DL-CHECKOUT-11" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId          |
+| SDDData       | orderconfirmationdetails |DL-CHECKOUT-11  |
+
+Then "DL-CHECKOUT-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-11   |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@DL-CHECKOUT-12
+Scenario: Customer performs Paypal checkout for DC,CH products and validates Order,User profile information in DB
+
+Given "DL-CHECKOUT-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-12   |
+
+Then "DL-CHECKOUT-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      		|
+| CommonData    | login     | lightwithapp		|
+
+And "DL-CHECKOUT-12" Customer Clears the Shopping Cart
+
+Then "DL-CHECKOUT-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | DC1	              |
+
+Then "DL-CHECKOUT-12" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | CH1	              |
+
+Then "DL-CHECKOUT-12" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-12" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "DL-CHECKOUT-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State    | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | -                   | -                | Light     | User      | 300 Test Street  | Deerfield | 16       | 60015   | -             | -            |
+
+Then "DL-CHECKOUT-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-CHECKOUT-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-CHECKOUT-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   | DL-CHECKOUT-12 |
+
+Then "DL-CHECKOUT-12" Customer validates Shipping and payment details from order confirmation page:
+| InputFileName	   	               | SheetName                           | RowId 	        	         |
+| CheckOutOrderDetails             | Address&ShippingVerification        | Address_Verify_1              | 
+
+Then "DL-CHECKOUT-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  |
+|  DataBase     | Query      | DLCheckout12Query1     |
+|  DataBase     | Query      | DLCheckout12Query2     |
+|  DataBase     | Query      | DLCheckout12Query3     |
+
+Then "DL-CHECKOUT-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-12   |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-13
+Scenario: Customer is able to Checkout the combination of CH , Gift cards, CL, PSC and DC items using Credit Card and verifies the arrangements in Cart page , shipping method page , billing info page and in personal mail.
+
+Given  "DL-CHECKOUT-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-13   |
+
+Given "DL-CHECKOUT-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       |
+| CommonData    | login     | NonMSUser   |
+
+And "DL-CHECKOUT-13" Customer Clears the Shopping Cart
+
+And "DL-CHECKOUT-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | CH1   |
+
+Then "DL-CHECKOUT-13" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId 	  |
+| CommonData    | search    | GiftCards   |
+
+Then "DL-CHECKOUT-13" Customer adds Daily Living items to the cart from search.
+
+And "DL-CHECKOUT-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId 	   |
+| CommonData    | search    | DCProduct1   |
+
+Then "DL-CHECKOUT-13" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-13" Customer Goes to the Shopping Cart
+
+Then "DL-CHECKOUT-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "DL-CHECKOUT-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       |
+| CommonData    | login     | NonMSUser   |
+
+And "DL-CHECKOUT-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "DL-CHECKOUT-13" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+When  "DL-CHECKOUT-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId         |
+| CACData       | RefillRx  | BackendCACRx  |
+
+#Mail service prescription
+When  "DL-CHECKOUT-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId               |
+| CACData       | RefillRx  | BackendCACMailplan  |
+
+When  "DL-CHECKOUT-13" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | Test Order      |  Test Order    | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "DL-CHECKOUT-13" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | Test Order   | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+And "DL-CHECKOUT-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "DL-CHECKOUT-13" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "DL-CHECKOUT-13" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then "DL-CHECKOUT-13" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "DL-CHECKOUT-13" Customer validates Delivery Messages in diffrent pages:
+|PageOption   |ProductCheck          |
+|ShoppingCart |CheckPSCShipping      |
+
+Then "DL-CHECKOUT-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "DL-CHECKOUT-13" Customer selects rx pick up date and time and click on continue
+
+Then "DL-CHECKOUT-13" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CL1Data4     | 	Yes    | - 					   |   - 					  |
+
+Then "DL-CHECKOUT-13" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "DL-CHECKOUT-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "DL-CHECKOUT-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |       standard           |       standard           |
+
+Then "DL-CHECKOUT-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-CHECKOUT-13" Customer validates Delivery Messages in diffrent pages:
+|PageOption   |ProductCheck          |
+|OrderReview  |CheckAll      		 |
+
+Then "DL-CHECKOUT-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-13" Customer validates Delivery Messages in diffrent pages:
+|PageOption   |ProductCheck          |
+|OrderReview  |CheckAll      		 |
+
+Given "DL-CHECKOUT-13" Customer login to the Yahoo.com:
+| InputFileName | SheetName | RowId     |
+| CommonData    | login     | NonMSUser   |
+
+Then "DL-CHECKOUT-13" Customer validates Delivery Messages in diffrent pages:
+|PageOption   |ProductCheck          |
+|Yahoomail    |CheckAll      		 |
+
+Then "DL-CHECKOUT-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  |
+| QC-DL	    	| CHECKOUT  	|DL-CHECKOUT-13   |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-CHECKOUT-14
+Scenario: Logged in user performs SS product check out and validates redeemed points in Review order page and order summary page
+
+Given  "DL-CHECKOUT-14" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId              |
+| QC-DL	        | CHECKOUT	         | DL-CHECKOUT-14     |
+
+Given "DL-CHECKOUT-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         		 |
+| CommonData  	 | login     | LoyaltyPointsUser	 |
+
+And "DL-CHECKOUT-14" Customer Clears the Shopping Cart
+
+Then "DL-CHECKOUT-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | search    | PoBoxProduct  |
+
+Then "DL-CHECKOUT-14" Customer adds Daily Living items to the cart from search.
+
+Then "DL-CHECKOUT-14" Customer Goes to the Shopping Cart
+
+And "DL-CHECKOUT-14" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       |TargetOverlay|
+| 	CSLR         | LinkNavigation    |EstimatedShipping |No			  |
+| 	CSLR         | LinkNavigation    |ShippingDetails	|Yes		  |
+| 	CSLR         | LinkNavigation    |CloseButton		|No			  |
+
+Then "DL-CHECKOUT-14" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation18 |
+
+And "DL-CHECKOUT-14" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       |
+|	CSLR		 | LinkNavigation	 |PointsInSC		|
+
+Then "DL-CHECKOUT-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "DL-CHECKOUT-14" Customer validates PO Box address in shipping info page:
+
+Then "DL-CHECKOUT-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |wag_srinivanni@yahoo.com  | 8471234567   |  No	       |
+
+Then "DL-CHECKOUT-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+And "DL-CHECKOUT-14" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       	|
+|	CSLR		 | LinkNavigation	 |RedemptionDropDown	|
+
+Then "DL-CHECKOUT-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|RedeemPtsOption|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			|1				|
+
+And "DL-CHECKOUT-14" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "DL-CHECKOUT-14" Customer validates the applied rewards in various pages:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "DL-CHECKOUT-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-CHECKOUT-14" Customer validates the applied rewards in various pages:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "DL-CHECKOUT-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-CHECKOUT-14" Customer finished testing the scenario:
+| InputFileName | SheetName 		   | RowId         	   |
+| QC-DL	        | CHECKOUT			   | DL-CHECKOUT-14    |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+

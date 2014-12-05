@@ -1,0 +1,222 @@
+package walgreens.ecom.batch.automation.library.marketingRemaining;
+
+import java.util.HashMap;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class Tier3URLValidationsLibrary extends CommonLibrary{
+    
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify URL of the Tier page after selecting any options(sort, Product type,Brand) present in Tier 3 page
+     * @author - Mohamed Fyrose
+     * @Created - 20-feb-2013
+     * @Modified By - Mohamed Fyrose
+     * @Modified Date - 6 - Mar -2013
+     ************************************************************** 
+     */
+    public static void validateTier3Dropdown(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ItemsPerpage_LST="//select[@id='recsPerPageTop']~XPATH";
+	String ProductOne_LNK="//form[@id='product-refinement']/fieldset/fieldset[1]/a[@class='refinement']~XPATH";
+	String BrandOne_LNK="//form[@id='brand-refinement']/fieldset/fieldset[1]/a[@class='refinement']~XPATH";
+	String BrandTwo_LNK="//form[@id='brand-refinement']/fieldset/fieldset[2]/a[@class='refinement']~XPATH";
+	String CommonHeader_DIV="//h1~XPATH";
+	String URL_Value=null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		String Select_Option = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SelectOption");
+		String Select_Category=getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SelectCategory");
+		String Validation_Type=getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "URLValidationType");
+		if (Select_Option.equalsIgnoreCase("SortDropdown")) {
+		    String SortDropdown_LST = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DropdownObject");
+		    String VisibleText = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VisibleText");
+		    if (isElementPresentVerification(SortDropdown_LST, browser)) {
+			if (!selectByVisibleText(SortDropdown_LST, VisibleText, browser)) {
+			    messagesMap.put("Tier3 Sort Dropdown", "Not able to select " + VisibleText + "  Option from dropdown");
+			    status = WARNING;
+			}
+
+		    } else {
+			throw new Exception("Sort Drop down not found in Tier3 Page");
+		    }
+		}
+		//Select Product Checkbox even if the options is both
+		if (Select_Category.equalsIgnoreCase("ProductType"))
+		{
+		    if(!isElementPresentVerifyClick(ProductOne_LNK, browser))
+		    {
+			throw new Exception("Not Able to select Product Link");
+		    }
+		}
+		else if (Select_Category.equalsIgnoreCase("Brand"))
+		{
+		    if(!isElementPresentVerifyClick(BrandOne_LNK, browser))
+		    {
+			throw new Exception("Not Able to select First Brand Link");
+		    }
+		    // if Multiple brands needs to be selected
+		    String Multiple=getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MultipleBrand");
+		    String SelectProd=getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PorductwithBrand");
+		    if (Multiple.equalsIgnoreCase("Yes"))
+		    {
+			if(!isElementPresentVerifyClick(BrandTwo_LNK, browser))
+			    {
+				throw new Exception("Not Able to select Second Brand Link");
+			    }
+		    }
+		    // to select a product along with Multiple Brands
+		    if (SelectProd.equalsIgnoreCase("Yes"))
+		    {
+			if(!isElementPresentVerifyClick(ProductOne_LNK, browser))
+			    {
+				throw new Exception("Not Able to select first Product after selecting Two Brands");
+			    }
+		    }
+		}
+		else if (Select_Category.equalsIgnoreCase("Both")) // Select product and Brand checkbox
+		{
+		    if(!isElementPresentVerifyClick(ProductOne_LNK, browser))
+		    {
+			throw new Exception("Not Able to select Product Link");
+		    }
+		    if (isElementPresentVerification(BrandOne_LNK, browser))
+		    {
+			 if(!isElementPresentVerifyClick(BrandOne_LNK, browser))
+			    {
+				throw new Exception("Not Able to select First Brand Link");
+			    }
+		    }
+		    else
+		    {
+			throw new Exception("Not Able to select First Brand Link");
+		    }
+		}
+		
+		// Get the URL Value
+		URL_Value = browser.getCurrentUrl();
+		//Verify NavAction=push
+		if (Validation_Type.equalsIgnoreCase("NavAction"))
+		{
+		  //URL should not contain navAction=push&navCount=0
+		    if (URL_Value.contains("navAction=push&navCount=0"))
+		    {
+			 messagesMap.put("Tier3 URL Validation", "navAction=push&navCount=0 has not been removed from URL ");
+			 status = WARNING;
+		    }
+		}
+		if (Validation_Type.equalsIgnoreCase("CategoryDirectory"))
+		{
+		  //Get the object path from Excel
+		    String ObjectLink=getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "TargetLink");
+		    String categoryPage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CategoryPage");
+		    if (!categoryPage.equalsIgnoreCase("-"))
+		    {
+			if(!isElementPresentVerifyClick("//a[contains(@href,'page="+categoryPage+"')]", browser))
+			{
+			    throw new Exception("Not Able to Click the Category page which is mentioned in the Excel. Type the valid page number");
+			}
+		    }
+		    if (isElementPresentVerification(ObjectLink, browser))
+		    {
+			String Link_href=getElementByProperty(ObjectLink, browser).getAttribute("href");
+			if (Link_href.contains("/store/store/category/productlist.jsp"))
+			{
+			    messagesMap.put("Category Directory Validation", "Href Contains /store/store/category/productlist.jsp ");
+			    status = WARNING; 
+			}
+			getElementByProperty(ObjectLink, browser).click();
+			String Current_URL=browser.getCurrentUrl();
+			if (Current_URL.contains("/store/store/category/productlist.jsp"))
+			{
+			    messagesMap.put("Category Directory Validation", "URL value Contains /store/store/category/productlist.jsp ");
+			    status = WARNING; 
+			}
+			
+		    }
+		    else
+		    {
+			throw new Exception("Given Target link not found");
+		    }
+		}
+		//Format URL(remove hyifen(-) and format it to verify Brand and category name in URL
+		if (Validation_Type.equalsIgnoreCase("FormatURL"))
+		{
+		   // http://qa1.walgreens.com/store/c/productlist/bye-bye-blemish-acne-treatments/N=360493-2000011389-306756
+		    //Bye Bye Blemish - Acne Treatments
+		    String formattedURL = URL_Value.replace("-", "");
+		    String Header = getElementByProperty(CommonHeader_DIV, browser).getText();
+		    String BrandorProd=Header.split("-")[0].replace(" ", "").toLowerCase();
+		    String Category=Header.split("-")[1].replace(" ", "").toLowerCase();
+		    String ConcatenatedProd=BrandorProd+Category;
+		   // Modified to remove "&"
+		    //Fyrose
+		    if (ConcatenatedProd.contains("&"))
+		    {
+			ConcatenatedProd=ConcatenatedProd.replace("&", "and");
+		    }
+		    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@Formatted URL & :"+ConcatenatedProd);
+		    // Get the option(check brand is present or negative case Verification) from Excel
+		    String FormatChecking = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SEOFormat");
+		    if (FormatChecking.equalsIgnoreCase("BrandorProdPresent"))
+		    {
+			if (!formattedURL.contains(ConcatenatedProd))
+			{
+			    messagesMap.put("SEO keyword", "URL Prod or Brand name not comes befor Category ");
+			    status = WARNING; 
+			}
+		    }
+		    
+
+		}
+		if (Validation_Type.equalsIgnoreCase("ProductAloneSEO")) // Select Product in Left Nav and check it is displayed in URL
+		{
+		    String formattedURL = URL_Value.replace("-", "");
+		    String Header= getElementByProperty(CommonHeader_DIV, browser).getText().toLowerCase().replace(" ", "");
+		    if (!formattedURL.contains(Header))
+			{
+			    messagesMap.put("SEO keyword", "URL contains Product in URL ");
+			    status = WARNING; 
+			}
+		}
+		if (Validation_Type.equalsIgnoreCase("NOProductSEO")) // Check product or Brand name should not present in URL
+		{
+		    String formattedURL = URL_Value.replace("-", "");
+		    String Header= getElementByProperty(CommonHeader_DIV, browser).getText().toLowerCase().replace(" ", "");
+		    if (formattedURL.contains(Header)) // Header text should not be present in the URL
+			{
+			    messagesMap.put("SEO keyword", "URL contains Product or Brand name in URL ");
+			    status = WARNING; 
+			}
+		}
+		
+		
+		
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

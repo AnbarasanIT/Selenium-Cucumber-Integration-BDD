@@ -1,0 +1,196 @@
+@dailyliving @siteintegration @BrowseAndSearchPageValidations
+Feature: This feature feature is about validation of SDD Browse and Search related validations 
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-1
+Scenario: Customer is able to add web only instock online item to cart from VPD Page 
+
+Given  "SDD-BROWSEANDSEARCH-1" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-1|
+
+And "SDD-BROWSEANDSEARCH-1" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  			     |
+| CommonData    | search    | sdd_webonly_instockonline1 |
+
+Then "SDD-BROWSEANDSEARCH-1" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	  			       |
+| SDDData       | VPDPage    | sdd_webonly_instockonline_info1 |
+
+Then "SDD-BROWSEANDSEARCH-1" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity |
+| -       |
+
+Then "SDD-BROWSEANDSEARCH-1" Customer Goes to the Shopping Cart
+
+Then "SDD-BROWSEANDSEARCH-1" Customer validates required Product Delivery Option type from Shopping Cart:
+| InputFileName | SheetName | RowId    	  			     |
+| CommonData    | search    | sdd_webonly_instockonline1 |
+
+Then "SDD-BROWSEANDSEARCH-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-2
+Scenario: Customer verifies Out of stock for ship and disabled add to cart button in the VPD Page for the Product Web only-OOS online item
+
+Given  "SDD-BROWSEANDSEARCH-2" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-2|
+
+And "SDD-BROWSEANDSEARCH-2" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  			        |
+| CommonData    | search    | sdd_webonly_outofstockonline1 |
+
+Then "SDD-BROWSEANDSEARCH-2" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	  			          |
+| SDDData       | VPDPage    | sdd_webonly_outofstockonline_info1 |
+
+Then "SDD-BROWSEANDSEARCH-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-2|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-3
+Scenario: Customer is able to add the Web and Store Product to cart using default selected Option(Ship)
+
+Given  "SDD-BROWSEANDSEARCH-3" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-3|
+
+Given "SDD-BROWSEANDSEARCH-3" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-BROWSEANDSEARCH-3" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  	 |
+| CommonData    | search    | sdd_web_store1 |
+
+Then "SDD-BROWSEANDSEARCH-3" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	       |
+| SDDData       | VPDPage    | sdd_web_store_info1 |
+
+Then "SDD-BROWSEANDSEARCH-3" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity |
+| -       |
+
+Then "SDD-BROWSEANDSEARCH-3" Customer Goes to the Shopping Cart
+
+Then "SDD-BROWSEANDSEARCH-3" Customer validates required Product Delivery Option type from Shopping Cart:
+| InputFileName | SheetName | RowId    	  	 |
+| CommonData    | search    | sdd_web_store1 |
+
+Then "SDD-BROWSEANDSEARCH-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-3|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-4
+Scenario: Customer is able to add the Web and Store in stock Product to cart using Pikcup Delivery Option
+
+Given  "SDD-BROWSEANDSEARCH-4" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-4|
+
+And "SDD-BROWSEANDSEARCH-4" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  	  	 |
+| CommonData    | search    | sdd_web_store2 |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	       |
+| SDDData       | VPDPage    | sdd_web_store_info2 |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer selects new store or changes store from the VPD page:
+| InputFileName | SheetName    | RowId    	         |
+| SDDData       | storedetails | VPDPagePickupStore1 |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	       |
+| SDDData       | VPDPage    | sdd_web_store_info3 |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity |
+| 2       |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer Goes to the Shopping Cart
+
+Then "SDD-BROWSEANDSEARCH-4" Customer validates required Product Delivery Option type from Shopping Cart:
+| InputFileName | SheetName | RowId 	     |
+| CommonData    | search    | sdd_web_store2 |
+
+Then "SDD-BROWSEANDSEARCH-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-4|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-5
+Scenario: Customer is able to add the WPU and store item to cart
+
+Given  "SDD-BROWSEANDSEARCH-5" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-5|
+
+And "SDD-BROWSEANDSEARCH-5" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  	  	  |
+| CommonData    | search    | sdd_store_only1 |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	   |
+| SDDData       | VPDPage    | sdd_store_info1 |
+| SDDData       | VPDPage    | sdd_store_info2 |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer selects new store or changes store from the VPD page:
+| InputFileName | SheetName    | RowId    	         |
+| SDDData       | storedetails | VPDPagePickupStore2 |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	   |
+| SDDData       | VPDPage    | sdd_store_info3 |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity |
+| -       |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer Goes to the Shopping Cart
+
+Then "SDD-BROWSEANDSEARCH-5" Customer validates required Product Delivery Option type from Shopping Cart:
+| InputFileName | SheetName | RowId 	      |
+| CommonData    | search    | sdd_store_only1 |
+
+Then "SDD-BROWSEANDSEARCH-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-5|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BROWSEANDSEARCH-6
+Scenario: Customer is able to find in-store only message in the VPD page.
+
+Given  "SDD-BROWSEANDSEARCH-6" Customer starts the scenario:
+| InputFileName | SheetName 	  | RowId       	     |
+| QC-SDD        | BROWSEANDSEARCH | SDD-BROWSEANDSEARCH-6|
+
+And "SDD-BROWSEANDSEARCH-6" Customer Clears the Shopping Cart
+
+And  "SDD-BROWSEANDSEARCH-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId 	    	|
+| CommonData    | search    | sdd_instore_only1 |
+
+Then "SDD-BROWSEANDSEARCH-6" Customer validates Product status and selects Delivery option from the VPD page:
+| InputFileName | SheetName  | RowId    	     |
+| SDDData       | VPDPage    | sdd_instore_info1 |
+
+Then "SDD-BROWSEANDSEARCH-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	 | RowId        		|
+| QC-SDD        | BROWSEANDSEARCH| SDD-BROWSEANDSEARCH-6|

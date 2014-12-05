@@ -1,0 +1,449 @@
+package walgreens.ecom.batch.automation.library.marketing.directMail;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class DirectMailPreferenceFormValidationsLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - UI validation in Postal Mail Preference page under Direct Mail
+     * @author - Mohana Janakavalli K
+     * @Created - 21-01-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateUIMailPreferencesform(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	String Edityourpostalmailtitle_ElM = "//h1[contains(text(),'Edit Your Postal Mail Preferences')]~XPATH";
+	String DMALogo_img = "img[title='DMA TRUSTED MARKETER PROGRAM MEMBER']~CSS";
+	String Completethefields_ELM = "//p[contains(text(),'Complete the fields below to change')]~XPATH";
+	String OnlineprivacySecuritypolicy_TXT = "//p[contains(text(),'We do not rent or sell your information.')]~XPATH";
+	String OnlineprivacySecuritypolicy_ELM = "//p/a[contains(text(),'Online Privacy & Security Policy')]~XPATH";
+	String OnlineprivacySecuritypolicy_TIT = "//h1[contains(text(),'Online Privacy & Security Policy')]~XPATH";
+	String Allfieldsarerequired_ELM = "//p[contains(text(),'All fields are required unless otherwise indicated.')]~XPATH";
+	String Title_SELECT = "select[alt='Enter your Title here.']~CSS";
+	String FirstName_TXT = "input[id='firstName']~CSS";
+	String MiddleName_TXT = "input[id='mi']~CSS";
+	String LastName_TXT = "input[id='lastName']~CSS";
+	String Suffix_TXT = "select[id='suffix']~CSS";
+	String CustomerAddress_TXT = "input[id='custAddr']~CSS";
+	String Street_TXT = "input[id='street']~CSS";
+	String City_TXT = "input[id='city']~CSS";
+	String State_SELECT = "select[id='state']~CSS";
+	String Zipcode_TXT = "input[id='zipCode']~CSS";
+	String PhoneNumber_TXT = "input[id='phoneNumber']~CSS";
+	String AlternativeNumber_TXT = "input[id='altPhoneNumber']~CSS";
+	String EmailAddress_TXT = "input[id='emailAddr']~CSS";
+	String Cancel_IMG = "//img[@alt='Cancel Button']~XPATH";
+	String Continue_ELM = "//input[@title='CONTINUE']~XPATH";
+	String Homephone_TXT = "//form/div/div[2]/div/div[21]/div~XPATH";
+	String Title_TXT = "//form/div/div[2]/div/div/div~XPATH";
+	String MiddleInitial_TXT = "//form/div/div[2]/div/div[5]/div~XPATH";
+	String suffix_TXT = "//form/div/div[2]/div/div[9]/div~XPATH";
+	String AppUntSuitr_TXT = "//form/div/div[2]/div/div[13]/div~XPATH";
+	String ZipCode_TXT = "//form/div/div[2]/div/div[19]/div~XPATH";
+	String CellPhone_TXT = "//form/div/div[2]/div/div[23]/div~XPATH";
+	String Emailaddress_TXT = "//form/div/div[2]/div/div[24]/div/div/div~XPATH";
+	String DMAPOPUP_ELM = "//h1[contains(text(),'Direct Marketing Association')]~XPATH";
+	String DMAPOPUP_TXT = "//tbody/tr[2]/td[contains(text(),'As a member of the Direct Marketing Association')]~XPATH";
+	String Close_IMG = "img[alt='Close Window']~CSS";
+	List<WebElement> Title = null;
+	String TitleOptions[] = null;
+	List<WebElement> Suffix = null;
+	String SuffixOptions[] = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String strSourcePageURL = null;
+	    strSourcePageURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PageURL");
+	    strSourcePageURL = EcommTestRunner.config.getString("walgreensURL") + strSourcePageURL;
+	    CommonLibrary.getUrl(browser, strSourcePageURL);
+	    TitleOptions = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Titles").split(",");
+	    SuffixOptions = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Suffixes").split(",");
+	    if (!isElementPresentVerification(Edityourpostalmailtitle_ElM, browser)) {
+		messagesMap.put("Edit Your Postal Mail Preferences", "Title not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Completethefields_ELM, browser)) {
+		messagesMap.put("Complete the fields below to change ", "Body of the page below the title not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(OnlineprivacySecuritypolicy_TXT, browser)) {
+		messagesMap.put("Online Privacy and Security Policy", "Online Privacy and Security Policy are not getting displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Allfieldsarerequired_ELM, browser)) {
+		messagesMap.put("All fields are required unless otherwise indicated", "All fields are required unless otherwise indicated statement not present");
+		status = WARNING;
+	    }
+	    Title = new Select(getElementByProperty(Title_SELECT, browser)).getOptions();
+	    for (int i = 1; i < Title.size(); i++) {
+		if (!Title.get(i).getText().equals(TitleOptions[i])) {
+
+		    messagesMap.put("Title Dropdown", "Same values are not present");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerification(FirstName_TXT, browser)) {
+		messagesMap.put("First Name", "First Name Text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(MiddleName_TXT, browser)) {
+		messagesMap.put("Middle Initial", "Middle name text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(LastName_TXT, browser)) {
+		messagesMap.put("Last Name", "Last Name text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Suffix_TXT, browser)) {
+		messagesMap.put("Suffix", "Suffix text field");
+		status = WARNING;
+	    }
+	    Suffix = new Select(getElementByProperty(Suffix_TXT, browser)).getOptions();
+	    for (int i = 1; i < Suffix.size(); i++) {
+		if (!Suffix.get(i).getText().equals(SuffixOptions[i])) {
+		    messagesMap.put("Suffix Dropdown", "Same values are not present");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerification(CustomerAddress_TXT, browser)) {
+		messagesMap.put("Customer Address", "Customer Address");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Street_TXT, browser)) {
+		messagesMap.put("DMA Logo", "DMA Logo Image on right corner");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(City_TXT, browser)) {
+		messagesMap.put("City", "City TExt field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(State_SELECT, browser)) {
+		messagesMap.put("State", "State text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Zipcode_TXT, browser)) {
+		messagesMap.put("Zip Code And Example ", "Zip Code And Example text field");
+		status = WARNING;
+	    }
+	    if (isElementPresentVerification(Zipcode_TXT, browser)) {
+		String text = getElementByProperty(ZipCode_TXT, browser).getText();
+		if (!(text.contains("(5 or 9 digits)"))) {
+		    messagesMap.put("Example", "Example text in ZipCode section");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerification(PhoneNumber_TXT, browser)) {
+		messagesMap.put("Phone Number", "Phone Number text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(AlternativeNumber_TXT, browser)) {
+		messagesMap.put("Alternative Number", "Alternative Number text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(EmailAddress_TXT, browser)) {
+		messagesMap.put("Email Address", "Email Address Text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Cancel_IMG, browser)) {
+		messagesMap.put("Cancel", "Cancel Link");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Continue_ELM, browser)) {
+		messagesMap.put("Continue", "Continue Button");
+		status = WARNING;
+	    }
+	    if ((!getElementByProperty(Homephone_TXT, browser).getText().contains("Optional")) && (!getElementByProperty(Homephone_TXT, browser).getText().contains("(Ex: 555-555-5555) "))) {
+		messagesMap.put("Optional And Example", "Optional And Example text exist in Phone Number section");
+		status = WARNING;
+	    }
+	    if ((!getElementByProperty(CellPhone_TXT, browser).getText().contains("Optional")) && (!getElementByProperty(CellPhone_TXT, browser).getText().contains("(Ex: 555-555-5555)"))) {
+		messagesMap.put("Optional And Example", "Optional And Example text exist in Cell Phone section");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(Title_TXT, browser).getText().contains("Optional")) {
+		messagesMap.put("Optional", "Optional text exist in Title section");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(MiddleInitial_TXT, browser).getText().contains("Optional")) {
+		messagesMap.put("Optional", "Optional text exist in Middle Initial section");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(suffix_TXT, browser).getText().contains("Optional")) {
+		messagesMap.put("Optional", "Optional text exist in Suffix section");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(Emailaddress_TXT, browser).getText().contains("Optional")) {
+		messagesMap.put("Optional", "Optional text exist in Email Address section");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(AppUntSuitr_TXT, browser).getText().contains("Optional")) {
+		messagesMap.put("Optional", "Optional text exist in AppUntSuitr section");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(DMALogo_img, browser)) {
+		messagesMap.put("DMA Logo", "DMA Logo Image on right corner");
+		status = WARNING;
+	    }
+	    String WinHandleBefore = browser.getWindowHandle();
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+	    }
+	    if (!isElementPresentVerification(DMAPOPUP_ELM, browser)) {
+		messagesMap.put("DMA WINDOW", "DMA Window");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(DMAPOPUP_TXT, browser)) {
+		messagesMap.put("DMA WINDOW", "DMA Window Text");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Close_IMG, browser)) {
+		messagesMap.put("Close Image", "Close Button");
+		status = WARNING;
+	    }
+	    browser.close();
+	    browser.switchTo().window(WinHandleBefore);
+	    if (!isElementPresentVerifyClick(OnlineprivacySecuritypolicy_ELM, browser)) {
+		messagesMap.put("Onlineprivary", "Online privary and Security policy");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(OnlineprivacySecuritypolicy_TIT, browser)) {
+		messagesMap.put("Onlineprivary", "OnlineprivacySecuritypolicy Page");
+		status = WARNING;
+	    }
+	    browserBack(browser);
+	    if (!isElementPresentVerifyClick(Cancel_IMG, browser)) {
+		messagesMap.put("Cancel", "Cancel Link");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - UI validation in Postal Mail Preference page under Direct Mail
+     * @author - Mohana Janakavalli K
+     * @Created - 21-01-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void MailPreferencesSubmission(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String PreferenceForm_TABLE = "//div[3]/form/div/div[2]~XPATH";
+	String Continue_ELM = "//input[@title='CONTINUE']~XPATH";
+	String[] Textboxdata, Listboxdata, TextboxObjects, ListboxObjects = null;
+	List<WebElement> textboxitems;
+	String FirstNameErrorMessage_ELM = "//*[contains(text(),'Please re-enter your first name to continue.')]~XPATH";
+	String LastNameErrorMessage_ELM = "//*[contains(text(),' Please re-enter your last name to continue.')]~XPATH";
+	String CityErrorMessage_ELM = "//*[contains(text(),' Please re-enter your city to continue.')]~XPATH";
+	String ZipcodeErrorMessage_ELM = "//*[contains(text(),'Please re-enter your ZIP code to continue.')]~XPATH";
+	String HomenumberErrorMessage_ELM = "//*[contains(text(),' Please re-enter your home phone to continue.')]~XPATH";
+	String CellnumberErrorMessage_ELM = "//*[contains(text(),'Please re-enter your Cell phone to continue.')]~XPATH";
+	String EmailaddressErrorMessage_ELM = "//*[contains(text(),'Please re-enter your Email to continue. ')]~XPATH";
+	String OnceAMonth_RDO = "input[id='prefContactTime1']~CSS";
+	String Confirm_INPUT = "input[title='CONFIRM']~CSS";
+	String thankyoumessage_ELM = "//h1[contains(text(),'Thank you! Your request has been submitted.')]~XPATH";
+	String Wewilupdate_ELM = "//p[contains(text(),'We will update our postal mail records')]~XPATH";
+	String Youcanmodifythechanges_ELM = "//p[contains(text(),'You can modify the changes that')]~XPATH";
+	String Thischangesaffect_ELM = "//p[contains(text(),'This change affects your postal mail preferences only')]~XPATH";
+	String Returntohome_LNK = "//a[contains(text(),'Return to Home')]~XPATH";
+	String Walgreens_IMG = "img[alt='Walgreens']~CSS";
+	String DMAPOPUP_ELM = "//h1[contains(text(),'Direct Marketing Association')]~XPATH";
+	String DMAPOPUP_TXT = "//tbody/tr[2]/td[contains(text(),'As a member of the Direct Marketing Association')]~XPATH";
+	String Close_IMG = "img[alt='Close Window']~CSS";
+	String Cancel_IMG = "img[alt='Cancel']~CSS";
+	String YourInformationtable_TABLE = "//div/div[3]/div/div[2]~XPATH";
+	String DMALogo_img = "img[title='DMA TRUSTED MARKETER PROGRAM MEMBER']~CSS";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String strSourcePageURL = null;
+	    String flagVal = null;
+	    strSourcePageURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PageURL");
+	    strSourcePageURL = EcommTestRunner.config.getString("walgreensURL") + strSourcePageURL;
+	    CommonLibrary.getUrl(browser, strSourcePageURL);
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int count = 0; count < totalRowCount; count++) {
+		Textboxdata = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "TextBoxDetails").split(";");
+		TextboxObjects = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "TextBoxObjects").split(";");
+		Listboxdata = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "SelectBoxDetails").split(";");
+		ListboxObjects = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "ListBoxObjects").split(";");
+		flagVal = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "Flag");
+		textboxitems = getElementByProperty(PreferenceForm_TABLE, browser).findElements(By.cssSelector("input[type='text']"));
+		List<WebElement> listboxitems = getElementByProperty(PreferenceForm_TABLE, browser).findElements(By.tagName("select"));
+		for (int i = 0; i < textboxitems.size(); i++) {
+		    if (textboxitems.get(i) != null) {
+			textboxitems.get(i).clear();
+			textboxitems.get(i).sendKeys(Textboxdata[i]);
+			TextboxObjects[i] = Textboxdata[i];
+		    }
+		}
+		for (int i = 0; i < listboxitems.size(); i++) {
+		    if (listboxitems.get(i) != null) {
+			new Select(listboxitems.get(i)).selectByVisibleText(Listboxdata[i]);
+			ListboxObjects[i] = Listboxdata[i];
+		    }
+		}
+		if (!isElementPresentVerifyClick(OnceAMonth_RDO, browser)) {
+		    throw new Exception("Not able to click Once a month radio button");
+		}
+		if (!isElementPresentVerifyClick(Continue_ELM, browser)) {
+		    throw new Exception("Not able to click continue button");
+		}
+		if (flagVal.equalsIgnoreCase("Validate")) {
+		    if (!isElementPresentVerification(FirstNameErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid first name not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(LastNameErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid last name not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(CityErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid city not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(ZipcodeErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid zipcode not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(HomenumberErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid home number not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(CellnumberErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid cell number not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(EmailaddressErrorMessage_ELM, browser)) {
+			messagesMap.put("Error message", "Error message for invalid email not present");
+			status = WARNING;
+		    }
+		} else if (flagVal.equalsIgnoreCase("Confirm")) {
+		    String tablecontent = getElementByProperty(YourInformationtable_TABLE, browser).getText();
+		    if (!tablecontent.contains(ListboxObjects[0] + " " + TextboxObjects[0] + " " + TextboxObjects[1] + " " + TextboxObjects[2] + " " + ListboxObjects[1])) {
+			messagesMap.put("Entered details mismatch", "Entered details are not displayed 1");
+			status = WARNING;
+		    }
+		    ListboxObjects[2] = ListboxObjects[2].split("-")[0].trim();
+		    if (!tablecontent.contains(TextboxObjects[3] + "\n" + TextboxObjects[4] + "\n" + TextboxObjects[5] + ", " + ListboxObjects[2] + "" + TextboxObjects[6])) {
+			messagesMap.put("Entered details mismatch", "Entered details are not displayed 2");
+			status = WARNING;
+		    }
+		    String[] arrayHomenumber = TextboxObjects[7].split("-", 2);
+		    int arrhomelength = arrayHomenumber.length;
+		    for (int i = 0; i < arrhomelength; i++) {
+			if (!tablecontent.contains(arrayHomenumber[i])) {
+			    messagesMap.put("Entered details mismatch", "Entered Home number is not displayed");
+			    status = WARNING;
+			}
+		    }
+		    String[] arrayCellPhone = TextboxObjects[8].split("-", 2);
+		    int arrcelllength = arrayCellPhone.length;
+		    for (int i = 0; i < arrcelllength; i++) {
+			if (!tablecontent.contains(arrayCellPhone[i])) {
+			    messagesMap.put("Entered details mismatch", "Entered CellPhone is not displayed");
+			    status = WARNING;
+			}
+		    }
+		    if (!tablecontent.contains((TextboxObjects[9]).trim())) {
+			messagesMap.put("Entered details mismatch", "Entered EmailAddress is not displayed");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(Confirm_INPUT, browser)) {
+			throw new Exception("Not able to click confirm button");
+		    }
+		    if (!isElementPresentVerification(thankyoumessage_ELM, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Wewilupdate_ELM, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Youcanmodifythechanges_ELM, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Thischangesaffect_ELM, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(Returntohome_LNK, browser)) {
+			throw new Exception("Not able to click confirm button");
+		    }
+		    if (!isElementPresentVerification(Walgreens_IMG, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		} else if (flagVal.equalsIgnoreCase("DMALogoAndCancel")) {
+		    if (!isElementPresentVerifyClick(DMALogo_img, browser)) {
+			messagesMap.put("DMA Logo", "DMA Logo Image on right corner");
+			status = WARNING;
+		    }
+		    String WinHandleBefore = browser.getWindowHandle();
+		    for (String NewWinHandle : browser.getWindowHandles()) {
+			browser.switchTo().window(NewWinHandle);
+		    }
+		    if (!isElementPresentVerification(DMAPOPUP_ELM, browser)) {
+			messagesMap.put("DMA WINDOW", "DMA Window");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(DMAPOPUP_TXT, browser)) {
+			messagesMap.put("DMA WINDOW", "DMA Window Text");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Close_IMG, browser)) {
+			messagesMap.put("Close Image", "Close Button");
+			status = WARNING;
+		    }
+		    browser.close();
+		    browser.switchTo().window(WinHandleBefore);
+		    if (!isElementPresentVerifyClick(Cancel_IMG, browser)) {
+			messagesMap.put("Cancel link", "Unable to locate Cancel link");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Walgreens_IMG, browser)) {
+			messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+			status = WARNING;
+		    }
+		} else if (flagVal.equalsIgnoreCase("Blank")) {
+		    if (!isElementPresentVerifyClick(Continue_ELM, browser)) {
+			throw new Exception("Not able to click continue button");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+}

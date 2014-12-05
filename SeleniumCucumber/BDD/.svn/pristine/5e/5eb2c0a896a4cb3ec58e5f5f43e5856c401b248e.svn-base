@@ -1,0 +1,55 @@
+@pharmacy @ExpressRefillBSlot
+Feature:  verify the presence of BSlot in the Express Refill order confirmation page
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressBslot-1
+Scenario: verify the presence of BSlot in the Express Refill order confirmation page for Anonymous user
+
+Given "RX-ExpressBslot-1" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId      	    |
+| QC-RX   		 | ExpressBslot | RX-ExpressBslot-1 |
+
+Then "RX-ExpressBslot-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	      	       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification | Anonymous            | ExpressRefill |
+
+And "RX-ExpressBslot-1" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription1    |
+
+Then "RX-ExpressBslot-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   		           | SheetName            | RowId  				       |
+| PharmacyHomePageLinkVerification | Anonymous            | ExpressRefillRegisterNow   |
+
+Then "RX-ExpressBslot-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	| RowId     	   |
+| QC-RX  	 	 | ExpressBslot | RX-ExpressBslot-1|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressBslot-2
+Scenario: verify the presence of BSlot in the Express Refill order confirmation page for Light reg user
+
+Given "RX-ExpressBslot-2" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId      	    |
+| QC-RX  	 	 | ExpressBslot | RX-ExpressBslot-2 |
+
+Given "RX-ExpressBslot-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId |
+| CommonData  	| login     | Bslot |
+
+Then "RX-ExpressBslot-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   		           | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification | Anonymous            | ExpressRefill |
+
+And "RX-ExpressBslot-2" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription1    |
+
+Then "RX-ExpressBslot-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   		            | SheetName           | RowId             |
+| PharmacyHomePageLinkVerification  | LightReg            | AddPharmacyAccess |
+
+Then "RX-ExpressBslot-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	| RowId     	   |
+| QC-RX  	 	 | ExpressBslot | RX-ExpressBslot-2|
+
+#-----------------------------------------------------------------------------------------------------------

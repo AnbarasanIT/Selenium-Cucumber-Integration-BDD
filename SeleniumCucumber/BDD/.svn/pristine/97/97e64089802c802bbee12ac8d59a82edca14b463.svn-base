@@ -1,0 +1,279 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutPharmacyLibrary;
+import walgreens.ecom.batch.automation.library.checkout_sdd.CheckoutPharmacyLibrary_SDD_ON;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.constants.IGlobalVariables;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class PharmacyCheckoutSteps implements IGlobalVariables {
+
+    @Then("^\"([^\"]*)\" Customer selects the delivery option and clicks on proceed to checkout button:$")
+    public void Customer_selects_the_delivery_option_and_clicks_on_proceed_to_checkout_button(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the delivery option and clicks on proceed to checkout button");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.selectDeliveryOptionAndProceedToCheckout(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects rx pick up date and time and click on continue$")
+    public void Customer_selects_rx_pick_up_date_and_time_and_click_on_continue(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects rx pick up date and time");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutPharmacyLibrary_SDD_ON.selectRxPickupDateAndTime(browser, scenario, step);
+	    } else {
+		CheckoutPharmacyLibrary.selectRxPickupDateAndTime(browser, scenario, step);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer reviews Price section for Refill in shopping cart page:$")
+    public void Customer_reviews_Price_section_for_Refill_in_shopping_cart_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+
+	    // Following code to ensure to store the shared properties in case
+	    // needed by later steps.
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    // Map<String, String> sharedStepProperties = new HashMap<String,
+	    // String>();
+	    // scenario.setSharedStepProperties(sharedStepProperties);
+
+	    step.setStepName("Customer reviews Price section for Refill in shopping cart page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutPharmacyLibrary_SDD_ON.verifyShoppingCartRxCP(browser, scenario, step, dataMap);
+	    } else {
+		CheckoutPharmacyLibrary.verifyShoppingCartRxCP(browser, scenario, step, dataMap);
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer reviews Price section for Refill in Review order page:$")
+    public void Customer_reviews_Price_section_for_Refill_in_Review_order_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer reviews Price section for Refill in Review order page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.verifyReviewOrderRxCP(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer reviews Price section for Refill in Order Confirmation page:$")
+    public void Customer_reviews_Price_section_for_Refill_in_Order_Confirmation_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer reviews Price section for Refill in Order Confirmation page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.verifyOrderConfirmationRxCP(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer changes rx store or selects new store in pickup options page:$")
+    public void Customer_changes_rx_store_or_selects_new_store_in_pickup_options_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer changes rx store or selects new store in pickup options page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.changeStoreRx(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies Order details in the Order Review Page:$")
+    public void Customer_verifies_Order_details_in_the_Order_Review_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies Order details in the Order Review Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutPharmacyLibrary_SDD_ON.verifyOrderdetailsinReviewOrderPage(browser, step, scenario, dataMap);
+	    } else {
+		CheckoutPharmacyLibrary.verifyOrderdetailsinReviewOrderPage(browser, step, scenario, dataMap);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:$")
+    public void Customer_gets_the_Order_IDs_and_verifies_Order_details_in_the_Order_Confirmation_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer gets the Order IDs and verifies Order details in the Order Confirmation Page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutPharmacyLibrary_SDD_ON.verifyOrderdetailsinOrderConfirmationPage(browser, step, scenario, dataMap);
+	    } else {
+		CheckoutPharmacyLibrary.verifyOrderdetailsinOrderConfirmationPage(browser, step, scenario, dataMap);
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates the Free Shipping Message for New Rx:$")
+    public void Customer_validates_the_Free_shipping_Message_for_New_Rx(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer validates the Free Shipping Message for New Rx:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.verifyFreeTwoDayShippingMessage(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verify and changes the pick up time in pick up location from review order page$")
+    public void Customer_verify_and_changes_the_pick_up_time_in_pick_up_location_from_review_order_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer verify and changes the pick up time in pick up location from review order page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.changePickUptimeFromReviewOrder(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies the Comment box in pickup page and Enters the text:$")
+    public void Customer_verifies_the_Comment_box_in_pickup_page_and_Enters_the_text(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepScenarioId(scenario.getScenarioNumber());
+	    step.setStepName("Customer verifies the Comment box in pickup page and Enters the text:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutPharmacyLibrary.verifyCommentBoxRxPickupPage(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+}

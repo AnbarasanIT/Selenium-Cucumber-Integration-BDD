@@ -1,0 +1,385 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class FluShotsVerificationLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the flu shots UI and Link
+     *          verification for all users
+     * 
+     * @author - Thangaraj R
+     * @Created -
+     * @Modified By -
+     * @Modified Date -19-Dec-12
+     ************************************************************* 
+     */
+    public static void flushotsVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ExpectedAllergyURL = null;
+	String ExpectedPregnancyURL = null;
+	String ExpectedFluvaccinesURL = null;
+	String ExpectedBloodPressureURL = null;
+	String ExpectedWeightlossURL = null;
+	String BreadcrumbText = null;
+	String ExpectedStoreLocatorURL = null;
+	String ExpectedDiabetesURL = null;
+	String ExpectedHeartHealthURL = null;
+	String ExpectedStateAgeURL = null;
+	String ExpectedthevaccineURL = null;
+	String ExpectedHomeFluRemediesURL = null;
+	String ExpectedKidsRemediesURL = null;
+	String ExpectedFlusymptomsURL = null;
+	String ExpectedOverthecounterURL = null;
+	WebElement BreadcrumbTable = null;
+	List<WebElement> BreadcrumbValues = null;
+	String Flushots_LNK = "a[title='Flu Shots']~CSS";
+	String FlushotsPage_TXT = "//h1[contains(text(),'Flu Shots')]~XPATH";
+	String ChatLive_LNK = "img[title*='Chat']~CSS";
+	String ChatLivePage_LNK = "//img[contains(@alt,'Chat Live with a Walgreens Pharmacy Professional.')]~XPATH";
+	String Allergy_LNK = "a[title='Allergy']~CSS";
+	String Pregnancy_LNK = "a[title='Pregnancy/New Moms']~CSS";
+	String FluVaccines_LNK = "a[title='Flu Vaccines']~CSS";
+	String WeightLoss_LNK = "a[title='Weight Loss']~CSS";
+	String WeightLossPage_TXT = "//h1[contains(text(),'Weight Loss')]~XPATH";
+	String BloodPressure_LNK = "a[title='Blood Pressure']~CSS";
+	String BloodPressurePage_TXT = "//h1[contains(text(),'Blood Pressure')]~XPATH";
+	String FluVaccinesPage_TXT = "//h1[contains(text(),'Flu Vaccines')]~XPATH";
+	String FluVaccinesBreadcrumb_ELM = "//*[@id='header_bar']/div~XPATH";
+	String HealthShops_LNK = "a[title='Health Shop']~CSS";
+	String HealthShopsPage_TXT = "//h1[contains(text(),'Health Shops')]~XPATH";
+	String ColdFlu_LNK = "//li[4]/a[contains(text(),'Cold and Flu')]~XPATH";
+	String Flu_LNK = "a[title='Flu']~CSS";
+	String FluBanner_IMG = "img[title*='Arm Yourself with a Flu Shot']~CSS";
+	String Diabetes_LNK = "a[title='Diabetes']~CSS";
+	String HeartHealth_LNK = "a[title='Heart Health']~CSS";
+	String FindPharmacy_BTN = "img[alt='Find a Pharmacy']~CSS";
+	String StateAgeWalgreens_LNK = "a[title='Walgreens restrictions apply']~CSS";
+	String ScheduleAppointment_BTN = "img[alt='Schedule an Appointment']~CSS";
+	String KidsRemedies_LNK = "a[title='Kids Cough Remedies']~CSS";
+	String KidsRemediesPage_TXT = "//h1[contains(text(),'Kids Cough Remedies')]~XPATH";
+	String CoughRemedies_LNK = "a[title='Cough Remedies for Toddlers']~CSS";
+	String CoughRemediesPage_TXT = "//h1[contains(text(),'Cough Remedies For Toddler')]~XAPTH";
+	String KidsColdMedicine_LNK = "a[title='Kids Cold Medicine']~CSS";
+	String KidsColdMedicine_TXT = "//h1[contains(text(),'Kids Cold Medicine')]~XPATH";
+	String HealthCornerPage_TXT = "img[alt*='Health Corner']~CSS";
+	String thefluvaccine_LNK = "a[href*='/marketing/library/contents']~CSS";
+	String HomeFluRemedies_LNK = "a[title='At Home Flu Remedies']~CSS";
+	String ChatLivePage_TXT = "//h1[contains(text(),'Pharmacy Chat')]~XPATH";
+	String Flusymptoms_LNK = "a[title='Flu Symptoms']~CSS";
+	String Overthecounter_LNK = "a[title='Over-the-Counter Flu']~CSS";
+	String ColdAndFluLeftNavigation_ELM = "//b[contains(text(),'Cold and Flu')]~XPATH";
+	Map<String, String> messagesMap = null;
+	String UserType = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // navigates to flu shots page
+	    if (!isElementPresentVerifyClick(Flushots_LNK, browser)) {
+		throw new Exception("Not able to click on Flushots link");
+	    }
+	    if (!isElementPresentVerification(FlushotsPage_TXT, browser)) {
+		messagesMap.put("Flu shots", "Flu shots page is not exist");
+		status = WARNING;
+	    }
+	    // validate the URL of Flu vaccines page
+	    if (!isElementPresentVerifyClick(FluVaccines_LNK, browser)) {
+		throw new Exception("Not able to click on FluVaccines link");
+	    }
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    ExpectedFluvaccinesURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedFluvaccinesURL");
+	    if (!ExpectedFluvaccinesURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		messagesMap.put("Flu vaccines", "Not Navigated to correct Flu vaccines  URL ");
+		status = WARNING;
+	    }
+	    browserBack(browser);
+	    // Verify th navigations for un authenticated user
+	    if (UserType.equalsIgnoreCase("UnAuthenticated")) {
+		if (!isElementPresentVerification(FlushotsPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Flu shots page is not exist");
+		    status = WARNING;
+		}
+		// validate the URL of allergy page
+		if (!isElementPresentVerifyClick(Allergy_LNK, browser)) {
+		    throw new Exception("Not able to click on Allergy link");
+		}
+		ExpectedAllergyURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedAllergyURL");
+		if (!ExpectedAllergyURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Allergy", "Not Navigated to correct Allergy URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		// validate the URL of Pregnancy/New Moms page
+		if (!isElementPresentVerifyClick(Pregnancy_LNK, browser)) {
+		    throw new Exception("Not able to click on Pregnancy link");
+		}
+		ExpectedPregnancyURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedPregnancyURL");
+		if (!ExpectedPregnancyURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Pregnancy/New Moms", "Not Navigated to correct Pregnancy/New Moms URL ");
+		    status = WARNING;
+		}
+	    } else if (UserType.equalsIgnoreCase("Light")) {
+		if (!isElementPresentVerifyClick(BloodPressure_LNK, browser)) {
+		    throw new Exception("Not able to click on Blood Pressure link");
+		}
+		if (!isElementPresentVerification(BloodPressurePage_TXT, browser)) {
+		    messagesMap.put("Blood pressure", "Blood pressuret page is not exist");
+		    status = WARNING;
+		}
+		ExpectedBloodPressureURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedBloodPressureURL");
+		if (!ExpectedBloodPressureURL.equals(browser.getCurrentUrl())) {
+		    status = WARNING;
+		    messagesMap.put("Blood Pressure", "Not Navigated to correct Blood pressure URL ");
+		}
+		browserBack(browser);
+		if (!isElementPresentVerification(FlushotsPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Flus hots Page is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(WeightLoss_LNK, browser)) {
+		    throw new Exception("Not able to click on Weight Loss link");
+		}
+		if (!isElementPresentVerification(WeightLossPage_TXT, browser)) {
+		    messagesMap.put("Weight loss", "Weight Loss Pageis not exist ");
+		    status = WARNING;
+		}
+		ExpectedWeightlossURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedWeightlossURL");
+		if (!ExpectedWeightlossURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    status = WARNING;
+		    messagesMap.put("Blood Pressure", "Not Navigated to correct Blood pressure URL ");
+		}
+		browserBack(browser);
+		if (!isElementPresentVerification(FlushotsPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Flus hots Page is not exist ");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(FluVaccines_LNK, browser)) {
+		    throw new Exception("Not able to click on Flu vaccines link");
+		}
+		if (!isElementPresentVerification(FluVaccinesPage_TXT, browser)) {
+		    messagesMap.put("Flu Vaccines", "Flu Vaccines page is not exist");
+		    status = WARNING;
+		}
+		// verify the breabcrumb order in the flu shots page
+		BreadcrumbTable = getElementByProperty(FluVaccinesBreadcrumb_ELM, browser);
+		BreadcrumbValues = BreadcrumbTable.findElements(By.tagName("a"));
+		int NoOfvalues = BreadcrumbValues.size();
+		for (int Value = 1; Value <= NoOfvalues; Value++) {
+		    // BreadcrumbText=browser.findElement(By.xpath("//div[2]/div/div/ul/li["+Value+"]")).getText();
+		    BreadcrumbText = browser.findElement(By.xpath("//div[@id='header_bar']/ul/li[" + Value + "]")).getText();
+		    String ExpectedText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Breadcrumb" + Value + "");
+		    if (!BreadcrumbText.contains(ExpectedText)) {
+			messagesMap.put("Breadcrumb", " " + ExpectedText + " is not exist");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerifyClick(ColdFlu_LNK, browser)) {
+		    throw new Exception("Not able to click on Health Shops link");
+		}
+		if (!isElementPresentVerification(FlushotsPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Flu shots page is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(HealthShops_LNK, browser)) {
+		    throw new Exception("Not able to click on Health Shops link");
+		}
+		if (!isElementPresentVerification(HealthShopsPage_TXT, browser)) {
+		    messagesMap.put("Health Shops", "Health Shops page is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Flu_LNK, browser)) {
+		    throw new Exception("Not able to click on Flu link");
+		}
+		if (!isElementPresentVerifyClick(FluVaccines_LNK, browser)) {
+		    throw new Exception("Not able to click on Flu vaccines link");
+		}
+		// verify the various links exist in the flu vaccines page
+		if (!isElementPresentVerification(BloodPressure_LNK, browser)) {
+		    messagesMap.put("BloodPressure", "Blood Pressure  is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(WeightLoss_LNK, browser)) {
+		    messagesMap.put("WeightLoss", "WeightLoss is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(Diabetes_LNK, browser)) {
+		    messagesMap.put("Diabetes", "Diabetes is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(Allergy_LNK, browser)) {
+		    messagesMap.put("Allergy", "Allergy is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(HeartHealth_LNK, browser)) {
+		    messagesMap.put("HeartHealth", "HeartHealth is not exist");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(Pregnancy_LNK, browser)) {
+		    messagesMap.put("Pregnancy", "Pregnancy is not exist");
+		    status = WARNING;
+		}
+
+	    } else if (UserType.equalsIgnoreCase("Anonymous")) {
+		// Verify the URL for store locator page
+		if (!isElementPresentVerifyClick(FindPharmacy_BTN, browser)) {
+		    throw new Exception("Not able to click on FindPharmacy link");
+		}
+		ExpectedStoreLocatorURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedStoreLocatorURL");
+		if (!ExpectedStoreLocatorURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Find A Pharmacy", "Not Navigated to correct Store Locator URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(Diabetes_LNK, browser)) {
+		    throw new Exception("Not able to click on Diabetes link");
+		}
+		ExpectedDiabetesURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedDiabetesURL");
+		if (!ExpectedDiabetesURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Find A Pharmacy", "Not Navigated to correct Daibetes URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(HeartHealth_LNK, browser)) {
+		    throw new Exception("Not able to click on Diabetes link");
+		}
+		ExpectedHeartHealthURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedHeartHealthURL");
+		if (!ExpectedHeartHealthURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Find A Pharmacy", "Not Navigated to correct Heart health URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		// verify the state age walgreens URl
+		// modified by Fyrose release : Gremlin  date : 2-May-13
+		// StateAgeWalgreens link is removed from flu shots page
+		/*if (!isElementPresentVerifyClick(StateAgeWalgreens_LNK, browser)) {
+		    throw new Exception("Not able to click on StateAgeWalgreens link");
+		}
+		ExpectedStateAgeURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedStateAgeURL");
+		if (!ExpectedStateAgeURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Find A Pharmacy", "Not Navigated to correct State age  URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(ScheduleAppointment_BTN, browser)) {
+		    throw new Exception("Not able to click on Schedule Appointment link");
+		}
+		browserBack(browser);
+		*/
+		if (!isElementPresentVerifyClick(KidsRemedies_LNK, browser)) {
+		    throw new Exception("Not able to click on KidsRemedies_LNK");
+		}
+		if (!isElementPresentVerification(KidsRemediesPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "KidsRemedies page is not exist");
+		    status = WARNING;
+		}
+		ExpectedKidsRemediesURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedKidsRemediesURL");
+		if (!ExpectedKidsRemediesURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Find A Pharmacy", "Not Navigated to correct Kids cough remedies URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(CoughRemedies_LNK, browser)) {
+		    throw new Exception("Not able to click on CoughRemedies link");
+		}
+		if (!isElementPresentVerification(CoughRemediesPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "CoughRemediesPage is not exist");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		// Validate the url for kids cold medicne page
+		if (!isElementPresentVerifyClick(KidsColdMedicine_LNK, browser)) {
+		    throw new Exception("Not able to click on KidsColdMedicine link");
+		}
+		if (!isElementPresentVerification(KidsColdMedicine_TXT, browser)) {
+		    messagesMap.put("Flu shots", "CoughRemediesPage is not exist");
+		    status = WARNING;
+		}
+		// Navigates to the Health corner URL-Removed From the site
+		/*getUrl(browser, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "HealthcornerURL"));
+		if (!isElementPresentVerification(HealthCornerPage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "HealthCornerPage is not exist");
+		    status = WARNING;
+		}
+		browserBack(browser);*/
+		if (!isElementPresentVerifyClick(Flushots_LNK, browser)) {
+		    throw new Exception("Not able to click on Flushots link");
+		}
+		if (!isElementPresentVerifyClick(FluVaccines_LNK, browser)) {
+		    throw new Exception("Not able to click on FluVaccines link");
+		}
+		if (!isElementPresentVerifyClick(thefluvaccine_LNK, browser)) {
+		    throw new Exception("Not able to click on thefluvaccine_LNK");
+		}
+		ExpectedthevaccineURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedthevaccineURL");
+		if (!ExpectedthevaccineURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Flu vaccines", "Not Navigated to correct the Flu vaccine under 2011 flushot URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(HomeFluRemedies_LNK, browser)) {
+		    throw new Exception("Not able to click on HomeFluRemedies_LNK");
+		}
+		ExpectedHomeFluRemediesURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedHomeFluRemediesURL");
+		if (!ExpectedHomeFluRemediesURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Flu vaccines", "Not Navigated to correct the Home Flu RemediesURL URL ");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		// User navigates to Chat live pharmacy page
+		if (!isElementPresentVerifyClick(ChatLive_LNK, browser)) {
+		    throw new Exception("Not able to click on Chat live link");
+		}
+		if (!isElementPresentVerification(ChatLivePage_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Chat live page is not exist");
+		    status = WARNING;
+		}
+		browserBack(browser);
+		if (!isElementPresentVerifyClick(Flusymptoms_LNK, browser)) {
+		    throw new Exception("Not able to click on Flusymptoms");
+		}
+		ExpectedFlusymptomsURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedFlusymptomsURL");
+		if (!ExpectedFlusymptomsURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Flu vaccines", "Not Navigated to correct the Home Flu symptoms URL ");
+		    status = WARNING;
+		}
+		// verify the url in over the counter page
+		if (!isElementPresentVerifyClick(Overthecounter_LNK, browser)) {
+		    throw new Exception("Not able to click on Flusymptoms");
+		}
+		ExpectedOverthecounterURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedOverthecounterURL");
+		if (!ExpectedOverthecounterURL.equalsIgnoreCase(browser.getCurrentUrl())) {
+		    messagesMap.put("Flu vaccines", "Not Navigated to correct the over the counter URL ");
+		    status = WARNING;
+		}
+
+	    } else if (UserType.equalsIgnoreCase("Authenticated")) {
+		// validate the Flu vaccines page
+		if (!isElementPresentVerifyClick(FluVaccines_LNK, browser)) {
+		    throw new Exception("Not able to click on FluVaccines link");
+		}
+		if (!isElementPresentVerification(ColdAndFluLeftNavigation_ELM, browser)) {
+		    messagesMap.put("Flu shots", "Cold and Flu left navigaiton is not exist");
+		    status = WARNING;
+		}
+	    } else
+		throw new Exception("Please enter proper user type");
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

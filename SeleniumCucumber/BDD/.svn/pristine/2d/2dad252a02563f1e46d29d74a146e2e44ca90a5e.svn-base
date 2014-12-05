@@ -1,0 +1,50 @@
+package walgreens.ecom.batch.automation.library.selfservice;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class FSALogoValidationsLibrary extends CommonLibrary {
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to verify if Check box is selected or not
+     * @Input - Object Name, Check Status
+     * @author - Mohana Janakavalli K
+     * @Created - 18-Dec-2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+
+    public static void checkFSALogoNotDisplayed(EventFiringWebDriver browser, StepBean stepBean) {
+	String FSAObject_IMG = "//img[@alt='FSA Item']~XPATH";
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	}
+	    if (isElementPresentVerification(FSAObject_IMG, browser)) {
+		messagesMap.put("FSALogo", "FSA logo should not be displayed");
+		    status = WARNING;
+	    }
+		
+	    
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

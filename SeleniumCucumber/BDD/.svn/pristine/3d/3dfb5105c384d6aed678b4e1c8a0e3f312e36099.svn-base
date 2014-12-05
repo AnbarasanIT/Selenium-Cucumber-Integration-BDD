@@ -1,0 +1,81 @@
+@pharmacy @RXRegistration
+Feature: All the scenarios in the feature are to verify Rx registration
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-Registration-1
+Scenario: Verify Rx regn for an anonymous user
+
+Given  "RX-Registration-1" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-1 |
+
+And "RX-Registration-1" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId 	 | ExpectedTargetPage | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| TransferRx | SignInPage    	  | TransferRx		         |
+
+And "RX-Registration-1" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 | PharmacyRegistrtionFrom | RegisterOption | Password  | 
+| Registration  | RxRegistration | UserData	 | Transfer		  	  	   | REGISTER		| Password1 |
+
+Then "RX-Registration-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-Registration-2
+Scenario: Verify Rx regn for an anonymous user, via PSC
+
+Given  "RX-Registration-2" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-2 |
+
+And "RX-Registration-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "RX-Registration-2" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "RX-Registration-2" Customer selects Enrollment Type and click on continue:
+| EnrollmentType | UserType	  |
+| Individual     | Guest	  |
+
+Then "RX-Registration-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId |
+| -		             | -      | Yes	     | -             | -         | -     |
+
+And "RX-Registration-2" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 | PharmacyRegistrtionFrom | RegisterOption | Password  | 
+| Registration  | RxRegistration | UserData	 | PSC 			  	  	   | REGISTER		| Password1 |
+
+Then "RX-Registration-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-Registration-3
+Scenario: Verify complete Regn for a light user
+
+Given  "RX-Registration-3" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-3 |
+
+Then "RX-Registration-3" Customer selects either Login to walgreens or Register a new account.
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| Global Register    | -      | -        |  -	       |
+
+And  "RX-Registration-3" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+| -                           | MaybeLater 	         | -	   | -			 | -	     | -	   | -		  |Yes       | CommonData    | personalInfo | lightuser1 |
+
+And "RX-Registration-3" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId 	 | ExpectedTargetPage | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| TransferRx | CompleteRegn    	  | TransferRx		         |
+
+And "RX-Registration-3" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 | PharmacyRegistrtionFrom | RegisterOption | Password  | 
+| Registration  | RxRegistration | UserData	 | Transfer		  	  	   | COMPLETE REG	| Password1 |
+
+Then "RX-Registration-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | Registration  | RX-Registration-3 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

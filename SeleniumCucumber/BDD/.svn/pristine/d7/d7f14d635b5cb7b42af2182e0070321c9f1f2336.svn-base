@@ -1,0 +1,96 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout;
+
+import static org.junit.Assert.assertEquals;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutRxRefillLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.When;
+import cucumber.table.DataTable;
+
+public class RefillPrescriptionCheckoutSteps {
+
+    @When("^\"([^\"]*)\" Customer adds prescriptions for refill to cart:$")
+    public void Customer_adds_prescriptions_specified_in_the_datasheet_for_refill_to_cart(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer adds prescriptions for refill to cart");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutRxRefillLibrary.addPrescriptionsToShoppingCartFromDataSheet(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @When("^\"([^\"]*)\" Customer verifies date format of refills and No Prescriptions selected overlay:$")
+    public void Customer_verifies_date_format_of_refills_and_No_Prescriptions_selected_overlay(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies date format of refills and No Prescriptions selected overlay:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutRxRefillLibrary.NoRefillOverlayChecking(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @When("^\"([^\"]*)\" Customer navigates to refill prescriptions page through refill faster overlay from pharmacy page:$")
+    public void Customer_navigates_to_refill_prescriptions_page_through_refill_faster_overlay_from_pharmacy_page(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	//Map<String, List<String>> dataMap = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer navigates to refill prescriptions page through refill faster overlay from pharmacy page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutRxRefillLibrary.NavigatetoRefillPrescriptions(browser, step);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @When("^\"([^\"]*)\" Customer verfies prescrptions details and hide prescriptions functionality:$")
+    public void Customer_verfies_prescrptions_details_and_hide_prescriptions_functionality(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verfies prescrptions details and hide prescriptions functionality:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutRxRefillLibrary.checkHidepresc(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+}

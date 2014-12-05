@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- ##########################################################################	-->
+<!-- Purpose	: To download the latest code from SVN & CI Run					-->
+<!-- Author 	: Ram 															-->
+<!-- Created 	: 10-28-2013													-->
+<!-- Modified 	: Ram (1-11-2012) 												-->
+<!-- Arguments	: None														 	-->
+<!-- ########################################################################## -->
+
+<project basedir="." default="call.buildxml" name="BATCH9QA_AUTOMATION_CI_RUN">
+
+	<!-- THE BELOW MENTIONED PROPERTIES CAN BE CHANGED -->
+	<!-- ********************************************* -->
+
+	<!-- GENERAL,SVN & SVN-ANT Tasks properties -->
+
+	<property name="project.dir" value="bath9qa_smoke" /> <!-- Can be changed -->
+	<property name="svn.rep.url" value="svn+ssh://ddmzsvn1/usr/local/svn/ec_svn_repository/batch9qa/branches" /> <!-- DO NOT CHANGE -->
+	<property name="svn.project" value="torino_15_0" /> <!-- Can be changed -->
+	<property name="svn.username" value="sivasubr" /> <!-- Can be changed -->
+	<property name="svn.password" value="Pass123P" /> <!-- Can be changed -->
+	<property name="svnant.javahl" value="false" />  <!-- DO NOT CHANGE -->
+	<property name="svnant.svnkit" value="true" />  <!-- DO NOT CHANGE -->
+	<property name="svnant.dir" value="svnant/lib" /> <!-- Do not change -->
+
+	<!-- Execution Tasks properties -->
+
+	<property name="mainClass" value="EcommTestRunner" />  <!-- DO NOT CHANGE -->
+	<property name="runMode" value="smoke" /> <!-- Can be changed -->
+	<property name="runEnviroment" value="staging" /> <!-- Can be changed -->
+	<property name="vdiName" value="ST1" /> <!-- Can be changed -->
+	<property name="scenarioTags" value="@smoke" /> <!-- Can be changed -->
+
+	<!-- Local Application Properties File changes -->
+	
+	<property name="local_application.properties" value="config/automation/local_application.properties" /> <!-- Can be changed -->
+	<property name="fireFox" value="Yes" /> <!-- Can be changed -->
+	<property name="chrome" value="No" /> <!-- Can be changed -->
+	<property name="closeBrowser" value="Yes" /> <!-- Can be changed -->
+	<property name="smoke.thread.unitOfWork" value="1" /> <!-- Can be changed -->
+	<property name="smoke.thread.poolSize" value="1" /> <!-- Can be changed -->
+	<property name="walgreensURL" value="http://int1.walgreens.com/" /> <!-- Can be changed -->
+	<property name="cscURL" value="http://csc-int1.walgreens.com/agent/" /> <!-- Can be changed -->
+	<property name="timeOut" value="2000" /> <!-- Can be changed -->
+	<property name="reExecutionIterator" value="0" /> <!-- Can be changed -->
+	<property name="ALMUpdate" value="Yes" /> <!-- Can be changed -->
+	<property name="ALMExecutionEmail" value="Yes" /> <!-- Can be changed -->
+
+	<!-- ######################################################################################################################## -->
+
+	<!-- Clean the  ${project.dir}-->
+
+	<target name="clean">
+		<delete dir="${project.dir}" failonerror="false" />
+		<!-- NOT NEEDED NOW <mkdir dir="${project.dir}/${project.dir}"/> -->
+	</target>
+
+	<!-- SVNANT Class Path & Type Def-->
+
+	<path id="svnant.classpath">
+		<fileset dir="${svnant.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath" />
+
+	<!-- Get the latest branch from SVN -->
+
+	<target name="svn.checkout" depends="clean">
+		<svn username="${svn.username}" password="${svn.password}" svnkit="${svnant.svnkit}" javahl="${svnant.javahl}">
+			<export srcUrl="${svn.rep.url}/${svn.project}" revision="HEAD" destPath="${project.dir}" />
+		</svn>
+	</target>
+
+	<!-- Change the properties file accordingly before running -->
+
+	<target name="modify.localproperties" depends="svn.checkout">
+		<propertyfile file="${project.dir}/${local_application.properties}">
+			<entry key="fireFox" value="${fireFox}" />
+			<entry key="chrome" value="${chrome}" />
+			<entry key="closeBrowser" value="${closeBrowser}" />
+			<entry key="smoke.thread.unitOfWork" type="int" value="${smoke.thread.unitOfWork}" />
+			<entry key="smoke.thread.poolSize" type="int" value="${smoke.thread.poolSize}" />
+			<entry key="walgreensURL" value="${walgreensURL}" />
+			<entry key="cscURL" value="${cscURL}" />
+			<entry key="timeOut" value="${timeOut}" />
+			<entry key="reExecutionIterator" type="int" value="${reExecutionIterator}" />
+			<entry key="ALMUpdate" value="${ALMUpdate}" />
+			<entry key="ALMExecutionEmail" value="${ALMExecutionEmail}" />
+		</propertyfile>
+	
+	<!-- Move the ALMDATA.INI from local to Extensions folder under project -->
+		
+		<move file="ALMDATA.INI" todir="${project.dir}/Extensions" overwrite="true"/>
+	</target>
+
+	<!-- Run the build.xml from the actual project folder by passing parameters from the this parent file-->
+	
+	<target name="call.buildxml" depends="modify.localproperties">
+		<ant antfile="build.xml" dir="${project.dir}" target="Run" inheritAll="true" />
+	</target>
+
+</project>
+

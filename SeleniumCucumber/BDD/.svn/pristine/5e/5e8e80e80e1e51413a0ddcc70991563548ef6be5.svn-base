@@ -1,0 +1,82 @@
+@registration @FastRefillOverlay
+Feature: All the scenarios in the feature are related to validation of confirmation modal and manage prescription page through fast refill functionality
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+@Reg-fast-1
+Scenario: Verify the confirmation modal for a new user through fast refill overlay from walgreens home page
+
+Given  "Reg-fast-1" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-Reg	     | FastRefill			 | Reg-fast-1						 |
+
+And "Reg-fast-1" Customer validates confirmation modal for a new user through fast refill overlay
+
+Then "Reg-fast-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-Reg	 	 | FastRefill 		   | Reg-fast-1		 				 |
+#-----------------------------------------------------------------------------------------------------------------------------
+@Reg-fast-2
+Scenario: Verify the confirmation modal for a light user through fast refill overlay from pharmacy home page
+
+Given  "Reg-fast-2" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-Reg	     | FastRefill			 | Reg-fast-2						 |
+
+And "Reg-fast-2" Customer validates confirmation modal for a light user through fast refill overlay
+| InputFileName | SheetName 	| RowId          	  |
+| CommonData  	| FastRefill   	| LightUser			  |
+
+Then "Reg-fast-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-Reg	 	 | FastRefill 		   | Reg-fast-2		 				 |
+#-----------------------------------------------------------------------------------------------------------------------------
+@Reg-fast-3
+Scenario: Verify the confirmation modal for a Loyalty light user when sign in through header and creates Rx account through update account overlay
+
+Given  "Reg-fast-3" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-Reg	     | FastRefill			 | Reg-fast-3						 |
+
+Given "Reg-fast-3" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId          		  |
+| CommonData  	| FastRefill   	| LtyLightser			  |
+
+And "Reg-fast-3" Customer validates confirmation modal for a loyalty light user through update account overlay
+
+
+Then "Reg-fast-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-Reg	 	 | FastRefill 		   | Reg-fast-3		 				 |
+#-----------------------------------------------------------------------------------------------------------------------------
+@Reg-fast-4
+Scenario: Verify the display of manage your prescription page when Rx unAuthenticated user sign in through header and completes authentication
+
+Given  "Reg-fast-3" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-Reg	     | FastRefill			 | Reg-fast-4						 |
+
+Given "Reg-fast-3" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId          		  |
+| CommonData  	| FastRefill   	| RxunAuth 				  |
+
+And "Reg-fast-3" Customer verifies the display of manage your prescription page for Rx unAuth user
+
+
+Then "Reg-fast-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-Reg	 	 | FastRefill 		   | Reg-fast-4		 				 |
+#-----------------------------------------------------------------------------------------------------------------------------
+@Reg-fast-5
+Scenario: Verify the display of manage your prescription page when Rx Authenticated user sign in through fast refill overlay
+
+Given  "Reg-fast-3" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-Reg	     | FastRefill			 | Reg-fast-5						 |
+
+And "Reg-fast-3" Customer verifies the display of manage your prescription page for Rx Auth user through fast refill overlay
+| InputFileName | SheetName 	| RowId          		  |
+| CommonData  	| FastRefill   	| RxAuth 				  |
+
+Then "Reg-fast-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-Reg	 	 | FastRefill 		   | Reg-fast-5		 				 |
+#-----------------------------------------------------------------------------------------------------------------------------

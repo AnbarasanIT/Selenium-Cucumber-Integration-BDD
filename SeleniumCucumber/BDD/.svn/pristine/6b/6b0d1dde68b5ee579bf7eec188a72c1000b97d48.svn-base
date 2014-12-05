@@ -1,0 +1,168 @@
+@dailyliving @FSALogoValidations
+Feature: Verify the FSA Logos across all pages and checkuo
+
+#----------------------------------------------------------------------------------------------------
+@SS-FSAValidation-1
+Scenario: Logged in user checks for the FSA Logos in search results and tier 3 page
+
+Given  "SS-FSAValidation-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | FSAValidation	         | SS-FSAValidation-1	|
+
+Given "SS-FSAValidation-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | Login     | FSAUser	 |
+
+Then "SS-FSAValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   	|
+| SelfService    | FSALogo	     | Beauty  			|
+| SelfService    | FSALogo	     | SkinCare  		|
+| SelfService    | FSALogo	     | FaceTreatments 	|
+| SelfService    | FSALogo	     | FSACheckBox	 	|
+| SelfService    | FSALogo	     | ProductName	 	|
+
+When "SS-FSAValidation-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | Search    | FSAProduct   |
+
+Then "SS-FSAValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   			|
+| SelfService    | FSALogo	     | FSACheckBoxSearchResults	|
+| SelfService    | FSALogo	     | ProductName	 			|
+| SelfService    | FSALogo	     | Contatc Lenses 			|
+| SelfService    | FSALogo	     | Acuvue		 			|
+| SelfService    | FSALogo	     | FSAClick		 			|
+| SelfService    | FSALogo	     | ProductName	 			|
+
+Then "SS-FSAValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | FSAValidation			   | SS-FSAValidation-1  |
+#----------------------------------------------------------------------------------------------------
+@SS-FSAValidation-2
+Scenario: Logged in user performs checkout with FSA item
+
+Given  "SS-FSAValidation-2" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | FSAValidation	         | SS-FSAValidation-2	|
+
+Given "SS-FSAValidation-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | Login     | FSAUser	 |
+
+And "SS-FSAValidation-2" Customer Clears the Shopping Cart
+
+When "SS-FSAValidation-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | Search    | FSAProduct   |
+
+Then "SS-FSAValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   			|
+| SelfService    | FSALogo	     | FSACheckBoxSearchResults	|
+| SelfService    | FSALogo	     | ProductName	 			|
+
+Then "SS-FSAValidation-2" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity|
+|-		 |
+
+Then "SS-FSAValidation-2" Customer Goes to the Shopping Cart
+
+Then "SS-FSAValidation-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-FSAValidation-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| shippingaddress  	  | -                   | -                | -	       | -   	   | -			    | -		    | -	    | -		  |   -    |-					    | -			   |  -		     |
+
+Then "SS-FSAValidation-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-FSAValidation-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId  |GuestPayment   |
+| NewCreditCard | -              | -	                 | -                  | SelfService     | CreditCard  | FSACard1 | -			 |
+
+Then "SS-FSAValidation-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-FSAValidation-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId     |
+| SelfService   | OrderConfirmationDetails |FSAorder   |
+
+Then "SS-FSAValidation-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-FSAValidation-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | FSAValidation			   | SS-FSAValidation-2  |
+#----------------------------------------------------------------------------------------------------
+@SS-FSAValidation-3
+Scenario: Logged in user performs checkout with FSA item and non-FSA item
+
+Given  "SS-FSAValidation-3" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | FSAValidation	         | SS-FSAValidation-3	|
+
+Given "SS-FSAValidation-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | Login     | FSAUser	 |
+
+And "SS-FSAValidation-3" Customer Clears the Shopping Cart
+
+When "SS-FSAValidation-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | Search    | NonFSAProduct|
+
+Then "SS-FSAValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   			|
+| SelfService    | FSALogo	     | ProductNameVPD 			|
+
+Then "SS-FSAValidation-3" Customer validates FSA UI in tier 3 and search results page:
+
+Then "SS-FSAValidation-3" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity|
+|-		 |
+
+Then "SS-FSAValidation-3" Customer Goes to the Shopping Cart
+
+When "SS-FSAValidation-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | Search    | FSAProduct   |
+
+Then "SS-FSAValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   			|
+| SelfService    | FSALogo	     | FSACheckBoxSearchResults	|
+| SelfService    | FSALogo	     | ProductName	 			|
+
+Then "SS-FSAValidation-3" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:
+|Quantity|
+|-		 |
+
+Then "SS-FSAValidation-3" Customer Goes to the Shopping Cart
+
+Then "SS-FSAValidation-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-FSAValidation-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| shippingaddress  	  | -                   | -                | -	       | -   	   | -			    | -		    | -	    | -		  |   -    |-					    | -			   |  -		     |
+
+Then "SS-FSAValidation-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-FSAValidation-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId  |GuestPayment  |
+| NewCreditCard | -              | -	                 | -                  | SelfService     | CreditCard  | FSACard1 | -			|
+
+Then "SS-FSAValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName     | RowId    	   |
+| SelfService    | FSALogo	     | OrderReview	   |
+
+Then "SS-FSAValidation-3" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | FSAValidation			   | SS-FSAValidation-1  |
+#----------------------------------------------------------------------------------

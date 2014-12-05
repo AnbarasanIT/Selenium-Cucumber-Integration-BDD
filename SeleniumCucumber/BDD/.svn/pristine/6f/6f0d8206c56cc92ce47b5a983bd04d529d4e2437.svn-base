@@ -1,0 +1,917 @@
+package walgreens.ecom.batch.automation.library.checkout_sdd;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ProductBean;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutPharmacyLibrary_SDD_ON extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Select a pickup store if it already isn't selected with SDD ON
+     * @author - Siva
+     * @throws
+     * @Created - 29-Jan-2013
+     * @Modified By -Siva
+     * @Modified Date -01-APR-2013
+     ************************************************************* 
+     **/
+    public static void selectRxPickupDateAndTime(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean) {
+	String status = PASS;
+	String PickUpoptionsPageDate_LST = "select#pickupDate~CSS";
+	String PickUpoptionsPageTime_LST = "select#pickupTime~CSS";
+	String Continue_BTN = "//input[contains(@title,'Continue')]~XPATH";
+	String StoreNumber_ELM = "//p[contains(@class,'walAddress')]~XPATH";
+	WebElement ElmStoreNumber = null;
+	String StoreNumber = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+
+	    // SIMEON - 9/25/13 - Added to use isElementPresentVerification
+	    if (!isElementPresentVerification(StoreNumber_ELM, browser)) {
+		messagesMap.put("Store Number Element", "No Store Element found on Rx PickUp Location page");
+		status = WARNING;
+	    }
+	    // ----------------------
+
+	    ElmStoreNumber = getElementByProperty(StoreNumber_ELM, browser);
+	    if (ElmStoreNumber != null) {
+		if (ElmStoreNumber.getText().contains("Store")) {
+		    StoreNumber = ElmStoreNumber.getText().split("Store")[1].split(",")[0].trim();
+		} else {
+		    StoreNumber = ElmStoreNumber.getText().split(",")[0].trim();
+		}
+
+		sharedProperties.put("PickupStoreNumber", StoreNumber);
+	    }
+	    // else { // SIMEON - removed
+	    // messagesMap.put("Store Number Element",
+	    // "No Store Element found on Rx PickUp Location page");
+	    // status = WARNING;
+	    // }
+
+	    if (isElementPresentVerification(PickUpoptionsPageDate_LST, browser)) {
+		new Select(getElementByProperty(PickUpoptionsPageDate_LST, browser)).selectByIndex(2);
+		Thread.sleep(3000L); // RAM
+		new Select(getElementByProperty(PickUpoptionsPageTime_LST, browser)).selectByIndex(2);
+		Thread.sleep(5000L); // RAM
+	    }
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		throw new Exception("Not able to click on continue Button");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the Order details (Rx details, Pickup info,
+     *          Pyament section etc) in the Order Review Page SDD ON
+     * @Input -
+     * @author - Siva Santhi Reddy
+     * @Created -
+     * @Modified By -SIVA
+     * @Modified Date -08-AUG-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderdetailsinReviewOrderPage(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LeftNavigation_DIV = "//div[@id='leftNavShippingInfo']";
+	String OrderSummaryHeader_ELM = "//h3[contains(text(),'Order Summary')]~XPATH";
+	String EstimatedTotalValue_ELM = "//div[contains(@class,'orderSummTotText') or @class='totalPrc']~XPATH";
+	String PrescriptionHeader_ELM = "//*[contains(text(),'Prescription Information')]~XPATH";
+	String ExcludeRxCostMsg_ELM = "//*[contains(text(),'Pharmacy costs will be charged')]~XPATH";
+	String PaymentSectionHeader_ELM = "//h3[contains(text(),'Payment Details')]~XPATH";
+	String PaymentMethod_ELM = "//strong[contains(text(),'Payment Method:')]~XPATH";
+	String BillingInformation_ELM = "//strong[contains(text(),'Billing Information:')]~XPATH";
+	String ChangeBillingInfo_LNK = "a[title='Change Billing Information']~CSS";
+	String ShippingInformationHeader_ELM = "//h3[contains(text(),'Shipping Information') and @id='rightNavFragId']~XPATH";
+	String ChangeShippignInformation_LNK = "a[title='Change Shipping Information']~CSS";
+	String ChangeShippingMethod_LNK = "a[title='Change Shipping Method']~CSS";
+	String PickupDetailsHeader_ELM = "//h3[contains(text(),'Pickup Details')]~XPATH";
+	String PickupDetails_ELM = "//strong[contains(text(),'AM') or contains(text(),'PM')]~XPATH";
+	String ChangePickupDetails_LNK = "a[title='Change store or Pickup time']~CSS";
+	String SameDayDeliveryHeader_ELM = "//h3[contains(text(),'Same-day delivery from Store')]~XPATH";
+	String SameDayDeliveryTime_ELM = "//h4/strong[contains(text(),':00 PM')]~XPATH";
+	String SameDayDeliveryDate_ELM = "//h4[contains(@class,'orderSummTextDate') or contains(@class,'puTimenDate')]~XPATH";
+	String SDDDeliveryNoteMessage_ELM = "//*[contains(text(),'An adult must be available to sign for')]~XPATH";
+	String SDDChangeShipAddress_LNK = "//p[contains(@class,'mrgRt1em')]/a[@title='Change Shipping Information']~XPATH";
+	String OrderSummarySection = null, StoreNumber = null, PickupInfoSection = null, ShippingInfoSection = null, PaymentSection = null, SameDayDeliverySection = null, VerifyProductDetails = null, RxSDDDeliveryInstrutionMessage = null;
+	boolean isProductFoundinSameSection = false;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedPropertiesMap = null;
+	Map<String, ProductBean> allProductsFromOrderbeanMap = null;
+	int NoofProductsFound = 0;
+	ProductBean requiredProductBean = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    // Getting the share properties (Store Number which was assigned to
+	    // Hasmap in the select Pick date and time method)
+	    sharedPropertiesMap = scenarioBean.getSharedStepProperties();
+	    if (sharedPropertiesMap != null) {
+		StoreNumber = sharedPropertiesMap.get("PickupStoreNumber");
+	    }
+	    // Getting all Product information which was saved in Cart Page
+	    allProductsFromOrderbeanMap = CheckoutLibrary_SDD_ON.getAllProductsFromOrder(scenarioBean.getScenarioId());
+
+	    // Getting the info from Excel sheet for which sections needs to be
+	    // verified
+	    OrderSummarySection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderSummarySection");
+	    PaymentSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PaymentSummarySection");
+	    ShippingInfoSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingInfoSection");
+	    PickupInfoSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PickupInfoSection");
+	    SameDayDeliverySection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SameDayDeliverySection");
+	    RxSDDDeliveryInstrutionMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxSDDDeliveryInstrutionMessage");
+	    VerifyProductDetails = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerifyProductDetails");
+	    String ItemsinCart = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ItemsinCart");
+
+	    boolean isRequiredDivisionFound = false, isValidationsFinished = false;
+
+	    if (VerifyProductDetails != null && ItemsinCart != null && VerifyProductDetails.equalsIgnoreCase("Yes")) {
+		if (allProductsFromOrderbeanMap == null) {
+		    throw new Exception("No Products found in the order Bean");
+		}
+		String[] TotalItems = ItemsinCart.split(",");
+		if (isElementPresentVerification(LeftNavigation_DIV, browser)) {
+		    List<WebElement> LeftNavDivisions = getElementByProperty(LeftNavigation_DIV, browser).findElements(By.xpath("//div[@id='leftNavShippingInfo']/div"));
+		    if (LeftNavDivisions != null && LeftNavDivisions.size() > 0) {
+			for (int j = 0; j < TotalItems.length; j++) {
+			    // getting requried Product Bean Value
+			    requiredProductBean = allProductsFromOrderbeanMap.get(TotalItems[j].trim());
+			    if (requiredProductBean != null) {
+				// reset value to false
+				isProductFoundinSameSection = false;
+				// Verifying required Product in Left
+				// Navitations
+				for (int i = 0; i < LeftNavDivisions.size(); i++) {
+				    // reset values to false.
+				    isRequiredDivisionFound = false;
+				    isValidationsFinished = false;
+				    // Validating the Product is displaying in
+				    // the right delivery section
+				    if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("SDD")) {
+					if (LeftNavDivisions.get(i).getText().contains("Same-day delivery from store")) {
+					    isProductFoundinSameSection = true;
+					}
+				    } else if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("Pickup")) {
+					if (LeftNavDivisions.get(i).getText().contains("Pick up")) {
+					    isProductFoundinSameSection = true;
+					}
+				    } else if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("Ship")) {
+					if (LeftNavDivisions.get(i).getText().contains("Shipped to you")) {
+					    isProductFoundinSameSection = true;
+					}
+				    }
+				    if (requiredProductBean.getProductType().equalsIgnoreCase("DL")) {
+					if (LeftNavDivisions.get(i).getText().contains("Product Information")) {
+					    isRequiredDivisionFound = true;
+					}
+				    } else if (requiredProductBean.getProductType().equalsIgnoreCase("CL")) {
+					if (LeftNavDivisions.get(i).getText().contains("Contact Lens Information")) {
+					    isRequiredDivisionFound = true;
+					}
+				    } else {
+					if (LeftNavDivisions.get(i).getText().contains("Prescription Information")) {
+					    isRequiredDivisionFound = true;
+					}
+				    }
+
+				    if (isRequiredDivisionFound) {
+					int divcount = i + 2;
+					List<WebElement> individualProductDivisions = browser.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + divcount + "]/div"));
+					if (individualProductDivisions != null && individualProductDivisions.size() > 0) {
+					    for (int k = 0; k < individualProductDivisions.size(); k++) {
+						boolean isProductFound = false;
+						if (!requiredProductBean.getProductType().contains("Rx")) {
+						    String hrefOfProduct = individualProductDivisions.get(k).findElement(By.tagName("a")).getAttribute("href");
+						    if (hrefOfProduct != null && hrefOfProduct.contains(requiredProductBean.getProductId())) {
+							isProductFound = true;
+						    }
+						}
+						if (individualProductDivisions.get(k).getText().contains(requiredProductBean.getProductName()) || isProductFound) {
+						    NoofProductsFound = NoofProductsFound + 1;
+						    int innerdivnumber = k + 1;
+						    String ProductQuantity = browser
+							    .findElement(By.xpath("//div[@id='leftNavShippingInfo']/div[" + divcount + "]/div[" + innerdivnumber + "]/div[3]/p")).getText().trim();
+						    String ProductPrice = browser.findElement(By.xpath("//div[@id='leftNavShippingInfo']/div[" + divcount + "]/div[" + innerdivnumber + "]/div[4]/p"))
+							    .getText();
+						    if ((!requiredProductBean.getProductName().contains("Transfer"))) {
+							if (ProductQuantity == null || !ProductQuantity.contains(requiredProductBean.getProductQuantity())) {
+							    messagesMap.put(TotalItems[j] + "-Product Quantity", "is mismatching");
+							    status = WARNING;
+							}
+						    }
+						    if (requiredProductBean.getProductType().contains("Rx")) {
+							String NormalRxTypeAndNumber_ELM = "//div[@id='leftNavShippingInfo']/div[" + divcount + "]/div[" + innerdivnumber + "]/div/div/p";
+							String MailPlanRxTypeAndNumber_ELM = "//div[@id='leftNavShippingInfo']/div[" + divcount + "]/div[" + innerdivnumber + "]/div/p[2]";
+							String RxTypeAndNumberText = null;
+							if (isElementPresentVerification(NormalRxTypeAndNumber_ELM, browser)) {
+							    RxTypeAndNumberText = getElementByProperty(NormalRxTypeAndNumber_ELM, browser).getText();
+							} else {
+							    RxTypeAndNumberText = getElementByProperty(MailPlanRxTypeAndNumber_ELM, browser).getText();
+							}
+							if (!requiredProductBean.getProductType().toUpperCase().contains("NEW")) {
+							    if (RxTypeAndNumberText == null || !RxTypeAndNumberText.contains(requiredProductBean.getProductId())) {
+								messagesMap.put(TotalItems[j] + "-Product ID", "is displaying wrongly");
+								status = WARNING;
+							    }
+							}
+							if (RxTypeAndNumberText == null
+								|| !RxTypeAndNumberText.contains(requiredProductBean.getProductType().split("Rx")[0].replace("\n", " ").split(" ")[0].trim())) {
+							    messagesMap.put(TotalItems[j] + "-Product Type", "is displaying wrongly");
+							    status = WARNING;
+							}
+						    } else {
+							if (ProductPrice == null || !ProductPrice.equals(requiredProductBean.getProductTotalPrice())) {
+							    messagesMap.put(TotalItems[j] + "-Product Price", "is mismatching");
+							    status = WARNING;
+							}
+						    }
+						    isValidationsFinished = true;
+						    break;
+						}
+					    } // end of for loop
+					}
+				    }
+				    // if product validted come out of the loop
+				    if (isValidationsFinished) {
+					break;
+				    }
+				}
+				// Product not found in same section. then throw
+				// an
+				// error.
+				if (!isProductFoundinSameSection) {
+				    messagesMap.put("Products are misplaced", "They are displaying in another delviery Section");
+				    status = WARNING;
+				}
+			    } else {
+				messagesMap.put("Product Not Available", "The Product Details your are trying to verify was not added to Cart.Please check the Product ID: " + TotalItems[j].trim());
+				status = WARNING;
+			    }
+			}
+		    }
+		    // verifying validation was done for all the products are
+		    // not
+		    if (NoofProductsFound != TotalItems.length) {
+			messagesMap.put("Product Validation InComplete", "Product info Validation is not happend for all the Products");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Left Navigation Division", "Left Navigation division Properties has been changed. Please Check");
+		    status = WARNING;
+		}
+	    }
+
+	    // verifying Order Summary Section
+	    if (OrderSummarySection != null) {
+		if (OrderSummarySection.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(OrderSummaryHeader_ELM, browser)) {
+			messagesMap.put("Order Summary Header", "Header is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(EstimatedTotalValue_ELM, browser).getText().contains("$")) {
+			messagesMap.put("Estimated Total", "Label is missing");
+			status = WARNING;
+		    }
+		    if (isElementPresentVerification(PrescriptionHeader_ELM, browser)) {
+			
+			if (!isElementPresentVerification(ExcludeRxCostMsg_ELM, browser)) {
+			    messagesMap.put("Exclude Rx Cost", "Message is missing");
+			    status = WARNING;
+			}
+		    } else {
+			if (isElementPresentVerification(ExcludeRxCostMsg_ELM, browser)) {
+			    messagesMap.put("Exclude Rx Cost", "Message should not be displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+
+	    // Verifying Payment Options section
+	    if (PaymentSection != null) {
+		int RequiredPaymentDivnumber = 0;
+		if (PaymentSection.equalsIgnoreCase("Yes")) {
+		    String[] PaymentOptionElemnts = { PaymentSectionHeader_ELM, PaymentMethod_ELM, BillingInformation_ELM, ChangeBillingInfo_LNK };
+		    for (int i = 0; i < PaymentOptionElemnts.length; i++) {
+			if (!isElementPresentVerification(PaymentOptionElemnts[i], browser)) {
+			    messagesMap.put(PaymentOptionElemnts[i], "Option is missing");
+			    status = WARNING;
+			}
+		    }
+		    // 15-APR-2013-Newly Added code to Save Shipping
+		    // Address----SIVA--START
+		    List<WebElement> rightcontainerDivs = browser.findElements(By.id("rgtContainer"));
+		    for (int i = 0; i < rightcontainerDivs.size(); i++) {
+			if (rightcontainerDivs.get(i).getText().contains("Payment Method")) {
+			    RequiredPaymentDivnumber = i + 1;
+			    break;
+			}
+		    }
+		    WebElement BillingAddresspTag = browser.findElement(By.xpath("//div[@id='rgtContainer'][" + RequiredPaymentDivnumber + "]/div/p[3]"));
+		    if (BillingAddresspTag != null) {
+			String[] FullBillingAddress = BillingAddresspTag.getText().split("\n");
+			String UserBillingAddress = (FullBillingAddress[FullBillingAddress.length - 2] + "\n" + FullBillingAddress[FullBillingAddress.length - 1]).trim(); // SIMEON
+			// -
+			// 9/16/13
+			// -
+			// get
+			// second
+			// two
+			// lines
+			sharedProperties.put("UserBillingAddress", UserBillingAddress);
+		    } else {
+			messagesMap.put("Billing Address element", "is not found");
+			status = WARNING;
+		    }
+		    // -ENDED
+		} else if (PaymentSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(PaymentSectionHeader_ELM, browser) || isElementPresentVerification(PaymentMethod_ELM, browser)
+			    || isElementPresentVerification(BillingInformation_ELM, browser)) {
+			messagesMap.put("Payment Section", "Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // verifying Shipping Info Section
+	    if (ShippingInfoSection != null) {
+		if (ShippingInfoSection.equalsIgnoreCase("Yes")) {
+		    String[] ShippingInfoElements = { ShippingInformationHeader_ELM, ChangeShippignInformation_LNK, ChangeShippingMethod_LNK };
+		    for (int i = 0; i < ShippingInfoElements.length; i++) {
+			if (!isElementPresentVerification(ShippingInfoElements[i], browser)) {
+			    messagesMap.put(ShippingInfoElements[i], "Option is missing");
+			    status = WARNING;
+			}
+		    }
+		} else if (ShippingInfoSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(ShippingInformationHeader_ELM, browser)) {
+			messagesMap.put("Shipping Info Section", "Object Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    // Pickup Info Section
+	    if (PickupInfoSection != null) {
+		if (PickupInfoSection.equalsIgnoreCase("Yes")) {
+		    String StoreNumber_ELM = "//*[contains(text(),'" + StoreNumber + "')]~XPATH";
+		    String[] PickupElements = { PickupDetailsHeader_ELM, PickupDetails_ELM, ChangePickupDetails_LNK, StoreNumber_ELM };
+		    for (int i = 0; i < PickupElements.length; i++) {
+			if (!isElementPresentVerification(PickupElements[i], browser)) {
+			    messagesMap.put(PickupElements[i], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		} else if (PickupInfoSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(PickupDetailsHeader_ELM, browser)) {
+			messagesMap.put("Pickup Details Header/Section", "Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    // verifying SDD section
+	    if (SameDayDeliverySection != null) {
+		if (SameDayDeliverySection.equalsIgnoreCase("Yes")) {
+		    String[] SDDElements = { SameDayDeliveryHeader_ELM, SameDayDeliveryTime_ELM, SameDayDeliveryDate_ELM, SDDChangeShipAddress_LNK };
+		    for (int i = 0; i < SDDElements.length; i++) {
+			if (!isElementPresentVerification(SDDElements[i], browser)) {
+			    messagesMap.put(SDDElements[i], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		    if (RxSDDDeliveryInstrutionMessage != null) {
+			if (RxSDDDeliveryInstrutionMessage.equalsIgnoreCase("Yes")) {
+			    if (!isElementPresentVerification(SDDDeliveryNoteMessage_ELM, browser)) {
+				messagesMap.put("An adult must be available to sign for message", "Message is not displayed");
+				status = WARNING;
+			    }
+			} else if (RxSDDDeliveryInstrutionMessage.equalsIgnoreCase("No")) {
+			    if (isElementPresentVerification(SDDDeliveryNoteMessage_ELM, browser)) {
+				messagesMap.put("An adult must be available to sign for message", "Message should not be displayed");
+				status = WARNING;
+			    }
+			}
+		    }
+		} else if (SameDayDeliverySection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(SameDayDeliveryHeader_ELM, browser)) {
+			messagesMap.put("Same Day Delivery Details Header", "Object Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the Order details (Rx,CL and DL details,
+     *          Pickup info, Pyament section etc) in the Order Confirmation Page
+     *          and Saves the Order IDs in Excel (SDD ON)
+     * @Input -
+     * @author - Siva Santhi Reddy
+     * @Created -11-FEB-2013
+     * @Modified By -SIVA
+     * @Modified Date -22-AUG-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderdetailsinOrderConfirmationPage(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LeftNavigation_DIV = "//div[@id='leftNavShippingInfo']";
+	String OrderSummaryHeader_ELM = "//h3[contains(text(),'Order Summary')]~XPATH";
+	String EstimatedTotalValue_ELM = "//div[contains(@class,'orderSummTotText') or @class='totalPrc']~XPATH";
+	String PrescriptionHeader_ELM = "//div/*[contains(text(),'Prescription')]~XPATH";
+	String ExcludeRxCostMsg_ELM = "//*[contains(text(),'Pharmacy costs will be charged')]~XPATH";
+	String PaymentSectionHeader_ELM = "//h3[contains(text(),'Payment Details')]~XPATH";
+	String PaymentMethod_ELM = "//strong[contains(text(),'Payment Method:')]~XPATH";
+	String BillingInformation_ELM = "//strong[contains(text(),'Billing Information:')]~XPATH";
+	String ShippingInformationHeader_ELM = "//h3[contains(text(),'Shipping Information') and @id='rightNavFragId']~XPATH";
+	// Pickup Elements
+	String PickupMessage_ELM = "//*[contains(text(),'Your order will be ready for pickup at')]~XPATH";
+	String PickupDetails_DIV = "//div[contains(@class,'confirmOrderRoundedBox')]~XPATH";
+	String PickupStoreDetails_ELM = "//strong[contains(text(),'Your pick up store:')]~XPATH";
+	String PickupInstructions_ELM = "//*[contains(text(),'Pickup Instructions')]~XPATH";
+	String TimeDetails_ELM = "//strong[contains(text(),':00 AM') or contains(text(),':00 PM')]~XPATH";
+	// SDD Elements
+	String SameDayDeliveryMessage_ELM = "//p[contains(text(),'Your order will be delivered between:')]~XPATH";
+	String SameDayDeliveryTime_DIV = "//div[contains(@class,'confirmOrderRoundedBox')]~XPATH";
+	String SameDayDelveiryTime_ELM = "//strong[contains(text(),':00 PM')]~XPATH";
+	String SameDayDeliveryDate_ELM = "//div[contains(@class,'confirmOrderRoundedBox')]/p[contains(text(),',')]~XPATH";
+	String DeliveryTo_ELM = "//strong[contains(text(),'Deliver to:')]~XPATH";
+	String DeliveryFromStore_ELM = "//strong[contains(text(),'Delivery from store:')]~XPATH";
+	String SDDDeliveryInstructions_ELM = "//p[contains(text(),'Same-day delivery Instructions')]~XPATH";
+	String SDDDeliveryNoteMessage_ELM = "//*[contains(text(),'An adult must be available to sign for')]~XPATH";
+	String PrintReceipt_BTN = "//*[@title='Print Receipt' or @alt='Print Order Summary']~XPATH";
+	String OrderSummarySection = null, StoreNumber = null, PickupInfoSection = null, ShippingInfoSection = null, PaymentSection = null, SameDayDeliverySection = null, VerifyProductDetails = null, RxSDDDeliveryInstrutionMessage = null, OrderType = null;
+	boolean isProductFoundinSameSection = false, isRequiredDivisionFound = false, isValidationsFinished = false;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedPropertiesMap = null;
+	Map<String, String> sharedProperties = null;
+	Map<String, ProductBean> allProductsFromOrderbeanMap = null;
+	int NoofProductsFound = 0;
+	// initializing Product bean
+	ProductBean requiredProductBean = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    // Getting the share properties (Store Number which was assigned to
+	    // Hasmap in the select Pick date and time method)
+	    sharedPropertiesMap = scenarioBean.getSharedStepProperties();
+	    if (sharedPropertiesMap != null) {
+		StoreNumber = sharedPropertiesMap.get("PickupStoreNumber");
+	    }
+	    // Getting the info from Excel sheet for which sections needs to be
+	    // verified
+	    OrderSummarySection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderSummarySection");
+	    PaymentSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PaymentSummarySection");
+	    ShippingInfoSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingInfoSection");
+	    PickupInfoSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PickupInfoSection");
+	    SameDayDeliverySection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SameDayDeliverySection");
+	    RxSDDDeliveryInstrutionMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxSDDDeliveryInstrutionMessage");
+	    VerifyProductDetails = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerifyProductDetails");
+	    String ItemsinCart = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ItemsinCart");
+	    OrderType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderType");
+
+	    // get Order details(will be saved in the Same Excel sheet Row)
+	    if (!CheckoutLibrary.getOrderIDs(browser, OrderType, dataMap)) {
+		if (OrderType != null && OrderType.equalsIgnoreCase("ShipToCustomer")) {
+		    messagesMap.put("Order IDs:", "Ship To Home Order are not getting generated in 'W' Series");
+		    status = WARNING;
+		} else {
+		    messagesMap.put("Order IDs:", "Orde IDs are Generating in Z Series");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerification(PrintReceipt_BTN, browser)) {
+		messagesMap.put("Print Receipt Button", "Button is missing");
+		status = WARNING;
+	    }
+	    if (VerifyProductDetails != null && ItemsinCart != null && VerifyProductDetails.equalsIgnoreCase("Yes")) {
+		String[] TotalItems = ItemsinCart.split(",");
+		// Getting all Product information which was saved in Cart Page
+		allProductsFromOrderbeanMap = CheckoutLibrary_SDD_ON.getAllProductsFromOrder(scenarioBean.getScenarioId());
+		if (allProductsFromOrderbeanMap == null) {
+		    throw new Exception("No Products found in the order Bean");
+		}
+		if (isElementPresentVerification(LeftNavigation_DIV, browser)) {
+		    List<WebElement> OrderCompleteLeftDivs = browser.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div"));
+		    int RequiredDivision = 0;
+		    if (OrderCompleteLeftDivs != null) {
+			for (int count = 0; count < OrderCompleteLeftDivs.size(); count++) {
+			    if (OrderCompleteLeftDivs.get(count).getText().contains("Order #")) {
+				RequiredDivision = count + 1;// finding required
+							     // division number
+				break;
+			    }
+			}
+		    }
+		    List<WebElement> LeftNavDivisions = browser.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div"));
+		    if (LeftNavDivisions != null) {
+			for (int j = 0; j < TotalItems.length; j++) {
+			    // getting required product bean values.
+			    requiredProductBean = allProductsFromOrderbeanMap.get(TotalItems[j].trim());
+			    if (requiredProductBean != null) {
+				// reset value to false
+				isProductFoundinSameSection = false;
+				for (int i = 0; i < LeftNavDivisions.size(); i++) {
+				    // reset values to false.
+				    isRequiredDivisionFound = false;
+				    isValidationsFinished = false;
+				    // validating whether product found in
+				    // rightdelivery section or not
+				    if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("SDD")) {
+					if (LeftNavDivisions.get(i).getText().contains("Same-day delivery from store")) {
+					    isProductFoundinSameSection = true;
+					}
+				    } else if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("Pickup")) {
+					if (LeftNavDivisions.get(i).getText().contains("Pick up")) {
+					    isProductFoundinSameSection = true;
+					}
+				    } else if (requiredProductBean.getProductDeliveryOption().equalsIgnoreCase("Ship")) {
+					if (LeftNavDivisions.get(i).getText().contains("Ship to you")) {
+					    isProductFoundinSameSection = true;
+					}
+				    }
+				    if (requiredProductBean.getProductType().equalsIgnoreCase("DL")) {
+					if (LeftNavDivisions.get(i).getText().contains("Product Information")) {
+					    isRequiredDivisionFound = true;
+					}
+				    } else if (requiredProductBean.getProductType().equalsIgnoreCase("CL")) {
+					if (LeftNavDivisions.get(i).getText().contains("Contact Lens")) {
+					    isRequiredDivisionFound = true;
+					}
+				    } else {
+					if (LeftNavDivisions.get(i).getText().contains("Prescription")) {
+					    isRequiredDivisionFound = true;
+					}
+				    }
+				    if (isRequiredDivisionFound) {
+					int divcount = i + 2;
+					List<WebElement> individualProductDivisions = browser.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div[" + divcount
+						+ "]/div"));
+					if (individualProductDivisions == null) {
+					    throw new Exception("InvdividualProductDivisions is not available");
+					}
+					for (int k = 0; k < individualProductDivisions.size(); k++) {
+					    boolean isProductFound = false;
+					    if (!requiredProductBean.getProductType().contains("Rx")) {
+						String hrefOfProduct = individualProductDivisions.get(k).findElement(By.tagName("a")).getAttribute("href");
+						if (hrefOfProduct != null && hrefOfProduct.contains(requiredProductBean.getProductId())) {
+						    isProductFound = true;
+						}
+					    }
+					    if (individualProductDivisions.get(k).getText().contains(requiredProductBean.getProductName()) || isProductFound) {
+						NoofProductsFound = NoofProductsFound + 1;
+						int innerdivnumber = k + 1;
+						String ProductQuantity = browser
+							.findElement(
+								By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div[" + divcount + "]/div[" + innerdivnumber + "]/div[2]/p"))
+							.getText().trim();
+						String ProductPrice = browser.findElement(
+							By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div[" + divcount + "]/div[" + innerdivnumber + "]/div[3]/p"))
+							.getText();
+						if ((!requiredProductBean.getProductName().contains("Transfer"))) {
+						    if (!ProductQuantity.equals(requiredProductBean.getProductQuantity())) {
+							messagesMap.put(TotalItems[j] + "-Product Quantity", "is mismatching");
+							status = WARNING;
+						    }
+						}
+						if (requiredProductBean.getProductType().contains("Rx")) {
+						    String NormalRxTypeAndNumber_ELM = "//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div[" + divcount + "]/div[" + innerdivnumber
+							    + "]/div/div/p[2]";
+						    String RxTypeAndNumberText = null;
+						    RxTypeAndNumberText = getElementByProperty(NormalRxTypeAndNumber_ELM, browser).getText();
+						    if (!requiredProductBean.getProductType().toUpperCase().contains("NEW")) {
+							if (!RxTypeAndNumberText.contains(requiredProductBean.getProductId())) {
+							    messagesMap.put(TotalItems[j] + "-Product ID", "is displaying wrongly");
+							    status = WARNING;
+							}
+						    }
+						    if (!RxTypeAndNumberText.contains(requiredProductBean.getProductType().split("Rx")[0].replace("\n", " ").split(" ")[0].trim())) {
+							messagesMap.put(TotalItems[j] + "-Product Type", "is displaying wrongly");
+							status = WARNING;
+						    }
+						} else {
+						    if (ProductPrice != null && !ProductPrice.equals(requiredProductBean.getProductTotalPrice())) {
+							messagesMap.put(TotalItems[j] + "-Product Price", "is mismatching");
+							status = WARNING;
+						    }
+						}
+						isValidationsFinished = true;
+						break;
+					    }
+					}
+				    }
+				    // if product found come out of the loop
+				    if (isValidationsFinished) {
+					break;
+				    }
+				}
+			    } else {
+				messagesMap.put("Product Not in Cart",
+					"verifyOrderdetailsinOrderConfirmationPage()::The Product Details your are trying to verify was not added to Cart.Please check the Product ID.");
+				status = WARNING;
+			    }
+			    // if product not found in the right delivery option
+			    // section. throw an execption
+			    if (!isProductFoundinSameSection) {
+				messagesMap.put("Product Misplaced", "verifyOrderdetailsinOrderConfirmationPage()::Products are misplaced. They are displaying in another delviery Section.");
+				status = WARNING;
+			    }
+			}
+		    } else {
+			messagesMap.put("Left Navigation unavailable", "verifyOrderdetailsinOrderConfirmationPage()::Left Navigation is not available.");
+			status = WARNING;
+		    }
+		    // verifying validation was done for all the proudct or not
+		    if (NoofProductsFound != TotalItems.length) {
+			messagesMap.put("All Product Validation", "verifyOrderdetailsinOrderConfirmationPage()::Product info Validation is not happend for all the Products.");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Left Navigation division", "verifyOrderdetailsinOrderConfirmationPage()::Left Navigation division Properties has been changed. Please Check");
+		    status = WARNING;
+		}
+	    }
+	    // verifying Order Summary Section
+	    if (OrderSummarySection != null) {
+		if (OrderSummarySection.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(OrderSummaryHeader_ELM, browser)) {
+			messagesMap.put("Order Summary Header", "Header is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(EstimatedTotalValue_ELM, browser).getText().contains("$")) {
+			messagesMap.put("Estimated Total", "Label is missing");
+			status = WARNING;
+		    }
+		    if (isElementPresentVerification(PrescriptionHeader_ELM, browser)) {
+			if (!isElementPresentVerification(ExcludeRxCostMsg_ELM, browser)) {
+			    messagesMap.put("Exclude Rx Cost", "Message is missing");
+			    status = WARNING;
+			}
+		    } else {
+			if (isElementPresentVerification(ExcludeRxCostMsg_ELM, browser)) {
+			    messagesMap.put("Exclude Rx Cost", "Message should not be displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	    // verifying Payment Options section
+	    if (PaymentSection != null) {
+		if (PaymentSection.equalsIgnoreCase("Yes")) {
+		    String[] PaymentOptionElemnts = { PaymentSectionHeader_ELM, PaymentMethod_ELM, BillingInformation_ELM };
+		    for (int i = 0; i < PaymentOptionElemnts.length; i++) {
+			if (!isElementPresentVerification(PaymentOptionElemnts[i], browser)) {
+			    messagesMap.put(PaymentOptionElemnts[i], "Option is missing");
+			    status = WARNING;
+			}
+		    }
+		} else if (PaymentSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(PaymentSectionHeader_ELM, browser) || isElementPresentVerification(PaymentMethod_ELM, browser)
+			    || isElementPresentVerification(BillingInformation_ELM, browser)) {
+			messagesMap.put("Payment Section", "Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // verifying shipping info section
+	    if (ShippingInfoSection != null) {
+		if (ShippingInfoSection.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(ShippingInformationHeader_ELM, browser)) {
+			messagesMap.put("Shipping Information Section", "Header is missing");
+			status = WARNING;
+		    }
+		} else if (ShippingInfoSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(ShippingInformationHeader_ELM, browser)) {
+			messagesMap.put("Shipping Info Section", "Object Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // verifying pickup info section
+	    if (PickupInfoSection != null) {
+		if (PickupInfoSection.equalsIgnoreCase("Yes")) {
+		    String StoreNumber_ELM = "//*[contains(text(),'" + StoreNumber + "')]~XPATH";
+		    String[] PickupElements = { PickupMessage_ELM, PickupDetails_DIV, PickupStoreDetails_ELM, PickupInstructions_ELM, TimeDetails_ELM, StoreNumber_ELM };
+		    for (int i = 0; i < PickupElements.length; i++) {
+			if (!isElementPresentVerification(PickupElements[i], browser)) {
+			    messagesMap.put(PickupElements[i], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		} else if (PickupInfoSection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(PickupMessage_ELM, browser) || isElementPresentVerification(PickupInstructions_ELM, browser)) {
+			messagesMap.put("Pickup Details Header/Section", "Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // verifying SDD section
+	    if (SameDayDeliverySection != null) {
+		if (SameDayDeliverySection.equalsIgnoreCase("Yes")) {
+		    String[] SDDElements = { SameDayDeliveryMessage_ELM, SameDayDeliveryTime_DIV, SameDayDelveiryTime_ELM, SameDayDeliveryDate_ELM, DeliveryTo_ELM, DeliveryFromStore_ELM,
+			    SDDDeliveryInstructions_ELM };
+		    for (int i = 0; i < SDDElements.length; i++) {
+			if (!isElementPresentVerification(SDDElements[i], browser)) {
+			    messagesMap.put(SDDElements[i], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		    if (RxSDDDeliveryInstrutionMessage != null) {
+			if (RxSDDDeliveryInstrutionMessage.equalsIgnoreCase("Yes")) {
+			    if (!isElementPresentVerification(SDDDeliveryNoteMessage_ELM, browser)) {
+				messagesMap.put("An adult must be available to sign for message", "Message is not displayed");
+				status = WARNING;
+			    }
+			} else if (RxSDDDeliveryInstrutionMessage.equalsIgnoreCase("No")) {
+			    if (isElementPresentVerification(SDDDeliveryNoteMessage_ELM, browser)) {
+				messagesMap.put("An adult must be available to sign for message", "Message should not be displayed");
+				status = WARNING;
+			    }
+			}
+		    }
+		} else if (SameDayDeliverySection.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(SameDayDeliveryMessage_ELM, browser) || isElementPresentVerification(SDDDeliveryInstructions_ELM, browser)) {
+			messagesMap.put("Same Day Delivery Details Header", "Object Should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify Rx Price in Shopping Cart when SDD is ON
+     * @author - Siva
+     * @Created -19-MAR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyShoppingCartRxCP(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RxPriceColumn_ELM = "//table/tbody/tr[2]/td[3]~XPATH";
+	String SelectPickupInStore_RADIO = "input#pickupStore1~CSS";
+	String SelectShipTo_RADIO = "input#shipto1~CSS";
+	String CashPriceInsuranceMessage_ELM = "//p[contains(text(),'Prescription prices')]~XPATH";
+	String CashpriceMesgBelowCart_ELM = "//p[contains(text(),'The price listed is the')]~XPATH";
+	String NocashPriceTextMsg = null, PickupCashprice = "noprice", ShipCashPrice = "noprice", CashpriceMesgBelowCart = null, CashpriceInsuranceMesgBelowCart = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    CashpriceInsuranceMesgBelowCart = getTestData("CommonData", "GenaralInfo", "CashpriceInsuranceMesgBelowCart_SDDON", "Message").trim();
+	    CashpriceMesgBelowCart = getTestData("CommonData", "GenaralInfo", "CashpriceMesgBelowCart", "Message").trim();
+	    NocashPriceTextMsg = getTestData("CommonData", "GenaralInfo", "NocashPriceTextMsg_SDDON", "Message");
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+		    if (!isElementPresentVerifyClick(SelectPickupInStore_RADIO, browser)) {
+			throw new Exception("Not able to click the select Pickup Radio button");
+		    }
+		    // Delivery Option selction is taking time to load when SDD
+		    // is ON.
+		    Thread.sleep(3000);
+		} else if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+		    if (!isElementPresentVerifyClick(SelectShipTo_RADIO, browser)) {
+			throw new Exception("Not able to click the select Pickup Radio button");
+		    }
+		    // Delivery Option selction is taking time to load when SDD
+		    // is ON.
+		    Thread.sleep(3000);
+		}
+		if (dataMap.get("RxCashPrice").get(i).equalsIgnoreCase("Yes")) {
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+			String cashprice = getElementByProperty(RxPriceColumn_ELM, browser).getText();
+			PickupCashprice = cashprice;// new line
+			if (cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("Pickup-cash price", "cash price is not displaying in shopping cart for pickup");
+			    status = WARNING;
+			}
+			sharedProperties.put("ShoppingCartCashPrice", cashprice);
+		    } else if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+			String cashprice = getElementByProperty(RxPriceColumn_ELM, browser).getText();
+			ShipCashPrice = cashprice;// new line
+			if (cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("cash price", "cash price is not displaying in shopping cart for ship");
+			    status = WARNING;
+			}
+			sharedProperties.put("ShoppingCartCashPrice", cashprice);
+		    }
+		} else if (dataMap.get("RxCashPrice").get(i).equalsIgnoreCase("No")) {
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+			String cashprice = getElementByProperty(RxPriceColumn_ELM, browser).getText().replace("\n", " ");
+			if (!cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("cash price", "cash price is displaying in shopping cart for pickup");
+			    status = WARNING;
+			}
+		    }
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+			String cashprice = getElementByProperty(RxPriceColumn_ELM, browser).getText().replace("\n", " ");
+			if (!cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("No cash price", "No cash price Message is not displaying in shopping cart for ship");
+			    status = WARNING;
+			}
+		    }
+		}
+		String RxPricecolumnText = getElementByProperty(RxPriceColumn_ELM, browser).getText();
+		if (RxPricecolumnText.contains("$")) {
+		    if (isElementPresentVerification(CashpriceMesgBelowCart_ELM, browser)) {
+			if (!getElementByProperty(CashpriceMesgBelowCart_ELM, browser).getText().equalsIgnoreCase(CashpriceMesgBelowCart)) {
+			    messagesMap.put("Cash Price Message", "Cash Price Message is mismatching with given data");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Cash Price Message", "Cash Price Message is not getting displayed");
+			status = WARNING;
+		    }
+		} else {
+		    if (isElementPresentVerification(CashPriceInsuranceMessage_ELM, browser)) {
+			if (!getElementByProperty(CashPriceInsuranceMessage_ELM, browser).getText().trim().equalsIgnoreCase(CashpriceInsuranceMesgBelowCart)) {
+			    messagesMap.put("Insurance Message", "Insurance Message is mismatching with given data");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Insurance Message", "Insurance Message is not getting displayed");
+			status = WARNING;
+		    }
+		}
+	    }// for loop
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+}

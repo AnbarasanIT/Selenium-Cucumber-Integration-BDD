@@ -1,0 +1,34 @@
+package walgreens.ecom.batch.automation.stepdefinitions.marketing.emailUnsubscription;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.marketing.emailUnsubscription.EO12199Unsubscription;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class EO12199UnsubscriptionSteps {
+    @Then("^\"([^\"]*)\" Customer verifies email unsubscription:$")
+    public void Customer_verifies_email_unsubscription(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies email unsubscription:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    EO12199Unsubscription.CancelEmailSubscription(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

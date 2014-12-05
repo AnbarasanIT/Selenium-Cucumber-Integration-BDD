@@ -1,0 +1,504 @@
+@pharmacy @StoreLocator
+Feature: Store locator related functionalities
+
+# Contains all Store locator related flows of QTP Migrated Scenarios
+#-----------------------------------------------------------------------------------------------------------
+#@MARKETING-StoreLocator-1
+#Scenario: Anonymous user searches for stores using one or more filters
+
+#Given  "MARKETING-StoreLocator-1" Customer starts the scenario:
+#| InputFileName | SheetName    | RowId         	   		  |
+#| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-1 |
+
+#Then "MARKETING-StoreLocator-1" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName    | RowId        |
+#| PharmacyLinkVerification  |StoreLocator  | StoreLocator |
+
+#Then "MARKETING-StoreLocator-1" Customer searches for a store:
+#| InputFileName | SheetName   | RowId     		    |
+#| StoreLocator  |MakeMyStore  | SelectStoreDetails1 |
+#| StoreLocator  |MakeMyStore  | SelectStoreDetails2 |
+#| StoreLocator  |MakeMyStore  | SelectStoreDetails3 |
+#| StoreLocator  |MakeMyStore  | SelectStoreDetails4 |
+#| StoreLocator  |MakeMyStore  | SelectStoreDetails5 |
+
+#Then "MARKETING-StoreLocator-1" Customer finished testing the scenario:
+#| InputFileName | SheetName    | RowId					  |
+#| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-1 |
+
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-2
+Scenario:  Authenticated user checks out a new prescritpion and verifies the confirmation mail.
+
+Given  "MARKETING-StoreLocator-2" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	          |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-2 |
+
+Given "MARKETING-StoreLocator-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | YahooUser |
+
+When  "MARKETING-StoreLocator-2" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+Then "MARKETING-StoreLocator-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "MARKETING-StoreLocator-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId       |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore |
+
+Then "MARKETING-StoreLocator-2" Customer searches for a store:
+| InputFileName | SheetName   | RowId     			  	  |
+| StoreLocator  |MakeMyStore  | DuaneReadeStore  	  	  |
+
+Then "MARKETING-StoreLocator-2" Customer selects rx pick up date and time and click on continue
+
+Then "MARKETING-StoreLocator-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId      	        |
+| PharmacyLinkVerification  |StoreLocator  | OrderReviewChangeStore |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore 			|
+
+Then "MARKETING-StoreLocator-2" Customer searches for a store:
+| InputFileName | SheetName   | RowId     		          |
+| StoreLocator  |MakeMyStore  | DuaneReadechangestore 	  | 
+
+Then "MARKETING-StoreLocator-2" Customer selects rx pick up date and time and click on continue
+
+
+Then "MARKETING-StoreLocator-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "MARKETING-StoreLocator-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |NewRxOrder_SL   |
+
+Then "MARKETING-StoreLocator-2" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "MARKETING-StoreLocator-2" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    |
+| CommonData 	| login 	   |YahooUser |
+
+Then "MARKETING-StoreLocator-2" Customer verifies order confirmation mail in yahoo:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |NewRxOrder_SL   |
+
+Then "MARKETING-StoreLocator-2" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-2 |
+
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-3
+Scenario:  Authenticated user checks out a transfer prescritpion and verifies the confirmation mail.
+
+Given  "MARKETING-StoreLocator-3" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-3 |
+
+Given "MARKETING-StoreLocator-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | YahooUser |
+
+When "MARKETING-StoreLocator-3" Customer adds a Transfer Prescription to the cart:
+| InputFileName 		| SheetName 					| RowId		    | FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |AddHealthHistoryLink |
+| AccountDashboard		| HealthHistoryAndInsurance		| Healthinfo1 	| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |Yes				    |
+
+Then "MARKETING-StoreLocator-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "MARKETING-StoreLocator-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName     | RowId      	 |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore |
+
+Then "MARKETING-StoreLocator-3" Customer searches for a store:
+| InputFileName | SheetName   | RowId     		|
+| StoreLocator  |MakeMyStore  | DuaneReadeStore |
+
+Then "MARKETING-StoreLocator-3" Customer selects rx pick up date and time and click on continue
+
+Then "MARKETING-StoreLocator-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId      	 |
+| PharmacyLinkVerification  |StoreLocator  | OrderReviewChangeStore |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore |
+
+Then "MARKETING-StoreLocator-3" Customer searches for a store:
+| InputFileName | SheetName   | RowId     			  |
+| StoreLocator  |MakeMyStore  | DuaneReadechangestore |
+
+Then "MARKETING-StoreLocator-3" Customer selects rx pick up date and time and click on continue
+
+Then "MARKETING-StoreLocator-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "MARKETING-StoreLocator-3" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "MARKETING-StoreLocator-3" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    |
+| CommonData 	| login 	   |YahooUser |
+
+Then "MARKETING-StoreLocator-3" Customer verifies order confirmation mail in yahoo:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |TransferOrder_SL |
+
+Then "MARKETING-StoreLocator-3" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-3 |
+
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-4          
+Scenario: Authenticated user checks out a refill prescritpion and verifies the confirmation mail.
+
+Given  "MARKETING-StoreLocator-4" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-4 |
+
+Given "MARKETING-StoreLocator-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |SourcePage  |
+| CommonData  	 | login     | YahooUser |Overlay  |
+
+When  "MARKETING-StoreLocator-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |
+| CACData       | RefillRx  | YahooRefillRx |
+
+Then "MARKETING-StoreLocator-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "MARKETING-StoreLocator-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId      	 |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore |
+
+Then "MARKETING-StoreLocator-4" Customer searches for a store:
+| InputFileName | SheetName   | RowId     		      |
+| StoreLocator  |MakeMyStore  | DuaneReadechangestore |
+
+Then "MARKETING-StoreLocator-4" Customer selects rx pick up date and time and click on continue
+
+Then "MARKETING-StoreLocator-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId      	 |
+| PharmacyLinkVerification  |StoreLocator  | OrderReviewChangeStore |
+| PharmacyLinkVerification  |StoreLocator  | ChangeStore |
+
+Then "MARKETING-StoreLocator-4" Customer searches for a store:
+| InputFileName | SheetName   | RowId     			  |
+| StoreLocator  |MakeMyStore  | DuaneReadechangestore |
+
+Then "MARKETING-StoreLocator-4" Customer selects rx pick up date and time and click on continue
+
+Then "MARKETING-StoreLocator-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "MARKETING-StoreLocator-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |RefillOrder_SL   |
+
+Then "MARKETING-StoreLocator-4" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "MARKETING-StoreLocator-4" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId    |
+| CommonData 	| login 	   |YahooUser |
+
+Then "MARKETING-StoreLocator-4" Customer verifies order confirmation mail in yahoo:
+| InputFileName 		| SheetName    | RowId     		|
+| CheckoutOrderDetails  | OrderIds 	   |RefillOrder_SL |
+
+Then "MARKETING-StoreLocator-4" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-4 |
+
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-5
+Scenario: Logged in user verifies find a store functionality in Auto Refills/setup auto refills page
+
+Given  "MARKETING-StoreLocator-5" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-5 |
+
+Given "MARKETING-StoreLocator-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | YahooUser |
+
+Then "MARKETING-StoreLocator-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId      |
+| PharmacyLinkVerification  |Authenticated  | AutoRefillsAuth |
+| PharmacyLinkVerification  |Authenticated  | ChangeDeliveryOptions |
+| PharmacyLinkVerification  |Authenticated  | FindAStore |
+
+Then "MARKETING-StoreLocator-5" Customer searches for a store:
+| InputFileName | SheetName   | RowId     		|
+| StoreLocator  |MakeMyStore  | DuaneReadeStore2 |
+
+Then "MARKETING-StoreLocator-5" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "MARKETING-StoreLocator-5" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-5 |
+
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-6
+Scenario: Anonymous user searches for stores and Validates the UI
+
+Given  "MARKETING-StoreLocator-6" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	         |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-6|
+
+Then "MARKETING-StoreLocator-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId        |
+| PharmacyLinkVerification  |StoreLocator  | StoreLocator |
+
+Then "MARKETING-StoreLocator-6" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	   	   | ErrorValidation |
+| StoreLocator  |MakeMyStore  | SearchDetails1 	   | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails2     | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails3     | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails6	   | -   			 |
+| StoreLocator  |MakeMyStore  | SearchDetails4 	   | Yes			 |
+| StoreLocator  |MakeMyStore  | SearchDetails5 	   | Yes			 |
+| StoreLocator  |MakeMyStore  | SelectStoreDetails7| -				 |
+
+Then "MARKETING-StoreLocator-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId                |
+| Marketing                 |StoreLocator  | DetailsAndDirections |
+| Marketing                 |StoreLocator  | UICheck			  |
+| Marketing                 |StoreLocator  | UICheck1			  |
+| Marketing                 |StoreLocator  | StoreLocatorHome     |
+| Marketing                 |StoreLocator  | BrowseByState    	  |
+| Marketing                 |StoreLocator  | Alabama         	  |
+| PharmacyLinkVerification  |StoreLocator  | StoreLocator		  |
+| Marketing                 |StoreLocator  | SelectionVerification|
+
+Then "MARKETING-StoreLocator-6" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-6 |
+
+#----------------------------------------------------------------------------------
+
+@MARKETING-StoreLocator-7
+Scenario: Verify the UI of store details page through pick up store page
+
+Given  "MARKETING-StoreLocator-7" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-MARKETING	| StoreLocator 			 | MARKETING-StoreLocator-7     |
+
+Given "MARKETING-StoreLocator-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | Rxuser1   | 
+
+When  "MARKETING-StoreLocator-7" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | No  				 |
+
+Then "MARKETING-StoreLocator-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+#Removed Since Store details link no longer available in Pickup at store Page
+#Then "MARKETING-StoreLocator-7" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName    | RowId                |
+#| Marketing                 |StoreLocator  | StoreDetails         |
+#| Marketing                 |StoreLocator  | Directions           |
+#| Marketing                 |StoreLocator  | ReturntoStoreDetails |
+#| Marketing                 |StoreLocator  | NearbyStores		  | 
+
+Then "MARKETING-StoreLocator-7" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-7 |
+
+#--------------------------------------------------------------------------------
+
+@MARKETING-StoreLocator-8
+Scenario: Verify the UI of Change store through pick up store page
+
+Given  "MARKETING-StoreLocator-8" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-MARKETING	| StoreLocator			 | MARKETING-StoreLocator-8     |
+
+Given "MARKETING-StoreLocator-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | Rxuser1	 | 
+
+When  "MARKETING-StoreLocator-8" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo3 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | No  				 |
+
+Then "MARKETING-StoreLocator-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "MARKETING-StoreLocator-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId                |
+| Marketing                 |StoreLocator  | ChangeStore          |
+| Marketing                 |StoreLocator  | SelectionVerification|
+| Marketing                 |StoreLocator  | ShowMoreChangeStore  | 
+
+Then "MARKETING-StoreLocator-8" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	   | ErrorValidation |
+| StoreLocator  |MakeMyStore  | SearchDetails1 | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails2 | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails6 | -				 |
+| StoreLocator  |MakeMyStore  | SearchDetails3 | -   			 |
+| StoreLocator  |MakeMyStore  | StoreSearch    | -   			 |
+
+Then "MARKETING-StoreLocator-8" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-8 |
+
+#--------------------------------------------------------------------------------
+@MARKETING-StoreLocator-9
+Scenario: Verify the UI of store details page through Express Refill
+
+Given  "MARKETING-StoreLocator-9" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	    |
+| QC-MARKETING	| StoreLocator			 | MARKETING-StoreLocator-9     |
+
+Then "MARKETING-StoreLocator-9" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | UseExpressRefill       |
+
+Then "MARKETING-StoreLocator-9" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName	  | SheetName                | RowId 	        	             | 
+| Pharmacy        | ExpressRefill            | Express Refill Number4            |
+
+Then "MARKETING-StoreLocator-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId                |
+| Marketing                 |StoreLocator  | StoreDetails         |
+| Marketing                 |StoreLocator  | Directions           |
+| Marketing                 |StoreLocator  | ReturntoStoreDetails |
+| Marketing                 |StoreLocator  | NearbyStores		  | 
+
+Then "MARKETING-StoreLocator-9" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-9 |
+#---------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-10
+Scenario: Verify the UI of store details page after selecting a store from Store Locator page as Logged In user.
+
+Given  "MARKETING-StoreLocator-10" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	     |
+| QC-MARKETING	| StoreLocator			 | MARKETING-StoreLocator-10     |
+
+Then "MARKETING-StoreLocator-10" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName    | RowId    |
+| Global Register    | -      | -        |  Pharmacy      | Registration | lightreg |
+
+Then "MARKETING-StoreLocator-10" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	| DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   |RowId    |
+| -                           | MaybeLater   	     | -       |  -     | -         | -       | -        | Yes       | Pharmacy      | Registration|lightreg |
+
+Then "MARKETING-StoreLocator-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId        |
+| PharmacyLinkVerification  |StoreLocator  | StoreLocator |
+
+Then "MARKETING-StoreLocator-10" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	 |
+| StoreLocator  |MakeMyStore  | StoreSearch1 |
+
+Then "MARKETING-StoreLocator-10" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-10 |
+#---------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-11
+Scenario: Verify the UI of store details page after selecting a store from Store Locator page as Not Signed In user.
+
+Given  "MARKETING-StoreLocator-11" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	     |
+| QC-MARKETING	| StoreLocator			 | MARKETING-StoreLocator-11     |
+
+Then "MARKETING-StoreLocator-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId        |
+| PharmacyLinkVerification  |StoreLocator  | StoreLocator |
+
+Then "MARKETING-StoreLocator-11" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	 |
+| StoreLocator  |MakeMyStore  | StoreSearch2 |
+
+Then "MARKETING-StoreLocator-11" Customer validates the Store Details overlay
+
+Then "MARKETING-StoreLocator-11" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-11 |
+#---------------------------------------------------------------------------------------------
+@MARKETING-StoreLocator-12
+Scenario: Customer validates UI of Store Results page 
+
+Given  "MARKETING-StoreLocator-12" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         		 	     |
+| QC-MARKETING	| StoreLocator			 | MARKETING-StoreLocator-12     |
+
+Then "MARKETING-StoreLocator-12" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId        |
+| PharmacyLinkVerification  |StoreLocator  | StoreLocator |
+
+Then "MARKETING-StoreLocator-12" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	 |
+| StoreLocator  |MakeMyStore  | StoreSearch3 |
+
+Then "MARKETING-StoreLocator-12" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					   |
+| QC-MARKETING	| StoreLocator | MARKETING-StoreLocator-12 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-StoreLocator-1
+Scenario: User performs the Link Validation in the store locator page for the anonymous user
+
+Given "RX-StoreLocator-1" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId             |
+| QC-RX	        | StoreLocator       | RX-StoreLocator-1 |
+
+And "RX-StoreLocator-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | StoreLocator          |
+
+And "RX-StoreLocator-1" Customer verifies the link navigation functionality in the Store Locator Page: 
+| InputFileName	   	               | SheetName            | RowId 	        	  |PageValidation	|
+| Pharmacy 						   | Service	          | StoreLocatorDetails   |Yes              |
+
+And "RX-StoreLocator-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | ServiceUrl            |
+
+Then "RX-StoreLocator-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId             |
+| QC-RX	        | StoreLocator       | RX-StoreLocator-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-StoreLocator-2
+Scenario: User performs the Link Validation in the store locator page for the Logged In user
+
+Given "RX-StoreLocator-2" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId             |
+| QC-RX	        | StoreLocator       | RX-StoreLocator-2 |
+
+And "RX-StoreLocator-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      		     |
+| CommonData  	| login   	| AuthenticatedUser1	 |
+
+And "RX-StoreLocator-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	 		 |
+| PharmacyHomePageLinkVerification | Authenticated        | StoreLocator          		 |
+
+And "RX-StoreLocator-2" Customer verifies the link navigation functionality in the Store Locator Page:
+| InputFileName	   	               | SheetName            | RowId 	        	  |PageValidation	|
+| Pharmacy 						   | Service	          | StoreLocatorDetails   |Yes              |
+
+And "RX-StoreLocator-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | ServiceUrl            |
+
+Then "RX-StoreLocator-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId             |
+| QC-RX	        | StoreLocator       | RX-StoreLocator-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------

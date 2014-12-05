@@ -1,0 +1,1300 @@
+package walgreens.ecom.batch.automation.library.pharmacy.Prescriptions;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.regex.Pattern;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.remotesystems.db.walgreens.DBLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.constants.IGlobalVariables;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class SpecialtyRX {
+	// static fields
+	/** Data creation tool IR1 URL. */
+	private static final String IR1URL = "http://tonewas201.walgreens.com:8080/IR1OPVDataCreator/jsp/";
+
+	/** Data creation tool IR2 URL. */
+	private static final String IR2URL = "http://tonewas201.walgreens.com:8080/IR2OPVDataCreator/jsp/";
+
+	/** Organization IDs for IR1. */
+	private static final String[] ORGS_IR1 = { "7887223", "7885876", "7888207",
+			"7883794", "7884802", "7889204", "7890227" };
+
+	/** Organization IDs for IR2. */
+	private static final String[] ORGS_IR2 = { "169166", "169170", "169174",
+			"169185", "169191", "169194", "169202" };
+
+	/** Provider IDs for IR1. */
+	private static final String[] PROVIDERS_IR1 = { "", "", "", "", "", "", "" };
+
+	/** Provider IDs for IR2. */
+	private static final String[] PROVIDERS_IR2 = { "1573", "1578", "1581",
+			"1590", "1619", "1648", "1661" };
+
+	/** Drug RN numbers for IR1. */
+	private static final String[] DRUGS_IR1 = { "3297763", "3538444",
+			"3297492", "3404870", "3297544", "3298250", "3298049", "3540605",
+			"3284653", "3292245", "3413178", "3396145", "3337261", "3324267",
+			"3301591", "3281568", "3298424", "3282319", "3283942", "3292315" };
+
+	/** Drug RN numbers for IR2. */
+	private static final String[] DRUGS_IR2 = { "393385", "261463", "249809",
+			"422972", "230738", "350891", "268879", "232391", "235010",
+			"420059", "269228", "247090", "274703", "276121", "230032",
+			"407066", "267508", "271597", "295636", "289969" };
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Get specialty-related info from DB
+	 * @author - Siva Santhi Reddy
+	 * @Created - Nov 30 2012
+	 * @Modified By - Simeon Georgiev
+	 * @Modified Date - 21-FEB-2014
+	 * @param -
+	 * @return - True if info was retrieved successfully, false otherwise.
+	 ************************************************************* 
+	 */
+	private static boolean runSRxQuery(StepBean stepBean,
+			ScenarioBean scenarioBean, Map<String, List<String>> dataMap)
+			throws Exception, SQLException, ClassNotFoundException {
+		String status = IGlobalVariables.PASS;
+		String SQLQuery = null, QueryType = null, VerifyColoumn = null, VerifyValue = null;
+		String strRecordSetValue = "", RetrieveFieldValues = null;
+		String Modifyquery = null, RetrieveFileName = null, RetrieveSheetName = null, RetrieveRowID = null, RetrieveColumnID = null, RetrieveClauseValue = null;
+		String ReplaceQuery = null, QueryName = null;
+		boolean isRecordFound = false;
+		Map<String, String> messagesMap = null;
+		Map<String, String> setDBvlaues = null;
+		Map<String, String> getSharedProperties = null;
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+
+			if (EcommTestRunner.runEnvironment.equalsIgnoreCase("staging")) {
+				connection = DBLibrary.getConnection(dataMap);
+
+				if (messagesMap == null) {
+					messagesMap = new HashMap<String, String>();
+					stepBean.setStepStatusMessages(messagesMap);
+				}
+				if (setDBvlaues == null) {
+					setDBvlaues = new HashMap<String, String>();
+					scenarioBean.setscenarioDBvalues(setDBvlaues);
+				}
+				getSharedProperties = scenarioBean.getSharedStepProperties();
+				// Get the data from Excel for the Connections type
+				SQLQuery = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "Query");
+				QueryType = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "QueryType");
+				RetrieveFieldValues = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RetrieveFieldValues");
+				ReplaceQuery = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "ReplaceQuery");
+				QueryName = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "QueryName");
+				Modifyquery = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "Modifyquery");
+				RetrieveFileName = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RetrieveFileName");
+				RetrieveSheetName = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RetrieveSheetName");
+				RetrieveRowID = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RetrieveRowID");
+				RetrieveColumnID = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RetrieveColumnID");
+				RetrieveClauseValue = CommonLibrary.getTestData(
+						RetrieveFileName, RetrieveSheetName, RetrieveRowID,
+						RetrieveColumnID);
+				// Added Logic to Provide addtional benfit to Modify the
+				// query.--SIVA
+				if (ReplaceQuery != null && ReplaceQuery.equals("Yes")) {
+					SQLQuery = getSharedProperties.get(QueryName);
+				}
+				if (Modifyquery != null && Modifyquery.equalsIgnoreCase("Yes")) {
+					// Always Provide 5 "X" symbols in the query if you want
+					// the modify the query
+					SQLQuery = SQLQuery.replace("XXXXX", RetrieveClauseValue);
+				} else if (Modifyquery != null
+						&& Modifyquery.equalsIgnoreCase("PostServayEmail")) {
+					SQLQuery = SQLQuery.replace("XXXXX", RetrieveClauseValue);
+					Calendar cal = Calendar.getInstance();
+					cal.add(Calendar.DATE, -7);
+					String dateSplit[] = cal.getTime().toString().split(" ");
+					String requiredDate = dateSplit[2] + "-"
+							+ dateSplit[1].toUpperCase() + "-"
+							+ dateSplit[5].substring(2, 4);
+					SQLQuery = SQLQuery.replace("POSTER_EMAIL_DATE",
+							requiredDate);
+				}
+
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery(SQLQuery);
+				if (QueryType.equalsIgnoreCase("Select")) {
+					// assuming at max we will verify 10 header values for
+					// one SQL Query
+					while (resultSet.next()) {
+						isRecordFound = true;
+						if (RetrieveFieldValues != null
+								&& !RetrieveFieldValues.equals("-")) {
+							String[] RetrieveFields = RetrieveFieldValues
+									.split(",");
+							for (int k = 0; k < RetrieveFields.length; k++) {
+								String RetrieveValue = resultSet
+										.getString(RetrieveFields[k]);
+								setDBvlaues.put(RetrieveFields[k],
+										RetrieveValue);
+								TestDataDBManager.putTestData("Pharmacy",
+										"SRxTempData", "Temp1", "QueryResult"
+												+ (k + 1), RetrieveValue);
+							}
+						}
+						for (int j = 1; j < 10; j++) {
+							VerifyColoumn = CommonLibrary.getTestData(dataMap
+									.get("InputFileName").get(0),
+									dataMap.get("SheetName").get(0), dataMap
+											.get("RowId").get(0),
+									"VerifyColoumn" + j);
+							VerifyValue = CommonLibrary.getTestData(dataMap
+									.get("InputFileName").get(0),
+									dataMap.get("SheetName").get(0), dataMap
+											.get("RowId").get(0), "VerifyValue"
+											+ j);
+							if (VerifyColoumn.equalsIgnoreCase("end") && j > 1) {
+								break;
+							}
+							if (!VerifyColoumn.equalsIgnoreCase("end")) {
+								strRecordSetValue = resultSet
+										.getString(VerifyColoumn);
+								// Added for verifying the either/or values
+								// for same column - SARAVANAN M
+								if (VerifyValue.contains("~")) {
+									if (!(strRecordSetValue
+											.equalsIgnoreCase(VerifyValue
+													.split("~")[0]) || strRecordSetValue
+											.equalsIgnoreCase(VerifyValue
+													.split("~")[1]))) {
+										throw new Exception(
+												"Expected "
+														+ VerifyValue
+																.split("~")[0]
+														+ "[OR]"
+														+ VerifyValue
+																.split("~")[1]
+														+ " for "
+														+ VerifyColoumn
+														+ " column but it is displaying "
+														+ strRecordSetValue);
+									}
+								} else {
+									if (!strRecordSetValue
+											.equalsIgnoreCase(VerifyValue)) {
+										throw new Exception(
+												"Expected "
+														+ VerifyValue
+														+ " for "
+														+ VerifyColoumn
+														+ " column but it is displaying "
+														+ strRecordSetValue);
+									}
+								}
+							}
+						}
+					}
+
+					// Return error if there's no record found
+					// Printing/Throwing out Row ID for debugging purposes
+					if (!isRecordFound) {
+						throw new Exception(
+								"Not able to find the required record with given SQL query on row:"
+										+ dataMap.get("RowId").get(0));
+					}
+				}
+				return true;
+			} else {
+				System.out
+						.println("Run Mode is Production. We cant access DB Values in Production");
+				return false;
+			}
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+			return false;
+		} finally {
+			if (connection != null) { // Close all the connections
+				resultSet.close();
+				statement.close();
+			}
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to fill out the details form to create an SM
+	 *          profile for the customer.
+	 * @author - Simeon Georgiev
+	 * @Created - 22-January-14
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void completeDetailsForm(EventFiringWebDriver browser,
+			StepBean stepBean, Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// navigate to data creation tool
+			String opv = CommonLibrary.getTestData(dataMap.get("InputFileName")
+					.get(0), dataMap.get("SheetName").get(0),
+					dataMap.get("RowId").get(0), "OPV");
+			if (opv.equalsIgnoreCase("IR1")) {
+				CommonLibrary.getUrl(browser, IR1URL);
+			} else if (opv.equalsIgnoreCase("IR2")) {
+				CommonLibrary.getUrl(browser, IR2URL);
+			}
+
+			// click on customer details
+			String custDetes = "//a[contains(@href,'patient.jsp')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(custDetes, browser)) {
+				throw new Exception(
+						"Not able to click on Customer Details link.");
+			}
+
+			String custHeader = "//*[contains(text(),'Customer details')]~XPATH";
+			if (!CommonLibrary
+					.isElementPresentVerification(custHeader, browser)) {
+				messagesMap.put("Header verification",
+						"Customer Details header is not displayed.");
+				status = IGlobalVariables.WARNING;
+			}
+
+			// fill out form
+			// source system id
+			// CommonLibrary.getTestData(dataMap.get("InputFileName").get(0),
+			// dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+			// "SourceSystemID");
+			String sourceId = null;
+			// create random source system id
+			// generate random 12-digit id
+			Random gen = new Random();
+			String x = "";
+			for (int i = 0; i < 12; i++) {
+				x += Integer.toString(gen.nextInt(9) + 1);
+			}
+			sourceId = x; // will need this for other form as well
+
+			String sourceIdBox = "//input[contains(@name,'patientRn')]~XPATH";
+			if (!CommonLibrary
+					.clearAndEnterText(sourceIdBox, sourceId, browser)) {
+				messagesMap.put("Source System Id",
+						"Unable to enter text in Source System Id box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// write source system id to data sheet
+			System.out.println("Source System ID: " + sourceId);
+			TestDataDBManager.putTestData("Pharmacy", "SRxTempData", "Temp1",
+					"SourceSystemID", sourceId);
+
+			// names
+			String firstName = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "QueryResult1");
+			String fNameBox = "//input[contains(@name,'firstName')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(fNameBox, firstName, browser)) {
+				messagesMap.put("First Name",
+						"Unable to enter text in First Name box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			String lastName = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "QueryResult2");
+			String lNameBox = "//input[contains(@name,'lastName')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(lNameBox, lastName, browser)) {
+				messagesMap.put("Last Name",
+						"Unable to enter text in Last Name box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// gender
+			String gender = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "QueryResult3");
+			String maleBox = "//input[@value='M']~XPATH";
+			String femaleBox = "//input[@value='F']~XPATH";
+			if (gender.equalsIgnoreCase("m")) {
+				if (!CommonLibrary
+						.isElementPresentVerifyClick(maleBox, browser)) {
+					messagesMap.put("Gender", "Unable to select gender.");
+					status = IGlobalVariables.FAIL;
+				}
+			} else if (gender.equalsIgnoreCase("f")) {
+				if (!CommonLibrary.isElementPresentVerifyClick(femaleBox,
+						browser)) {
+					messagesMap.put("Gender", "Unable to select gender.");
+					status = IGlobalVariables.FAIL;
+				}
+			}
+
+			// dob
+			String dob = CommonLibrary.getTestData("Pharmacy", "SRxTempData",
+					"Temp1", "QueryResult4");
+			String dobBox = "//input[contains(@name,'birthDate')]~XPATH";
+
+			// parse input and format birthdate
+			Date bday = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dob);
+			dob = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(bday);
+			if (!CommonLibrary.clearAndEnterText(dobBox, dob, browser)) {
+				messagesMap.put("DOB",
+						"Unable to enter text in Birth Date box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// email
+			String email = CommonLibrary.getTestData(
+					dataMap.get("InputFileName").get(0),
+					dataMap.get("SheetName").get(0), dataMap.get("RowId")
+							.get(0), "UserName");
+			String emailBox = "//input[contains(@name,'emailAddress')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(emailBox, email, browser)) {
+				messagesMap.put("Email Address",
+						"Unable to enter text in Email Address box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// click submit
+			String submitBtn = "//input[contains(@name,'submit')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(submitBtn, browser)) {
+				throw new Exception(
+						"Unable to click submit button in Customer Details page.");
+			}
+			Thread.sleep(CommonLibrary.OBJECT_WAIT_THRESHOLD); // wait for sbt
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to fill out the address form to create an SM
+	 *          profile for the customer.
+	 * @author - Simeon Georgiev
+	 * @Created - 23-January-14
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void completeAddressForm(EventFiringWebDriver browser,
+			StepBean stepBean, Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// navigate to data creation tool
+			String opv = CommonLibrary.getTestData(dataMap.get("InputFileName")
+					.get(0), dataMap.get("SheetName").get(0),
+					dataMap.get("RowId").get(0), "OPV");
+			if (opv.equalsIgnoreCase("IR1")) {
+				CommonLibrary.getUrl(browser, IR1URL);
+			} else if (opv.equalsIgnoreCase("IR2")) {
+				CommonLibrary.getUrl(browser, IR2URL);
+			}
+
+			// click on address form
+			String custAddr = "//a[contains(@href,'patientAddress.jsp')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(custAddr, browser)) {
+				throw new Exception(
+						"Not able to click on Customer Address link.");
+			}
+
+			String custHeader1 = "//*[contains(text(),'Customer Address')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerification(custHeader1,
+					browser)) {
+				messagesMap.put("Header verification",
+						"Customer Address header is not displayed.");
+				status = IGlobalVariables.WARNING;
+			}
+
+			// fill out form
+			// source system id
+			String sourceId = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "SourceSystemID");
+			String sourceIdBox = "//input[contains(@name,'patientRn')]~XPATH";
+			if (!CommonLibrary
+					.clearAndEnterText(sourceIdBox, sourceId, browser)) {
+				messagesMap.put("Source System Id",
+						"Unable to enter text in Source System Id box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// street address
+			String address = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "QueryResult5");
+			String addressBox = "//input[contains(@name,'address1')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(addressBox, address, browser)) {
+				messagesMap.put("Address",
+						"Unable to enter text in Address box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// city
+			String city = CommonLibrary.getTestData("Pharmacy", "SRxTempData",
+					"Temp1", "QueryResult6");
+			String cityBox = "//input[contains(@name,'city')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(cityBox, city, browser)) {
+				messagesMap.put("City", "Unable to enter text in City box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// state
+			String state = CommonLibrary.getTestData("Pharmacy", "SRxTempData",
+					"Temp1", "QueryResult7");
+			String stateBox = "//input[contains(@name,'state')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(stateBox, state, browser)) {
+				messagesMap.put("State", "Unable to enter text in State box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// zip
+			String zip = CommonLibrary.getTestData("Pharmacy", "SRxTempData",
+					"Temp1", "QueryResult8");
+			String zipBox = "//input[contains(@name,'zip')]~XPATH";
+			if (!CommonLibrary.clearAndEnterText(zipBox, zip, browser)) {
+				messagesMap.put("Zip", "Unable to enter text in Zip box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// phone number
+			String areaCode = CommonLibrary.getTestData("Pharmacy",
+					"SRxTempData", "Temp1", "QueryResult9");
+			String num = CommonLibrary.getTestData("Pharmacy", "SRxTempData",
+					"Temp1", "QueryResult10");
+			String phoneNum = areaCode + num;
+			String phoneNumBox = "//input[contains(@name,'cellPhoneNbr')]~XPATH";
+			if (!CommonLibrary
+					.clearAndEnterText(phoneNumBox, phoneNum, browser)) {
+				messagesMap
+						.put("Address", "Unable to enter text in Phone box.");
+				status = IGlobalVariables.FAIL;
+			}
+
+			// click submit
+			String submitBtn = "//input[contains(@name,'submit')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(submitBtn, browser)) {
+				throw new Exception(
+						"Unable to click submit button in Customer Address page.");
+			}
+			Thread.sleep(CommonLibrary.OBJECT_WAIT_THRESHOLD); // wait for sbt
+
+			// write source system id to data sheet (used for verification)
+			// write to both rows; only one will be run
+			TestDataDBManager.putTestData("DataBase", "SRxQuery", "CheckSMID1",
+					"VerifyValue1", sourceId);
+			TestDataDBManager.putTestData("DataBase", "SRxQuery", "CheckSMID2",
+					"VerifyValue1", sourceId);
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to fill out the prescription form in data
+	 *          creation tool to add a prescription
+	 * @author - Simeon Georgiev
+	 * @Created - 2-December-13
+	 * @Modified By - Simeon
+	 * @Modified Date - 4-February-14
+	 ************************************************************* 
+	 */
+	public static void addPrescriptions(EventFiringWebDriver browser,
+			StepBean stepBean, Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// initialize date and date format
+			Date today = new Date();
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd:HH:mm:ss");
+
+			// do iteration --------------------------------------------
+			int cnt = Integer.parseInt(dataMap.get("Count").get(0));
+			// handle out of range values
+			cnt = cnt > 0 ? cnt : 1;
+			cnt = cnt <= 5 ? cnt : 5;
+			for (int j = 1; j <= cnt; j++) {
+				// navigate to data creation tool
+				String opv = CommonLibrary.getTestData("Pharmacy", "SRxUsers",
+						"User1", "OPV");
+				if (opv.equalsIgnoreCase("IR1")) {
+					CommonLibrary.getUrl(browser, IR1URL);
+				} else if (opv.equalsIgnoreCase("IR2")) {
+					CommonLibrary.getUrl(browser, IR2URL);
+				} else {
+					System.err.println("Invalid OPV environment.");
+				}
+
+				// click on prescription form
+				String presForm = "//a[contains(@href,'prescriptionHeader')]~XPATH";
+				if (!CommonLibrary.isElementPresentVerifyClick(presForm,
+						browser)) {
+					throw new Exception(
+							"Not able to click on Customer Prescription link.");
+				}
+
+				String presHeader = "//u[contains(text(),'Customer Prescription')]~XPATH";
+				if (!CommonLibrary.isElementPresentVerification(presHeader,
+						browser)) {
+					messagesMap.put("Header verification",
+							"Customer Prescription header is not displayed.");
+					status = IGlobalVariables.WARNING;
+				}
+
+				// fill out form
+				// source system id
+				String sourceSystemID = CommonLibrary.getTestData("Pharmacy",
+						"SRxTempData", "Temp1", "SourceSystemID");
+				String sourceIdBox = "//input[contains(@name,'sourceSystemId')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(sourceIdBox,
+						sourceSystemID, browser)) {
+					messagesMap.put("Source System Id",
+							"Unable to enter text in Source System Id box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// source rx number
+				String rxNum = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RxNum");
+				String rxNumBox = "//input[contains(@name,'sourceRxNbr')]~XPATH";
+				if (rxNum.equalsIgnoreCase("random")) {
+					// generate random 7-digit rx num
+					Random gen = new Random();
+					String x = "";
+					for (int i = 0; i < 7; i++) {
+						x += Integer.toString(gen.nextInt(9) + 1);
+					}
+					rxNum = x;
+				}
+				if (!CommonLibrary.clearAndEnterText(rxNumBox, rxNum, browser)) {
+					messagesMap.put("Rx number",
+							"Unable to enter text in Rx Number box.");
+					status = IGlobalVariables.FAIL;
+				}
+				// rxNum needed for later verification in refillhub
+
+				// org id
+				String orgId = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "OrgID");
+				String orgIdBox = "//input[contains(@name,'orgId')]~XPATH";
+				if (orgId.equalsIgnoreCase("any")) {
+					// choose from hardcoded values based on environment
+					if (opv.equalsIgnoreCase("IR1")) {
+						orgId = ORGS_IR1[new Random().nextInt(ORGS_IR1.length)];
+					} else if (opv.equalsIgnoreCase("IR2")) {
+						orgId = ORGS_IR2[new Random().nextInt(ORGS_IR2.length)];
+					}
+				} else if (orgId.equalsIgnoreCase("random")) {
+					// TODO
+					System.err
+							.println("Random functionality for org not yet implemented!");
+				} else if (!Pattern.matches("\\d{7}|\\d{6}", orgId)) {
+					messagesMap.put("Org ID", "Invalid Org ID was provided.");
+					status = IGlobalVariables.WARNING;
+				}
+				if (!CommonLibrary.clearAndEnterText(orgIdBox, orgId, browser)) {
+					messagesMap.put("Org ID",
+							"Unable to enter text in Org Id box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// doctor rn
+				String doctorRn = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "DoctorRN");
+				String doctorRnBox = "//input[contains(@name,'providerId')]~XPATH";
+				if (doctorRn.equalsIgnoreCase("any")) {
+					// choose from hardcoded values based on environment
+					if (opv.equalsIgnoreCase("IR1")) {
+						doctorRn = PROVIDERS_IR1[new Random()
+								.nextInt(PROVIDERS_IR1.length)];
+					} else if (opv.equalsIgnoreCase("IR2")) {
+						doctorRn = PROVIDERS_IR2[new Random()
+								.nextInt(PROVIDERS_IR2.length)];
+					}
+				} else if (doctorRn.equalsIgnoreCase("random")) {
+					// TODO
+					System.err
+							.println("Random functionality for doctor not yet implemented!");
+				} else if (!Pattern.matches("\\d{7}|\\d{4}", doctorRn)) {
+					messagesMap.put("Doctor RN",
+							"Invalid Doctor RN was provided.");
+					status = IGlobalVariables.WARNING;
+				}
+				if (!CommonLibrary.clearAndEnterText(doctorRnBox, doctorRn,
+						browser)) {
+					messagesMap.put("Doctor RN",
+							"Unable to enter text in Doctor Rn box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// store number - 10997
+				String storeNum = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "StoreNum");
+				String storeNumBox = "//input[contains(@name,'sourceStoreNbr')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(storeNumBox, storeNum,
+						browser)) {
+					messagesMap.put("Store number",
+							"Unable to enter text in Store Number box.");
+					status = IGlobalVariables.FAIL;
+				}
+				// record full rx number from store number and rxNum
+				String fullRxNum = storeNum + rxNum;
+
+				// drug rn
+				String drugRn = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "DrugRN");
+				String drugRnBox = "//input[contains(@name,'productId')]~XPATH";
+				if (drugRn.equalsIgnoreCase("any")) {
+					// choose from hardcoded values based on environment
+					if (opv.equalsIgnoreCase("IR1")) {
+						drugRn = DRUGS_IR1[new Random()
+								.nextInt(DRUGS_IR1.length)];
+					} else if (opv.equalsIgnoreCase("IR2")) {
+						drugRn = DRUGS_IR2[new Random()
+								.nextInt(DRUGS_IR2.length)];
+					}
+				} else if (Pattern.matches("[a-zA-Z]+", drugRn)) {
+					// TODO
+					System.err
+							.println("Drug search functionality not implemented.");
+
+				} else if (!Pattern.matches("\\d{7}|\\d{6}", drugRn)) {
+					messagesMap.put("Drug RN", "Invalid Drug RN was provided.");
+					status = IGlobalVariables.WARNING;
+				}
+				if (!CommonLibrary
+						.clearAndEnterText(drugRnBox, drugRn, browser)) {
+					messagesMap.put("Drug RN",
+							"Unable to enter text in Drug Rn box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// days supply
+				String daysSupply = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "DaysSupply");
+				String daysSupplyBox = "//input[contains(@name,'fillDaysSupply')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(daysSupplyBox, daysSupply,
+						browser)) {
+					messagesMap.put("Days supply",
+							"Unable to enter text in Days Supply box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// fill date
+				String fillDate = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "FillDate");
+				String fillDateBox = "//input[contains(@name,'fillLastEnteredDate')]~XPATH";
+				if (fillDate.equalsIgnoreCase("today")) {
+					fillDate = dateFormat.format(today);
+				}
+				if (!CommonLibrary.clearAndEnterText(fillDateBox, fillDate,
+						browser)) {
+					messagesMap.put("Fill date",
+							"Unable to enter text in Fill Date box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// rx date
+				String rxDate = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RxDate");
+				String rxDateBox = "//input[contains(@name,'rxDate')]~XPATH";
+				if (rxDate.equalsIgnoreCase("today")) {
+					rxDate = dateFormat.format(today);
+				}
+				if (!CommonLibrary
+						.clearAndEnterText(rxDateBox, rxDate, browser)) {
+					messagesMap.put("Rx date",
+							"Unable to enter text in Rx Date box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// refill quantity
+				String refillQty = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RefillQTY");
+				String refillQtyBox = "//input[contains(@name,'fillQTYLastDispensed')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(refillQtyBox, refillQty,
+						browser)) {
+					messagesMap.put("Refill quantity",
+							"Unable to enter text in Refill Quantity box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// refill date
+				String refillDate = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RefillDate");
+				String refillDateBox = "//input[contains(@name,'rxOriginalFillDate')]~XPATH";
+				if (refillDate.equalsIgnoreCase("today")) {
+					refillDate = dateFormat.format(today);
+				}
+				if (!CommonLibrary.clearAndEnterText(refillDateBox, refillDate,
+						browser)) {
+					messagesMap.put("Refill date",
+							"Unable to enter text in Refill Date box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// quantity remaining
+				String qtyLeft = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "QTYLeft");
+				String qtyLeftBox = "//input[contains(@name,'rxQtyRemains')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(qtyLeftBox, qtyLeft,
+						browser)) {
+					messagesMap.put("Quantity remaining",
+							"Unable to enter text in Quantity Remaining box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// profile status code - Y
+				String profileCode = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "ProfileCode");
+				if (profileCode.equalsIgnoreCase("yes")) {
+					WebElement profileCodeMenu = CommonLibrary
+							.getElementByProperty(
+									"//select[contains(@name,'profileStatusCode')]~XPATH",
+									browser);
+					new Select(profileCodeMenu).selectByVisibleText("Y");
+				}
+
+				// refill remaining
+				String refillLeft = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RefillLeft");
+				String refillLeftBox = "//input[contains(@name,'refillRemains')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(refillLeftBox, refillLeft,
+						browser)) {
+					messagesMap.put("Refill remaining",
+							"Unable to enter text in Refill Remaining box.");
+					status = IGlobalVariables.FAIL;
+				}
+
+				// instruction
+				String instruction = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "Instruction");
+				String instructionBox = "//input[contains(@name,'rxSig')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(instructionBox,
+						instruction, browser)) {
+					messagesMap.put("Instruction",
+							"Unable to enter text in Instruction box.");
+					status = IGlobalVariables.WARNING;
+				}
+
+				// submit form
+				String submitBtn = "//input[contains(@name,'submit')]~XPATH";
+				if (!CommonLibrary.isElementPresentVerifyClick(submitBtn,
+						browser)) {
+					throw new Exception("Unable to click on submit button.");
+				}
+				Thread.sleep(CommonLibrary.OBJECT_WAIT_THRESHOLD); // wait
+
+				// write rx number to data sheet
+				System.out.println("RX Number: " + fullRxNum);
+				TestDataDBManager.putTestData("Pharmacy", "SRxTempData",
+						"Temp1", "RxNumber" + j, fullRxNum);
+			} // end iteration
+				// record count
+			System.out.println("Prescriptions added: " + cnt);
+			TestDataDBManager.putTestData("Pharmacy", "SRxTempData", "Temp1",
+					"Nums", Integer.toString(cnt));
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to validate in refill hub that the
+	 *          prescriptions were successfully added.
+	 * @author - Simeon Georgiev
+	 * @Created - 2-December-13
+	 * @Modified By - Simeon
+	 * @Modified Date - 4-February-14
+	 ************************************************************* 
+	 */
+	public static void validateRxRefillhub(EventFiringWebDriver browser,
+			StepBean stepBean, Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// navigate to refill hub
+			// click on pharmacy tab
+			String pharmacyTab = "//a[contains(@title,'Pharmacy & Health')]~XPATH";
+			if (!CommonLibrary
+					.isElementPresentVerifyClick(pharmacyTab, browser)) {
+				throw new Exception("Unable to click on Pharmacy tab.");
+			}
+			String pharmacyHeader = "//h1[contains(text(),'Pharmacy')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerification(pharmacyHeader,
+					browser)) {
+				messagesMap.put("Validate header",
+						"Pharmacy & Health header is not displayed.");
+				status = IGlobalVariables.WARNING;
+			}
+
+			// click on link to refill hub
+			String refillHubLink = "//img[contains(@title,'Refill Prescriptions')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(refillHubLink,
+					browser)) {
+				throw new Exception(
+						"Unable to click on 'Refill Prescriptions' link.");
+			}
+			String refillHubHeader = "//h1[contains(text(),'Manage Prescriptions')]~XPATH";
+			if (!CommonLibrary.isElementPresentVerifyClick(refillHubHeader,
+					browser)) {
+				messagesMap.put("Validate header",
+						"Manage Prescriptions header is not displayed.");
+				status = IGlobalVariables.WARNING;
+			}
+
+			// verify prescriptions
+			// get number of prescriptions
+			int cnt = Integer.parseInt(CommonLibrary.getTestData(
+					dataMap.get("InputFileName").get(0),
+					dataMap.get("SheetName").get(0), dataMap.get("RowId")
+							.get(0), "Nums"));
+			boolean allFound = true;
+			for (int i = 1; i <= cnt; i++) {
+				// search for prescription in searchbox
+				String rxNum = CommonLibrary.getTestData(
+						dataMap.get("InputFileName").get(0),
+						dataMap.get("SheetName").get(0), dataMap.get("RowId")
+								.get(0), "RxNumber" + i);
+				String rxSearch = "//input[contains(@id,'prescription_search')]~XPATH";
+				if (!CommonLibrary.clearAndEnterText(rxSearch, rxNum, browser)) {
+					throw new Exception(
+							"Unable to enter text in prescription search box");
+				}
+				String rxSearchBtn = "//input[contains(@id,'pres_search')]~XPATH";
+				if (!CommonLibrary.isElementPresentVerifyClick(rxSearchBtn,
+						browser)) {
+					throw new Exception("Unable to click on search button");
+				}
+				// verify div for prescription number
+				String rxDiv = "//div[contains(text(),'" + rxNum + "')]~XPATH";
+				if (!CommonLibrary.isElementPresentVerification(rxDiv, browser)) {
+					System.err.println("Prescription " + rxNum + " not found!");
+					allFound = false;
+				}
+			}
+
+			if (!allFound) {
+				messagesMap
+						.put("Validate prescriptions",
+								"Some or all prescriptions were not found in refill hub.");
+				status = IGlobalVariables.WARNING;
+			}
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to run queries in swagdb01/02 and systest1/2
+	 *          based on specified environments, to retrieve customer's info.
+	 * @author - Simeon Georgiev
+	 * @Created - 21-February-14
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void getCustInfo(StepBean stepBean,
+			ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// run first query in swagb01 or 02
+			// construct new map based on environments specified
+			Map<String, List<String>> newMap = new HashMap<String, List<String>>();
+			String db = CommonLibrary.getTestData(dataMap.get("InputFileName")
+					.get(0), dataMap.get("SheetName").get(0),
+					dataMap.get("RowId").get(0), "Database");
+			if (db.equalsIgnoreCase("swagdb01")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetCustInfo1");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb01.");
+				}
+			} else if (db.equalsIgnoreCase("swagdb02")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetCustInfo2");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb02.");
+				}
+			} else {
+				System.err.println("Invalid database name.");
+			}
+			newMap.clear();
+
+			// run second query in systest1 or 2
+			db = CommonLibrary.getTestData(dataMap.get("InputFileName").get(0),
+					dataMap.get("SheetName").get(0), dataMap.get("RowId")
+							.get(0), "Systest");
+			if (db.equalsIgnoreCase("systest1")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetCustDetails1");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from systest1.");
+				}
+			} else if (db.equalsIgnoreCase("systest2")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetCustDetails2");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from systest2.");
+				}
+			} else {
+				System.err.println("Invalid systest name.");
+			}
+
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to run query in swagdb01/02 based on specified
+	 *          environment to validate customer's SM ID.
+	 * @author - Simeon Georgiev
+	 * @Created - 21-February-14
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void verifySMID(StepBean stepBean, ScenarioBean scenarioBean,
+			Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// run query in swagdb01 or 02
+			// construct new map based on environments specified
+			Map<String, List<String>> newMap = new HashMap<String, List<String>>();
+			String db = CommonLibrary.getTestData(dataMap.get("InputFileName")
+					.get(0), dataMap.get("SheetName").get(0),
+					dataMap.get("RowId").get(0), "Database");
+			if (db.equalsIgnoreCase("swagdb01")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("CheckSMID1");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb01.");
+				}
+			} else if (db.equalsIgnoreCase("swagdb02")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("CheckSMID2");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb02.");
+				}
+			} else {
+				System.err.println("Invalid database name.");
+			}
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to run query in swagdb01/02 based on specified
+	 *          environment, to retrieve customer's SM ID.
+	 * @author - Simeon Georgiev
+	 * @Created - 21-February-14
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void getSMID(StepBean stepBean, ScenarioBean scenarioBean,
+			Map<String, List<String>> dataMap) {
+		// initialize variables
+		String status = IGlobalVariables.PASS;
+		Map<String, String> messagesMap = null;
+
+		try {
+			// initialize messages map
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			// run query in swagdb01 or 02
+			// construct new map based on environments specified
+			Map<String, List<String>> newMap = new HashMap<String, List<String>>();
+			String db = CommonLibrary.getTestData(dataMap.get("InputFileName")
+					.get(0), dataMap.get("SheetName").get(0),
+					dataMap.get("RowId").get(0), "Database");
+			if (db.equalsIgnoreCase("swagdb01")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetSMID1");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb01.");
+				}
+			} else if (db.equalsIgnoreCase("swagdb02")) {
+				// construct map
+				List<String> l1 = new ArrayList<String>();
+				l1.add("DataBase");
+				newMap.put("InputFileName", l1);
+
+				List<String> l2 = new ArrayList<String>();
+				l2.add("SRxQuery");
+				newMap.put("SheetName", l2);
+
+				List<String> l3 = new ArrayList<String>();
+				l3.add("GetSMID2");
+				newMap.put("RowId", l3);
+
+				// run query
+				if (!runSRxQuery(stepBean, scenarioBean, newMap)) {
+					throw new Exception(
+							"Unable to retrieve info from swagdb02.");
+				}
+			} else {
+				System.err.println("Invalid database name.");
+			}
+		} catch (Exception e) {
+			status = IGlobalVariables.FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			CommonLibrary.LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+}

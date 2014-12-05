@@ -1,0 +1,543 @@
+@loyalty @ContactLensLoyaltyRegistration
+Feature: All the scenarios in the feature are related to Loyalty/WAG Registration when CL item in Cart.
+
+#CSLR-1472
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-1
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs tries to create walgreens account without loyalty through Proceed to checkout
+
+Given  "LTY-CLREG-1" Customer starts the scenario:
+| InputFileName | SheetName  | RowId       |
+| QC-LTY        | CLREG      | LTY-CLREG-1 |
+
+And "LTY-CLREG-1" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister     |
+
+Then "LTY-CLREG-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-1" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId | MembershipType |ErrorType      | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg1|  	-		  |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg2| Maybelater	  |		-	      |  Yes   |
+
+Then "LTY-CLREG-1" Customer Verifies Walgreens account creation success message in the overlay:
+
+Then "LTY-CLREG-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@LTY-CLREG-2
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs tries to create walgreens and loyalty account through Proceed to checkout
+
+Given  "LTY-CLREG-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-2 |
+
+And "LTY-CLREG-2" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister     |
+
+Then "LTY-CLREG-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-2" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId | MembershipType |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg1|  	-		  |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg3|  	New  	  |   -           |  Yes   |
+
+Then "LTY-CLREG-2" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-CLREG-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-3
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs who have loyalty account in store tries to create walgreens and loyalty account through Proceed to checkout 
+
+Given  "LTY-CLREG-3" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-3 |
+
+And "LTY-CLREG-3" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-3" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister     |
+
+Then "LTY-CLREG-3" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-3" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId  | MembershipType |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg4 |  	-		  |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg5 |  	New  	  |-          	  |  Yes   |
+
+Then "LTY-CLREG-3" Customer Makes a Selection from Single Page Match:
+|IsThisYOu |
+| No       |
+
+Then "LTY-CLREG-3" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-CLREG-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-4
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs tries to create walgreens and attach loyalty account through Proceed to checkout  
+
+Given  "LTY-CLREG-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-4 |
+
+And "LTY-CLREG-4" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister     |
+
+Then "LTY-CLREG-4" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-4" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId | MembershipType |ErrorType  	  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg6|  	-		  |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg7|  	Activate  |-          	  |  Yes   |
+
+Then "LTY-CLREG-4" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  -     |  Yes   |
+
+Then "LTY-CLREG-4" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-CLREG-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-4 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-5
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs and having loyalty account in store tries to create walgreens and attach loyalty account through Proceed to checkout  
+
+Given  "LTY-CLREG-5" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-5 |
+
+And "LTY-CLREG-5" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister     |
+
+Then "LTY-CLREG-5" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-5" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId  | MembershipType |ErrorType    	| Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg8 |  	-	 	   |AgeRestricted	|  Yes   |
+|LoyaltyLogin  | CLRegistrationData  | CLReg9 |  	Activate   |NoMatchError	|  Yes   |
+|LoyaltyLogin  | CLRegistrationData  | CLReg10|  	-          |    -	     	|  Yes   |
+
+Then "LTY-CLREG-5" Customer verifies the loyalty Registration failure message:
+|InputFileName | SheetName    | RowId 					 |FailureMsgType |
+| CommonData   | GenaralInfo  | ValidationFailureMessage | Validation    |
+
+Then "LTY-CLREG-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@LTY-CLREG-6
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs tries to create walgreens and loyalty account through join now from cart intent page.  
+
+Given  "LTY-CLREG-6" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-6 |
+
+And "LTY-CLREG-6" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-6" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -	       |
+
+Then "LTY-CLREG-6" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-6" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId  | MembershipType |ErrorType      | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg11|  	-          |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg12|  	New        |    -	       |  Yes   |
+
+Then "LTY-CLREG-6" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  New			|
+
+Then "LTY-CLREG-6" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-6 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-7
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs who have loyalty account in store tries to create walgreens and loyalty account through join now from cart intent page.  
+
+Given  "LTY-CLREG-7" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-7 |
+
+And "LTY-CLREG-7" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-7" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -	       |
+
+Then "LTY-CLREG-7" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-7" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId  | MembershipType |ErrorType      | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg13|  	-          |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg14|  	New  	   |-          	   |  Yes   |
+
+Then "LTY-CLREG-7" Customer Makes a Selection from Single Page Match:
+|IsThisYOu |
+| No       |
+
+Then "LTY-CLREG-7" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-7 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-8
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs tries to create walgreens and attach loyalty account through join now from cart intent page  
+
+Given  "LTY-CLREG-8" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-8 |
+
+And "LTY-CLREG-8" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-8" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-8" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-CLREG-8" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-8" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId  | MembershipType |ErrorType      | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg15|  	-          |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg16|  	Activate   |-          	   |  Yes   |
+
+Then "LTY-CLREG-8" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    -   		   |  -     |   -    |
+
+Then "LTY-CLREG-8" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-CLREG-8" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-8 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-9
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs who have loyalty account in store tries to create walgreens and loyalty account through join now from cart intent page  
+
+Given  "LTY-CLREG-9" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-9 |
+
+And "LTY-CLREG-9" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-9" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| Yes     | -           | -        |
+
+Then "LTY-CLREG-9" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-9" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName      	 | RowId  | MembershipType |ErrorType      | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg17|  	-          |AgeRestricted  |  -     |
+|LoyaltyLogin  | CLRegistrationData  | CLReg18|  	Activate   |-          	   |  Yes   |
+
+Then "LTY-CLREG-9" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   |  Yes   |    -   |
+
+Then "LTY-CLREG-9" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "LTY-CLREG-9" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-9 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-10
+Scenario: To verify whether Contact Lens registration page DOB dropdown field contains value till 2001 and error message is displayed when user below 13 yrs and not having loyalty account in store tries to create walgreens and attach loyalty account through join now from cart intent page  
+
+Given  "LTY-CLREG-10" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | CLREG      | LTY-CLREG-10 |
+
+And "LTY-CLREG-10" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-10" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-10" Customer chooses the loyalty registeration flow from the Shopping cart page to proceed to Join Balance Rewards:
+| JoinNow | ActivateNow | LoginNow |
+| -       | -           | yes      |
+
+Then "LTY-CLREG-10" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-10" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId   | MembershipType |ErrorType    	| Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg19 |  	-	 	   |AgeRestricted	|  Yes   |
+|LoyaltyLogin  | CLRegistrationData  | CLReg20 |  	Activate   |NoMatchError	|  Yes   |
+|LoyaltyLogin  | CLRegistrationData  | CLReg21 |  	-          |    -	     	|  Yes   |
+
+Then "LTY-CLREG-10" Customer verifies the loyalty Registration failure message:
+|InputFileName | SheetName    | RowId 					 |FailureMsgType |
+| CommonData   | GenaralInfo  | ValidationFailureMessage | Validation    |
+
+Then "LTY-CLREG-10" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | CLREG      | LTY-CLREG-10 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-11
+Scenario: To verify whether Loyalty Landing page with points is displayed while already Loyalty user logs in via Join now button in Order confirmation page
+
+Given  "LTY-CLREG-11" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | CLREG      | LTY-CLREG-11 |
+
+And "LTY-CLREG-11" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-CLREG-11" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CLREG-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-CLREG-11" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-CLREG-11" Customer Goes to the Shopping Cart
+
+Then "LTY-CLREG-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-CLREG-11" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "LTY-CLREG-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "LTY-CLREG-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "LTY-CLREG-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "LTY-CLREG-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "LTY-CLREG-11" Customer finds Loyalty Banner section in the Order confirmation page:
+|LtyBanner  | JoinNow | ActivateNow |LearnMore |
+| DLBanner  | Yes     |    -        |   -      |
+
+Then "LTY-CLREG-11" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId                    |ExpectedTargetPage  |
+| -                  | Yes    | -        | CommonData    | login     | RxLoyaltyTrasactionUser1 | LoyaltyLandingPage |
+
+Then "LTY-CLREG-11" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId        |
+| QC-LTY        | CLREG      | LTY-CLREG-11 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CLREG-12
+Scenario: To verify whether no special character is accepted by Balance rewards or phone number field and also verify the field validation and error via CL 
+
+Given  "LTY-CLREG-12" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | REG       | LTY-REG-12 	|
+
+And "LTY-CLREG-12" Customer Clears the Shopping Cart
+
+And "LTY-CLREG-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CLREG-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CLREG-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-CLREG-12" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | SheetName  | RowId |
+| -                  | -      | Yes      |  -			  |    -	   | -     |
+
+Then "LTY-CLREG-12" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId   | MembershipType |ErrorType  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg22 |  	Activate    |-          |  -     |
+
+Then "LTY-CLREG-12" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan10digitError | Lessthan10digit      |  -      |   -     |
+
+Then "LTY-CLREG-12" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId   | MembershipType |ErrorType  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg23 |  	Activate    |-          |  -     |
+
+Then "LTY-CLREG-12" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Lessthan13digitError | Lessthan13digit      |  -      |   -     |
+
+Then "LTY-CLREG-12" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId   | MembershipType |ErrorType  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg24 |  	Activate    |-          |  -     |
+
+Then "LTY-CLREG-12" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | Invalid13digitError  | Invalid13digit       |  -      |   -     |
+
+#Marked as NA since it is allwoing special charaters-CSLR-1796
+#Then "LTY-CLREG-12" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+#|InputFileName | SheetName           | RowId   | MembershipType |ErrorType  | Submit |
+#|LoyaltyLogin  | CLRegistrationData  | CLReg25 |  	Activate    |-          |  -     |
+
+#Then "LTY-CLREG-12" Customer verifies the error validation in Loyalty account creation Page:
+#| InputFileName | SheetName   | RowId    |BalanceRewardsorPhone | Phone   | Zipcode |
+#| -             | -           | -        | SpecialCharacters    |  -      |   -     |
+
+Then "LTY-CLREG-12" Customer Registers for Walgreens and Loyalty when CL item in Cart:
+|InputFileName | SheetName           | RowId   | MembershipType |ErrorType  | Submit |
+|LoyaltyLogin  | CLRegistrationData  | CLReg26 |  	Activate    |-          |  -     |
+
+Then "LTY-CLREG-12" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    					|BalanceRewardsorPhone | Phone   | Zipcode |
+| CommonData    | loyaltyinfo | BalanceRewardsNoEntryError  |NoEntry               |  -      |   -     |
+ 
+Then "LTY-CLREG-12" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId       |
+| QC-LTY        | REG       | LTY-REG-12  |
+

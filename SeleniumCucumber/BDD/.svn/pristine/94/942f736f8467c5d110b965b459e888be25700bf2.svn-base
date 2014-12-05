@@ -1,0 +1,3412 @@
+package walgreens.ecom.batch.automation.library.pharmacy.appointmentscheduler;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class WalgreensAppointmentSchedulerLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This methos is to search the Appointments for Flu and
+     *          vaccination
+     * @author - Thangaraj R
+     * @Created -
+     * @Modified By -
+     * @Modified Date -18-Dec-12
+     ************************************************************* 
+     */
+    public static void searchFluVaccinationsAppointments(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Age = null;
+	String Location = null;
+	String NoOfPatient = null;
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String WalgreensAppointmentScheduler_LNK = "a[title='Walgreens Appointment Scheduler']~CSS";
+	String FluShotsAndVacciantions_LNK = "img[title='Get Started']~CSS";
+	String WalgreensAppointmentScheduler_TXT = "//h1[contains(text(),'Appointment Scheduler')]~XPATH";
+	String ScheduleForOnePatient_IMG = "img[alt='ONE PATIENT']~CSS";
+	String ScheduleForFamily_IMG = "img[title*='A Family Or Group']~CSS";
+	String OverlayAgeOfPatient_TXT = "input[name='youngestPatientAge']~CSS";
+	String OverlayLocation_TXT = "input[name='location']~CSS";
+	String ScheduleWeekDropDown_ELM = "select[id='searchWeek']~CSS";
+	String NoOfPatients_ELM = "select[id='noOfPatients']~CSS";
+	String Flu_CHK = "input[id='immunizationCheck']~CSS";
+	String OverlaySearchAppointments_BTN = "input[title*='Search Appointment']~CSS";
+	String AppointmentResults_TXT = "//h1[contains(text(),'Appointment Results')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // navigates to pharmacy page
+	    if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		throw new Exception("Not able to click on Pharmacy link");
+	    }
+	    if (!isElementPresentVerifyClick(WalgreensAppointmentScheduler_LNK, browser)) {
+		throw new Exception("Not able to click on WalgreensAppointmentScheduler link");
+	    }
+	    if (!isElementPresentVerification(WalgreensAppointmentScheduler_TXT, browser)) {
+		messagesMap.put("Flu shots", "Walgreens Appointment Scheduler page is not exist");
+		status = WARNING;
+	    }
+	    // click on FluShotsAndVacciantions link
+	    if (!isElementPresentVerifyClick(FluShotsAndVacciantions_LNK, browser)) {
+		throw new Exception("Not able to click on FluShots And Vacciantions started link");
+	    }
+	    // choose one patient or family option
+	    if (dataMap.get("AppointmentType").get(0).equalsIgnoreCase("OnePatient")) {
+		if (!isElementPresentVerifyClick(ScheduleForOnePatient_IMG, browser)) {
+		    throw new Exception("Not able to click on OnePatient link");
+		}
+	    } else if (dataMap.get("AppointmentType").get(0).equalsIgnoreCase("Family")) {
+		if (!isElementPresentVerifyClick(ScheduleForFamily_IMG, browser)) {
+		    throw new Exception("Not able to click on Family or Group link");
+		}
+	    }
+	    // Enter the age,Zipcode,No of patient in the overlay
+	    switchToOverlay(browser);
+	    Age = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Age");
+	    if (!clearAndEnterText(OverlayAgeOfPatient_TXT, Age, browser)) {
+		throw new Exception("Not able to Enter Age in the overlay");
+	    }
+	    Location = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    if (!clearAndEnterText(OverlayLocation_TXT, Location, browser)) {
+		throw new Exception("Not able to Enter Zipcode in the overlay");
+	    }
+	    // Select the week in the overlay
+	    new Select(getElementByProperty(ScheduleWeekDropDown_ELM, browser)).selectByIndex(1);
+	    NoOfPatient = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatient");
+	    if (!selectByVisibleText(NoOfPatients_ELM, NoOfPatient, browser)) {
+		throw new Exception("Not able to Enter NoOfPatient in the overlay");
+	    }
+	    if (!checkBoxSelection(browser, Flu_CHK, "SELECT")) {
+		throw new Exception("Not able to Select FLu checkbox in the overlay");
+	    }
+	    // Click the Search appointments in overlay
+	    if (!isElementPresentVerifyClick(OverlaySearchAppointments_BTN, browser)) {
+		throw new Exception("Not able to click on Overlay Search Appointments started link");
+	    }
+	    if (dataMap.get("ExpectedTargetPage").get(0).equalsIgnoreCase("AppointMentResults")) {
+		if (!isElementPresentVerification(AppointmentResults_TXT, browser)) {
+		    messagesMap.put("Flu shots", "Walgreens Appointment Results page is not exist");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to pick which appointment type, the user wants
+     *          to schedule
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date -04-Jan-12
+     ************************************************************* 
+     */
+
+    public static void selectAppointmentTypeToSchedule(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String AppointmentType = null;
+	String PatientOption = null;
+	String PageToScheduleAppointmentFrom = null;
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String WalgreensAppointmentScheduler_LNK = "a[title='Appointment Scheduler']~CSS";
+	String WalgreensAppointmentScheduler_TXT = "//h1[contains(text(),'Appointment Scheduler')]~XPATH";
+	String FluShotsGetStarted_LNK = "//p[3]/a/img[@title='Get Started']~XPATH";
+	String ScheduleVaccinationHeader_ELM = "//h1[contains(text(),'Schedule a Vaccination')]~XPATH";
+	String HealthTestGetStarted_LNK = "a[href*='health-test']~CSS";
+	String ScheduleHealthTestHeader_ELM = "//h1[contains(text(),'Schedule a Health Test')]~XPATH";
+	String MedicareReviewGetStarted_LNK = "a[href*='medicare-part-d']~CSS";
+	String ScheduleMedicareReviewHeader_ELM = "//h1[contains(text(),'Schedule a Medicare Review')]~XPATH";
+	String CMRGetStarted_LNK = "a[href*='comprehensive-medication-review']~CSS";
+	String ScheduleCMRHeader_ELM = "//h1[contains(text(),'Schedule a Comprehensive Medication Review')]~XPATH";
+	String ScheduleForOnePatient_IMG = "img[title='One Patient']~CSS";
+	String ScheduleForFamily_IMG = "img[title*='A Family Or Group']~CSS";
+	String SwitchToFamilyAppointment_LNK = "a[title='Switch to a family appointment']~CSS";
+	String SwitchToSinglePatientAppointment_LNK = "a[title='Switch to a single patient appointment']~CSS";
+	String ScheduleAnAppointment_IMG = "img[title='Schedule An Appointment']~CSS";
+	String SearchAppointments_BTN = "input[title='Search Appointments']~CSS";
+	String GenericSchedulerOverlayHeader_ELM = "//h2[contains(text(),'Schedule an Appointment: ')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // 1. Get the Appt Type and Patient Type Options
+	    AppointmentType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentType");
+	    PatientOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientOption");
+	    PageToScheduleAppointmentFrom = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PageToScheduleAppointmentFrom");
+
+	    // 2. navigate to pharmacy page
+	    if (!PageToScheduleAppointmentFrom.equalsIgnoreCase("FIND STORE")) {
+		if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		    throw new Exception("Not able to click on Pharmacy link");
+		}
+
+		if (!isElementPresentVerifyClick(WalgreensAppointmentScheduler_LNK, browser)) {
+		    throw new Exception("Unable to navigate to Walgreens Appointment Scheduler page");
+		}
+		if (!isElementPresentVerification(WalgreensAppointmentScheduler_TXT, browser)) {
+		    messagesMap.put("Walgreens Appointment Scheduler page Issue", "Walgreens Appointment Scheduler page is not loaded properly.");
+		    status = WARNING;
+		}
+
+		// 3. Picking the type of appointment to be scheduled
+		if ("FLU SHOTS AND VACCINATIONS".equalsIgnoreCase(AppointmentType)) // FLU
+		// SHOTS
+		{
+		    if (!isElementPresentVerifyClick(FluShotsGetStarted_LNK, browser)) {
+			throw new Exception("Unable to navigate to Flu shot and vaccination scheduler page");
+		    }
+
+		    if (!isElementPresentVerification(ScheduleVaccinationHeader_ELM, browser)) {
+			messagesMap.put("Walgreens Appointment Scheduler Issue", "Flu shot and vaccination Scheduler page is not loaded properly.");
+			status = WARNING;
+		    }
+		} else if ("HEATH TESTS".equalsIgnoreCase(AppointmentType)) // HEALTH
+		// TESTS
+		{
+		    if (!isElementPresentVerifyClick(HealthTestGetStarted_LNK, browser)) {
+			throw new Exception("Unable to navigate to Flu shot and vaccination scheduler page");
+		    }
+
+		    if (!isElementPresentVerification(ScheduleHealthTestHeader_ELM, browser)) {
+			messagesMap.put("Walgreens Appointment Scheduler Issue", "Flu shot and vaccination Scheduler page is not loaded properly.");
+			status = WARNING;
+		    }
+		} else if ("MEDICARE PLAN REVIEW".equalsIgnoreCase(AppointmentType)) // MEDICARE
+		// PLAN
+		{
+		    if (!isElementPresentVerifyClick(MedicareReviewGetStarted_LNK, browser)) {
+			throw new Exception("Unable to navigate to Flu shot and vaccination scheduler page");
+		    }
+
+		    if (!isElementPresentVerification(ScheduleMedicareReviewHeader_ELM, browser)) {
+			messagesMap.put("Walgreens Appointment scheduler Issue", "Flu shot and vaccination Scheduler page is not loaded properly.");
+			status = WARNING;
+		    }
+		} else if ("COMPREHENSIVE MEDICATION REVIEW".equalsIgnoreCase(AppointmentType)) // CMR
+		{
+		    if (!isElementPresentVerifyClick(CMRGetStarted_LNK, browser)) {
+			throw new Exception("Unable to navigate to Flu shot and vaccination scheduler page");
+		    }
+
+		    if (!isElementPresentVerification(ScheduleCMRHeader_ELM, browser)) {
+			messagesMap.put("Walgreens Appointment Scheduler Issue", "Flu shot and vaccination Scheduler page is not loaded properly.");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // 4. Type of Patient to be selected 1. One 2.Family/Group
+	    if ("FLU SHOTS AND VACCINATIONS".equalsIgnoreCase(AppointmentType) || "HEATH TESTS".equalsIgnoreCase(AppointmentType)) {
+		if ("FAMILY".equalsIgnoreCase(PatientOption)) {
+		    if (!isElementPresentVerifyClick(ScheduleForFamily_IMG, browser)) {
+			throw new Exception("Unable to click Family or Group image");
+		    }
+
+		    switchToOverlay(browser);
+
+		    if (!isElementPresentVerification(SwitchToSinglePatientAppointment_LNK, browser)) {
+			messagesMap.put("Walgreens Appointment Scheduler Issue", "Unable to navigate to Family or Group overlay");
+			status = WARNING;
+		    }
+		} else {
+		    if (!isElementPresentVerifyClick(ScheduleForOnePatient_IMG, browser)) {
+			throw new Exception("Unable to click One patient image");
+		    }
+
+		    switchToOverlay(browser);
+
+		    if (!isElementPresentVerification(SwitchToFamilyAppointment_LNK, browser)) {
+			messagesMap.put("Walgreens Appointment scheduler Issue", "Unable to navigate to one patient overlay");
+			status = WARNING;
+		    }
+		}
+	    } else if ("MEDICARE PLAN REVIEW".equalsIgnoreCase(AppointmentType) || "COMPREHENSIVE MEDICATION REVIEW".equalsIgnoreCase(AppointmentType)) {
+		if (!isElementPresentVerifyClick(ScheduleAnAppointment_IMG, browser)) {
+		    throw new Exception("Unable to click Schedule An Appointment");
+		}
+
+		switchToOverlay(browser);
+
+		if (!isElementPresentVerification(SearchAppointments_BTN, browser)) {
+		    messagesMap.put("Walgreens Appointment scheduler Issue", "Unable to navigate to Schedule An Appointment overlay");
+		    status = WARNING;
+		}
+	    } else {
+		throw new Exception("Invalid patient option for the appointment type - unable to proceed further");
+	    }
+
+	    // 5. Check if the overlay is displayed
+	    if ("FLU SHOTS AND VACCINATIONS".equalsIgnoreCase(AppointmentType)) {
+		AppointmentType = "Vaccinations";
+	    }
+	    if (!getElementByProperty(GenericSchedulerOverlayHeader_ELM, browser).getText().contains(AppointmentType)) {
+		messagesMap.put("Walgreens Appointment Scheduler Issue", "The Appointment Scheduler overlay header does not match the expected overlay header.");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method enters details in any of the appointment scheduler
+     *          overlays
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date -04-Jan-12
+     ************************************************************* 
+     */
+
+    public static void enterDetailsInSchedulerOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String AppointmentType = null;
+	String PatientOption = null;
+	String UserType = null;
+	String Location = null;
+	String YoungestPatientAge = null;
+	String AppointmentToSelect = null;
+	String PatientAge_TXT = "input[name='youngestPatientAge']~CSS";
+	String Location_TXT = "input[id*='location']~CSS";
+	String SearchWeek_LST = "select[id='searchWeek']~CSS";
+	String NoOfPatients_LST = "select[id='noOfPatients']~CSS";
+	String SearchAppointments_BTN = "input[title='Search Appointments']~CSS";
+	String GenericRadioButton_RDO = "input[type='radio']~CSS";
+	String GenericCheckBox_CHK = "input[type='checkbox']~CSS";
+	String ScheduleAppointmentOverlay_ELM = "div[id*='showSearchForm']~CSS";
+	List<WebElement> SearchWeekList = null, FluHealthTestOptions = null;
+	int Iterator = 0, NoOfTests = 1, NoOfTestsFlag = 0;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // 1. Get the appointment details to be entered
+	    AppointmentType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentType");
+	    PatientOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientOption");
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    Location = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+	    YoungestPatientAge = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Age");
+
+	    // 2. Check if the zipcode is auto-populated for any other user
+	    // apart from anonymous user
+	    if (!UserType.equalsIgnoreCase("ANONYMOUS")) {
+		if (getElementByProperty(Location_TXT, browser).getAttribute("value").isEmpty()) {
+		    messagesMap.put("Verify if Location field is pre-populated for a Signed-In user", "Location Field is not pre-populated.");
+		    status = WARNING;
+		}
+	    }
+
+	    // The following are common for all types of appointments, hence
+	    // having this outside the IF statement
+
+	    // 3. Enter the LOCATION
+	    if (!clearAndEnterText(Location_TXT, Location, browser)) {
+		messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Location Field");
+		status = WARNING;
+	    }
+
+	    // 4. Select the WEEK
+	    SearchWeekList = new Select(getElementByProperty(SearchWeek_LST, browser)).getOptions();
+	    new Select(getElementByProperty(SearchWeek_LST, browser)).selectByIndex(3);
+	    // 5. Enter the Age
+	    if (AppointmentType.equalsIgnoreCase("Flu Shots and Vaccinations") || AppointmentType.equalsIgnoreCase("Health Tests")) {
+
+		if (!clearAndEnterText(PatientAge_TXT, YoungestPatientAge, browser)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Patient Age Field");
+		    status = WARNING;
+		}
+
+		if (PatientOption.equalsIgnoreCase("Family")) {
+		    // 6. Get No of Patients
+		    new Select(getElementByProperty(NoOfPatients_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId")
+			    .get(0), "NoOfPatients"));
+		    AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+
+		    // 7. Select the Service
+		    FluHealthTestOptions = getElementByProperty(ScheduleAppointmentOverlay_ELM, browser).findElements(By.tagName("p"));
+		    for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+			if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+			    if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppointmentToSelect)) {
+				FluHealthTestOptions.get(Iterator).findElement(By.cssSelector(StringUtils.substringBefore(GenericRadioButton_RDO, "~"))).click();
+				break;
+			    }
+			}
+		    }
+		} else {
+		    // We'll need "NoOfTests" from the user because this is
+		    // required to iterate through the sections in patient
+		    // information field
+		    NoOfTests = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfTests"));
+
+		    FluHealthTestOptions = getElementByProperty(ScheduleAppointmentOverlay_ELM, browser).findElements(By.tagName("p"));
+		    // getting this from the user, as some scripts are specific
+		    // about vaccination thats supposed to be checked
+		    String[] arrAppointmentsToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(",");
+		    // check for the label inside the "p" tag, then if the text
+		    // matches the appointment the user wants to choose, select
+		    // the checkbox inside that particular "p" tag
+		    for (int AppointmentIterator = 0; AppointmentIterator < arrAppointmentsToSelect.length; AppointmentIterator++) {
+			for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+			    // this is used to preven the null pointer exception
+			    // that we'd otherwise get
+			    if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+				if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(arrAppointmentsToSelect[AppointmentIterator])) {
+				    FluHealthTestOptions.get(Iterator).findElement(By.cssSelector(StringUtils.substringBefore(GenericCheckBox_CHK, "~"))).click();
+				    NoOfTestsFlag++;
+				    break;
+				}
+			    }
+			}
+		    }
+		    // this checks if all the specified appointments have been
+		    // selected
+		    if (!(NoOfTestsFlag == NoOfTests)) {
+			messagesMap.put("Data Entry issue in Scheduler Overlay", "Not all of the expected Appointments were selected");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (!isElementPresentVerifyClick(SearchAppointments_BTN, browser)) {
+		throw new Exception("Unable to click Search Appointments.");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method selects the date and time of the appointment
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -Thangaraj R
+     * @Modified Date -15-Oct-13
+     ************************************************************* 
+     */
+
+    public static int selectAppointmentDayAndSession(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String NextStepEnabled_BTN = "input[title='Next >']~CSS";
+	String AppointmentReuslts_TBL = "//table/tbody/tr[Row]/td[Column]~XPATH";
+	String EnterPatientInformation_ELM = "//h1[contains(text(),'Patient Information')]~XPATH";
+	String NextInContact_BTN = "//img[@title='Next']~XPATH";
+	String InfoError_ELM="//div[@id='info_error']//p/strong[contains(text(),'together')]";
+	int rowNumber = 0, TimeSlotSelected = 0;
+	int flag = 1;
+	WebElement ApptTimeObject = null, ApptDayLink = null;
+	List<WebElement> TimeSlotList = null, NoOfTable = null, Table = null, NoOFBlocks = null;
+	String SelectedTimeValue = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    switchToOverlay(browser);
+//	    if(!isElementPresentVerification(NextInContact_BTN, browser)){
+//	    if (!isElementPresentVerifyClick(NextInContact_BTN, browser)) {
+//		status = FAIL;
+//		throw new Exception("Unable to click Next button");
+//	    }
+//	    }
+	    isElementPresentVerifyClick(NextInContact_BTN, browser);
+
+	    Thread.sleep(10000);
+	    for (rowNumber = 2; rowNumber <= 5; rowNumber++)// increasing the
+		
+	    // row value.
+	    {
+		for (int coloumnNumber = 1; coloumnNumber <= 7; coloumnNumber++)// increasing
+		// the
+		// coloumn
+		// value.
+		{
+		    ApptTimeObject = getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser);
+//		    System.out.println("Class name="+ApptTimeObject.getAttribute("class"));
+		    System.out.println("the Appttime text++++++++++++: "+ApptTimeObject);
+		    if ((ApptTimeObject != null) && (!ApptTimeObject.getAttribute("class").contains("disabled")))
+		    {
+			if (ApptTimeObject.getText() != null || ApptTimeObject.getText() != ""){ 
+			
+			    ApptDayLink = ApptTimeObject.findElement(By.tagName("a"));
+				ApptDayLink.click();
+				// Update to include Slecting time slot
+				ApptTimeObject = getElementByProperty("//div[@id='time_container']//ul[@class='tlist']", browser);
+				// identify
+				// the
+				// same
+				// object
+				// ofter
+				// the
+				// time
+				// list
+				// is
+				// present
+
+				TimeSlotList = ApptTimeObject.findElements(By.tagName("li"));
+				TimeSlotSelected = generateRandomNumber(TimeSlotList.size() - 1, 0);
+
+				if (TimeSlotSelected < 0) {
+				    TimeSlotSelected += 1;
+				} else if (TimeSlotSelected > TimeSlotList.size()) {
+				    TimeSlotSelected = 3;
+				} else if (TimeSlotSelected > 4) {
+				    TimeSlotSelected = 3;
+				}
+				// TimeSlotSelected = 1;
+				SelectedTimeValue = TimeSlotList.get(TimeSlotSelected).getText();
+				TimeSlotList.get(TimeSlotSelected).findElement(By.tagName("a")).click();
+				if (!getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser).getText()
+					.contains(SelectedTimeValue)) {
+				    messagesMap.put("Issue while trying to select time slot", "The time slot selected is not updated in the area");
+				    status = WARNING;
+				}
+				flag = flag + 1;// increasing the flag value by
+				// 1
+				break;// coming out of the inner loop.
+			}
+		    }
+		}
+		if (flag == 2)// if Flag value reaches two means come out of the
+		// outer loop.
+		{
+		    break;// coming out of the outer loop.
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(NextStepEnabled_BTN, browser)) {
+		throw new Exception("Unable to select Date/TIme");
+	    }
+
+	    if (!isElementPresentVerification(EnterPatientInformation_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    rowNumber = 0;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    rowNumber = 0;
+	    stepBean.setStepStatus(status);
+	}
+	return rowNumber;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to fill in patient details for any
+     *          user/appointment
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date -04-Jan-12
+     ************************************************************* 
+     */
+
+    public static void enterPatientInformation(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String UserType = null, FirstName = null, LastName = null, EmailAddress = null, PhoneNum = null, ConfirmationNumber = null, AppointmentToSelect = null, Zipcode = null;
+	String VerifyVaccinationForm = null;
+	String EmailAddress_TXT = "input[id='emailaddress']~CSS";
+	String PhoneNum_TXT = "input[id='phonenumber1']~CSS";
+	String FirstName_TXT = "input[id*='firstName1']~CSS";
+	String LastName_TXT = "input[id*='lastName1']~CSS";
+	String Month_LST = "select[id*='dobMonth1']~CSS";
+	String Day_LST = "select[id*='dobDay1']~CSS";
+	String Year_LST = "select[id*='dobYear1']~CSS";
+	String Gender_LST = "input[id*='male_gender1']~CSS";
+	String UseDifferentInformation_RDO = "input[id*='patientinformation1_diff']~CSS";
+	String SubmitAppointment_BTN = "input[title='Confirm appointment']~CSS";
+	String AppointmentConfirmation_ELM = "//h1[contains(text(),'Confirmation')]~XPATH";
+	String ConfirmationNumber_ELM = "//*[contains(text(),'Confirmation Number:')]~XPATH";
+
+	// # Modified :R S MUKESH VARUN Date:24/6/13
+	String AppointmentTable_TBL = "//div[3]/div/div[1]/p[2]~XPATH";
+	// "table[id='appt_details']~CSS";
+	String VaccineConsentForm_LNK = "a[title='completed vaccine consent form']~CSS";
+	String PatientVaccinationFormHeader_ELM = "//h1[contains(text(),'Patient Vaccination Form')]~XPATH";
+	String SubmitAndBuildForm_BTN = "input[title='SUBMIT INFO AND BUILD FORM']~CSS";
+	String FormCreatedMsg_ELM = "//*[contains(text(),'Your vaccination request form has been created.')]~XPATH";
+	String CreatePharmacyAccount_LNK = "a[title='Create Pharmacy Account']~CSS";
+	List<WebElement> VaccinationForm = null;
+	int NoOfPatients = 1;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(sharedProperties);
+	    }
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    EmailAddress = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "EmailAddress");
+	    PhoneNum = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNum").replace("-", "");
+	    String[] DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB").split("-");
+	    Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+	    NoOfPatients = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients"));
+	    AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+
+	    if (!UserType.equalsIgnoreCase("Anonymous")) {
+		if (getElementByProperty(EmailAddress_TXT, browser).getAttribute("value").equals("")) {
+		    messagesMap.put("Verify if Location field is pre populated for a signed in user", "Location Field is not pre-populated");
+		    status = WARNING;
+		}
+
+		if (getElementByProperty(PhoneNum_TXT, browser).getAttribute("value").equals("")) {
+		    messagesMap.put("Verify if Location field is pre populated for a signed in user", "Location Field is not pre-populated");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!clearAndEnterText(EmailAddress_TXT, EmailAddress, browser)) {
+		messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Email Address Field.");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PhoneNum_TXT, PhoneNum, browser)) {
+		messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Phone No. Field");
+		status = WARNING;
+	    }
+
+	    for (int PatientIterator = 1; PatientIterator <= NoOfPatients; PatientIterator++) {
+		if ((UserType.equalsIgnoreCase("LoggedIn")) && (PatientIterator == 1)) {
+		    if (!isElementPresentVerifyClick(UseDifferentInformation_RDO, browser)) {
+			throw new Exception("Unable to click on use Different Patient information for patient " + PatientIterator);
+		    }
+		}
+		if (!clearAndEnterText(FirstName_TXT.replace("1", Integer.toString(PatientIterator)), FirstName, browser)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in First Name Field for Patient " + PatientIterator);
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(LastName_TXT.replace("1", Integer.toString(PatientIterator)), LastName, browser)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Last Name Field for Patient " + PatientIterator);
+		    status = WARNING;
+		}
+
+		new Select(getElementByProperty(Month_LST.replace("1", Integer.toString(PatientIterator)), browser)).selectByValue(DOB[0]);
+		new Select(getElementByProperty(Day_LST.replace("1", Integer.toString(PatientIterator)), browser)).selectByValue(DOB[1]);
+		new Select(getElementByProperty(Year_LST.replace("1", Integer.toString(PatientIterator)), browser)).selectByValue(DOB[2]);
+
+		getElementByProperty(Gender_LST.replace("1", Integer.toString(PatientIterator)), browser).click();
+	    }
+
+	    if (!isElementPresentVerifyClick(SubmitAppointment_BTN, browser)) {
+		throw new Exception("Unable to Submit appointment.");
+	    }
+
+	    if (!isElementPresentVerification(AppointmentConfirmation_ELM, browser)) {
+		messagesMap.put("Data Entry issue in Scheduler Overlay", "Appointment Confirmation Page is not loaded after clicking on Submit appointment");
+		status = WARNING;
+	    }
+
+	    ConfirmationNumber = getElementByProperty(ConfirmationNumber_ELM, browser).getText().split(":")[1].trim();
+	    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentNo", ConfirmationNumber);
+
+	    // # Modified :R S MUKESH VARUN Date:24/6/13
+	    if (NoOfPatients > 1) {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+		if (!getElementByProperty(AppointmentTable_TBL, browser).getText().contains(AppointmentToSelect)) {
+		    messagesMap.put("Appointment name link not displayed in confirmation Section", "Appointment Confirmation Page - Appointment link is not displayed");
+		    status = WARNING;
+		}
+	    } else {
+		String[] AppointmentsSelected = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(":");
+		for (int ApptIterator = 0; ApptIterator < AppointmentsSelected.length; ApptIterator++) {
+		    if (!getElementByProperty(AppointmentTable_TBL.replace("1", Integer.toString(ApptIterator + 1)), browser).getText().contains(AppointmentsSelected[ApptIterator])) {
+
+			messagesMap.put("Appointment name link not displayed in confirmation Section", "Appointment Confirmation Page - Appointment link is not displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    VerifyVaccinationForm = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerifyVaccinationConsentForm");
+	    if (VerifyVaccinationForm.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(VaccineConsentForm_LNK, browser)) {
+		    throw new Exception("Unable to navigate to vaccine consent form page.");
+		} else {
+		    if (!isElementPresentVerification(PatientVaccinationFormHeader_ELM, browser)) {
+			messagesMap.put("Patient Vaccination Form", "Patient Vaccination Form page is not loaded");
+			status = WARNING;
+		    }
+
+		    PhoneNum = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNum");
+
+		    if (NoOfPatients > 1) {
+			AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+		    } else {
+			AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions");
+		    }
+		    VaccinationForm = browser.findElements(By.tagName("p"));
+		    FirstName = FirstName + " " + LastName;
+		    String[] FieldsToVerify = { PhoneNum, AppointmentToSelect, FirstName, EmailAddress,
+			    getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB").replace("-", "/") };
+		    for (int FormIterator = 0; FormIterator < VaccinationForm.size(); FormIterator++) {
+			if (VaccinationForm.get(FormIterator).getText().contains("Immunization(s):")) {
+			    // since we are verifying 5 fields only
+			    for (int i = 0; i < FieldsToVerify.length; i++) {
+				if (!VaccinationForm.get(FormIterator).getText().replace(" , ", ", ").replace("  ", " ").contains(FieldsToVerify[i])) {
+				    messagesMap.put("Patient Vaccination Form", "Patient Vaccination Form page is not loaded, with the value: " + FieldsToVerify[i]);
+				    status = WARNING;
+				}
+			    }
+
+			}
+		    }
+
+		    if (!isElementPresentVerifyClick(SubmitAndBuildForm_BTN, browser)) {
+			throw new Exception("Print Patient Vaccination Form");
+		    }
+
+		    if (!isElementPresentVerification(FormCreatedMsg_ELM, browser)) {
+			messagesMap.put("Patient Vaccination Form", "Your vaccination request form has been created page is displayed");
+			status = WARNING;
+		    }
+
+		    if (UserType.equalsIgnoreCase("Anonymous")) {
+			if (!isElementPresentVerifyClick(CreatePharmacyAccount_LNK, browser)) {
+			    throw new Exception("Create Pharmacy Account link verification");
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the functionality of Edit link in
+     *          your appointment block in Enter patient information page
+     * @author -
+     * @Created -
+     * @Modified By -
+     * @Modified Date -04-Jan-12
+     ************************************************************* 
+     */
+
+    public static void VerifyEditLinks(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String DateTimeEdit_LNK = "//div[@id='right-content']/p[6]/a~XPATH";
+	String AgeEdit_LNK = "//div[@id='right-content']/p[12]/a~XPATH";
+	String ServicesEdit_LNK = "//div[@id='right-content']/p[15]/a~XPATH";
+	String EditPatientInfoOverlayHeader_ELM = "//h2[contains(text(),'Schedule an Appointment: ')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // Verify the navigation of the date and time edit link
+	    if (!isElementPresentVerifyClick(DateTimeEdit_LNK, browser)) {
+		messagesMap.put("Appointment Date and Time Edit link", "Not able to identify the Appointment Date and Time Edit link in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(EditPatientInfoOverlayHeader_ELM, browser)) {
+		messagesMap.put("Appointment Date and Time Edit Overlay", "Not able to identify the Appointment Date and Time Edit overlay in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToDefault(browser);
+
+	    // Verify the navigation of the Age edit link
+	    if (!isElementPresentVerifyClick(AgeEdit_LNK, browser)) {
+		messagesMap.put("Patient Age Edit link", "Not able to identify the Patient Age Edit link in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(EditPatientInfoOverlayHeader_ELM, browser)) {
+		messagesMap.put("Edit Patient Age Overlay", "Not able to identify the Patient Age Edit overlay in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToDefault(browser);
+
+	    // Verify the navigation of the Services edit link
+	    if (!isElementPresentVerifyClick(ServicesEdit_LNK, browser)) {
+		messagesMap.put("Appointment Services Edit link", "Not able to identify the Appointment Services Edit link in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(EditPatientInfoOverlayHeader_ELM, browser)) {
+		messagesMap.put("Appointment Services Edit Overlay", "Not able to identify the Appointment Services Edit overlay in enter patient information page");
+		status = WARNING;
+	    }
+	    switchToDefault(browser);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the Error messages in Enter patient
+     *          information page
+     * @author - Jagan B
+     * @Created -
+     * @Modified By -
+     * @Modified Date -18-Apr-12
+     ************************************************************* 
+     */
+
+    public static void VerifyErrorMessage(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FirstNameErrorMsg_ELM = "div[id='firstName1ErrorText']~CSS";
+	String LastNameErrorMsg_ELM = "div[id='lastName1ErrorText']~CSS";
+	String DoBErrorMsg_ELM = "div[id='dobYear1ErrorText']~CSS";
+	String GenderErrorMsg_ELM = "div[id='male_gender1ErrorText']~CSS";
+	String EmailErrorMsg_ELM = "div[id='emailaddressErrorText']~CSS";
+	String UseDifferentInformation_RDO = "input[id*='patientinformation1_diff']~CSS";
+	String PhoneNumErrorMsg_ELM = "div[id='phonenumber1ErrorText']~CSS";
+	String SubmitAppointment_BTN = "input[title='Confirm appointment']~CSS";
+	String EmailAddress_TXT = "input[id='emailaddress']~CSS";
+	String PhoneNum_TXT = "input[id='phonenumber1']~CSS";
+	String FirstName_TXT = "input[id*='firstName1']~CSS";
+	String LastName_TXT = "input[id*='lastName1']~CSS";
+	String ErrorMsgType = null, PatientOption = null, UserType = null, InvalidFirstName = null, InvalidLastName = null, InvalidEmailAddress = null, InvalidPhoneNum = null;
+	int NoOfPatients = 1;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ErrorMsgType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ErrorMsgType");
+	    PatientOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientOption");
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    InvalidFirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InvalidFirstName");
+	    InvalidLastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InvalidLastName");
+	    InvalidEmailAddress = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InvalidEmailAddress");
+	    InvalidPhoneNum = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InvalidPhoneNum").replace("-", "");
+
+	    if (ErrorMsgType.equalsIgnoreCase("Invalid")) {
+
+		if (!UserType.equalsIgnoreCase("Anonymous")) {
+		    if (getElementByProperty(EmailAddress_TXT, browser).getAttribute("value").equals("")) {
+			messagesMap.put("Verify if Location field is pre populated for a signed in user", "Location Field is not pre-populated");
+			status = WARNING;
+		    }
+
+		    if (getElementByProperty(PhoneNum_TXT, browser).getAttribute("value").equals("")) {
+			messagesMap.put("Verify if Location field is pre populated for a signed in user", "Location Field is not pre-populated");
+			status = WARNING;
+		    }
+		}
+
+		if (!clearAndEnterText(EmailAddress_TXT, InvalidEmailAddress, browser)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Email Address Field.");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(PhoneNum_TXT, InvalidPhoneNum, browser)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Phone No. Field");
+		    status = WARNING;
+		}
+		if (PatientOption.equalsIgnoreCase("Family")) {
+		    NoOfPatients = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients"));
+		}
+		for (int PatientIterator = 1; PatientIterator <= NoOfPatients; PatientIterator++) {
+		    if ((!UserType.equalsIgnoreCase("Anonymous")) && (PatientIterator == 1)) {
+			if (!isElementPresentVerifyClick(UseDifferentInformation_RDO, browser)) {
+			    throw new Exception("Unable to click on use Different Patient information for patient " + PatientIterator);
+			}
+		    }
+		    if (!clearAndEnterText(FirstName_TXT.replace("1", Integer.toString(PatientIterator)), InvalidFirstName, browser)) {
+			messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in First Name Field for Patient " + PatientIterator);
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(LastName_TXT.replace("1", Integer.toString(PatientIterator)), InvalidLastName, browser)) {
+			messagesMap.put("Data Entry issue in Scheduler Overlay", "Unable to enter value in Last Name Field for Patient " + PatientIterator);
+			status = WARNING;
+		    }
+
+		}
+
+	    }
+	    if (!isElementPresentVerifyClick(SubmitAppointment_BTN, browser)) {
+		throw new Exception("Unable to click Submit appointment.");
+	    }
+
+	    // Verify the display of the error messages
+	    if (!isElementPresentVerification(FirstNameErrorMsg_ELM, browser)) {
+		messagesMap.put("FirstName Error Message", "Firstname Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(LastNameErrorMsg_ELM, browser)) {
+		messagesMap.put("LaseName Error Message", "Lastname Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(DoBErrorMsg_ELM, browser)) {
+		messagesMap.put("DateofBirth Error Message", "Date of Birth Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(GenderErrorMsg_ELM, browser)) {
+		messagesMap.put("Gender Error Message", "Gender Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(EmailErrorMsg_ELM, browser)) {
+		messagesMap.put("EmailAddress Error Message", "Email Address Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(PhoneNumErrorMsg_ELM, browser)) {
+		messagesMap.put("Phone Number Error Message", "Phone Number Error Message is not displyed in enter patient information page");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is for the vaccine consent form verifications
+     * @author - Chezhiyan E
+     * @Created -04-Jan-12
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void printVaccineConsentFormVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String UserType = null;
+	String VaccineConsentME_CHK = "input[id='me']~CSS";
+	String VaccineConsentSomeone_CHK = "input[id='someone']~CSS";
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String FirstName_TXT = "input[id*='firstname']~CSS";
+	String LastName_TXT = "input[id*='lastname']~CSS";
+	String EmailID_TXT = "input[id*='emailId']~CSS";
+	String StreetAddress_TXT = "input[id*='streetAddress']~CSS";
+	String Cit_TXT = "input[id*='city']~CSS";
+	String Zipcode_TXT = "input[id*='zipCode']~CSS";
+	String[] PrePopulated_LST = { "select[id='gender']~CSS", "select[id*='Month']~CSS", "select[id*='Day']~CSS", "select[id*='Year']~CSS", "select[id*='state']~CSS" };
+	String BuildForm_BTN = "input[title='SUBMIT INFO AND BUILD FORM']~CSS";
+	String FormCreatedMsg_ELM = "//*[contains(text(),'Your vaccination request form has been created.')]~XPATH";
+	String PrePopulatedListValue = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+
+	    if (UserType.equalsIgnoreCase("Authenticated")) {
+		if (!isElementPresentVerifyClick(VaccineConsentME_CHK, browser)) {
+		    throw new Exception("Unable to clcik ME checkbox");
+		}
+
+		if (!isElementPresentVerifyClick(VaccineConsentSomeone_CHK, browser)) {
+		    throw new Exception("Unable to click Someone Checkbox");
+		}
+
+		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		    throw new Exception("Unable to Click continue button");
+		}
+
+		if (getElementByProperty(FirstName_TXT, browser).getAttribute("value").isEmpty() || getElementByProperty(LastName_TXT, browser).getAttribute("value").isEmpty()
+			|| getElementByProperty(EmailID_TXT, browser).getAttribute("value").isEmpty()) {
+		    messagesMap.put("Verify if first name, last name, Email ID fields are pre-populated for a Signed-In user", "first name, last name, Email ID fields are not pre-populated.");
+		    status = WARNING;
+		}
+
+		if (getElementByProperty(StreetAddress_TXT, browser).getAttribute("value").isEmpty() || getElementByProperty(Cit_TXT, browser).getAttribute("value").isEmpty()
+			|| getElementByProperty(Zipcode_TXT, browser).getAttribute("value").isEmpty()) {
+		    messagesMap.put("Verify if Street Address, Zipcode, City fields are pre-populated for a Signed-In user", "Street Address, Zipcode, City fields are not pre-populated.");
+		    status = WARNING;
+		}
+
+		for (int PrePopListBoxIterator = 0; PrePopListBoxIterator < PrePopulated_LST.length; PrePopListBoxIterator++) {
+		    PrePopulatedListValue = new Select(getElementByProperty(PrePopulated_LST[PrePopListBoxIterator], browser)).getFirstSelectedOption().getText();
+		    if (PrePopulatedListValue.equalsIgnoreCase("") || PrePopulatedListValue.equalsIgnoreCase("Month") || PrePopulatedListValue.equalsIgnoreCase("Day")
+			    || PrePopulatedListValue.equalsIgnoreCase("Year") || PrePopulatedListValue.equalsIgnoreCase("State")) {
+			messagesMap.put("Verify if the list boxes are prepopulated in print concent form page", "One or more of the list boxes are not prepopulated");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(BuildForm_BTN, browser)) {
+		throw new Exception("Unable to click on submit and build form");
+	    }
+
+	    if (!isElementPresentVerification(FormCreatedMsg_ELM, browser)) {
+		messagesMap.put("Build Form Verification", "Your vaccination request form has been created. is not displayed");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This is to navigate to schedule an appointment page from store
+     *          locator page
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date -04-Jan-12
+     ************************************************************* 
+     */
+
+    public static void findAStore(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String StoreLocator_LNK = "a[title='Store Locator']~CSS";
+	String Zipcode_TXT = "input[id='locator']~CSS";
+	String FluShotFilter_CHK = "input[id='fs']~CSS";
+	String FindStore_BTN = "input[id='findstore']~CSS";
+	String DetailsDirections_LNK = "a[title='Details']~CSS";
+	String ScheduleAppointmentOnline_LNK = "a[title='Schedule an appointment online']~CSS";
+	String ScheduleVaccinationHeader_ELM = "//h1[contains(text(),'Schedule a Vaccination')]~XPATH";
+	String ViewAllImmunizations_LNK = "a[title*='Immunizations4']~CSS";
+	String AvailableImmunizations_ELM = "//h1[contains(text(),'Available Immunizations at This Store')]~XPATH";
+	String Immunization1_LNK = "a[title='Pneumonia (Pneumococcal)']~CSS";
+	String Immunization2_LNK = "a[title='Flu (Influenza)']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(StoreLocator_LNK, browser)) {
+		throw new Exception("Unable to navigate to store locator page");
+	    }
+
+	    if (!clearAndEnterText(Zipcode_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode"), browser)) {
+		throw new Exception("Unable to enter Zipcode in Store Locator page");
+	    }
+
+	    if (!isElementPresentVerifyClick(FluShotFilter_CHK, browser)) {
+		messagesMap.put("Store Locator", "Flu shot filter is not selected");
+		status = WARNING;
+	    }
+
+	    if (!isElementPresentVerifyClick(FindStore_BTN, browser)) {
+		throw new Exception("Unable to find a store");
+	    }
+
+	    if (!isElementPresentVerifyClick(DetailsDirections_LNK, browser)) {
+		throw new Exception("Unable to navigate to store details page");
+	    }
+
+	    if (!isElementPresentVerifyClick(ViewAllImmunizations_LNK, browser)) {
+		messagesMap.put("View all immunizations", "Immunizations link is not clickable");
+		status = WARNING;
+	    }
+
+	    switchToOverlay(browser);
+
+	    if (!isElementPresentVerification(AvailableImmunizations_ELM, browser)) {
+		messagesMap.put("Available Immunizations overlay", "Available services overlay header is not displayed");
+		status = WARNING;
+		if (!(isElementPresentVerification(Immunization1_LNK, browser) || isElementPresentVerification(Immunization2_LNK, browser))) {
+		    messagesMap.put("Available Immunizations overlay", "Expected immunizations are not present");
+		    status = WARNING;
+		}
+	    }
+	    switchToDefault(browser);
+	    if (!isElementPresentVerifyClick(ScheduleAppointmentOnline_LNK, browser)) {
+		throw new Exception("Unable to navigate to click on schedule an appointment online from store details page");
+	    }
+
+	    if (!isElementPresentVerification(ScheduleVaccinationHeader_ELM, browser)) {
+		messagesMap.put("Store Locator", "Schedule a vaccination page is not present.");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This is to verify various links in the appointment
+     *          confirmation page
+     * @author - Mukesh varun R S
+     * @Created -09-May-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void AppoinmentConfirmationPageLinks(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ViewMapOverlay_LNK = "a[title*='View map']~CSS";
+	String EditAppointment_LNK = "a[href*='/pharmacy/enterprisescheduler/enterprise_scheduler_reschedule.jsp']~CSS";
+	String CancelAppointment_LNK = "a[href*='/pharmacy/enterprisescheduler/enterprise_scheduler_cancel_appointment']~CSS";
+	String PrintAppointment_LNK = "a[title='Print']~CSS";// Appointment
+	String ViewMapOverlay_TXT = "//h2[contains(text(),'Location and hours')]~XPATH";
+
+	// Print Scheduler
+	String MyAppointmentPage_TXT = "//h1[contains(text(),'Reschedule Appointment')]~XPATH";
+	String CancelAppointmentOveylay_TXT = "a[title='No, do not cancel this appointment']~CSS";
+	String OverlayClose_BTN = "a[title='Close']~CSS";
+	String ServicePrint_TAG = "//table[@id='appt_details_print']/thead/tr/td[2]/ul[1]~XPATH";
+	String NamePrint_TAG = "//table[@id='appt_details_print']/thead/tr/td/ul[1]~XPATH";
+	String Pharmacy_IMG = "img[title='pharmacy']~CSS";
+	String Pharmacy_ELM = "//p[contains(text(),'Please check in at the pharmacy counter.')]~XPATH";
+	String HealthCareClinic_IMG = "img[title='healthcare clinic']~CSS";
+	String HealthCareClinic_ELM = "//p[contains(text(),'Please check in at the touch-screen kiosk ')]~XPATH";
+	String Name = "First Second";
+	String Name1 = null;
+	String[] AppointmentToSelect = null;
+	String Service1 = null;
+	int NoOfIterations = 1;
+	int NoOfPatients = 0;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+		String AppointmentType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentType");
+		if (AppointmentType.equalsIgnoreCase("Pharmacy")) {
+		    if (!isElementPresentVerification(Pharmacy_IMG, browser)) {
+			messagesMap.put("Reschedule appointment page", "Reschedule page is not loaded");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Pharmacy_ELM, browser)) {
+			messagesMap.put("Reschedule appointment page", "Reschedule page is not loaded");
+			status = WARNING;
+		    }
+		} else if (AppointmentType.equalsIgnoreCase("Clinic")) {
+		    if (!isElementPresentVerification(HealthCareClinic_IMG, browser)) {
+			messagesMap.put("Reschedule appointment page", "Reschedule page is not loaded");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(HealthCareClinic_ELM, browser)) {
+			messagesMap.put("Reschedule appointment page", "Reschedule page is not loaded");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerifyClick(EditAppointment_LNK, browser)) {
+		    throw new Exception("Unable to find  to Edit Appointment link.");
+		}
+		if (!isElementPresentVerification(MyAppointmentPage_TXT, browser)) {
+		    messagesMap.put("Reschedule appointment page", "Reschedule page is not loaded");
+		    status = WARNING;
+		}
+		browserBack(browser);
+
+		if (!isElementPresentVerifyClick(CancelAppointment_LNK, browser)) {
+		    throw new Exception("Unable to find to cancel Appointment link.");
+		}
+		switchToOverlay(browser);
+
+		if (!isElementPresentVerifyClick(CancelAppointmentOveylay_TXT, browser)) {
+		    throw new Exception("Unable to navigate to Apointment Confirmation by closing cancel overlay page.");
+		}
+		switchToDefault(browser);
+
+		if (!isElementPresentVerification(ViewMapOverlay_LNK, browser)) {
+		    status = FAIL;
+		    throw new Exception("Unable to find to view map link.");
+		}else{
+			getElementByProperty(ViewMapOverlay_LNK, browser).sendKeys(Keys.RETURN);
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(ViewMapOverlay_TXT, browser)) {
+		    messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		    throw new Exception("Unable to navigate to Apointment Confirmation by closing view map overlay page.");
+		}
+		switchToDefault(browser);
+
+		NoOfPatients = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients"));
+		// # Modified :R S MUKESH VARUN Date:24/6/13
+		if (NoOfPatients == 1) {
+		    AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(":");
+		    NoOfIterations = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfTests"));
+		} else {
+		    NoOfIterations = NoOfPatients;
+		    AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption").split(":");
+
+		}
+		String WndHandle = browser.getWindowHandle();
+
+		if (!isElementPresentVerifyClick(PrintAppointment_LNK, browser)) {
+		    status = FAIL;
+		    throw new Exception("Unable to navigate to Print Appointment page.");
+		}
+		for (String NewWinHandle : browser.getWindowHandles()) {
+		    browser.switchTo().window(NewWinHandle);
+		}
+		System.err.print(browser.getTitle());
+		if (!browser.getTitle().equalsIgnoreCase("Print Scheduler")) {
+		    messagesMap.put("Printer friendly page", "Printer friendly page is not found");
+		    status = FAIL;
+		}
+		for (int PatientIterator = 1; PatientIterator <= NoOfIterations; PatientIterator++) {
+		    int chkflag = 0;
+		    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+		    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+		    Service1 = getElementByProperty(ServicePrint_TAG.replace("1", Integer.toString(PatientIterator)), browser).getText();
+		    Name1 = getElementByProperty(NamePrint_TAG.replace("1", Integer.toString(PatientIterator)), browser).getText();
+		    if (!Name1.equalsIgnoreCase(Name.replace("First", FirstName).replace("Second", LastName))) {
+			throw new Exception("name was not match in printer friendly page");
+		    }
+		    for (int i = 0; i < AppointmentToSelect.length; i++) {
+			if (Service1.contains(AppointmentToSelect[i])) {
+			    chkflag = 1;
+			}
+		    }
+		    if (chkflag == 0) {
+			status = FAIL;
+			throw new Exception("chk flag =0 ; name was not match in printer friendly page");
+		    }
+
+		}
+		browser.switchTo().window(WndHandle);
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to cancel the Scheduled Appointment
+     * @author - Dinesh Jayapal
+     * @Created -09-May-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void cancelScheduledAppointment(EventFiringWebDriver browser, StepBean stepBean) {
+
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+
+	String CancelAppointmentOverlay_LNK = "a>img[title*='Cancel this Appointment']~CSS";
+	String CancelMessage_LNK = "//h2[contains(text(),'Your Appointment has Been Canceled')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerifyClick(CancelAppointmentOverlay_LNK, browser)) {
+		throw new Exception("Unable to click on cancel an appointment in overlay ");
+	    }
+	    if (!isElementPresentVerification(CancelMessage_LNK, browser)) {
+		throw new Exception("Cancel Message is not available ");
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This is to verify Cancel confirmation page from appointment
+     *          confirmation page
+     * @author - Dinesh Jayapal
+     * @Created -09-May-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void CancelConfirmationPage(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String CancelConfirmation_TXT = "//font[contains(text(),'successfully canceled')]~XPATH";
+	String CancelAppointmentOveylay_BTN = "img[title*='Yes, Cancel this Appointment']~CSS";
+	// # Modified Added :R S MUKESH VARUN Date:24/6/13
+	String CancelAppointment_LNK = "a[href*='/pharmacy/enterprisescheduler/enterprise_scheduler_cancel_appointment']~CSS";
+	String Storelocator_LNK = "a[title*='Search for a clinic or pharmacy location']~CSS";
+	String Storelocator_TXT = "img[title='Store Locator']~CSS";
+	String AppointmentScheduler_LNK = "a[title='Schedule another appointment']~CSS";
+	String AppointmentScheduler_TXT = "//h1[contains(text(),'Appointment Scheduler')]~XAPTH";
+	String WalgreensHomePage_LNK = "a[title='Go to Walgreens home page']~CSS";
+	String WalgreensHomePage_TXT = "img[title='Walgreens']~CSS";
+	try {
+	    // verifying cancel appointment link
+	    if (!isElementPresentVerifyClick(CancelAppointment_LNK, browser)) {
+		throw new Exception("Unable to click on CancelAppointment link ");
+	    }
+	    switchToOverlay(browser);
+	    // verifying cancel appointment button in overlay
+	    if (!isElementPresentVerifyClick(CancelAppointmentOveylay_BTN, browser)) {
+		throw new Exception("Unable to click on cancel an appointment in overlay ");
+	    }
+	    // verifying Cancel confirmation message
+	    if (!isElementPresentVerification(CancelConfirmation_TXT, browser)) {
+		throw new Exception("Cancel Message is not available ");
+	    }
+	    // verifying store locator link
+	    if (!isElementPresentVerifyClick(Storelocator_LNK, browser)) {
+		throw new Exception("Unable to find  to Storelocator link.");
+	    }
+
+	    if (!isElementPresentVerification(Storelocator_TXT, browser)) {
+		messagesMap.put("Store locator page", "Store locator page is not loaded");
+		status = WARNING;
+	    }
+	    browserBack(browser);
+	    // Verifying appointment scheduler link
+	    if (!isElementPresentVerifyClick(AppointmentScheduler_LNK, browser)) {
+		throw new Exception("Unable to find  to AppointmentScheduler link.");
+	    }
+	    if (!isElementPresentVerification(AppointmentScheduler_TXT, browser)) {
+		messagesMap.put("AppointmentScheduler page", "AppointmentScheduler page is not loaded");
+		status = WARNING;
+	    }
+	    browserBack(browser);
+	    // verifying walgreens home page link
+	    if (!isElementPresentVerifyClick(WalgreensHomePage_LNK, browser)) {
+		throw new Exception("Unable to find  to Walgreens HomePage link.");
+	    }
+	    if (!isElementPresentVerification(WalgreensHomePage_TXT, browser)) {
+		messagesMap.put("Walgreens HomePage", "Walgreens HomePagepage is not loaded");
+		status = WARNING;
+	    }
+	    browserBack(browser);
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Reschedule the appointment and verify the
+     *          rescheduled information in rescheduled confirmation page
+     * @author -Jagan B
+     * @Created -09-May-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static int newselectAppointmentDayAndSession(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	// String ViewAvailableServices_LNK =
+	// "a[title*='View available services']~CSS";
+	String NextStepEnabled_BTN = "input[title='Next']~CSS";
+	String AppointmentReuslts_TBL = "//table[@class='avblty']/tbody/tr[Row]/td[Column]~XPATH";
+	String EnterPatientInformation_ELM = "//h2[contains(text(),'Enter Patient')]~XPATH";
+	String ConfirmAppointment_BTN = "input[title='Confirm appointment']~CSS";
+	String RescheduleAppointment_ELM = "//h1[contains(text(),'Reschedule Your Appointment')]~XPATH";
+	String Gender = null;
+	// # Modified :R S MUKESH VARUN Date:24/6/13
+	String FinalTime_ELM = "//div[3]/div/div/p[3]~XPATH";
+	// table[@id='appt_details']/tbody/tr/td[3]/ul/li
+	String RescheduleConfirmation_TXT = "//font[contains(text(),'You have successfully rescheduled your appointment.')]~XPATH";
+	int rowNumber = 0, TimeSlotSelected = 0;
+	int flag = 1, coloumnNumber = 3;
+	String Day = null, Date = null;
+	WebElement ApptTimeObject = null, ApptDayLink = null;
+	List<WebElement> TimeSlotList = null;
+	String SelectedTimeValue = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.containsKey("SchedulerOption")) {
+		if (!dataMap.get("SchedulerOption").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("SchedulerOption").get(0).equalsIgnoreCase("Reschedule")) {
+			coloumnNumber--;
+		    }
+		}
+	    }
+
+	    for (rowNumber = 2; rowNumber <= 5; rowNumber++)// increasing the
+							    // row value.
+	    {
+		for (; coloumnNumber <= 7; coloumnNumber++)// increasing
+							   // the
+							   // coloumn
+							   // value.
+		{
+		    ApptTimeObject = getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser);
+		    System.out.println("ApptTimeObject="+ApptTimeObject.getText());
+		    if ((ApptTimeObject != null) && (!ApptTimeObject.getAttribute("class").contains("disabled"))){
+			//verifying whether element is present or not.If yes means enter in to the loop.
+			System.out.println("Appointment table "+AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)));
+			if (ApptTimeObject.getText() != null && ApptTimeObject.getText().trim() != "") // Checking// value// of// the// element.If// value// is// there// enter// into// the// loop.
+			{
+			    ApptDayLink = ApptTimeObject.findElement(By.tagName("a"));
+			    System.out.println("ApptDayLink="+ApptDayLink.getText());
+				ApptDayLink.click();
+				// Update to include Selecting time slot
+				WebElement ApptdayObject = getElementByProperty(
+					AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber - 1)).replace("Column", Integer.toString(coloumnNumber)), browser); // to
+				// identify
+
+				Day = ApptdayObject.getText().split("\n")[0].toString();
+				Date = ApptdayObject.getText().split("\n")[1].toString();
+				ApptTimeObject = browser.findElement(By.xpath("//div[@id='time_container']//ul[@class='tlist']")); // same
+				// object
+				// ofter
+				// the
+				// time
+				// list
+				TimeSlotList = ApptTimeObject.findElements(By.tagName("li")); // is
+				int Max;
+				if (TimeSlotList.size() > 5) {
+				    Max = 4;
+				} else {
+				    Max = TimeSlotList.size();
+				}
+				TimeSlotSelected = generateRandomNumber(Max - 1, 0);
+				if (TimeSlotSelected < 0) {
+				    TimeSlotSelected += 1;
+				} else if (TimeSlotSelected > TimeSlotList.size()) {
+				    TimeSlotSelected = TimeSlotList.size();
+				}
+				SelectedTimeValue = TimeSlotList.get(TimeSlotSelected).getText();
+				TimeSlotList.get(TimeSlotSelected).findElement(By.tagName("a")).click();
+				if (!getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser).getText()
+					.contains(SelectedTimeValue)) {
+				    messagesMap.put("Issue while trying to select time slot", "The time slot selected is not updated in the area");
+				    status = WARNING;
+				}
+				flag = flag + 1;// increasing the flag value by 1
+				break;// coming out of the inner loop.
+			}
+		    }
+		}
+		if (flag == 2)// if Flag value reaches two means come out of the
+			      // outer loop.
+		{
+		    break;// coming out of the outer loop.
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(NextStepEnabled_BTN, browser)) {
+		throw new Exception("Unable to select Date/TIme");
+	    }
+
+	    if (!isElementPresentVerification(EnterPatientInformation_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+
+	    if (!isElementPresentVerifyClick(ConfirmAppointment_BTN, browser)) {
+		throw new Exception("Unable to Click on confirmation button");
+	    }
+
+	    if (!isElementPresentVerification(RescheduleAppointment_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+
+	    // Change the format of the Rescheduled date
+	    String dateformat = dateFormatChanger(Date, "MM/dd", "MMMM dd");
+	    String truncatedDate = Integer.toString(Integer.parseInt(dateformat.split(" ")[1]));// In
+												// order
+												// to
+												// truncate
+												// the
+												// pre-zero
+												// in
+												// date
+												// (Ex:
+												// 02
+												// ->2)
+	    // Forming the string from rescheduled day and date
+	    String finaldate = Day.concat(", ").concat(dateformat.split(" ")[0]).concat(" ").concat(truncatedDate);
+
+	    // find the rescheduled day and date element in reschedule
+	    // confirmation page
+	    if (!isElementPresentVerification("//p[contains(text(),'" + finaldate + "')]", browser)) {
+		messagesMap.put("Rescheduled Day and date element", "Rescheduled day and date element is not present in appointment confirmation page");
+		status = WARNING;
+	    }
+
+	    // Verfiy the rescheduled time is displayed in rescheduled
+	    // confirmation page
+	    if (!getElementByProperty(FinalTime_ELM, browser).getText().replace("  ", " ").equalsIgnoreCase(SelectedTimeValue)) {
+		messagesMap.put("Rescheduled Time", "Rescheduled time is not displayed in appointment confirmation page");
+		status = WARNING;
+	    }
+
+	    if (!isElementPresentVerification(RescheduleConfirmation_TXT, browser)) {
+		throw new Exception("Reschedule Message is not available ");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    rowNumber = 0;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    rowNumber = 0;
+	    stepBean.setStepStatus(status);
+	}
+	return rowNumber;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the functionality of links in My
+     *          Appointment page
+     * @author -
+     * @Created -Jagan B.
+     * @Modified By -
+     * @Modified Date -09-May-13
+     ************************************************************* 
+     */
+
+    public static void MyAppointmentPageLinkNavigation(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String ViewMapOverlay_LNK = "a[title='View map & hours - Opens a simulated dialog']~CSS";
+	String PrintAppointment_LNK = "//a[contains(text(),'Print Appointment')]~XPATH";
+	String ViewMapOverlay_TXT = "//h2[contains(text(),'Location and hours')]~XPATH";
+	String OverlayClose_BTN = "a[title='Close']~CSS";
+	String Service_TAG = "//div[@id='white_content']/div[2]/div[2]/div/p[2]/a~XPATH";
+	String ServicePrint_TAG = "//table[@id='appt_details_print']/thead/tr[3]/td[2]/ul[1]~XPATH";
+	String Name_TAG = "//div[@id='white_content']/div[2]/div[2]/div/p~XPATH";
+	String NamePrint_TAG = "//table[@id='appt_details_print']/thead/tr[3]/td[1]/ul[1]~XPATH";
+	String Name, NameinPrinter = null;
+	String Service, ServiceinPrinter = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // Verify the functionality of ViewMap and hours link
+	    if (!isElementPresentVerifyClick(ViewMapOverlay_LNK, browser)) {
+		throw new Exception("Unable to find to view map link.");
+	    }
+
+	    switchToOverlay(browser);
+
+	    if (!isElementPresentVerification(ViewMapOverlay_TXT, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		throw new Exception("Unable to navigate to MyApointment Page by closing view map overlay");
+	    }
+
+	    switchToDefault(browser);
+
+	    // Verify the functionality of Print Appointment link
+
+	    Service = getElementByProperty(Service_TAG, browser).getText();
+	    Name = getElementByProperty(Name_TAG, browser).getText();
+
+	    String WndHandle = browser.getWindowHandle();
+	    if (!isElementPresentVerifyClick(PrintAppointment_LNK, browser)) {
+		status = FAIL;
+		throw new Exception("Unable to navigate to Print Appointment page.");
+	    }
+
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+	    }
+	    if (!browser.getTitle().equalsIgnoreCase("Print Scheduler")) {
+		messagesMap.put("Printer friendly page", "Printer friendly page is not found");
+		status = FAIL;
+		// throw new Exception("Printer friendly page is not found");
+	    }
+
+	    ServiceinPrinter = getElementByProperty(ServicePrint_TAG, browser).getText();
+	    NameinPrinter = getElementByProperty(NamePrint_TAG, browser).getText();
+
+	    if (!Service.equalsIgnoreCase(ServiceinPrinter)) {
+		status = FAIL;
+		throw new Exception("Unable to find the service name which you have scheduled in Printer friendly page");
+	    }
+	    if (!Name.equalsIgnoreCase(NameinPrinter)) {
+		status = FAIL;
+		throw new Exception("Unable to find the patient name which you have scheduled in Printer friendly page");
+	    }
+
+	    browser.close();
+	    browser.switchTo().window(WndHandle);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to search the scheduled appointment
+     * @author -
+     * @Created - Jagan B
+     * @Modified By -
+     * @Modified Date -09-May-13
+     ************************************************************* 
+     */
+
+    public static void findScheduledAppointment(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Month_LST = "select[id*='dobMonth']~CSS";
+	String Day_LST = "select[id*='dobDay']~CSS";
+	String Year_LST = "select[id*='dobYear']~CSS";
+	String ConfirmationNumber_TXT = "input[id='confirmationnumber']~CSS";
+	String ErrorMsg_ELM = "//strong[contains(text(),'No Match Found:')]~XPATH";
+	String Submit_BTN = "input[name='submit']~CSS";
+	String MyAppointment_ELM = "//font[contains(text(),'Scheduled Appointment')]~XPATH";
+	String ConfirmationNumber = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // 1. Get the DOB and Confirmation number
+	    String[] DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB").split("-");
+	    ConfirmationNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentNo");
+
+	    if (dataMap.get("ErrorMessageValidation") == null) {
+		throw new Exception("'ErrorMessageValidation' should not be NULL");
+	    }
+	    String ErrorMsgValidation = dataMap.get("ErrorMessageValidation").get(0);
+
+	    new Select(getElementByProperty(Month_LST, browser)).selectByValue(DOB[0]);
+	    new Select(getElementByProperty(Day_LST, browser)).selectByValue(DOB[1]);
+	    new Select(getElementByProperty(Year_LST, browser)).selectByValue(DOB[2]);
+
+	    if (!clearAndEnterText(ConfirmationNumber_TXT, ConfirmationNumber, browser)) {
+		messagesMap.put("Data Entry issue in Find your appointment page", "Unable to enter value in Confirmation number Field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		throw new Exception("Uable to click on submit button");
+	    }
+
+	    if (!isElementPresentVerification(MyAppointment_ELM, browser)) {
+		if (isElementPresentVerification(ErrorMsg_ELM, browser)) {
+		    messagesMap.put("My Appointment page Error Message", "No Match found error message is displyed on the My Appointment page");
+		    status = PASS;
+		} else {
+		    messagesMap.put("My Appointment page", "Unable to navigate to the My Appointment page ");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!ErrorMsgValidation.equalsIgnoreCase("Yes") || ErrorMsgValidation == null) {
+		if (!browser.findElement(By.cssSelector("div[id='grey_bg']")).getText().contains(ConfirmationNumber)) {
+		    messagesMap.put("My Appointment page", "Unable to find the entered appointment in My Appointment page");
+		    status = WARNING;
+		}
+	    } else {
+		if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+		    messagesMap.put("My Appointment page Error Message", "No Match found error message is displyed on the My Appointment page");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the display of scheduled appointments
+     *          in scheduler landing page
+     * @author -
+     * @Created -Jagan B.
+     * @Modified By -kalaiselvan
+     * @Modified Date -09-May-13
+     ************************************************************* 
+     */
+
+    public static void VerifydisplayofScheduledAppointment(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String UpcomingAppointment_ELM = "//div[contains(@class,'Bgbluebox')]~XPATH";
+	String ViewAllAppointments_LNK = "a[title='View all appointments']~CSS";
+	List<WebElement> UpcomingAppointments = null;
+	String[] AppointmentToSelect = null;
+	List<WebElement> Appointment = new ArrayList<WebElement>();
+	int NoofAppointment;
+	String NoAppointment_ELM = "//p[contains(text(),'You have no')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int NoOfPatients = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients"));
+	    String ErrorMsgValidation = dataMap.get("ErrorMessageValidation").get(0);
+	    if (NoOfPatients > 1) {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption").split(":");
+	    } else {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(":");
+	    }
+
+	    if (!ErrorMsgValidation.equalsIgnoreCase("Yes")) {
+		UpcomingAppointments = getElementByProperty(UpcomingAppointment_ELM, browser).findElements(By.tagName("ul"));
+		for (NoofAppointment = 0; NoofAppointment < UpcomingAppointments.size(); NoofAppointment++) {
+		    for (int i = 0; i < AppointmentToSelect.length; i++) {
+			if (!UpcomingAppointments.get(NoofAppointment).getText().contains(AppointmentToSelect[i])) {
+			    status = FAIL;
+			    throw new Exception("aoointment is not present in the schedular landing page in the up coming appointment section");
+			}
+		    }
+		}
+		if (!(Appointment.size() <= 2)) {
+		    messagesMap.put("No.of Appointments displayed", "More than two appointment details are present in appointment Landing page");
+		    status = WARNING;
+		}
+
+	    } else {
+		if (!isElementPresentVerification(NoAppointment_ELM, browser)) {
+		    messagesMap.put("Scheduler landing page Error Message", "No Scheduled appointment error message is not displyed on the Scheduler landing page");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(ViewAllAppointments_LNK, browser)) {
+		    throw new Exception("Unable to clink on View all appointment link");
+		}
+		if (!isElementPresentVerification(NoAppointment_ELM, browser)) {
+		    messagesMap.put("My Appointment page Error Message", "No Scheduled appointment error message is not displyed on the My Appointment page");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Reschedule the appointment and verify the
+     *          rescheduled information in rescheduled confirmation page
+     * @author -
+     * @Created -Jagan B
+     * @Modified By -
+     * @Modified Date -09-May-13
+     ************************************************************* 
+     */
+
+    public static void RescheduleAppointment(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String NextStepEnabled_BTN = "input[title='Next']~CSS";
+	String AppointmentReuslts_TBL = "//table/tbody/tr[Row]/td[Column]~XPATH";
+	String EnterPatientInformation_ELM = "//h2[contains(text(),'Enter Patient')]~XPATH";
+	String ConfirmAppointment_BTN = "input[title='Confirm appointment']~CSS";
+	String RescheduleAppointment_ELM = "//h1[contains(text(),'Reschedule Your Appointment')]~XPATH";
+	String FinalTime_ELM = "//table[@id='appt_details']/tbody/tr/td[3]/ul/li~XPATH";
+	String GenderMale_RDO = "input[id='male_gender1']~CSS";
+	String GenderFemale_RDO = "input[id='female_gender1']~CSS";
+	int rowNumber = 0, TimeSlotSelected = 0;
+	int flag = 1, coloumnNumber = 3;
+	String Day = null, Date = null;
+	String finaldate, dateformat = null;
+	WebElement ApptTimeObject = null, ApptDayLink = null;
+	List<WebElement> TimeSlotList = null;
+	String SelectedTimeValue = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.containsKey("SchedulerOption")) {
+		if (!dataMap.get("SchedulerOption").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("SchedulerOption").get(0).equalsIgnoreCase("Reschedule")) {
+			coloumnNumber++;
+		    }
+		}
+	    }
+
+	    for (rowNumber = 2; rowNumber <= 5; rowNumber++)// increasing the
+							    // row value.
+	    {
+		for (; coloumnNumber <= 7; coloumnNumber++)// increasing
+							   // the
+							   // coloumn
+							   // value.
+		{
+		    ApptTimeObject = getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser);
+		    if ((ApptTimeObject != null) && (!ApptTimeObject.getAttribute("class").contains("disabled")))// verifying
+														 // whether
+														 // element
+														 // is
+														 // present
+														 // or
+														 // not.
+														 // If
+														 // yes
+														 // means
+														 // enter
+														 // in
+														 // to
+														 // the
+														 // loop.
+		    {
+			if (ApptTimeObject.getText() != null || ApptTimeObject.getText() != "") // Checking
+												// value
+												// of
+												// the
+												// element.If
+												// value
+												// is
+												// there
+												// enter
+												// into
+												// the
+												// loop.
+			{
+			    ApptDayLink = ApptTimeObject.findElement(By.tagName("a"));
+			    {
+				ApptDayLink.click();
+				// Update to include Slecting time slot
+				WebElement ApptdayObject = getElementByProperty(
+					AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber - 1)).replace("Column", Integer.toString(coloumnNumber)), browser); // to
+				// identify
+				// Update to store the selected day and date
+				// value
+				Day = ApptdayObject.getText().split("\n")[0].toString();
+				Date = ApptdayObject.getText().split("\n")[1].toString();
+
+				ApptTimeObject = browser.findElement(By.xpath("//div[@id='time_container']"));
+				// same
+				// object
+				// ofter
+				// the
+				// time
+				// list
+				TimeSlotList = ApptTimeObject.findElement(By.tagName("ul")).findElements(By.tagName("li")); // is
+				// present
+				TimeSlotSelected = 3;// generateRandomNumber(TimeSlotList.size(),
+						     // 0);
+				if (TimeSlotSelected < 0) {
+				    TimeSlotSelected += 1;
+				} else if (TimeSlotSelected >= TimeSlotList.size()) {
+				    TimeSlotSelected = TimeSlotList.size() - 1;
+				}
+
+				SelectedTimeValue = TimeSlotList.get(TimeSlotSelected).getText();
+				TimeSlotList.get(TimeSlotSelected).findElement(By.tagName("a")).click();
+				if (!getElementByProperty(AppointmentReuslts_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser).getText()
+					.contains(SelectedTimeValue)) {
+				    messagesMap.put("Issue while trying to select time slot", "The time slot selected is not updated in the area");
+				    status = WARNING;
+				}
+				flag = flag + 1;// increasing the flag value by
+						// 1
+				break;// coming out of the inner loop.
+			    }
+			}
+		    }
+		}
+		if (flag == 2)// if Flag value reaches two means come out of the
+			      // outer loop.
+		{
+		    break;// coming out of the outer loop.
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(NextStepEnabled_BTN, browser)) {
+		throw new Exception("Unable to select Date/TIme");
+	    }
+
+	    if (!isElementPresentVerification(EnterPatientInformation_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+	    if (!(getElementByProperty(GenderMale_RDO, browser).isSelected() || getElementByProperty(GenderFemale_RDO, browser).isSelected())) {
+		String Gender = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Gender");
+		if (Gender.equalsIgnoreCase("Male")) {
+		    if (!isElementPresentVerifyClick(GenderMale_RDO, browser)) {
+			messagesMap.put("Data Entry issue in Patient information page", "Unable to select the gender value");
+			status = WARNING;
+		    }
+		} else {
+		    if (!isElementPresentVerifyClick(GenderFemale_RDO, browser)) {
+			messagesMap.put("Data Entry issue in Patient information page", "Unable to select the gender value");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(ConfirmAppointment_BTN, browser)) {
+		throw new Exception("Unable to Click on confirmation button");
+	    }
+	    if (!isElementPresentVerification(RescheduleAppointment_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+
+	    // Change the format of the Rescheduled date
+	    dateformat = dateFormatChanger(Date, "MM/dd", "MMMM dd");
+	    String truncatedDate = Integer.toString(Integer.parseInt(dateformat.split(" ")[1]));// In
+												// order
+												// to
+												// truncate
+												// the
+												// pre-zero
+												// in
+												// date
+												// (Ex:
+												// 02
+												// ->2)
+	    // Forming the string from rescheduled day and date
+	    finaldate = Day.concat(", ").concat(dateformat.split(" ")[0]).concat(" ").concat(truncatedDate);
+
+	    // find the rescheduled day and date element in reschedule
+	    // confirmation page
+	    if (!isElementPresentVerification("//p[contains(text(),'" + finaldate + "')]", browser)) {
+		messagesMap.put("Rescheduled Day and date element", "Rescheduled day and date element is not present in appointment confirmation page");
+		status = WARNING;
+	    }
+
+	    // Verfiy the rescheduled time is displayed in rescheduled
+	    // confirmation page
+	    if (!getElementByProperty(FinalTime_ELM, browser).getText().replace("  ", " ").equalsIgnoreCase(SelectedTimeValue)) {
+		messagesMap.put("Rescheduled Time", "Rescheduled time is not displayed in appointment confirmation page");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    rowNumber = 0;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    rowNumber = 0;
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This is to verify AppoinmentsResults Page
+     * @author - Mukesh varun R S
+     * @Created -8/MAY/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyTheLinksInAppoinmentsResultsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Calender_BTN = "//img[@title='Select a different date']~XPATH";
+	String AppointmentResults_TBL = "//table/tbody/tr[Row]/td[Column]~XPATH";
+	String content = "//div[@id='content']/div[2]/div/div/div[2]~XPATH";
+	String ApptTimeObject1 = "//div[@id='time_container']/ul~XPATH";
+	String Cancel_LNK = "a[id='back']~CSS";
+	String ScheduleAnAppointment_ELM = "//h2[contains(text(),'Schedule an Appointment: Vaccinations')]~XPATH";
+	String ViewMapOverlay_LNK = "a[title='View map & hours - Opens a simulated dialog']~CSS";
+	String ViewMapOverlay_ELM = "//h2[contains(text(),'Location and hours')]~XPATH";
+	String OverlayClose_BTN = "a[title='Close']~CSS";
+	String SeeAvailbleService_LNK = "a[title*='See available services']~CSS";
+	String AvailbleService_ELM = "//h2[contains(text(),'Available Services')]~XPATH";
+	int rowNumber = 0, flag = 1;
+	WebElement ApptTimeObject = null, ApptDayLink = null;
+	List<WebElement> TimeSlotList = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerification(Calender_BTN, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Calendar icon not present");
+		status = FAIL;
+	    }
+
+	    if (!isElementPresentVerifyClick(ViewMapOverlay_LNK, browser)) {
+		throw new Exception("Unable to find to view map link.");
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(ViewMapOverlay_ELM, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = FAIL;
+	    }
+	    if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		throw new Exception("Unable to navigate to Apointment Confirmation by closing view map overlay page.");
+	    }
+	    switchToDefault(browser);
+	    if (!isElementPresentVerifyClick(SeeAvailbleService_LNK, browser)) {
+		throw new Exception("Unable to find See Availble Service link.");
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(AvailbleService_ELM, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = FAIL;
+	    }
+	    if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		throw new Exception("Unable to navigate to Appointment Confirmation by closing view map overlay page.");
+	    }
+	    switchToDefault(browser);
+	    TimeSlotList = getElementByProperty(content, browser).findElements(By.cssSelector("a[title='Edit - Opens a simulated dialog']"));
+	    TimeSlotList.get(0).click();
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(ScheduleAnAppointment_ELM, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = FAIL;
+	    }
+	    getElementByProperty(Cancel_LNK, browser).click();
+	    switchToDefault(browser);
+	    TimeSlotList.get(1).click();
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(ScheduleAnAppointment_ELM, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = FAIL;
+	    }
+	    getElementByProperty(Cancel_LNK, browser).click();
+	    switchToDefault(browser);
+	    for (rowNumber = 2; rowNumber <= 5; rowNumber++) {
+		for (int coloumnNumber = 1; coloumnNumber <= 7; coloumnNumber++) {
+
+		    ApptTimeObject = getElementByProperty(AppointmentResults_TBL.replace("Row", Integer.toString(rowNumber)).replace("Column", Integer.toString(coloumnNumber)), browser);
+		    if ((ApptTimeObject != null) && (!ApptTimeObject.getAttribute("class").contains("disabled")))// verifying
+														 // whether
+														 // element
+														 // is
+														 // present
+														 // or
+														 // not.if
+														 // yes
+														 // means
+														 // enter
+														 // into
+														 // the
+														 // loop.
+		    {
+			if (ApptTimeObject.getText() != null || ApptTimeObject.getText() != "") // Checking
+												// value
+												// of
+												// element.If
+												// value
+												// is
+												// there
+												// enter
+												// into
+												// the
+												// loop
+			{
+			    ApptDayLink = ApptTimeObject.findElement(By.tagName("a"));
+			    {
+				ApptDayLink.click();
+				// checking for the time slots
+				if (!isElementPresentVerification(ApptTimeObject1, browser)) {
+				    messagesMap.put("Select Appointment Date and Time", "Time slots are not loaded");
+				    status = FAIL;
+
+				}
+				flag = flag + 1;
+				break;
+
+			    }
+			}
+		    }
+		}
+		if (flag == 2) {
+		    break;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This is to verify the past appointments section
+     * @author - Mukesh varun R S
+     * @Created -8/MAY/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void verificationOfPastAppointmentSection(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ViewMapOverlay_LNK = "a[title='View map & hours - Opens a simulated dialog']~CSS";
+	String ViewMapOverlay_ELM = "//h2[contains(text(),'Location and hours')]~XPATH";
+	String OverlayClose_BTN = "a[title='Close']~CSS";
+	String AppointmentHistory_LNK = "a[title='View all appointments']~CSS";
+	String Myappointments_ELM = "//h1[contains(text(),'My Appointments')]~XPATH";
+	String Timeslot_Proc = "//div[@id='appt_block']/div/div[1]~XPATH";
+	int NoOfAppointments = 0, NoofIteration = 0;
+	int m1 = 0, y1 = 0, m = 0, y = 0;
+	List<WebElement> TimeSlotList = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(AppointmentHistory_LNK, browser)) {
+		messagesMap.put("AppointmentHistory_LNK", "AppointmentHistory_LNK not loaded");
+		status = FAIL;
+	    }
+	    if (!isElementPresentVerification(Myappointments_ELM, browser)) {
+		messagesMap.put("Select Appointment Date and Time", "Enter Patient information page is not loaded after clicking on Next Step.");
+		status = WARNING;
+	    }
+	    String datetime = new SimpleDateFormat("yyyy:MM:dd:HHmmss").format(Calendar.getInstance().getTime());// getting
+														 // the
+														 // system
+														 // date
+	    String[] date = datetime.split(":");
+	    m1 = Integer.parseInt(date[1]);
+	    y1 = Integer.parseInt(date[0]);
+	    TimeSlotList = browser.findElements(By.xpath("//div[@id='appt_block']/div/div"));
+	    NoofIteration = TimeSlotList.size();
+	    for (int i = 2; i <= NoofIteration; i++) {// getting the each
+						      // appoinment
+		m = 0;
+		y = 0;
+		// getting the time slot in the each appointment
+		if (getElementByProperty(Timeslot_Proc.replace("1", Integer.toString(i)), browser).getAttribute("id").contains("white_content")) {
+		    String[] Dateinpage1 = getElementByProperty(Timeslot_Proc.replace("1", Integer.toString(i)), browser).getText().split(",");// getting
+																	       // date
+																	       // valuue
+																	       // from
+																	       // time
+																	       // slot
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("January")) {
+			m = 1;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("Febtuary")) {
+			m = 2;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("March")) {
+			m = 3;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("April")) {
+			m = 4;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("May")) {
+			m = 5;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("June")) {
+			m = 6;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("July")) {
+			m = 7;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("August")) {
+			m = 8;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("September")) {
+			m = 9;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("October")) {
+			m = 10;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("November")) {
+			m = 11;
+		    }
+		    if (Dateinpage1[1].split(" ")[1].equalsIgnoreCase("December")) {
+			m = 12;
+		    }
+		    y = Integer.parseInt(Dateinpage1[2].split(" ")[1]);
+		    // checking the date in the appoinment with the date from
+		    // system date
+		    int agedif = 0;
+		    while (!((m1 == m) && (y1 == y))) // verifyin whethre it is
+						      // date difference is
+						      // greater than 15 months
+		    {
+			if (m < 12) {
+			    m++;
+			} else {
+			    y++;
+			    m = 1;
+			}
+			agedif++;
+		    }
+		    NoOfAppointments++;// adding no of appointment for each
+				       // appoinmnet
+		    if (agedif > 15) {
+			status = FAIL;
+			throw new Exception("appointment greater then the 15 month are displyed");
+		    }
+		}
+	    }
+	    if (NoOfAppointments > 50) // verifying the number of appointment is
+				       // less than 50
+	    {
+		status = FAIL;
+		throw new Exception("Number of the appointment displyed exceeds 50");
+	    }
+	    if (!isElementPresentVerifyClick(ViewMapOverlay_LNK, browser)) {
+		throw new Exception("Unable to find to view map link.");
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(ViewMapOverlay_ELM, browser)) {
+		messagesMap.put("store locator overlay page", "store locator page is not loaded");
+		status = FAIL;
+	    }
+	    if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		throw new Exception("Unable to navigate to Apointment Confirmation by closing view map overlay page.");
+	    }
+	    switchToDefault(browser);
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Enter the values in the Schedule an appoinmetn page
+     *          and error verificatrion in the same page
+     * @author - Mukesh Varun
+     * @Created -
+     * @Modified By -
+     * @Modified Date -27-May-13
+     ************************************************************* 
+     */
+    public static void verificationinScheduleAnAppointmnetPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String WalgreensAppointmentScheduler_LNK = "//ul[2]/li[2]/a[@title='Appointment Scheduler']~XPATH";
+	String WalgreensAppointmentScheduler_TXT = "//h1[contains(text(),'Appointment Scheduler')]~XPATH";
+	String ScheduleAnAppointment_TXT = "//h1[contains(text(),'Schedule an Appointment')]~XPATH";
+	String ScheduleNowSchedularLandingPage_LNK = "area[title='Schedule now']~CSS";
+	String Age_LST = "select[id='patientAge']~CSS";
+	String InvalidErrorMessage_TXT = "//b[contains(text(),'Please review the fields marked red and make all necessary')]";
+	String InlineErrorLocation_TXT = "//p[contains(text(),'Enter a valid address or city & state or ZIP code.')]~XAPTH";
+	String InlineErrorAge_TXT = "//p[contains(text(),'Select your age.')]~XAPTH";
+	String Next_BTN = "//*[@id='enabled'][@value='next']";
+	String NoOfPatient_LST = "select[name*='noOfPatients']~CSS";
+	String DiabledNext_IMG = "//img[@id='disabled']";
+	String Zipcode_TXT = "input[id='patientZipcode']~CSS";
+	String SelectAService_ELM = "//h1[contains(text(),'Select Appointment Service')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+	    if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		throw new Exception("Not able to click on Pharmacy link");
+	    }
+
+	    if (!isElementPresentVerifyClick(WalgreensAppointmentScheduler_LNK, browser)) {
+		throw new Exception("Unable to navigate to Walgreens Appointment Scheduler page");
+	    }
+	    if (!isElementPresentVerification(WalgreensAppointmentScheduler_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page Issue", "Walgreens Appointment Scheduler page is not loaded properly.");
+		status = WARNING;
+	    }
+	    // # Added :R S MUKESH VARUN Date:24/6/13
+	    // getElementByProperty(ScheduleNowSchedularLandingPage_LNK,
+	    // browser).sendKeys(Keys.RETURN);
+	    if (!isElementPresentVerifyClick(ScheduleNowSchedularLandingPage_LNK, browser)) {
+		throw new Exception("Unable to click Schedule Now link Schedular Landing Page");
+	    }
+	    if (!isElementPresentVerification(ScheduleAnAppointment_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page Issue", "Schedule An Appointment page is not loaded properly.");
+		status = WARNING;
+	    }
+	    if (dataMap.containsKey("ErrorValidation")) {
+		if (!dataMap.get("ErrorValidation").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("ErrorValidation").get(0).equalsIgnoreCase("Yes")) {
+			if (!UserType.equalsIgnoreCase("ANONYMOUS")) {
+			    if (getElementByProperty(Zipcode_TXT, browser).getAttribute("value").isEmpty()) {
+				messagesMap.put("Verify if Location field is pre-populated for a Signed-In user", "Location Field is not pre-populated.");
+				status = WARNING;
+			    }
+			}
+			if (!clearAndEnterText(Zipcode_TXT, "", browser)) {
+			    messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+			    status = WARNING;
+			}
+			new Select(getElementByProperty(Age_LST, browser)).selectByValue("2");
+			new Select(getElementByProperty(Age_LST, browser)).selectByIndex(0);
+			if (!isElementPresentVerification(InlineErrorAge_TXT, browser)) {
+			    messagesMap.put("Walgreens Appointment Scheduler page Issue", "Inline error message for no entry in age is not present");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerification(InlineErrorLocation_TXT, browser)) {
+			    messagesMap.put("Walgreens Appointment Scheduler page Issue", "Inline error message for no entry in location is not present");
+			    status = WARNING;
+			}
+			if (browser.findElement(By.xpath(Next_BTN)).isDisplayed()) {
+			    status = WARNING;
+			    throw new Exception("next BTN is displayed in the schedule an appointmnet page when error message are present");
+			}
+			getElementByProperty(Zipcode_TXT, browser).sendKeys("!@#$%");
+			new Select(getElementByProperty(Age_LST, browser)).selectByIndex(3);
+			if (browser.findElement(By.xpath(Next_BTN)) != null) {
+			    browser.findElement(By.xpath(Next_BTN)).click();
+			} else {
+			    throw new Exception("unable to click next btn in the schedule an appointment page");
+			}
+			if (browser.findElement(By.xpath(InvalidErrorMessage_TXT)) == null) {
+			    messagesMap.put("Walgreens Appointment Scheduler page Issue", "Global error message for invalid entry in location is not present");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerification(InlineErrorLocation_TXT, browser)) {
+			    messagesMap.put("Walgreens Appointment Scheduler page Issue", "Inline error message for invalid entry in location is not present");
+			    status = WARNING;
+			}
+			if (browser.findElement(By.xpath(DiabledNext_IMG)) == null) {
+			    messagesMap.put("Walgreens Appointment Scheduler page Issue", "next button is enabled while error messages are present");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+		status = WARNING;
+	    }
+	    String Age = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Age");
+	    new Select(getElementByProperty(Age_LST, browser)).selectByVisibleText(Age);
+
+	    String NoOfPatients = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients");
+
+	    new Select(getElementByProperty(NoOfPatient_LST, browser)).selectByValue(NoOfPatients);
+	    if (browser.findElement(By.xpath(Next_BTN)) != null) {
+		browser.findElement(By.xpath(Next_BTN)).click();
+	    } else {
+		throw new Exception("unable to click next btn in the schedule an appointment page");
+	    }
+	    if (!isElementPresentVerification(SelectAService_ELM, browser)) {
+		messagesMap.put("Select A Service page is nort found", "after clicking nxt btn in schedule appointment page");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method enters details in Select a service for an
+     *          appointment and error validation on the Select a service page
+     * @author - Mukesh Varun R S
+     * @Created -
+     * @Modified By -
+     * @Modified Date -27-May-13
+     ************************************************************* 
+     */
+
+    public static void enterDetailsInSelectAppointmentService(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	String AppointmentToSelect = null;
+	String Edit_LNK = "a[title='Edit']~CSS";
+	String ScheduleAnAppointment_TXT = "//h1[contains(text(),'Schedule an Appointment')]~XPATH";
+	String Next_BTN = "//img[@title='Next']";
+	String IncompetableInformationmesage_ELM = "//strong[contains(text(),' Please schedule your first appointment, and then make a second appointment for the additional service.')]~XPATH";
+	String Errormesage_ELM = "//strong[contains(text(),'We can only schedule 4 services at one time. Remove a service to add a different one.')]~XPATH";
+	String Age_LST = "select[id='patientAge']~CSS";
+	String NextInScheduleAppointmentPage_BTN = "//*[@id='enabled'][@value='next']";
+	String SelectAService_ELM = "//h1[contains(text(),'Select Appointment Service')]~XPATH";
+	String SelectOption_ELM = "//div[@id='services_link']";
+	String ViewHealthCareLocationcss_LNK = "a[title='View all Healthcare Clinic locations']~CSS";
+	String LocatinAndWaitTime_ELM = "//h1[contains(text(),'Locations & Wait Times')]~XPATH";
+	String LearnMore_LNK = "a[title*='Learn more']~CSS";
+	List<WebElement> FluHealthTestOptions = null;
+	int Iterator = 0, NoOfTests = 1, NoOfTestsFlag = 0;
+	int AppointmentIterator = 0;
+	WebElement Pharmacymouseover = null;
+	String AppointmentsToMoseOver = null, ExpectedObject = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String NoOfPatients = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients");
+	    NoOfTests = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfTests"));
+	    if (dataMap.containsKey("MouseOverValidation")) {
+		if (!dataMap.get("MouseOverValidation").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("MouseOverValidation").get(0).equalsIgnoreCase("Yes")) {
+			for (AppointmentIterator = 15; AppointmentIterator < 22; AppointmentIterator++) {
+			    AppointmentsToMoseOver = getTestData(dataMap.get("InputFileName").get(1), dataMap.get("SheetName").get(1),
+				    dataMap.get("RowId").get(1).replace("1", Integer.toString(AppointmentIterator)), "ServiceName");
+			    ExpectedObject = getTestData(dataMap.get("InputFileName").get(1), dataMap.get("SheetName").get(1),
+				    dataMap.get("RowId").get(1).replace("1", Integer.toString(AppointmentIterator)), "ExpectedObject");
+			    FluHealthTestOptions = browser.findElement(By.xpath(SelectOption_ELM)).findElements(By.tagName("p"));
+			    for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+				if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+				    if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppointmentsToMoseOver)) {
+					Pharmacymouseover = FluHealthTestOptions.get(Iterator).findElement(By.tagName("label"));
+
+					performHoverClickAction(Pharmacymouseover, LearnMore_LNK, browser);
+
+					String WndHandle = browser.getWindowHandle();
+					for (String NewWinHandle : browser.getWindowHandles()) {
+					    browser.switchTo().window(NewWinHandle);
+					}
+
+					if (isElementPresentVerification(ExpectedObject, browser)) {
+					    browser.close();
+					    browser.switchTo().window(WndHandle);
+					} else {
+					    throw new Exception("unable to find nxt page for " + AppointmentsToMoseOver);
+					}
+
+					String reason = "//h2[contains(text(),'the reason for your visit')]~XPATH";
+					if (isElementPresentVerification(reason, browser)) {
+					    getUrl(browser, browser.getCurrentUrl());
+					}
+					break;
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	    if (dataMap.containsKey("PageValidation")) {
+		if (!dataMap.get("PageValidation").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("PageValidation").get(0).equalsIgnoreCase("Yes")) {
+			if (Integer.parseInt(NoOfPatients) == 1) {
+			    FluHealthTestOptions = browser.findElement(By.xpath(SelectOption_ELM)).findElements(By.tagName("p"));
+			    // getting this from the user, as some scripts are
+			    // specific about vaccination thats supposed to be
+			    // checked
+			    String[] arrAppointmentsToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions")
+				    .split(":");
+			    // check for the label inside the "p" tag, then if
+			    // the text matches the appointment the user wants
+			    // to choose, select the checkbox inside that
+			    // particular "p" tag
+			    for (AppointmentIterator = 0; AppointmentIterator < arrAppointmentsToSelect.length; AppointmentIterator++) {
+				for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+				    // this is used to prevent the null pointer
+				    // exception that we'd otherwise get
+				    if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+					if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(arrAppointmentsToSelect[AppointmentIterator])) {
+
+					    FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='checkbox']")).click();
+					    break;
+					}
+				    }
+				}
+			    }
+			    if (!isElementPresentVerification(IncompetableInformationmesage_ELM, browser)) {
+				messagesMap.put("Error mesage is not displayed", "Incompetable Error mesage is not displayed");
+				status = WARNING;
+			    }
+			    if (arrAppointmentsToSelect.length > 4) {
+				if (!getElementByProperty(Errormesage_ELM, browser).isDisplayed()) {
+				    messagesMap.put("Error mesage is not displayed", "Number of service limit Error mesage is not displayed");
+				    status = WARNING;
+				}
+			    } else {
+				status = WARNING;
+				messagesMap.put("will Not verfiy all error messages please", "enter more than 4 services to select");
+			    }
+			} else {
+			    FluHealthTestOptions = getElementByProperty(SelectOption_ELM, browser).findElements(By.tagName("p"));
+			    String[] AppToVerify = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NAForFamily").split(":");
+			    for (AppointmentIterator = 0; AppointmentIterator < (AppToVerify.length - 1); AppointmentIterator++) {
+				for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+				    if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+					if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppToVerify[2])) {
+					    status = WARNING;
+					    throw new Exception("CMMA option is present in the select a service page");
+					}
+					if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppToVerify[AppointmentIterator])) {
+					    if (FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='radio']")).isEnabled()) {
+						status = WARNING;
+						throw new Exception(AppToVerify[AppointmentIterator] + "radio button is enabled in the select a service page");
+					    }
+					    break;
+					}
+				    }
+				}
+			    }
+			}
+			if (!isElementPresentVerifyClick(Edit_LNK, browser)) {
+			    status = WARNING;
+			    throw new Exception("Cannot find the edit link");
+			}
+			if (!isElementPresentVerification(ScheduleAnAppointment_TXT, browser)) {
+			    status = WARNING;
+			    messagesMap.put("Select a sservice page issue", "cannot find schedule an appointment page after clinking edit link ");
+			}
+			getElementByProperty(Age_LST, browser).sendKeys(Keys.TAB);
+			if (browser.findElement(By.xpath(NextInScheduleAppointmentPage_BTN)) != null) {
+			    browser.findElement(By.xpath(NextInScheduleAppointmentPage_BTN)).click();
+			} else {
+			    throw new Exception("not able to click next BTN in the schedule an appointmnet page");
+			}
+			if (!isElementPresentVerification(SelectAService_ELM, browser)) {
+			    messagesMap.put("issue in the select a service page", "Select A Service heading Not able to find when navigating from schedule appointmnet page");
+			    status = WARNING;
+			}
+			String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+			if (Zipcode.equalsIgnoreCase(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PharmacyOnlyPincode"))) {
+			    if (!(isElementPresentVerifyClick(ViewHealthCareLocationcss_LNK, browser))) {
+				messagesMap.put("issue in the select a service page", "View Health Care Locationcss link not fonud");
+				status = WARNING;
+			    }
+			    if (!isElementPresentVerification(LocatinAndWaitTime_ELM, browser)) {
+				messagesMap.put("cannot navigate from schedule appoinment page", "Location And WaitTime page is not found");
+				status = WARNING;
+			    }
+			    browser.navigate().back();
+			}
+		    }
+		}
+	    }
+	    if (Integer.parseInt(NoOfPatients) > 1) {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+		FluHealthTestOptions = getElementByProperty(SelectOption_ELM, browser).findElements(By.tagName("p"));
+		for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+		    if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+			if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().equalsIgnoreCase(AppointmentToSelect)) {
+			    FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='radio']")).click();
+			    break;
+			}
+		    }
+		}
+	    } else {
+		NoOfTestsFlag = 0;
+		FluHealthTestOptions = getElementByProperty(SelectOption_ELM, browser).findElements(By.tagName("p"));
+		// getting this from the user, as some scripts are specific
+		// about vaccination thats supposed to be checked
+		String[] arrAppointmentsToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(":");
+		// check for the label inside the "p" tag, then if the text
+		// matches the appointment the user wants to choose, select the
+		// checkbox inside that particular "p" tag
+		for (AppointmentIterator = 0; AppointmentIterator < arrAppointmentsToSelect.length; AppointmentIterator++) {
+		    for (Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+			if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+			    if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(arrAppointmentsToSelect[AppointmentIterator])) {
+
+				FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='checkbox']")).click();
+				Thread.sleep(1000);
+				if (FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='checkbox']")).isSelected()) {
+				    NoOfTestsFlag++;
+				}
+
+				break;
+			    }
+			}
+		    }
+		}
+
+		// this checks if all the specified appointments have been
+		// selected
+		if (!(NoOfTestsFlag == NoOfTests)) {
+		    messagesMap.put("Data Entry issue in Scheduler Overlay", "Not all of the expected Appointments were selected");
+		    status = WARNING;
+		}
+	    }
+	    if (browser.findElement(By.xpath(Next_BTN)) != null) {
+		browser.findElement(By.xpath(Next_BTN)).click();
+	    } else {
+		status = FAIL;
+		throw new Exception("Unable to click Next button in the select a service page");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method enter details to LPA form from service details
+     *          page
+     * @author - Mukesh Varun
+     * @Created -
+     * @Modified By -
+     * @Modified Date -27-May-13
+     ************************************************************* 
+     */
+
+    public static void SelectAppointmentServicePageFromServiceDetailsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Zipcode_TXT = "input[id='patientZipcode']~CSS";
+	String Age_TXT = "select[id='patientAge']~CSS";
+	String NoOfPatient_TXT = "select[name*='noOfPatients']~CSS";
+	String ScheduleNow_BTN = "//input[@title='Schedule Now']~XPATH";
+	String SelectAService_ELM = "//h1[contains(text(),'Select Appointment Service')]~XPATH";
+	String SelectOption_ELM = "//div[@id='services_link']";
+	String LearnMore_LNK = "a[title*='Learn More']~CSS";
+	String AppointmentsToMoseOver = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+	    String Age = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Age");
+	    String NoOfPatients = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients");
+
+	    if (Integer.parseInt(NoOfPatients) == 1) {
+		AppointmentsToMoseOver = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions");
+	    } else {
+		AppointmentsToMoseOver = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption");
+	    }
+	    List<WebElement> FluHealthTestOptions = browser.findElement(By.xpath(SelectOption_ELM)).findElements(By.tagName("p"));
+	    for (int Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+		if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+		    if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppointmentsToMoseOver)) {
+			WebElement Pharmacymouseover = FluHealthTestOptions.get(Iterator).findElement(By.tagName("label"));
+			performHoverClickAction(Pharmacymouseover, LearnMore_LNK, browser);
+			break;
+		    }
+		}
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+		status = WARNING;
+	    }
+	    new Select(getElementByProperty(Age_TXT, browser)).selectByVisibleText(Age);
+	    new Select(getElementByProperty(NoOfPatient_TXT, browser)).selectByValue(NoOfPatients);
+	    if (!isElementPresentVerifyClick(ScheduleNow_BTN, browser)) {
+		status = FAIL;
+		throw new Exception("Not able to click schedule now in the service details page");
+	    }
+	    if (!isElementPresentVerification(SelectAService_ELM, browser)) {
+		status = FAIL;
+		throw new Exception("Select A Service page is not found when navigating from the service details page");
+	    }
+	    for (int Iterator = 0; Iterator < FluHealthTestOptions.size(); Iterator++) {
+		if (FluHealthTestOptions.get(Iterator).findElements(By.tagName("label")).size() != 0) {
+		    if (FluHealthTestOptions.get(Iterator).findElement(By.tagName("label")).getText().contains(AppointmentsToMoseOver)) {
+			if (Integer.parseInt(NoOfPatients) == 1) {
+			    if (!FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='checkbox']")).isSelected()) {
+				status = FAIL;
+				throw new Exception("the service you chosen is not preselected in the Select A service page");
+			    }
+			    break;
+			} else {
+			    if (!FluHealthTestOptions.get(Iterator).findElement(By.cssSelector("input[type='radio']")).isSelected()) {
+				status = FAIL;
+				throw new Exception("the service you chosen is not preselected in the Select A service page");
+			    }
+			    break;
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method verify the Special Messaging Overlay
+     * @author - Mukesh Varun R S
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void SpecialMessagingOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	String Next_BTN = "img[title='Next']~CSS";
+	String NextInSpecialOverlay_BTN = "//input[@value='next']";
+	String AppointmentResult_ELM = "//h1[contains(text(),'Appointment Results')]~XPATH";
+
+	String Flushot_ELM = "//h1[contains(text(),'Specific State Regulations for the Flu Shot ')]~XPATH";
+	String OngoingHealthCondition_ELM = "//h1[contains(text(),'Information about the management of ongoing')]~XPATH";
+	String Pysical_ELM = "//h1[contains(text(),'Information about your physical')]~XPATH";
+	String[] AppointmentToSelect = null;
+	int NoOfoption = 1, NxtBtnFlag = 0;
+	Map<String, String> messagesMap = null;
+
+	String BeforeSpecialMessage_ELM = "//p[contains(text(),'This assessment is offered to select Medicare Advantage members and should only be scheduled')]~XPATH";
+	String CMMA_ELM = "//h1[contains(text(),'Comprehensive Medicare Member Assessment')]~XPATH";
+	String HealthPlan_TXT = "select[id='healthplan']~CSS";
+	String Assessment_TXT = "select[id='assessment']~CSS";
+	String HealthPlan = null, Assessment = null;
+
+	String BloodPressureScreening_ELM = "//h1[contains(text(),'Information about your blood pressure screening')]~XPATH";
+	String CholesterolScreening_ELM = "//h1[contains(text(),'Information about your cholesterol screening')]~XPATH";
+	String DiabetesScreening_ELM = "//h1[contains(text(),'Information about your diabetes screening')]~XPATH";
+	String HealthScreening_ELM = "//h1[contains(text(),'Information about your health screening')]~XPATH";
+	String HealthScreeningWithRiskAssessment_ELM = "//h1[contains(text(),'health risk assessment')]~XPATH";
+	int CMMAFlag = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.containsKey("HealthPlan")) {
+		if (!dataMap.get("HealthPlan").get(0).equalsIgnoreCase(null)) {
+		    HealthPlan = dataMap.get("HealthPlan").get(0);
+		}
+	    }
+	    if (dataMap.containsKey("Assessment")) {
+		if (!dataMap.get("Assessment").get(0).equalsIgnoreCase(null)) {
+		    Assessment = dataMap.get("Assessment").get(0);
+		}
+	    }
+
+	    String[] AppointmentToVerify = getTestData(dataMap.get("InputFileName").get(1), dataMap.get("SheetName").get(1), dataMap.get("RowId").get(1), "Services").split(":");
+	    String NoOfPatients = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients");
+	    if (Integer.parseInt(NoOfPatients) > 1) {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyAppointmentOption").split(":");
+	    } else {
+		AppointmentToSelect = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentOptions").split(":");
+	    }
+	    NoOfoption = AppointmentToSelect.length;
+	    if (NoOfoption > 4) {
+		NoOfoption = 4;
+	    }
+	    for (int i = 0; i < NoOfoption; i++) {
+		for (int j = 0; j < AppointmentToVerify.length; j++) {
+		    if (AppointmentToSelect[i].equalsIgnoreCase(AppointmentToVerify[j])) {
+			NxtBtnFlag = 1;
+			switchToOverlay(browser);
+			switch (j) {
+			case 0:
+			    if (!isElementPresentVerification(Pysical_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Camp, sports, or annual school physicals mesasage is not displayed");
+			    }
+			    break;
+			case 1:
+			    if (!isElementPresentVerification(Pysical_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Administrative physicals mesage is not displayed");
+			    }
+			    break;
+			case 2:
+			    if (!isElementPresentVerification(OngoingHealthCondition_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Ongoing Health Condition message is not displayed");
+			    }
+			    break;
+			case 3:
+
+			    if (!isElementPresentVerification(Flushot_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Flu shot message is not displayed");
+			    }
+			    break;
+			// # added by:R S Mukesh Varun DATE:24/6/13
+			case 4:
+			    if (!isElementPresentVerification(BeforeSpecialMessage_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "'Before Special Message'   message is not displayed");
+			    }
+			    CMMAFlag = 1;
+			    break;
+			case 5:
+			    if (!isElementPresentVerification(BloodPressureScreening_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Blood Pressure Screening message is not displayed");
+			    }
+			    break;
+			case 6:
+			    if (!isElementPresentVerification(CholesterolScreening_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Cholesterol Screening message is not displayed");
+			    }
+			    break;
+			case 7:
+			    if (!isElementPresentVerification(DiabetesScreening_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Diabetes Screening message is not displayed");
+			    }
+			    break;
+			case 8:
+			    if (!isElementPresentVerification(HealthScreening_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Health Screening message is not displayed");
+			    }
+			    break;
+			case 9:
+			    if (!isElementPresentVerification(HealthScreeningWithRiskAssessment_ELM, browser)) {
+				status = WARNING;
+				messagesMap.put("Message not diaplayed in Special message overlay", "Health Screening With Risk Assessment message is not displayed");
+			    }
+			    break;
+			default:
+			}
+		    }
+		}
+	    }
+	    if (NxtBtnFlag == 1) {
+		if (!isElementPresentVerifyClick(Next_BTN, browser)) {
+		    status = FAIL;
+		    throw new Exception("Unable to click Next button");
+		}
+
+		if (CMMAFlag == 1) {
+		    if (!isElementPresentVerification(CMMA_ELM, browser)) {
+			status = WARNING;
+			messagesMap.put("Message not diaplayed in Special message overlay", "CMMA message is not displayed");
+		    }
+
+		    new Select(getElementByProperty(HealthPlan_TXT, browser)).selectByVisibleText(HealthPlan);// selectByValue(a);
+		    new Select(getElementByProperty(Assessment_TXT, browser)).selectByVisibleText(Assessment);
+		    if (!isElementPresentVerifyClick(NextInSpecialOverlay_BTN, browser)) {
+			status = FAIL;
+			throw new Exception("Unable to click Next button in the cmma overlay");
+		    }
+		}
+		switchToDefault(browser);
+	    }
+	   /* switchToOverlay(browser);
+	    if (!isElementPresentVerifyClick(NextInContact_BTN, browser)) {
+		status = FAIL;
+		throw new Exception("Unable to click Next button");
+	    }
+
+	    Thread.sleep(10000);
+	    if (!isElementPresentVerification(AppointmentResult_ELM, browser)) {
+		status = WARNING;
+		throw new Exception("Unable to find the appointments results page");
+	    }*/
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method verify the Special Messaging Overlay
+     * @author - Mukesh Varun R S
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void HealthCareLinicInHomePage(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String HealthCareClinic_LNK = "//a[@title='Healthcare Clinic']~XPATH";
+	String HealthCareClinic_ELM = "//h1[contains(text(),'Healthcare Clinic')]~XPATH";
+	String HealthCareClinicHomePage_ELM = "//a[@title='Healthcare Clinic']~XPATH";
+	WebElement Pharmacymouseover = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(HealthCareClinicHomePage_ELM, browser)) {
+		status = FAIL;
+		throw new Exception("Unable to click the health care clinic block in the home page");
+	    }
+	    if (!isElementPresentVerification(HealthCareClinic_ELM, browser)) {
+		status = FAIL;
+		messagesMap.put("ERRor while clicking health care clinic in home page mouse over", "cannot naviagte to health care clinic page");
+	    }
+	    getElementByProperty(Pharmacy_IMG, browser).click();
+	    Thread.sleep(5000);
+	    Pharmacymouseover = getElementByProperty(Pharmacy_IMG, browser);
+	    performHoverClickAction(Pharmacymouseover, HealthCareClinic_LNK, browser);
+	    if (!isElementPresentVerification(HealthCareClinic_ELM, browser)) {
+		status = FAIL;
+		messagesMap.put("ERRor while performing mouse over", "cannot naviagte to health care clinic page");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method select an appointment in the My appointment Page
+     *          with confirmation Number
+     * @author - Mukesh Varun R S
+     * @Created -19/6/13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void MyAppointmentSearchingAppointment(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	String LinkToClick = null;
+	String Content_ELM = "div[id='content']~CSS";
+	String AppointmentBlock_ELM = "div[id='grey_bg']";
+	String Reschedule_LNK = "a[title='Reschedule Appointment']";
+	String Cancel_LNK = "a[href*='/pharmacy/enterprisescheduler/enterprise_scheduler_cancel_appointment']";
+	List<WebElement> Appointments = null, noofblocks = null;
+	int brkFlag = 0;
+
+	Map<String, String> messagesMap = null;
+	String AppointmentNo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AppointmentNo");
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.containsKey("LinkToClick")) {
+		if (!dataMap.get("LinkToClick").get(0).equalsIgnoreCase(null)) {
+		    LinkToClick = dataMap.get("LinkToClick").get(0);
+		}
+	    }
+	    Appointments = getElementByProperty(Content_ELM, browser).findElements(By.cssSelector(AppointmentBlock_ELM));
+	    for (int i = 0; i < Appointments.size(); i++) {
+		noofblocks = Appointments.get(i).findElements(By.tagName("p"));
+		for (int j = 0; j < noofblocks.size(); j++) {
+		    if (noofblocks.get(j).getText().contains(AppointmentNo)) {
+			if (LinkToClick.equalsIgnoreCase("Reschedule")) {
+			    Appointments.get(i).findElement(By.cssSelector(Reschedule_LNK)).click();
+			    brkFlag = 1;
+			    break;
+			} else {
+			    Appointments.get(i).findElement(By.cssSelector(Cancel_LNK)).click();
+			    brkFlag = 1;
+			    break;
+			}
+		    }
+		}
+		if (brkFlag == 1) {
+		    break;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method verify the Special Messaging Overlay
+     * @author - Mukesh Varun R S
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void enterSignUpInformation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String SpecialEmailOffers_LNK = "a[title='Special Email Offers']~CSS";
+	String SignUpForEmailOffers_ELM = "//h1[contains(text(),'Sign up for Email Offers & Health Information')]~XPATH";
+	String Email_TXT = "input[id='emailsignup']~CSS";
+	String Zip_TXT = "input[id='zip']~CSS";
+	String SignUp_TXT = "input[name='signup']~CSS";
+	String SuccessMSGInFirstPage = "//p[contains(text(),'Thanks for signing up')]~XPATH";
+	String HealthCareClinic_CHK = "input[id='Healthcare Clinic News & Special Offers']~CSS";
+	String SuccessMsgWithHCC_ELM = "//p[contains(text(),'Healthcare Clinic News & Special Offers')]~XAPTH";
+
+	String SignUpHomePage_BTN = "input[id='email-sign-up']~CSS";
+	String EmailHomePage_TXT = "input[id='email']~CSS";
+	String ThankYou_ELM = "//*[contains(text(),'Thanks for signing up!')]~XAPTH";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(SpecialEmailOffers_LNK, browser)) {
+		status = FAIL;
+		throw new Exception("unable to click Special Email Offers LNK in home page");
+	    }
+	    if (!isElementPresentVerification(SignUpForEmailOffers_ELM, browser)) {
+		status = FAIL;
+		throw new Exception("unable to navigate to Sign Up For Email offers & health info");
+	    }
+
+	    getElementByProperty(Email_TXT, browser).sendKeys(randomEmailGenerator());
+	    getElementByProperty(Zip_TXT, browser).sendKeys(dataMap.get("ZipCode").get(0));
+	    if (!isElementPresentVerifyClick(SignUp_TXT, browser)) {
+		status = FAIL;
+		throw new Exception("unable to click the sign up btn in the email offers and health information page");
+	    }
+	    if (!isElementPresentVerification(SuccessMSGInFirstPage, browser)) {
+		status = FAIL;
+		throw new Exception("unable to find succes messageinnthe thank you for signing up page");
+	    }
+	    if (!isElementPresentVerifyClick(HealthCareClinic_CHK, browser)) {
+		status = FAIL;
+		throw new Exception("unable to check HCC CHK box in the thank you for signing up page");
+	    }
+	    if (!isElementPresentVerifyClick(SignUp_TXT, browser)) {
+		status = FAIL;
+		throw new Exception("unable to clcik sign up btn in the thank you for signing up page");
+	    }
+	    // if (!isElementPresentVerification(SuccessMsgWithHCC_ELM,
+	    // browser)) {
+	    // status = FAIL;
+	    // throw new
+	    // Exception("unable to find succes messageinnthe thank you for signing up page");
+	    // }
+	    if (isElementPresentVerification(HealthCareClinic_CHK, browser)) {
+		status = FAIL;
+		throw new Exception("HCC CHK box is present in the thank you for signing up page");
+	    }
+	    getElementByProperty(Pharmacy_IMG, browser).click();
+	    getElementByProperty(EmailHomePage_TXT, browser).sendKeys(randomEmailGenerator());
+
+	    if (!isElementPresentVerifyClick(SignUpHomePage_BTN, browser)) {
+		status = FAIL;
+		throw new Exception("unable to click sihn up btn in the footer of pharmacy home page");
+	    }
+
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+	    }
+	    if (!browser.getTitle().equalsIgnoreCase("Confirmation | Email Subscriptions Window | Walgreens")) {
+		messagesMap.put("fail in the sign up btn", "confirmation page is not found");
+		status = FAIL;
+	    }
+	    if (!isElementPresentVerifyClick(ThankYou_ELM, browser)) {
+		status = FAIL;
+		throw new Exception("unable to find thank you for signing up page");
+	    }
+	    if (!isElementPresentVerifyClick(HealthCareClinic_CHK, browser)) {
+		status = FAIL;
+		throw new Exception("unable to check HCC CHK box in the thank you for signing up page");
+	    }
+	    if (!isElementPresentVerifyClick(SignUp_TXT, browser)) {
+		status = FAIL;
+		throw new Exception("unable to clcik sign up btn in the thank you for signing up page");
+	    }
+	    if (!isElementPresentVerifyClick(ThankYou_ELM, browser)) {
+		status = FAIL;
+		throw new Exception("unable to find thank you for signing up page");
+	    }
+	    if (isElementPresentVerification(HealthCareClinic_CHK, browser)) {
+		status = FAIL;
+		throw new Exception("HCC CHK box is present in the thank you for signing up page");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - New Schedule landing page links verifications
+     * 
+     * 
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void verifyNewSchedulePageLinks(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	String Zipcode_TXT = "input[id='patientZipcode']~CSS";
+	String Age_TXT = "select[id='patientAge']~CSS";
+	String NoOfPatient_TXT = "select[name*='noOfPatients']~CSS";
+	String ScheduleNow_BTN = "//input[@title='Schedule Now']";
+	String SelectAService_ELM = "//h1[contains(text(),'Select Appointment Service')]~XPATH";
+	String Pharmacy_IMG = "a[class='menu_Pharmacy']~CSS";
+	String WalgreensAppointmentScheduler_LNK = "a[title='Appointment Scheduler']~CSS";
+	String WalgreensAppointmentScheduler_TXT = "//h1[contains(text(),'Appointment Scheduler')]~XPATH";
+	String Vaccine_LNK = "//a[@title='Vaccines']~XPATH";
+	String VaccineService_LNK = "//a[@title='Chickenpox series (Varicella)']~XPATH";
+	String VaccineServiceName_TXT = "//h1[contains(text(),'Chickenpox (Varicella) Vaccine')]~XPATH";
+	String ScheduleVacc_LNK = "//strong[contains(text(),'Schedule a')]~XPATH";
+	String ScheduleVacc_TXT = "//h1[contains(text(),'Schedule an Appointment')]~XPATH";
+	String HealthCare_LNK = "//a[@title='Health Screenings & Testing']~XPATH";
+	String HealthCareService_LNK = "//a[@title='Health screening']~XPATH";
+	String HealthCareServiceHeader_TXT = "//h1[contains(text(),'Health Screening')]~XPATH";
+	String HealthCareServiceNavigation_LNK = "//a[@title='Healthcare Clinic nearest you']~XPATH";
+	String HealthCareServiceNavigation_TXT = "//img[@title='Store Locator']~XPATH";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Schedule now validation
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Location");
+	    String PageValidations = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PageValidations");
+	    String ServiceValidations = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ServiceValidations");
+	    if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		throw new Exception("Not able to click on Pharmacy link");
+	    }
+
+	    if (!isElementPresentVerifyClick(WalgreensAppointmentScheduler_LNK, browser)) {
+		throw new Exception("Unable to navigate to Walgreens Appointment Scheduler page");
+	    }
+	    if (!isElementPresentVerification(WalgreensAppointmentScheduler_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page", "Walgreens Appointment Scheduler page is not loaded properly.");
+		status = WARNING;
+	    }
+	    // Service Validation Links
+	    if (ServiceValidations.equalsIgnoreCase("Yes")) {
+
+		if (!isElementPresentVerifyClick(Vaccine_LNK, browser)) {
+		    messagesMap.put("Vaccine Link", "Not able to click the Vaccine link");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(VaccineService_LNK, browser)) {
+		    messagesMap.put("Vaccine Service Link", "Not able to Find the Vaccine Service Link");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(VaccineServiceName_TXT, browser)) {
+		    messagesMap.put("Vaccine Service Text", "Not able to Find the Vaccine Service Text");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(ScheduleVacc_LNK, browser)) {
+		    messagesMap.put("Schedule Vaccine Service Link", "Not able to Find the Schedule Vaccine Service Link");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(ScheduleVacc_TXT, browser)) {
+		    messagesMap.put("Schedule Vaccine Service Text", "Not able to Find the Schedule Vaccine Service Text");
+		    status = WARNING;
+		}
+		// Navigation back to the schedular landing page
+		String ScheduleLandPage_LNK = "//a[@title='Appointment Scheduler']~XPATH";
+		if (!isElementPresentVerifyClick(ScheduleLandPage_LNK, browser)) {
+		    messagesMap.put("Schedular landing page link", "Not able to click the Schedular landing page link");
+		    status = WARNING;
+		}
+		// Service validation for the Health test link in the
+		// service details page
+		if (!isElementPresentVerifyClick(HealthCare_LNK, browser)) {
+		    messagesMap.put("Health care link", "Not able to click the Health care link");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(HealthCareService_LNK, browser)) {
+		    messagesMap.put("Health care Text", "Not able to click the Health care Text");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(HealthCareServiceHeader_TXT, browser)) {
+		    messagesMap.put("Health care service Header", "Health care service header text is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(HealthCareServiceNavigation_LNK, browser)) {
+		    messagesMap.put("Health care service Link", "Health care service Link is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(HealthCareServiceNavigation_TXT, browser)) {
+		    messagesMap.put("Store Locator page", "Store Locator page is not displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		throw new Exception("Not able to click on Pharmacy link");
+	    }
+	    if (!isElementPresentVerifyClick(WalgreensAppointmentScheduler_LNK, browser)) {
+		throw new Exception("Unable to navigate to Walgreens Appointment Scheduler page");
+	    }
+	    if (!isElementPresentVerification(WalgreensAppointmentScheduler_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page Issue", "Walgreens Appointment Scheduler page is not loaded properly.");
+		status = WARNING;
+	    }
+	    // PageValidation going to happen if give YES
+	    // PageValidations
+	    String UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+	    if (PageValidations.equalsIgnoreCase("Yes")) {
+		if (UserType.equalsIgnoreCase("loggedin")) {
+
+		    String ObjectToBeClick[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ObjectToBeClick").split(":");
+		    String ObjectToBeVerified[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ObjectToBeVerified").split(":");
+		    String TextToBeVerified[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TextToBeVerified").split(":");
+		    // Text verification in the landing page
+		    if (TextToBeVerified.length == TextToBeVerified.length)
+			for (int j = 0; j < TextToBeVerified.length; j++) {
+			    if (!isElementPresentVerification(TextToBeVerified[j], browser)) {
+				messagesMap.put("Pharmacy service Details page", TextToBeVerified[j] + "Expected Text is not displayed.");
+				status = WARNING;
+			    }
+			}
+		    // Link verification in the landing page
+		    if (ObjectToBeClick.length == ObjectToBeVerified.length)
+			for (int i = 0; i < ObjectToBeClick.length; i++)
+			    if (isElementPresentVerifyClick(ObjectToBeClick[i], browser)) {
+				if (!isElementPresentVerification(ObjectToBeVerified[i], browser)) {
+				    messagesMap.put("Schedule Appointment", ObjectToBeVerified[i] + " object is not displayed.");
+				    status = WARNING;
+				}
+				CommonLibrary.browserBack(browser);
+			    }
+		}
+	    }
+
+	    // Schedule Now error Validation
+	    if (getElementByProperty(Zipcode_TXT, browser).getAttribute("value").isEmpty()) {
+		messagesMap.put("Verify if Location field is pre-populated for a Signed-In user", "Location Field is not pre-populated.");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, "", browser)) {
+		messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+		status = WARNING;
+	    }
+	    new Select(getElementByProperty(Age_TXT, browser)).selectByIndex(0);
+	    if (browser.findElement(By.xpath(ScheduleNow_BTN)).isDisplayed()) {
+		throw new Exception("ScheduleNow BTN is displayed in the schedule an appointmnet page when error message are present");
+	    }
+	    getElementByProperty(Zipcode_TXT, browser).sendKeys("@$@$%@#%");
+	    new Select(getElementByProperty(Age_TXT, browser)).selectByIndex(3);
+	    if (browser.findElement(By.xpath(ScheduleNow_BTN)) != null) {
+		browser.findElement(By.xpath(ScheduleNow_BTN)).click();
+	    }
+	    // Error messageVaidation
+	    String InvalidErrorMessage_TXT = "//b[contains(text(),'Please review the fields marked red and make all necessary')]~XPATH";
+	    String InlineErrorLocation_TXT = "//p[contains(text(),'Enter a valid address or city & state')]~XPATH";
+
+	    if (!isElementPresentVerification(InlineErrorLocation_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page", "Inline error message for invalid entry in location is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(InvalidErrorMessage_TXT, browser)) {
+		messagesMap.put("Walgreens Appointment Scheduler page", "Service Error message for invalid entry is not present");
+		status = WARNING;
+	    }
+	    CommonLibrary.browserBack(browser);
+	    // Schedule now validation navigation without error
+	    // message
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+		status = WARNING;
+	    }
+	    String Age = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Age");
+	    new Select(getElementByProperty(Age_TXT, browser)).selectByVisibleText(Age);
+	    new Select(getElementByProperty(NoOfPatient_TXT, browser)).selectByValue("2");
+	    String NoOfPatients = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfPatients");
+	    new Select(getElementByProperty(NoOfPatient_TXT, browser)).selectByValue(NoOfPatients);
+	    if (!isElementPresentVerifyClick(ScheduleNow_BTN, browser)) {
+		throw new Exception("Not able to click schedule now in the service details page");
+	    }
+	    if (!isElementPresentVerification(SelectAService_ELM, browser)) {
+		throw new Exception("Select A Service page is not found when navigating from the service details page");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the Health Care Clinic Check box in
+     *          the patient details for any user/appointment
+     * @author - Mukesh Varun R S
+     * @Created -
+     * @Modified By -
+     * @Modified Date -19/6/13
+     ************************************************************* 
+     */
+
+    public static void hccEmailCheckBoxInPatientInfoPage(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String UserType = null;
+	String HealthCareClinic_CHK = "input[id='send_news']~CSS";
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(sharedProperties);
+	    }
+	    UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+
+	    if (UserType.equalsIgnoreCase("Anonymous")) {
+
+		if (!isElementPresentVerification(HealthCareClinic_CHK, browser)) {
+		    status = FAIL;
+		    messagesMap.put("error in patient informatio page", "checkbox for health care clinic email is not present");
+		}
+		if (!getElementByProperty(HealthCareClinic_CHK, browser).isSelected()) {
+		    status = FAIL;
+		    messagesMap.put("error in patient informatio page", "checkbox for health care clinic email is not selected by default");
+		}
+
+	    } else if (UserType.equalsIgnoreCase("RxUnauth")) {
+		if (dataMap.containsKey("CheckBox")) {
+		    if (!dataMap.get("CheckBox").get(0).equalsIgnoreCase(null)) {
+			if (dataMap.get("CheckBox").get(0).equalsIgnoreCase("Yes")) {
+
+			    if (!isElementPresentVerification(HealthCareClinic_CHK, browser)) {
+				status = FAIL;
+				messagesMap.put("error in patient informatio page", "checkbox for health care clinic email is not present");
+			    }
+			    if (!getElementByProperty(HealthCareClinic_CHK, browser).isSelected()) {
+				status = FAIL;
+				messagesMap.put("error in patient informatio page", "checkbox for health care clinic email is not selected by default");
+			    }
+			} else {
+
+			    if (isElementPresentVerification(HealthCareClinic_CHK, browser)) {
+				status = FAIL;
+				messagesMap.put("error in patient informatio page", "checkbox for health care clinic email is present for logged in user in the second time flow");
+			    }
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,2060 @@
+@dailyliving @CheckoutFlowUI
+Feature: Verify the UI of chek out flow pages
+
+#----------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-1
+Scenario: Logged in user perofrms rx check out and validates UI in Review order page  and changes the store
+
+Given  "SS-CheckoutFlowUI-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-1  |
+
+Given "SS-CheckoutFlowUI-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+When  "SS-CheckoutFlowUI-1" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 					| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | AddHealthHistoryLink |
+| AccountDashboard	 	| HealthHistoryAndInsurance		| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | NO 				  |
+
+Then "SS-CheckoutFlowUI-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "SS-CheckoutFlowUI-1" Customer selects rx pick up date and time and click on continue
+
+Then "SS-CheckoutFlowUI-1" Customer verify and changes the pick up time in pick up location from review order page
+| PickUpTime|
+| 11:00 AM  |
+
+Then "SS-CheckoutFlowUI-1" Customer verifies Order details in the Order Review Page:
+| InputFileName  | SheetName    | RowId     |
+| Pharmacy       | OrderDetails |orderinfo5 |
+
+Then "SS-CheckoutFlowUI-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    | RowId     |
+| Pharmacy      | OrderDetails |orderinfo5 |
+
+Then "SS-CheckoutFlowUI-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-1 |
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-2
+Scenario: Logged in user perofrms selfserve check out and validates the nanigation from order review page
+
+Given  "SS-CheckoutFlowUI-2" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-2  |
+
+And "SS-CheckoutFlowUI-2" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-2" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-2" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout| InputFileName  | SheetName | RowId         |
+| -                  | Yes    | -        |  -	       |  CommonData  	| login     | localuser1	 |
+
+Then "SS-CheckoutFlowUI-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 | pobreakout_001@yahoo.com | 8471234567   |  No	       |
+
+Then "SS-CheckoutFlowUI-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed   | DailyLivingShippingSpeed   | ContactLensShippingSpeed |
+| -      	        | standard		             |     -			        |
+
+Then "SS-CheckoutFlowUI-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SS-CheckoutFlowUI-2" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	       			|
+| MarketingLinkVerification  | SelfServe   	  | ChangeShipping   			|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInShippinginfo		|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInShipMethod     	|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInPaymentPage     	| 
+
+Then "SS-CheckoutFlowUI-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-2 |
+
+#----------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-3
+Scenario: Anonymous user verifies Shipping cost for an SS item( weight should be greater than 10 lbs) and Verifies text for Free shipping item in Shopping cart page
+
+Given  "SS-CheckoutFlowUI-3" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-3  |
+
+And "SS-CheckoutFlowUI-3" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   |
+| CommonData    | search    | SS_Weight10      |
+
+Then "SS-CheckoutFlowUI-3" Customer adds Daily Living items to the cart from search:
+
+Then "SS-CheckoutFlowUI-3" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	        |
+| MarketingLinkVerification  |Tier3Page   	  | SSItem_Weight10   	|
+
+#Shipping Free item 
+And "SS-CheckoutFlowUI-3" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   	   |
+| CommonData    | search    | FreeShipEligible     |
+
+Then "SS-CheckoutFlowUI-3" Customer adds Daily Living items to the cart from search:
+
+Then "SS-CheckoutFlowUI-3" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	        |
+| MarketingLinkVerification  |SelfServe   	  | ShipFree			|
+
+#Promotional Savings Item
+And "SS-CheckoutFlowUI-3" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   	   		|
+| CommonData    | search    | SS_PromotionalSavings     |
+
+Then "SS-CheckoutFlowUI-3" Customer adds Daily Living items to the cart from search:
+
+Then "SS-CheckoutFlowUI-3" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	        		|
+| MarketingLinkVerification  |SelfServe   	  | Promotional Savings			|
+
+Then "SS-CheckoutFlowUI-3" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-3 |
+#----------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-4
+Scenario: Anonymous user verifies Continue to shopping button and verify the shipping label
+
+Given  "SS-CheckoutFlowUI-4" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-4  |
+
+Given "SS-CheckoutFlowUI-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | localuser1	 |
+
+And "SS-CheckoutFlowUI-4" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	   | SheetName        | RowId 	 	            |
+| CheckoutOrderDetails | PageNavigations  | Tier1NavigationBeauty   |
+| CheckoutOrderDetails | PageNavigations  | Tier2NavigationHaircare |
+| CheckoutOrderDetails | PageNavigations  | Tier3NavigationShampoo  | 
+
+Then "SS-CheckoutFlowUI-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	  	    | SheetName        | RowId 	      |
+| MarketingLinkVerification | Tier3Page        | ShampooPage   |
+
+Then "SS-CheckoutFlowUI-4" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-4" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "SS-CheckoutFlowUI-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	  	    | SheetName        | RowId 	      	 |
+| MarketingLinkVerification | selfServe        | ShippingLabel   |
+
+Then "SS-CheckoutFlowUI-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-4" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-4 |
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-5
+Scenario: Guest User verifies the tax calculated in shopping cart page
+
+Given  "SS-CheckoutFlowUI-5" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId               |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-5 |
+
+And "SS-CheckoutFlowUI-5" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-5" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-5" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-5" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "SS-CheckoutFlowUI-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 | pobreakout_001@yahoo.com | 8471234567   |  Yes	       |
+
+Then "SS-CheckoutFlowUI-5" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	   | RowId           |
+| MarketingLinkVerification | selfServe        | TaxVerification |
+
+Then "SS-CheckoutFlowUI-5" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-5 |
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-6
+Scenario: Customer verifies Pre tax total changed in shopping cart when clicking back to cart from Payment method page 
+
+Given  "SS-CheckoutFlowUI-6" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-6  |
+
+Given "SS-CheckoutFlowUI-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | localuser1	 |
+
+And "SS-CheckoutFlowUI-6" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-6" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "SS-CheckoutFlowUI-6" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "SS-CheckoutFlowUI-6" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "SS-CheckoutFlowUI-6" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "SS-CheckoutFlowUI-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SS-CheckoutFlowUI-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -      		        |
+
+Then "SS-CheckoutFlowUI-6" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	   | RowId             |
+| MarketingLinkVerification | selfServe        | TaxInShoppingCart |
+
+Then "SS-CheckoutFlowUI-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-6" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-6 |
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-7
+Scenario: Anonymous user verifies Error message for invalid Coupon code
+
+Given  "SS-CheckoutFlowUI-7" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-7  |
+
+And "SS-CheckoutFlowUI-7" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   |
+| CommonData    | search    | SS_Weight10      |
+
+Then "SS-CheckoutFlowUI-7" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-7" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-7" Customer enters coupon code and verfies appropiate message on shopping cart page:
+| InputFileName | SheetName    | RowId    		    | 
+| Marketing     | SelfServe    | InvalidCoupon      |
+
+Then "SS-CheckoutFlowUI-7" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-7 |
+
+#----------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-8
+Scenario: Verify excludes Rx item message in shopping cart while cart contains SS+RX item
+
+Given  "SS-CheckoutFlowUI-8" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-8  |
+
+Given "SS-CheckoutFlowUI-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId             |
+| CommonData 	   | login     | SmokeTestRxUser1  |
+
+And "SS-CheckoutFlowUI-8" Customer Clears the Shopping Cart
+
+When  "SS-CheckoutFlowUI-8" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | Test Order      |  Test Order    | 8471234567        | Aspirin 10 Mg       | 2           |
+
+
+And "SS-CheckoutFlowUI-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   |
+| CommonData    | search    | nonloyaltybogo1      |
+
+Then "SS-CheckoutFlowUI-8" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-8" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	        		|
+| MarketingLinkVerification  |SelfServe  	  | RX_SS_taxmessage			|
+
+Then "SS-CheckoutFlowUI-8" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-8 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-9
+Scenario: Customer verifies the functionality of shipping info and shipping method button from repective pages
+
+Given  "SS-CheckoutFlowUI-9" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-9  |
+
+Given "SS-CheckoutFlowUI-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | localuser1	 |
+
+And "SS-CheckoutFlowUI-9" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-9" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-9" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SS-CheckoutFlowUI-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	   | RowId          	   |
+| MarketingLinkVerification | selfServe        | ShippingInfoPage	   |
+| MarketingLinkVerification | selfServe        | ContinueInShippinginfo|
+
+Then "SS-CheckoutFlowUI-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -      		        |
+
+Then "SS-CheckoutFlowUI-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	   | RowId          	   |
+| MarketingLinkVerification | selfServe        | ShippingMethod 	   |
+
+Then "SS-CheckoutFlowUI-9" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-9 |
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-10
+Scenario: Customer verifies combine cart message in shopping cart page.
+
+Given  "SS-CheckoutFlowUI-10" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-10  |
+
+Given "SS-CheckoutFlowUI-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId             |
+| CommonData 	   | login     | SmokeTestUser1  |
+
+And "SS-CheckoutFlowUI-10" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		   |
+| CommonData    | search    | SS_Weight10      |
+
+Then "SS-CheckoutFlowUI-10" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-10" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SS-CheckoutFlowUI-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SS-CheckoutFlowUI-10" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+
+Then "SS-CheckoutFlowUI-10" Customer Goes to the Shopping Cart
+
+Given "SS-CheckoutFlowUI-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId             |
+| CommonData 	   | login     | SmokeTestUser1  |
+
+Then "SS-CheckoutFlowUI-10" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	        |
+| MarketingLinkVerification  |SelfServe   	  | CombineCart			|
+
+And "SS-CheckoutFlowUI-10" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-10" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-10 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-11
+Scenario: Newely registered customer verifies the PSC check out
+
+Given "SS-CheckoutFlowUI-11" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-11 |
+
+And "SS-CheckoutFlowUI-11" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+| HomepageLinks  | Homepage  | register1	  |
+
+Then "SS-CheckoutFlowUI-11" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -	   | -			| -         | -	      | -	     | Yes       |CommonData     | personalInfo| lightuser1      |No								|
+
+Then "SS-CheckoutFlowUI-11" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "SS-CheckoutFlowUI-11" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "SS-CheckoutFlowUI-11" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  | InputFileName  | SheetName 	  | RowId      	   |
+|Individual     | Light     | Registration    | RxRegistration| UserData4       |
+
+Then "SS-CheckoutFlowUI-11" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "SS-CheckoutFlowUI-11" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   |                  | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SS-CheckoutFlowUI-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -      		        |
+
+Then "SS-CheckoutFlowUI-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SS-CheckoutFlowUI-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-11" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "SS-CheckoutFlowUI-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-11 |
+
+#----------------------------------------------------------------------------------
+
+
+@SS-CheckoutFlowUI-12
+Scenario: Newely registered customer places SS item Using payment option as BML
+
+Given "SS-CheckoutFlowUI-12" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-12 |
+
+And "SS-CheckoutFlowUI-12" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+| HomepageLinks  | Homepage  | register1	  |
+
+Then "SS-CheckoutFlowUI-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |
+| -                           | MaybeLater		     | -	   | -     		| -    		| -       | 	 -   | Yes       |SelfService    | Registration| lightuser1		 |
+
+And "SS-CheckoutFlowUI-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SS-CheckoutFlowUI-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "SS-CheckoutFlowUI-12" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "SS-CheckoutFlowUI-12" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 	  	 |Continue	    |AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL14DataFam1   | 	Yes 		| - 						|   - 							 |
+
+Then "SS-CheckoutFlowUI-12" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId       |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 		| Select   | BacktoPatientInfoLnk | ExpectedTargetPage  |
+| CACData	    | CLPatientDoctorInfo  | CL11DataFam2|    -		 		 |  -    	  |     -         |  -	 		  |  -		 		   | -  		    |   - 					| Yes	   |  -			  		  | ShippingInfoPage    |
+
+Then "SS-CheckoutFlowUI-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS        | MERCHANTK  | 10332 LAVA WEST	| LAVA HOT SPRINGS | 15    | 83246   |   -	  |MARCUS@MERCHANT.COM  | 2082082590   |  No	       |
+
+Then "SS-CheckoutFlowUI-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -	    		         |    standard			    |
+
+Then "SS-CheckoutFlowUI-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | -				   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "SS-CheckoutFlowUI-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId               |
+| CheckoutOrderDetails  | OrderIds     |SS-CheckoutFlowUI-12 |
+
+Then "SS-CheckoutFlowUI-12" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "SS-CheckoutFlowUI-12" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-12 |
+
+#----------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-13
+Scenario: Logged in user perofrms selfserve check out and validates the navigation from order review to payment information page
+
+Given  "SS-CheckoutFlowUI-13" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-13  |
+
+And "SS-CheckoutFlowUI-13" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-13" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-13" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-13" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout| InputFileName  | SheetName | RowId         |
+| -                  | Yes    | -        |  -	       |  CommonData  	| login     | localuser1	 |
+
+Then "SS-CheckoutFlowUI-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 | pobreakout_001@yahoo.com | 8471234567   |  NO	       |
+
+Then "SS-CheckoutFlowUI-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		             |     -			              |
+
+Then "SS-CheckoutFlowUI-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SS-CheckoutFlowUI-13" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	       			|
+| MarketingLinkVerification  | SelfServe   	  | PaymentInfoPage   			|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInPaymentPage     	| 
+
+Then "SS-CheckoutFlowUI-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-13" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-13 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-14
+Scenario: Logged in user perofrms selfserve check out and validates the nanigation from order review to Shipping method page
+
+Given  "SS-CheckoutFlowUI-14" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-14  |
+
+And "SS-CheckoutFlowUI-14" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-14" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-14" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-14" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout| InputFileName  | SheetName | RowId         |
+| -                  | Yes    | -        |  -	       |  CommonData  	| login     | localuser1	 |
+
+Then "SS-CheckoutFlowUI-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 | pobreakout_001@yahoo.com | 8471234567   |  No	       |
+
+Then "SS-CheckoutFlowUI-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		             |     -			              |
+
+Then "SS-CheckoutFlowUI-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SS-CheckoutFlowUI-14" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      | RowId   	       			|
+| MarketingLinkVerification  | SelfServe   	  | ShippingMethodPage 			|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInShipMethod     	|
+| MarketingLinkVerification  | SelfServe   	  | ContinueInPaymentPage     	| 
+
+Then "SS-CheckoutFlowUI-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-14" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-14 |
+
+#----------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-15
+Scenario: Logged in user performs SS order checkout using BML as payment method
+
+Given  "SS-CheckoutFlowUI-15" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-15  |
+
+Given "SS-CheckoutFlowUI-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| CommonData     | login     | SmokeTestUser1 		 |
+
+And "SS-CheckoutFlowUI-15" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| SelfService   | Search    | SSProduct    |
+
+Then "SS-CheckoutFlowUI-15" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-15" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister	 |
+
+Then "SS-CheckoutFlowUI-15" Customer selects either Login to walgreens or Register a new account:
+|UserisonSigninPage | Signin | Register| GuestCheckout| InputFileName | SheetName | RowId 				 |
+|-					| Yes	 | 	-	   |	 -		  | CommonData    | login     | SmokeTestUser1 		 |
+
+Then "SS-CheckoutFlowUI-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City         | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | KAREN        | MERCHANTK  | 9690 DEERECO RD	| TIMONIUM     | 23    | 21093   |   -	  |karen@merchant.com  | 4439211900   |  No	       |
+
+Then "SS-CheckoutFlowUI-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard	             |     - 	                |
+
+Then "SS-CheckoutFlowUI-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			  |
+
+Then "SS-CheckoutFlowUI-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-15" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName     | RowId           		 |
+| CheckoutOrderDetails  | OrderDetails  |BMLCheckout			 |
+
+Then "SS-CheckoutFlowUI-15" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "SS-CheckoutFlowUI-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId           	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-15 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-16
+Scenario: Logged in user performs SS order checkout using CC as payment method
+
+Given  "SS-CheckoutFlowUI-16" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-16  |
+
+Given "SS-CheckoutFlowUI-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-16" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| SelfService   | Search    | SSProduct    |
+
+Then "SS-CheckoutFlowUI-16" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-16" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShoppingCart	|
+
+Then "SS-CheckoutFlowUI-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister   	 |
+
+Then "SS-CheckoutFlowUI-16" Customer selects either Login to walgreens or Register a new account:
+|UserisonSigninPage | Signin | Register| GuestCheckout| InputFileName | SheetName | RowId 				 |
+|-					| yes	 |-		   |-			  |Pharmacy       | login     | Unauthenticateduser1 |
+
+Then "SS-CheckoutFlowUI-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShippingInfo    |
+
+Then "SS-CheckoutFlowUI-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress             | PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test Order | Test Order | 104 Wilmot Road | Deerfield | 16    | 60015   | wag_srinivanni@yahoo.com | 847122345127 |
+
+Then "SS-CheckoutFlowUI-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShipMethod   	|
+
+Then "SS-CheckoutFlowUI-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | Standard                 | 			                |
+
+Then "SS-CheckoutFlowUI-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | PaymentInfo   	|
+
+Then "SS-CheckoutFlowUI-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "SS-CheckoutFlowUI-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-16" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderDetails |CCCheckout		 |
+
+Then "SS-CheckoutFlowUI-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-16 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-17
+Scenario: Customer verifies the cehc out of SS item Using payment option as BML for the first time
+
+Given "SS-CheckoutFlowUI-17" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-17 |
+
+And "SS-CheckoutFlowUI-17" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "SS-CheckoutFlowUI-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |
+| -                           | MaybeLater		     | -	   | -     		| -    		| -       | 	 -   | Yes       |SelfService    | Registration| lightuser1		 |
+
+And "SS-CheckoutFlowUI-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-17" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-17" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | KAREN        | MERCHANTK  | 9690 DEERECO RD	| TIMONIUM     | 23    | 21093   |   -	  |karen@merchant.com  | 4439211900   |  No	       |
+
+Then "SS-CheckoutFlowUI-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		             |     -			              |
+
+Then "SS-CheckoutFlowUI-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | -				   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "SS-CheckoutFlowUI-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-17" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId               |
+| CheckoutOrderDetails  | OrderIds     |SS-CheckoutFlowUI-17 |
+
+Then "SS-CheckoutFlowUI-17" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "SS-CheckoutFlowUI-17" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-17 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-18
+Scenario: Guest User performs Express Checkout and verifies the same as shipping address
+
+Given  "SS-CheckoutFlowUI-18" Customer starts the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-18 	 |
+
+And "SS-CheckoutFlowUI-18" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-18" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-18" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-18" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-18" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "SS-CheckoutFlowUI-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567   |  Yes	       |
+
+Then "SS-CheckoutFlowUI-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "SS-CheckoutFlowUI-18" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-18 	 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-19
+Scenario: Logged in user verifies the error message for Expired credit card
+
+Given  "SS-CheckoutFlowUI-19" Customer starts the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-19 	 |
+
+Given "SS-CheckoutFlowUI-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "SS-CheckoutFlowUI-19" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-19" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-19" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "SS-CheckoutFlowUI-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "SS-CheckoutFlowUI-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-19" Customer verify the expired CC and type of card error message in the credit card page:
+| CCInputFileName | CCSheetName | CCRowId    |
+| CACData   	  | CreditCard 	| ErrorData1 |
+
+Then "SS-CheckoutFlowUI-19" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-19 	 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-20
+Scenario: Logged in user verifies the error message for Empty type of credit card
+
+Given  "SS-CheckoutFlowUI-20" Customer starts the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-20 	 |
+
+Given "SS-CheckoutFlowUI-20" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "SS-CheckoutFlowUI-20" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-20" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-20" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-20" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-20" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "SS-CheckoutFlowUI-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "SS-CheckoutFlowUI-20" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-20" Customer verify the expired CC and type of card error message in the credit card page:
+| CCInputFileName | CCSheetName | CCRowId    |
+| CACData   	  | CreditCard 	| ErrorData2 |
+
+Then "SS-CheckoutFlowUI-20" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-20 	 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-21
+Scenario: Anonymous user performs SS order checkout using CC as payment method
+
+Given  "SS-CheckoutFlowUI-21" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-21  |
+
+Given "SS-CheckoutFlowUI-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-21" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName   | RowId    	   |
+| SelfService   | Search      | SSProduct      |
+
+Then "SS-CheckoutFlowUI-21" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-21" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShoppingCart	|
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister   	 |
+
+Then "SS-CheckoutFlowUI-21" Customer selects either Login to walgreens or Register a new account:
+|UserisonSigninPage | Signin | Register| GuestCheckout| InputFileName | SheetName | RowId 	 |
+|-					| -		 |-		   | yes		  |-	          | -	      | -		 |
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShippingInfo    |
+
+Then "SS-CheckoutFlowUI-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           	| PhoneNumber  |
+| newshippingaddress  | -                   | -                | Test Order | Test Order | 104 Wilmot Road | Deerfield | 16    | 60015   | wag_srinivanni@yahoo.com | 847122345127 |
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | ShipMethod   	|
+
+Then "SS-CheckoutFlowUI-21" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | Standard                 | 			                |
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | GuestPaymentInfo|
+
+Then "SS-CheckoutFlowUI-21" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -				   | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard	|
+
+Then "SS-CheckoutFlowUI-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | OrderReview   	|
+
+Then "SS-CheckoutFlowUI-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-21" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderDetails |AnonymousCheckout|
+
+Then "SS-CheckoutFlowUI-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-21 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-22
+Scenario: Logged in user adds a CL item to cart and performs checkout with BML as payment option
+
+Given  "SS-CheckoutFlowUI-22" Customer starts the scenario:
+| InputFileName | SheetName 		  | RowId            	 |
+| QC-SS         | CheckoutFlowUI      | SS-CheckoutFlowUI-22 |
+
+Given "SS-CheckoutFlowUI-22" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       	     |
+| CommonData    | login     | SmokeTestUser1	 |
+
+And "SS-CheckoutFlowUI-22" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SS-CheckoutFlowUI-22" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "SS-CheckoutFlowUI-22" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-22" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "SS-CheckoutFlowUI-22" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   	|
+#| SelfService    | Shopping Cart  | CLInfo 	   		|
+
+#Then "SS-CheckoutFlowUI-22" Customer Selects required Option From Doctor Search Results Page:
+#| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+#| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage  |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   	 |
+#| SelfService    | Shopping Cart  | ShipInformation  |
+
+#Then "SS-CheckoutFlowUI-22" Customer selects a shipping option from the shipping information page and clicks on continue:
+#| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City     | State | ZipCode |ZipExtn  | EmailAddress        | PhoneNumber  |OffersbyEmail |
+#| newshippingaddress  | -                   | -                | karen         | merchantk  | 9690 DEERECO RD	| TIMONIUM | 23    | 21093   |   -	   |karen@merchant.com   | 4439211900   |  No	       |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   	 |
+#| SelfService    | Shopping Cart  | ShippingMethod   |
+
+#Then "SS-CheckoutFlowUI-22" Customer selects a shipping speed from shipping method page and clicks on continue:
+#| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+#| -               | -                        | standard                 |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   	|
+#| SelfService    | Shopping Cart  | PaymentMethod   |
+
+#Then "SS-CheckoutFlowUI-22" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+#| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2          | -			  |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	    |
+#| SelfService    | Shopping Cart  | BMLEditPage     |
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   	|
+#| SelfService    | Shopping Cart  | OrderReviewUI   |
+
+#Then "SS-CheckoutFlowUI-22" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "SS-CheckoutFlowUI-22" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	   		|
+#| SelfService    | Shopping Cart  | OrderConfirmation   |
+
+#Then "SS-CheckoutFlowUI-22" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName         | SheetName    | RowId       |
+#| CheckoutOrderDetails  | OrderDetails |CLCheckout	 |
+
+#Then "SS-CheckoutFlowUI-22" Customer logout from walgreens:
+#| Source  |
+#| Global  |
+
+Then "SS-CheckoutFlowUI-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-Smoke      | CheckoutFlowUI| SS-CheckoutFlowUI-22 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-23
+Scenario: Customer verifies the invalid password error and verify shopping cart
+
+Given  "SS-CheckoutFlowUI-23" Customer starts the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-23 	 |
+
+Given "SS-CheckoutFlowUI-23" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | localuser1    |
+
+And "SS-CheckoutFlowUI-23" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-23" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-23" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SS-CheckoutFlowUI-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SS-CheckoutFlowUI-23" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "SS-CheckoutFlowUI-23" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-23" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-23" Customer validates the invalid login:
+| InputFileName | SheetName | RowId    	   | Validation |
+| CommonData    | login    | InvalidUser    | Password   |
+
+Then "SS-CheckoutFlowUI-23" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-23 	 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+@SS-CheckoutFlowUI-24
+Scenario: Newely registered customer verifies the Paypal check out
+
+Given "SS-CheckoutFlowUI-24" Customer starts the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-24 	 |
+
+And "SS-CheckoutFlowUI-24" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+| HomepageLinks  | Homepage  | register1	  |
+
+Then "SS-CheckoutFlowUI-24" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	    | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -	   | -			| -         | -	      | -	     | Yes       |CommonData     | personalInfo| lightuser1      |No								|
+
+And "SS-CheckoutFlowUI-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-CheckoutFlowUI-24" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-24" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-24" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-24" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "SS-CheckoutFlowUI-24" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-24" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	         | -              | -               	    | -                  | CACData        	   | Paypal		  	   | sandbox1     | -			     |
+
+Then "SS-CheckoutFlowUI-24" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-24" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-24" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-24 	 |
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-25
+Scenario: Logged in user checks quantity is getting updated while adding BAGB product to cart twice
+
+Given  "SS-CheckoutFlowUI-25" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-25  |
+
+Given "SS-CheckoutFlowUI-25" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-25" Customer Clears the Shopping Cart
+
+When "SS-CheckoutFlowUI-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-25" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-25" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-25" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-25" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-25" Customer Goes to the Shopping Cart
+
+Given "SS-CheckoutFlowUI-25" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "SS-CheckoutFlowUI-25" Customer Goes to the Shopping Cart
+
+And "SS-CheckoutFlowUI-25" Customer verifies BOGO or BAGB products pairing in shopping cart page:
+| InputFileName | SheetName 		| RowId    	   	  |
+| SelfService   | QuantityUpdate    | BAGBQuantity    |
+
+Then "SS-CheckoutFlowUI-25" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-25 |
+
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-26
+Scenario: Logged in user checks for 1 item free message in shopping cart page while adding BOGO item twice to cart(CART MERGE)
+
+Given  "SS-CheckoutFlowUI-26" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-26  |
+
+Given "SS-CheckoutFlowUI-26" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-26" Customer Clears the Shopping Cart
+
+When "SS-CheckoutFlowUI-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| SelfService   | Search    | BOGO_FREE    |
+
+Then "SS-CheckoutFlowUI-26" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-26" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | CART_BOGOMSG	|
+
+Then "SS-CheckoutFlowUI-26" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| SelfService   | Search    | BOGO_FREE    |
+
+Then "SS-CheckoutFlowUI-26" Customer adds Daily Living items to the cart from search.
+
+Given "SS-CheckoutFlowUI-26" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "SS-CheckoutFlowUI-26" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | CART_NOMSG		|
+
+Then "SS-CheckoutFlowUI-26" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-26 |
+
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-27
+Scenario: Anonymous user checks quantity is getting updated while adding BAGB product to cart twice
+
+Given  "SS-CheckoutFlowUI-27" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-27  |
+
+And "SS-CheckoutFlowUI-27" Customer Clears the Shopping Cart
+
+When "SS-CheckoutFlowUI-27" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-27" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-27" Customer Goes to the Shopping Cart
+
+When "SS-CheckoutFlowUI-27" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-27" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-27" Customer Goes to the Shopping Cart
+
+And "SS-CheckoutFlowUI-27" Customer verifies BOGO or BAGB products pairing in shopping cart page:
+| InputFileName | SheetName 		| RowId    	   	  |
+| SelfService   | QuantityUpdate    | BAGBQuantity    |
+
+Then "SS-CheckoutFlowUI-27" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-27 |
+
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-28
+Scenario: Logged in user checks quantity is getting updated while adding BAGB product to cart twice
+
+Given  "SS-CheckoutFlowUI-28" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId                 |
+| QC-SS	        | CheckoutFlowUI         | SS-CheckoutFlowUI-28  |
+
+Given "SS-CheckoutFlowUI-28" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-28" Customer Clears the Shopping Cart
+
+When "SS-CheckoutFlowUI-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-28" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-28" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-28" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+When "SS-CheckoutFlowUI-28" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| SelfService   | Search    | BAGB_SameItemFree    |
+
+Then "SS-CheckoutFlowUI-28" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-28" Customer Goes to the Shopping Cart
+
+Given "SS-CheckoutFlowUI-28" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "SS-CheckoutFlowUI-28" Customer Goes to the Shopping Cart
+
+And "SS-CheckoutFlowUI-28" Customer verifies BOGO or BAGB products pairing in shopping cart page:
+| InputFileName | SheetName 		| RowId    	   	  |
+| SelfService   | QuantityUpdate    | BAGBQuantity    |
+
+Then "SS-CheckoutFlowUI-28" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-28 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-29
+Scenario: Logged in user adds a PSC item to cart and performs checkout with credit card as payment option
+
+Given  "SS-CheckoutFlowUI-29" Customer starts the scenario:
+| InputFileName | SheetName 		  | RowId            	 |
+| QC-SS         | CheckoutFlowUI      | SS-CheckoutFlowUI-29 |
+
+Given "SS-CheckoutFlowUI-29" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   	 |
+| CommonData  	| login     | PSCUser	 |
+
+And "SS-CheckoutFlowUI-29" Customer Clears the Shopping Cart
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName 		        	| SheetName 	| RowId               	  |
+| PharmacyHomePageLinkVerification  | Anonymous  	| PriscriptionSavingsClub |
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on Join savings club button on the Prescriptions savings club page.
+
+Then "SS-CheckoutFlowUI-29" Customer selects Enrollment Type and click on continue:
+|EnrollmentType | UserType  |
+|Individual     | Pharmacy  |
+
+Then "SS-CheckoutFlowUI-29" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "SS-CheckoutFlowUI-29" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | PSCShipMessage  |
+
+Then "SS-CheckoutFlowUI-29" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           	| PhoneNumber  |
+| homeaddress	  	  | -                   | -                | - 			| - 		 | - 			   | - 		   | -     | -   	 | wag_srinivanni@yahoo.com | 847122345127 |
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	 |
+| SelfService    | Shopping Cart  | ShipDetails  |
+
+Then "SS-CheckoutFlowUI-29" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 |   -		                |
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | PaymentPage     |
+
+Then "SS-CheckoutFlowUI-29" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+#Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName      | RowId    	    |
+#| SelfService    | Shopping Cart  | BMLEditPage     |
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	  |
+| SelfService    | Shopping Cart  | OrderReview   |
+
+Then "SS-CheckoutFlowUI-29" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-29" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   		  |
+| SelfService    | Shopping Cart  | OrderConfirmationUI   |
+
+Then "SS-CheckoutFlowUI-29" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId       |
+| CheckoutOrderDetails  | OrderDetails |PSCCheckout	 |
+
+Then "SS-CheckoutFlowUI-29" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-29" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-Smoke      | CheckoutFlowUI| SS-CheckoutFlowUI-29 |
+#----------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-30
+Scenario: Logged in user adds a SS and RX item to cart and performs checkout with credit card as payment option
+
+Given  "SS-CheckoutFlowUI-30" Customer starts the scenario:
+| InputFileName | SheetName 		  | RowId            	 |
+| QC-SS         | CheckoutFlowUI      | SS-CheckoutFlowUI-30 |
+
+Given "SS-CheckoutFlowUI-30" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	 			 |
+| Pharmacy  	| login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-30" Customer Clears the Shopping Cart
+
+When "SS-CheckoutFlowUI-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName   | RowId    	   |
+| SelfService   | Search      | SSProduct      |
+
+Then "SS-CheckoutFlowUI-30" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-30" Customer Goes to the Shopping Cart
+
+When  "SS-CheckoutFlowUI-30" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 					| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity | AddHealthHistoryLink |
+| AccountDashboard	 	| HealthHistoryAndInsurance		| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | NO 				  |
+
+Then "SS-CheckoutFlowUI-30" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "SS-CheckoutFlowUI-30" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	    |
+| SelfService    | Shopping Cart  | PickupDetails   |
+
+Then "SS-CheckoutFlowUI-30" Customer selects rx pick up date and time and click on continue
+
+Then "SS-CheckoutFlowUI-30" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	  |
+| SelfService    | Shopping Cart  | ShipAddress   |
+
+Then "SS-CheckoutFlowUI-30" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City       | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| shippingaddress	  | -                   | -                | test          | test       | 104 WILMOT ROAD	| DEERFIELD  | 15    | 60015   |   -	|wag_srinivanni@yahoo.com  | 84784195262  |  No	        | 
+
+Then "SS-CheckoutFlowUI-30" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	  |
+| SelfService    | Shopping Cart  | ShipDetails   |
+
+Then "SS-CheckoutFlowUI-30" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		 	      | standard	             |     - 	                |
+
+Then "SS-CheckoutFlowUI-30" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName      | RowId    	   	|
+| SelfService    | Shopping Cart  | PaymentPage     |
+
+Then "SS-CheckoutFlowUI-30" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "SS-CheckoutFlowUI-30" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-30" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-30" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-30 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-31
+Scenario: Customer verifies the SS item shipped through Paypal Check out and click on back link from review order
+
+Given  "SS-CheckoutFlowUI-31" Customer starts the scenario:
+| InputFileName 	 | SheetName 		 | RowId         	    |
+| QC-SS	        	 | CheckoutFlowUI	 | SS-CheckoutFlowUI-31 |
+
+Given "SS-CheckoutFlowUI-31" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | SSuser1    	 |
+
+And "SS-CheckoutFlowUI-31" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-31" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName 	 | RowId |
+| CommonData    | search         | DC1   |
+
+Then "SS-CheckoutFlowUI-31" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-31" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-31" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "SS-CheckoutFlowUI-31" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SS-CheckoutFlowUI-31" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -	                    |
+
+Then "SS-CheckoutFlowUI-31" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "SS-CheckoutFlowUI-31" Customer clicks on an object and validates the expected results:
+| InputFileName  			 | SheetName      | RowId      |
+| MarketingLinkVerification  | SelfServe   	  | PaypalInfo | 
+
+Then "SS-CheckoutFlowUI-31" Customer finished testing the scenario:
+| InputFileName       | SheetName 	  	| RowId        		     |
+| QC-SS	        	  | CheckoutFlowUI	| SS-CheckoutFlowUI-31 	 |
+
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-32
+Scenario: Customer validates the Billing information in Personal Infomation Page after changing the address while doing  SS checkout.
+
+Given  "SS-CheckoutFlowUI-32" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-32 |
+
+Given "SS-CheckoutFlowUI-32" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+And "SS-CheckoutFlowUI-32" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-32" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "SS-CheckoutFlowUI-32" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-32" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-32" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+
+Then "SS-CheckoutFlowUI-32" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | yes                 | -                | Test      | Unauth    |200 wilmot rd   | Deerfield | 16    |60015    | -             | -            |
+
+
+Then "SS-CheckoutFlowUI-32" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "SS-CheckoutFlowUI-32" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress 	| SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | NewBillingAddress |    true	            | true               | CACData         | CreditCard  | cc1     |
+
+Then "SS-CheckoutFlowUI-32" Customer verifies Order details in the Order Review Page:
+| InputFileName 		 | SheetName    | RowId            	   |
+|  CheckoutOrderDetails  | OrderIds     |SS-CheckoutFlowUI-32  |
+
+Then "SS-CheckoutFlowUI-32" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SS-CheckoutFlowUI-32" Customer validates the information from Manage Your Personal Information Page:
+|BillingAddress |
+| 	Yes			|
+
+Then "SS-CheckoutFlowUI-32" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "SS-CheckoutFlowUI-32" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "SS-CheckoutFlowUI-32" Customer validates the information from Manage Your Personal Information Page:
+|BillingAddress |
+| 	Yes			|
+
+Then "SS-CheckoutFlowUI-32" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-32 |
+#----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-33
+Scenario: Logged in user verfies Shopping Lis check box functionalities 
+
+Given  "SS-CheckoutFlowUI-33" Customer starts the scenario:
+| InputFileName 	 | SheetName 		 | RowId         	    |
+| QC-SS	        	 | CheckoutFlowUI	 | SS-CheckoutFlowUI-33 |
+
+Given "SS-CheckoutFlowUI-33" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | SSuser1    	 |
+
+And "SS-CheckoutFlowUI-33" Customer Clears the Shopping Cart
+
+
+Then "SS-CheckoutFlowUI-33" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName        | RowId           | ClickObjectinTab  |
+| HomepageLinks  | Homepage		 	| ShoppingList1	  |Yes			      |
+
+
+Then "SS-CheckoutFlowUI-33" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId            	   |
+| QC-SS	        | CheckoutFlowUI| SS-CheckoutFlowUI-33 |
+#----------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-34
+Scenario: Customer verifies the guest checkout of SS item Using payment option as BML 
+
+Given "SS-CheckoutFlowUI-34" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-34 |
+
+And "SS-CheckoutFlowUI-34" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-34" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-34" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-34" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-34" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-34" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "SS-CheckoutFlowUI-34" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      	   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK  | 9690 DEERECO RD 	| TIMONIUM         | 23    | 21093   |   -	  | KAREN@MERCHANT.COM  | 4439211900   |  No	     |
+
+Then "SS-CheckoutFlowUI-34" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-34" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | -				   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			  |
+
+Then "SS-CheckoutFlowUI-34" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-34" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		 |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-34 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-35
+Scenario: Customer verifies the guest checkout of SS item Using payment option as Paypal 
+
+Given "SS-CheckoutFlowUI-35" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-35 |
+
+And "SS-CheckoutFlowUI-35" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-35" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC2      |
+
+Then "SS-CheckoutFlowUI-35" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-35" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-35" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister		 |
+
+Then "SS-CheckoutFlowUI-35" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "SS-CheckoutFlowUI-35" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City       | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Raj           | Ram        | 34 test WEST	    | Deerfield  | 15    | 83246   |   -	  |MARCUS@MERCHANT.COM  | 2082082590   |  No	       |
+
+Then "SS-CheckoutFlowUI-35" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		             |     -			              |
+
+Then "SS-CheckoutFlowUI-35" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "SS-CheckoutFlowUI-35" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-35" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-35 |
+
+#----------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-36
+Scenario: Logged in User performs PayPal Checkout for a CH item
+
+Given  "SS-CheckoutFlowUI-36" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-36 |
+
+Given "SS-CheckoutFlowUI-36" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | SmokeTestUser1 |
+
+And "SS-CheckoutFlowUI-36" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-36" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | CH1      |
+
+Then "SS-CheckoutFlowUI-36" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-36" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-36" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	 |
+
+Then "SS-CheckoutFlowUI-36" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "SS-CheckoutFlowUI-36" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-CheckoutFlowUI-36" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	         | -              | -               	    | -                  | CACData        	   | Paypal		  	   | sandbox1     | -			     |
+
+Then "SS-CheckoutFlowUI-36" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CheckoutFlowUI-36" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CheckoutFlowUI-36" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-36 |
+
+#-----------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-37
+Scenario: Customer checks the secondary product price after removing Primary item in cart ( Bogo primary + Secondary )
+
+Given  "SS-CheckoutFlowUI-37" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-37 |
+
+And "SS-CheckoutFlowUI-37" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-37" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | BOGO_Remove      |
+
+Then "SS-CheckoutFlowUI-37" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-37" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-37" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | BOGO_Remove      |
+
+Then "SS-CheckoutFlowUI-37" Customer performs BOGO BOGOLEV manipulations in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | BOGO_Remove      |
+
+Then "SS-CheckoutFlowUI-37" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-37 |
+
+#-----------------------------------------------------------------------------------------------------
+
+@SS-CheckoutFlowUI-38
+Scenario: Customer checks the secondary product price after updating primary product quantity to 2 ( Bogo primary + Secondary )
+
+Given  "SS-CheckoutFlowUI-38" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-38 |
+
+And "SS-CheckoutFlowUI-38" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-38" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | Update_Two       |
+
+Then "SS-CheckoutFlowUI-38" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-38" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-38" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | Update_Two       |
+
+Then "SS-CheckoutFlowUI-38" Customer updates the primary product quantity in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | Update_Two       |
+
+Then "SS-CheckoutFlowUI-38" Customer performs BOGO BOGOLEV manipulations in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		  |
+| SelfService    | BOGOeligible    | Update_Two       |
+
+Then "SS-CheckoutFlowUI-38" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-38 |
+
+#-----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-39
+Scenario: Customer checks the secondary product price after updating primary product quantity to 2 ( Bogo primary + Secondary )
+
+Given  "SS-CheckoutFlowUI-39" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-39 |
+
+And "SS-CheckoutFlowUI-39" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-39" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BOGOLEV_Three       |
+
+Then "SS-CheckoutFlowUI-39" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-39" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-39" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BOGOLEV_Three       |
+
+Then "SS-CheckoutFlowUI-39" Customer updates the primary product quantity in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BOGOLEV_Three       |
+
+Then "SS-CheckoutFlowUI-39" Customer performs BOGO BOGOLEV manipulations in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BOGOLEV_Three       |
+
+Then "SS-CheckoutFlowUI-39" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-39 |
+#-----------------------------------------------------------------------------------------------------
+@SS-CheckoutFlowUI-40
+Scenario: Customer checks the UI of shopping cart page after adding various offers eligible items( BOGO , BOGOLEV , BAGA , BAGB , promotional offer )
+
+Given  "SS-CheckoutFlowUI-40" Customer starts the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-40 |
+
+And "SS-CheckoutFlowUI-40" Customer Clears the Shopping Cart
+
+And "SS-CheckoutFlowUI-40" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BOGOLEV         	 |
+
+Then "SS-CheckoutFlowUI-40" Customer adds Daily Living items to the cart from search.
+
+And "SS-CheckoutFlowUI-40" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BAGB       		 |
+
+Then "SS-CheckoutFlowUI-40" Customer adds Daily Living items to the cart from search.
+
+And "SS-CheckoutFlowUI-40" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BAGB_A       		 |
+
+Then "SS-CheckoutFlowUI-40" Customer adds Daily Living items to the cart from search.
+
+And "SS-CheckoutFlowUI-40" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BAGB_B       		 |
+
+Then "SS-CheckoutFlowUI-40" Customer adds Daily Living items to the cart from search.
+
+And "SS-CheckoutFlowUI-40" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName 	   | RowId    		     	 |
+| SelfService    | BOGOeligible    | Promotional       		 |
+
+Then "SS-CheckoutFlowUI-40" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CheckoutFlowUI-40" Customer Goes to the Shopping Cart
+
+Then "SS-CheckoutFlowUI-40" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | BAGB       		 |
+
+Then "SS-CheckoutFlowUI-40" Customer updates the primary product quantity in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | CMB_BOGO       	 |
+
+Then "SS-CheckoutFlowUI-40" Customer performs BOGO BOGOLEV manipulations in shopping cart page:
+| InputFileName  | SheetName 	   | RowId    		     |
+| SelfService    | BOGOeligible    | CMB_BOGO	         |
+
+Then "SS-CheckoutFlowUI-40" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         		  |
+| QC-SS	        | CheckoutFlowUI		   | SS-CheckoutFlowUI-40 |
+#-----------------------------------------------------------------------------------------------------

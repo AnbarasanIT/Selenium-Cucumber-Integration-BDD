@@ -1,0 +1,319 @@
+package walgreens.ecom.batch.automation.library.checkout_sdd;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.OrderBean;
+import walgreens.ecom.batch.framework.common.beans.ProductBean;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutLibrary_SDD_ON extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose -This Method is to hold the Product item details (Rx/cl/dl) from
+     *          Shopping Cart. All the Values are Assigned to ProductBean and
+     *          OrderBean
+     * @author - Siva Santhi Reddy
+     * @Created - AUG 30 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void saveItemDetailsFromCart(EventFiringWebDriver browser, ScenarioBean scenario, StepBean stepBean) {
+	String status = PASS;
+	String ProdcutCartTable = "//table[contains(@class,'sddCartTable')]/tbody";
+	// String CLCartTable = "//table[@class='sddCartTable']/tbody";
+	String DLCartTable = "//table[@summary='Product Table']/tbody";
+	String Prescription_Header = "//th[contains(text(),'Prescriptions')]~XPATH";
+	String ContactLensHeader_ELM = "//th[contains(text(),'Contact Lenses')]~XPATH";
+	String Pickup_RADIO = "//input[contains(@id,'pickupStore')]~XPATH";
+	String ShiptoYou_RADIO = "//input[contains(@id,'shipto')]~XPATH";
+	String LocalDelivery_RADIO = "//input[contains(@id,'localDelivery')]~XPATH";
+	String StoreNumber_ELM = "//p[contains(@class,'walAddress')]~XPATH";
+	int randomNumber = 1;
+	OrderBean orderBean = null;
+	Map<String, ProductBean> productsMap = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenario.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenario.setSharedStepProperties(sharedProperties);
+	    }
+	    // Start - This will keep track of all the orders in the framework
+	    if (orderBeansMap == null) {
+		orderBeansMap = new HashMap<String, OrderBean>();
+	    }
+	    // End - This will keep track of all the orders in the framework
+
+	    if (scenario.getOrderBean() == null) {
+		orderBean = new OrderBean();
+		orderBean.setScenarioId(scenario.getScenarioNumber());
+		scenario.setOrderBean(orderBean);
+	    } else {
+		orderBean = scenario.getOrderBean();
+	    }
+	    if (orderBean.getProductsMap() == null) {
+		productsMap = new HashMap<String, ProductBean>();
+		orderBean.setProductsMap(productsMap);
+	    } else {
+		productsMap = orderBean.getProductsMap();
+	    }
+	    if (isElementPresentVerification(Prescription_Header, browser)) {
+		String SelectedDeliveryOption = null;
+		List<WebElement> rxTableRows = getElementByProperty(ProdcutCartTable, browser).findElements(By.tagName("tr"));
+		for (int row = 1; row < rxTableRows.size(); row = row + 1) {
+		    ProductBean productBean = new ProductBean();
+		    System.err.println("Text is:"+rxTableRows.get(row).getText());
+		    if (rxTableRows.get(row).getText().contains("Rx:")) {
+			String RxName = rxTableRows.get(row).findElement(By.tagName("h4")).getText();
+			String RxNumber = rxTableRows.get(row).findElement(By.xpath("td/p")).getText().split("Rx:")[1].replace(" ", "").trim();
+			String Quantity = rxTableRows.get(row).findElement(By.xpath("td/p[2]")).getText().split("Qty:")[1].trim();
+			String RxType = rxTableRows.get(row).findElement(By.xpath("td/p[3]")).getText().trim();
+
+			if (RxNumber.equals("-")) {
+			    RxNumber = "999999" + randomNumber + "_new";
+			    randomNumber++;
+			}
+			String DeliveryOptionDivisionText = rxTableRows.get(row).findElement(By.xpath("td[2]")).getText().trim();
+			if (DeliveryOptionDivisionText.contains("Mail Plan") || DeliveryOptionDivisionText.contains("Specialty Pharmacy")) {
+			    SelectedDeliveryOption = "Ship";
+			} else if (DeliveryOptionDivisionText.equals("Pick up in store")) {
+			    SelectedDeliveryOption = "Pickup";
+			} else {
+			    if (isElementPresentVerification(Pickup_RADIO, browser)) {
+				if (getElementByProperty(Pickup_RADIO, browser).isSelected()) {
+				    SelectedDeliveryOption = "Pickup";
+				}
+			    }
+			    if (isElementPresentVerification(ShiptoYou_RADIO, browser)) {
+				if (getElementByProperty(ShiptoYou_RADIO, browser).isSelected()) {
+				    SelectedDeliveryOption = "Ship";
+				}
+			    }
+			    if (isElementPresentVerification(LocalDelivery_RADIO, browser)) {
+				if (getElementByProperty(LocalDelivery_RADIO, browser).isSelected()) {
+				    SelectedDeliveryOption = "SDD";
+				}
+			    }
+			}
+			productBean.setProductType(RxType + "Rx");
+			productBean.setProductId(RxNumber);
+			productBean.setProductName(RxName);
+			productBean.setProductQuantity(Quantity);
+			productBean.setProductDeliveryOption(SelectedDeliveryOption);
+			productsMap.put(RxNumber, productBean);
+		    }
+		}
+	    }
+	    if (isElementPresentVerification(ContactLensHeader_ELM, browser)) {
+		List<WebElement> productTables = browser.findElements(By.xpath("//table[contains(@class,'sddCartTable')]/tbody"));
+		WebElement CLCartTable = null;
+		for (int count = 0; count < productTables.size(); count++) {
+		    if (productTables.get(count).getText().contains("Contact Lenses")) {
+			CLCartTable = productTables.get(count);
+			break;
+		    }
+		}
+		List<WebElement> clTableRows = CLCartTable.findElements(By.tagName("tr"));
+		for (int row = 2; row < clTableRows.size(); row = row + 3) {
+		    ProductBean productBean = new ProductBean();
+		    String CLName = clTableRows.get(row).findElement(By.tagName("h4")).getText();
+		    String CLProductID = clTableRows.get(row).findElement(By.xpath("td/div[2]/h4/a")).getAttribute("href").split("id=")[1];
+		    String Quanity = clTableRows.get(row).findElement(By.xpath("td/input")).getAttribute("value");
+		    String CLPrice = clTableRows.get(row).findElement(By.xpath("td/h3/strong")).getText();
+		    productBean.setProductType("CL");
+		    productBean.setProductName(CLName);
+		    productBean.setProductId(CLProductID);
+		    productBean.setProductQuantity(Quanity);
+		    productBean.setProductDeliveryOption("Ship");
+		    productBean.setProductTotalPrice(CLPrice);
+		    productsMap.put(CLProductID, productBean);
+		}
+	    }
+	    if (isElementPresentVerification(DLCartTable, browser)) {
+		List<WebElement> dlTableRows = getElementByProperty(DLCartTable, browser).findElements(By.tagName("tr"));
+		for (int row = 3; row < dlTableRows.size(); row = row + 3) {
+		    ProductBean productBean = new ProductBean();
+		    String SelectedDeliveryOption = null;
+		    // int j = row + 4;
+		    String DLItemName = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td/div/div[2]/p/strong/a")).getText();
+		    String DLitemProdID = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td/div/div[2]/p/strong/a")).getAttribute("href").split("id=")[1]
+			    .split("&")[0];
+		    String Quanity = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td[4]/input")).getAttribute("value");
+		    String ProductPrice = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td[5]/h3/strong")).getText();
+		    WebElement DeliveryOptionDivison = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td[2]"));
+		    List<WebElement> DeliveryOptionElements = DeliveryOptionDivison.findElements(By.tagName("input"));
+		    if (DeliveryOptionElements.size() == 0) {
+			if (DeliveryOptionDivison.getText().contains("Ship")) {
+			    SelectedDeliveryOption = "Ship";
+			}
+		    } else {
+			for (int i = 0; i < DeliveryOptionElements.size(); i++) {
+			    if (DeliveryOptionElements.get(i).getAttribute("value").contains("Ship")) {
+				if (DeliveryOptionElements.get(i).isSelected()) {
+				    SelectedDeliveryOption = "Ship";
+				}
+			    } else if (DeliveryOptionElements.get(i).getAttribute("value").contains("SDD")) {
+				if (DeliveryOptionElements.get(i).isSelected()) {
+				    SelectedDeliveryOption = "SDD";
+				}
+			    } else if (DeliveryOptionElements.get(i).getAttribute("value").contains("WP")) {
+				if (DeliveryOptionElements.get(i).isSelected()) {
+				    SelectedDeliveryOption = "Pickup";
+				}
+			    }
+			}
+		    }
+		    productBean.setProductType("DL");
+		    productBean.setProductName(DLItemName);
+		    productBean.setProductId(DLitemProdID);
+		    productBean.setProductQuantity(Quanity);
+		    productBean.setProductDeliveryOption(SelectedDeliveryOption);
+		    productBean.setProductTotalPrice(ProductPrice);
+		    productsMap.put(DLitemProdID, productBean);
+		}
+	    }
+	    orderBeansMap.put(scenario.getScenarioNumber(), orderBean);
+
+	    // testRetrieveSingleProductInfoMethod();
+	    // testRetrieveAllProductsInfoMethod();
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    public static void testRetrieveSingleProductInfoMethod() {
+	String scenarioId = "SDD-SDDEndtoEnd-0";
+	String productId = "prod2301352";
+	ProductBean productBean = getSingleProductFromOrder(scenarioId, productId);
+
+	System.out.println("Product Type: " + productBean.getProductType());
+	System.out.println("Product Name: " + productBean.getProductName());
+	System.out.println("Product ID: " + productBean.getProductId());
+	System.out.println("Product Quantity: " + productBean.getProductQuantity());
+	System.out.println("Product Delivery Option: " + productBean.getProductDeliveryOption());
+	System.out.println("Product total Price: " + productBean.getProductTotalPrice());
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is used to retrieve the Product Bean from post
+     *          cart pages in the checkout flow.
+     * @author - Imran Aslam
+     * @Created - Feb 1st 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static ProductBean getSingleProductFromOrder(String scenarioId, String productId) {
+	OrderBean orderBean = null;
+	ProductBean productBean = null;
+	try {
+	    if (orderBeansMap != null && orderBeansMap.size() > 0) {
+		orderBean = orderBeansMap.get(scenarioId);
+		if (orderBean != null) {
+		    Map<String, ProductBean> productsMap = orderBean.getProductsMap();
+		    if (productsMap != null && productsMap.size() > 0) {
+			productBean = productsMap.get(productId);
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return productBean;
+    }
+
+    public static void testRetrieveAllProductsInfoMethod() {
+	String scenarioId = "SDD-SDDEndtoEnd-0";
+	Map<String, ProductBean> productsMap = getAllProductsFromOrder(scenarioId);
+	ProductBean productBean = null;
+
+	Iterator<Entry<String, ProductBean>> it = productsMap.entrySet().iterator();
+	while (it.hasNext()) {
+	    Map.Entry<String, ProductBean> pairs = (Map.Entry<String, ProductBean>) it.next();
+	    System.out.println("########################### Start:" + pairs.getKey() + ": Start #########################################");
+	    productBean = pairs.getValue();
+	    System.out.println("Product Type: " + productBean.getProductType());
+	    System.out.println("Product Name: " + productBean.getProductName());
+	    System.out.println("Product ID: " + productBean.getProductId());
+	    System.out.println("Product Quantity: " + productBean.getProductQuantity());
+	    System.out.println("Product Delivery Option: " + productBean.getProductDeliveryOption());
+	    System.out.println("Product total Price: " + productBean.getProductTotalPrice());
+	    System.out.println("########################### End:" + pairs.getKey() + ": End #########################################");
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is used to retrieve the Product Bean from post
+     *          cart pages in the checkout flow.
+     * @author - Imran Aslam
+     * @Created - Feb 1st 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static Map<String, ProductBean> getAllProductsFromOrder(String scenarioId) {
+	OrderBean orderBean = null;
+	Map<String, ProductBean> productsMap = null;
+	try {
+	    if (orderBeansMap != null && orderBeansMap.size() > 0) {
+		orderBean = orderBeansMap.get(scenarioId);
+		if (orderBean != null) {
+		    productsMap = orderBean.getProductsMap();
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return productsMap;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to click clicking Proceed to Checkout button in
+     *          Shopping Cart Page and verifying the Destiantion Page
+     * @author - Imran Aslam
+     * @Created - March 23rd, 2012
+     * @Modified By - Siva
+     * @Modified Date -08-Nov-12
+     ************************************************************* 
+     */
+    public static void proceedToCheckout(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	try {
+
+	    // ////// Requires new modification and implementation due to SDD
+	    // changes
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,230 @@
+package walgreens.ecom.batch.automation.library.dwar;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class DigitalOffersLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Coupons page Validations for the clipping and Unclipping
+     *          functionality
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created -5-Aug-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void CouponsClipAndUnclipValidation(EventFiringWebDriver browser, StepBean step, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ClippedCoupon = "//a[@title='View clipped coupons']~XPATH";
+	String UnclipConfirmation = "//a[contains(text(),'Yes')]~XPATH";
+	String SummaryHeader_sec = "//div[@class='float-right blue_box']~XPATH";
+	String ExpiredCoupon = "//h1[@title='View soon to expire coupons']~XPATH";
+	String RedemmedCoupon = "//h1[@title='View redeemed coupons']~XPATH";
+	String MaxMetWarning = "//div[@id='maxmetError']~XPATH";
+	String MaxMetMessage = "//p[contains(text(),'clipped the maximum number of coupons')]~XPATH";
+	String ClippedTxt = "//span[contains(text(),'Clipped')]~XPATH";
+	String AvaliableCouponTxt = "//span[contains(text(),'Available')]~XPATH";
+	String CouponClip = "//div[5]/div/div/div/a[@title='Clip this coupon']~XPATH";
+	String UnclipClipedCoupons = "//div/a[@title='Unclip this coupon']~XPATH";
+	String CouponsPageNotAvaliable = "//div[@title='Coupons are unavailable at this time']~XPATH";
+	String clippedCouponsCounts = "//h1[@id='clippedCouponsCount']~XPATH";
+	String totalCouponCount = "//h1[@id='totalCouponCount']~XPATH";
+	String CouponGrid = "//div[@class='couponsContainerGrid']~XPATH";
+	String ClippedCouponCountSec = "//h1[@id='clippedCouponsCount']~XPATH";
+	String TotalCouponCountSec = "//h1[@id='totalCouponCount']~XPATH";
+	String clippedCouponsCount = "//h1[@id='clippedCouponsCount']~XPATH";
+	String NomoreCouponsAvaliableMsg = "//p[contains(text(),'Currently there are no more coupons available')]~XPATH";
+	String ClippedCouponCountSection = "//h1[@id='clippedCouponsCount']~XPATH";
+	WebElement UnClipCoupons;
+	int NoofCouponsTobeClipped;
+	String Clipping;
+	String Unclipping;
+	WebElement ClipCoupons;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		step.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerification(SummaryHeader_sec, browser)) {
+		messagesMap.put("CouponsHub page", "Summary header is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ExpiredCoupon, browser)) {
+		messagesMap.put("CouponsHub page", "Soon to Expired coupon section is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(RedemmedCoupon, browser)) {
+		messagesMap.put("CouponsHub page", "Redemmed Coupon section is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(CouponGrid, browser)) {
+		messagesMap.put("CouponsHub page", "Coupon grid is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(AvaliableCouponTxt, browser)) {
+		messagesMap.put("CouponsHub page", "Avaliable Coupon section is not displayed");
+		status = WARNING;
+	    }
+	    int ClippedClipcount = Integer.parseInt(getElementByProperty(ClippedCouponCountSec, browser).getText().toString());
+	    int AvaliableClipcount = Integer.parseInt(getElementByProperty(TotalCouponCountSec, browser).getText().toString());
+	    // data to pick no of coupons to be clip
+	    NoofCouponsTobeClipped = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoofCouponsTobeClipped"));
+	    Clipping = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Clipping");
+	    Unclipping = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Unclipping");
+	    // verification of clipping functionality
+	    if (Clipping.equalsIgnoreCase("Yes")) {
+		for (int i = 1; i <= NoofCouponsTobeClipped; i++) {
+		    ClipCoupons = getElementByProperty(CouponClip, browser);
+		    ClipCoupons.click();
+		    Thread.sleep(6000);
+		    ClippedClipcount++;
+
+		    AvaliableClipcount--;
+		    int currentClipcount = Integer.parseInt(getElementByProperty(clippedCouponsCounts, browser).getText().toString());
+		    int CurrentAvaliableClipcount = Integer.parseInt(getElementByProperty(totalCouponCount, browser).getText().toString());
+		    if (ClippedClipcount == currentClipcount && AvaliableClipcount == CurrentAvaliableClipcount) {
+			messagesMap.put("CouponsHub page", "ClippedClipcount and currentClipcount is equaled");
+			status = WARNING;
+		    }
+		    if (currentClipcount == 90) {
+			if (!isElementPresentVerification(MaxMetWarning, browser)) {
+			    messagesMap.put("CouponsHub page", "Maxmet warning message is not displayed");
+			    status = WARNING;
+			}
+		    }
+		    if (currentClipcount == 100) {
+			if (!isElementPresentVerification(MaxMetMessage, browser)) {
+			    messagesMap.put("CouponsHub page", "you have reached maximum number of coupons message is not displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+	    } else if (!isElementPresentVerification(CouponsPageNotAvaliable, browser)) {
+		messagesMap.put("CouponsHub page", "Coupons page is not avaliable Error message");
+		status = FAIL;
+	    }
+	    // verification of Unclipping functionality
+	    int ClippedClipcounts = Integer.parseInt(getElementByProperty(ClippedCouponCountSection, browser).getText().toString());
+	    int AvaliableClippedcnt = ClippedClipcounts;
+	    if (Unclipping.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ClippedCoupon, browser)) {
+		    messagesMap.put("CouponsHub page", "Not able to click the ClippedCoupon");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(ClippedTxt, browser)) {
+		    messagesMap.put("CouponsHub page", "Clipped Coupon text is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(CouponGrid, browser)) {
+		    messagesMap.put("CouponsHub page", "Coupons Grid section is not displayed");
+		    status = WARNING;
+		}
+		for (int j = 1; j <= AvaliableClippedcnt; j++) {
+		    UnClipCoupons = getElementByProperty(UnclipClipedCoupons, browser);
+		    UnClipCoupons.click();
+		    if (!isElementPresentVerifyClick(UnclipConfirmation, browser)) {
+			messagesMap.put("CouponsHub page", "Not able to click the Confirmation message");
+			status = WARNING;
+		    }
+		    Thread.sleep(6000);
+		    ClippedClipcount--;
+		    int currentUnClipcount = Integer.parseInt(getElementByProperty(clippedCouponsCount, browser).getText().toString());
+		    if (ClippedClipcount == currentUnClipcount) {
+			messagesMap.put("CouponsHub page", "ClippedClipcount and currentClipcount is equaled");
+		    }
+		}
+		if (AvaliableClippedcnt == 0) {
+		    if (!isElementPresentVerification(NomoreCouponsAvaliableMsg, browser)) {
+			messagesMap.put("CouponsHub page", "Currently there are no more coupons available coupons message is not displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, step);
+	} finally {
+	    step.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Customers verifies the Auto Clip Functionality
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created -5-Aug-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void AutoClipCouponValidation(EventFiringWebDriver browser, StepBean step, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CouponClip_LNK = "//a[@title='Clip this coupon']~XPATH";
+	String OverlaySignIn_LNk = "//a[contains(text(),'Sign in or register now')]~XPATH";
+	String Balancerewards_TXT = "//img[@alt='balance rewards']~XPATH";
+	String OverlayVerification_TXT = "//img[@title='Clip paperless coupons']~XPATH";
+	String TotalCouponCountSec = "//h1[@id='totalCouponCount']~XPATH";
+	String saveAvaliableClipCountInDataSheet;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		step.setStepStatusMessages(messagesMap);
+	    }
+	    Thread.sleep(9000);
+	    saveAvaliableClipCountInDataSheet = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "saveAvaliableClipCountInDataSheet");
+	    int AvaliableCount = Integer.parseInt((getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AvaliableCount")));
+	    if (saveAvaliableClipCountInDataSheet.equalsIgnoreCase("Yes")) {
+		String AvaliableClipcount = getElementByProperty(TotalCouponCountSec, browser).getText().toString();
+		// Getting Test Data Sheet info to Avaliable count details
+		String putDataFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataFileName");
+		String putDataSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataSheetName");
+		String putDataRowId = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataRowId");
+		// Storing the Avaliable count in the given location
+		TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "AvaliableCount", AvaliableClipcount);
+		if (!isElementPresentVerifyClick(CouponClip_LNK, browser)) {
+		    messagesMap.put("Not able to click  Coupon link", "Landing in the coupon hub page");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(OverlayVerification_TXT, browser)) {
+		    messagesMap.put("Coupon hub page", "Overlay verification text is not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(OverlaySignIn_LNk, browser)) {
+		    messagesMap.put("Not able to click OverlaySignIn_LNk ", "Landing in the coupon hub page");
+		}
+		if (!isElementPresentVerification(Balancerewards_TXT, browser)) {
+		    messagesMap.put("SignInregister page", "balacne rewards text is not displayed");
+		    status = WARNING;
+		}
+	    } else {
+		int curAvaliableClipcount = Integer.parseInt(getElementByProperty(TotalCouponCountSec, browser).getText().toString());
+		if (!(AvaliableCount <= curAvaliableClipcount)) {
+		    messagesMap.put("Couponhub page", "Avaliable count is not decremented and the coupon is not clipped");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, step);
+	} finally {
+	    step.setStepStatus(status);
+	}
+    }
+}

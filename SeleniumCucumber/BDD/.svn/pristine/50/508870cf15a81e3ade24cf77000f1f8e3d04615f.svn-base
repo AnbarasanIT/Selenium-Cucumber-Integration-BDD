@@ -1,0 +1,199 @@
+@dwar @DigitalOffersCouponRegistration
+Feature: All the scenarios in the feature are Walgreens Registration through Digital Offer coupons.
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-1
+Scenario: Verify whether the user can able create lite account and then creating loyalty account in the coupons summary header
+
+Given "DWAR-DOCOUPONREG-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-1 |
+
+And "DWAR-DOCOUPONREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	            | SheetName            | RowId 	         |
+| PharmacyHomePageLinkVerification  | Authenticated    | RegisterHeader  |
+
+Then "DWAR-DOCOUPONREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -       | -     | -		   | -       | -        | Yes       |CommonData     | personalInfo| LoyaltyLightUser4|Yes								|
+
+Then "DWAR-DOCOUPONREG-1" Customer logout from walgreens:
+| Source |
+| Global |
+
+And "DWAR-DOCOUPONREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName           | RowId 	                  |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage  		  |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | SignInbalrewardsHeader    |
+
+And "DWAR-DOCOUPONREG-1" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId              |
+| CommonData  	| personalInfo  | LoyaltyLightUser4	 |
+
+And "DWAR-DOCOUPONREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName       | RowId 	                       |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage  	       |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | CouponsbalrewardsHeader    |
+
+Then "DWAR-DOCOUPONREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | 9854785965 | JAN		| 01      | 1988     |  No         | 
+
+And "DWAR-DOCOUPONREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	          |ClickObjectOverlay|TargetOverlay|
+| PharmacyHomePageLinkVerification | Authenticated        | Lightclipoverlay  |Yes			     |Yes          |
+| PharmacyHomePageLinkVerification | Authenticated        | Confirmationclose |Yes			     |No           |
+
+Then "DWAR-DOCOUPONREG-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-1 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-2
+Scenario: Verify whether the user can able to register the walgreens account in the coupons page in the summary section
+
+Given "DWAR-DOCOUPONREG-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-2 |
+
+And "DWAR-DOCOUPONREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	|
+| PharmacyHomePageLinkVerification | Authenticated        | DigitalOffers       |
+| PharmacyHomePageLinkVerification | Authenticated        | Registerclk         |
+
+And "DWAR-DOCOUPONREG-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 		  |saveUserNameAndPasswordInDataSheet|Page 			|
+| -                           | CreateNew		     | 60015   | 9658965896  | JAN		 | 01      | 1988     | Yes       |CommonData     | personalInfo| LoyaltyLightUser4|Yes								 |DigitalOffers	|
+
+And "DWAR-DOCOUPONREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	           |ClickObjectOverlay|TargetOverlay|
+| PharmacyHomePageLinkVerification | Authenticated        | Couponclipoverlay  |Yes			      |Yes          |
+| PharmacyHomePageLinkVerification | Authenticated        | Confirmationclose  |Yes			      |No           |
+
+Then "DWAR-DOCOUPONREG-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-2 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-3
+Scenario: Verify whether the user can able to register while clipping coupons in the coupons hub page
+
+Given "DWAR-DOCOUPONREG-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-3 |
+
+When "DWAR-DOCOUPONREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	            |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | Authenticated        | Clipproduct         |Yes          |No                |
+| PharmacyHomePageLinkVerification | Authenticated        | SigninJoinnowclick  |No           |Yes               |
+| PharmacyHomePageLinkVerification | Authenticated        | Registerclk         |No           |No                |
+
+Then "DWAR-DOCOUPONREG-3" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|Page 			|
+| -                           | CreateNew		     | 60015   | 9658965896  | JAN		 | 01      | 1988     | Yes       |CommonData     | personalInfo| LoyaltyLightUser4	 |Yes								|DigitalOffers	|
+
+And "DWAR-DOCOUPONREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        |ClickObjectOverlay|TargetOverlay	|
+| PharmacyHomePageLinkVerification | Authenticated        | Couponclipoverlay  |Yes			   |Yes				|
+| PharmacyHomePageLinkVerification | Authenticated        | Confirmationclose  |Yes			   |No				|
+
+Then "DWAR-DOCOUPONREG-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-3 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-4
+Scenario: Verify whether the user can able to Sign while clipping coupons in the coupons hub page
+
+Given "DWAR-DOCOUPONREG-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-4 |
+
+Then "DWAR-DOCOUPONREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	            |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage      |No			  |No				 |
+| PharmacyHomePageLinkVerification | Authenticated        | SignInClipproduct   |Yes          |No                |
+| PharmacyHomePageLinkVerification | Authenticated        | SigninJoinnowclick  |No           |Yes               |
+
+And "DWAR-DOCOUPONREG-4" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId              |
+| CommonData  	| personalInfo  | LoyaltyLightUser4	 |
+
+And "DWAR-DOCOUPONREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	|
+| PharmacyHomePageLinkVerification | Authenticated        | Couponsheader       |
+
+Then "DWAR-DOCOUPONREG-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-4 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-5
+Scenario: Verify whether the user can able to SignIn coupons hub page header
+
+Given "DWAR-DOCOUPONREG-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-5 |
+
+And "DWAR-DOCOUPONREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName           | RowId 	                  |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage  		  |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | SignInbalrewardsHeader    |
+
+And "DWAR-DOCOUPONREG-5" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId              |
+| CommonData  	| personalInfo  | LoyaltyLightUser4	 |
+
+And "DWAR-DOCOUPONREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName       | RowId 	           |
+| PharmacyHomePageLinkVerification  | Authenticated   | Couponsheader      |
+
+Then "DWAR-DOCOUPONREG-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONREG-6
+Scenario: Verify whether the user can able create lite account and then creating loyalty account in the coupons summary header
+
+Given "DWAR-DOCOUPONREG-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-6 |
+
+And "DWAR-DOCOUPONREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName        | RowId 	         |
+| PharmacyHomePageLinkVerification  | Authenticated    | RegisterHeader  |
+
+Then "DWAR-DOCOUPONREG-6" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -       | -     | -		   | -       | -        | Yes       |CommonData     | personalInfo| LoyaltyLightUser4|Yes								|
+
+Then "DWAR-DOCOUPONREG-6" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "DWAR-DOCOUPONREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	            |TargetOverlay|ClickObjectOverlay|
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage      |No			  |No				 |
+| PharmacyHomePageLinkVerification | Authenticated        | SignInClipproduct   |Yes          |No                |
+| PharmacyHomePageLinkVerification | Authenticated        | SigninJoinnowclick  |No           |Yes               |
+
+And "DWAR-DOCOUPONREG-6" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId              |
+| CommonData  	| personalInfo  | LoyaltyLightUser4	 |
+
+And "DWAR-DOCOUPONREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName       | RowId 	                       |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | Couponshubpage  	       |
+| PharmacyHomePageLinkVerification  | Authenticated  	  | CouponsbalrewardsHeader    |
+
+Then "DWAR-DOCOUPONREG-6" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | 9854785965 | JAN		| 01      | 1988     |  No        | 
+
+And "DWAR-DOCOUPONREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	          |ClickObjectOverlay|TargetOverlay|
+| PharmacyHomePageLinkVerification | Authenticated        | Lightclipoverlay  |Yes			     |Yes          |
+| PharmacyHomePageLinkVerification | Authenticated        | Confirmationclose |Yes			     |No           |
+
+Then "DWAR-DOCOUPONREG-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-DWAR	    | DOCOUPONREG   | DWAR-DOCOUPONREG-6 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

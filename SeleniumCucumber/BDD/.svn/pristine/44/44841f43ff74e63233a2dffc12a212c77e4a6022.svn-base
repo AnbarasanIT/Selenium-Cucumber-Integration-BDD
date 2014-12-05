@@ -1,0 +1,81 @@
+@pharmacy @SpecialtyRx
+Feature: These scenarios are used for specialty Rx data creation
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-SpecialtyRx-1
+Scenario: Create SM profile for a customer
+
+Given  "RX-SpecialtyRx-1" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-1  |
+
+# Specify user details here (email, password, and environments)
+Then "RX-SpecialtyRx-1" User gets customer details from the DB:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+And "RX-SpecialtyRx-1" User completes details form:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+And "RX-SpecialtyRx-1" User completes address form:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+Then "RX-SpecialtyRx-1" User verifies DB for SM ID:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+Then "RX-SpecialtyRx-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-1  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-SpecialtyRx-2
+Scenario: Check for SM record in DB
+
+Given  "RX-SpecialtyRx-2" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-2  |
+
+Then "RX-SpecialtyRx-2" User retrieves SM record from DB:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+Then "RX-SpecialtyRx-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-2  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-SpecialtyRx-3
+Scenario: Add a specialty prescription for a customer
+
+Given  "RX-SpecialtyRx-3" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-3  |
+
+# Specify user here.
+Then "RX-SpecialtyRx-3" User retrieves SM record from DB:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+# Specify prescription data here, otherwise arbitrary data will be used.
+# Specify number of prescriptions to add under Count, up to five.
+And "RX-SpecialtyRx-3" User adds specialty prescriptions:
+| InputFileName | SheetName		 | RowId 	 | Count  |
+| Pharmacy      | SRxData        | Data1	 | 5      |
+
+Given "RX-SpecialtyRx-3" Customer login to the walgreens.com:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxUsers        | User1	 |
+
+And "RX-SpecialtyRx-3" User validates prescriptions in refillhub:
+| InputFileName | SheetName		  | RowId 	 | 
+| Pharmacy      | SRxTempData     | Temp1	 |
+
+Then "RX-SpecialtyRx-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "RX-SpecialtyRx-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | SpecialtyRx   | RX-SpecialtyRx-3  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

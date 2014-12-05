@@ -1,0 +1,209 @@
+@dwar @DoCouponValidation
+Feature: All the scenarios in the feature are for demo purpose only
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONVALIDATION-1
+Scenario: Verify the customer can able to clip/Unclip the coupons in the coupons hub page
+
+Given "DWAR-DOCOUPONVALIDATION-1" Customer starts the scenario:
+| InputFileName | SheetName             | RowId                     |
+| QC-DWAR	    | DOCOUPONVALIDATION    | DWAR-DOCOUPONVALIDATION-1 |
+
+And "DWAR-DOCOUPONVALIDATION-1" Customer clicks on an object and validates the expected results:
+| InputFileName	  | SheetName            | RowId 	    |
+| DWARLinkVerification | DigitalOffers   | SignInLink   |
+| DWARLinkVerification | DigitalOffers   | Registerclk  |
+
+And "DWAR-DOCOUPONVALIDATION-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 		   |saveUserNameAndPasswordInDataSheet|
+| -                           | CreateNew		     | 60015   | 9658965896  | JAN		 | 01      | 1988     | Yes       |CommonData     | personalInfo| LoyaltyLightUser6|Yes								  |
+
+And "DWAR-DOCOUPONVALIDATION-1" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName        | RowId 	           |ClickObjectOverlay  |TargetOverlay|
+| DWARLinkVerification | DigitalOffers    | Couponclipoverlay  |Yes			        |Yes          |
+| DWARLinkVerification | DigitalOffers    | Confirmationclose  |Yes			        |No           |
+
+And "DWAR-DOCOUPONVALIDATION-1" Customer Verifies the clipping and unclipping functionality in the coupons hub page:
+| InputFileName | SheetName  | RowId                   |
+| DWAR          | ClipCoupon | NoofCouponsTobeClipped  |
+
+Then "DWAR-DOCOUPONVALIDATION-1" Customer finished testing the scenario:
+| InputFileName | SheetName           | RowId                        |
+| QC-DWAR	    | DOCOUPONVALIDATION  | DWAR-DOCOUPONVALIDATION-1    |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONVALIDATION-2
+Scenario: Verify the Weekly Ad & Coupons interstitial CA page and verify the details and learn more link validation in the coupons hub page for the LoggedIn user
+
+Given "DWAR-DOCOUPONVALIDATION-2" Customer starts the scenario:
+| InputFileName | SheetName           | RowId                     |
+| QC-DWAR	    | DOCOUPONVALIDATION  | DWAR-DOCOUPONVALIDATION-2 |
+
+And "DWAR-DOCOUPONVALIDATION-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData  	| login   	| Loyaltyuser   |
+
+And "DWAR-DOCOUPONVALIDATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName	    | SheetName           | RowId 	                  |
+| DWARLinkVerification| | DigitalOffers| | Weekly Ad & Coupons  	  |
+
+And "DWAR-DOCOUPONVALIDATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName       | RowId 	        |TargetOverlay     |ClickObjectOverlay |
+| DWARLinkVerification | DigitalOffers   | Learnmore        |Yes               |No                 |
+| DWARLinkVerification | DigitalOffers   | LearnmoreClose   |No                |Yes                |
+| DWARLinkVerification | DigitalOffers   | DetailsLink      |Yes               |No                 |
+
+And "DWAR-DOCOUPONVALIDATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName	  | SheetName         | RowId 	         |
+| DWARLinkVerification| | DigitalOffers| DetailsLinkClose |
+
+Then "DWAR-DOCOUPONVALIDATION-2" Customer finished testing the scenario:
+| InputFileName | SheetName             | RowId                        |
+| QC-DWAR	    | DOCOUPONVALIDATION    | DWAR-DOCOUPONVALIDATION-2    |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOCOUPONVALIDATION-3
+Scenario: Verify the Weekly Ad & Coupons interstitial CA page and verify the details and learn more link validation in the coupons hub page for the Guest user
+
+Given "DWAR-DOCOUPONVALIDATION-3" Customer starts the scenario:
+| InputFileName | SheetName                | RowId                     |
+| QC-DWAR	    | DOCOUPONVALIDATION       | DWAR-DOCOUPONVALIDATION-3 |
+
+And "DWAR-DOCOUPONVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	    | SheetName       | RowId 	                  |
+| DWARLinkVerification  | DigitalOffers   | Weekly Ad & Coupons  	  |
+
+And "DWAR-DOCOUPONVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	     | SheetName          | RowId 	         |TargetOverlay     |ClickObjectOverlay |
+| DWARLinkVerification   | DigitalOffers	  | Learnmore        |Yes               |No                 |
+| DWARLinkVerification   |DigitalOffers       | LearnmoreClose   |No                |Yes                |
+| DWARLinkVerification   | DigitalOffers      | DetailsLink      |Yes               |No                 |
+
+And "DWAR-DOCOUPONVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName           | RowId 	        |
+| DWARLinkVerification | DigitalOffers       | DetailsLinkClose |
+
+Then "DWAR-DOCOUPONVALIDATION-3" Customer finished testing the scenario:
+| InputFileName | SheetName            | RowId                        |
+| QC-DWAR	    | DOCOUPONVALIDATION   | DWAR-DOCOUPONVALIDATION-3    |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOPAGEVALIDATION-1
+Scenario: Verify that the anonymous user can able to verify view all and view less link validation
+
+Given "DWAR-DOPAGEVALIDATION-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId     			   |
+| QC-DWAR	    | DOPAGEVALIDATION       | DWAR-DOPAGEVALIDATION-1 |
+
+And "DWAR-DOPAGEVALIDATION-1" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName      | RowId 	     |
+| DWARLinkVerification | DigitalOffers  | Couponshubpage |
+
+And "DWAR-DOPAGEVALIDATION-1" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName         | RowId 	         |
+| DWARLinkVerification | DigitalOffers     | ViewAllLink     |
+| DWARLinkVerification | DigitalOffers     | ViewLessLink    |
+
+Then "DWAR-DOPAGEVALIDATION-1" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                            |
+| QC-DWAR	    | DOPAGEVALIDATION   | DWAR-DOPAGEVALIDATION-1          |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOPAGEVALIDATION-2
+Scenario: Verify that the LoggedIn user can able to verify view all and view less link validation
+
+Given "DWAR-DOPAGEVALIDATION-2" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId     			   |
+| QC-DWAR	    | DOPAGEVALIDATION       | DWAR-DOPAGEVALIDATION-2 |
+
+And "DWAR-DOPAGEVALIDATION-2" Customer login to the walgreens.com:
+| InputFileName | SheetName     | RowId          |
+| CommonData  	| login   	    | Loyaltyuser	 |
+
+And "DWAR-DOPAGEVALIDATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName	  | SheetName       | RowId 	         |
+| DWAR            | Authenticated   |Couponshubpage      |
+
+And "DWAR-DOPAGEVALIDATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName    | RowId 	        |
+| DWARLinkVerification | DigitalOffers| ViewAllLink     |
+| DWARLinkVerification | DigitalOffers| ViewLessLink    |
+
+Then "DWAR-DOPAGEVALIDATION-2" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "DWAR-DOPAGEVALIDATION-2" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                            |
+| QC-DWAR	    | DOPAGEVALIDATION   | DWAR-DOPAGEVALIDATION-2          |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOPAGEVALIDATION-3
+Scenario: Verify that the Non-BR user can able to verify view all and view less link validation
+
+Given "DWAR-DOPAGEVALIDATION-3" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId     			   |
+| QC-DWAR	    | DOPAGEVALIDATION       | DWAR-DOPAGEVALIDATION-3 |
+
+And "DWAR-DOPAGEVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName      | RowId 	      |
+| DWARLinkVerification | DigitalOffers  | RegisterHeader  |
+
+And "DWAR-DOPAGEVALIDATION-3" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -       | -     | -		   | -       | -        | Yes       |CommonData     | personalInfo| LoyaltyLightUser6|Yes								|
+
+And "DWAR-DOPAGEVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName       | RowId 	      |
+| DWARLinkVerification | DigitalOffers   | Couponshubpage     |
+
+And "DWAR-DOPAGEVALIDATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName	  | SheetName          | RowId 	         |
+| DWARLinkVerification | DigitalOffers | ViewAllLink     |
+| DWARLinkVerification | DigitalOffers | ViewLessLink    |
+
+Then "DWAR-DOPAGEVALIDATION-3" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                            |
+| QC-DWAR	    | DOPAGEVALIDATION   | DWAR-DOPAGEVALIDATION-3          |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@DWAR-DOPAGEVALIDATION-4
+Scenario: Customers verifies the Auto Clip Functionality in the coupons hub page
+
+Given "DWAR-DOPAGEVALIDATION-4" Customer starts the scenario:
+| InputFileName | SheetName                | RowId                   |
+| QC-DWAR	    | DOPAGEVALIDATION       | DWAR-DOPAGEVALIDATION-4   |
+
+And "DWAR-DOPAGEVALIDATION-4" Customer clicks on an object and validates the expected results:
+| InputFileName	       | SheetName        | RowId 	       |
+| DWARLinkVerification | DigitalOffers    | RegisterHeader |
+
+Then "DWAR-DOPAGEVALIDATION-4" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 		   |saveUserNameAndPasswordInDataSheet|
+| -                           | CreateNew		     | 60015   | 9658965896  | JAN		 | 01      | 1988     | Yes       |CommonData     | personalInfo| LoyaltyLightUser6|Yes								 |
+
+Then "DWAR-DOPAGEVALIDATION-4" Customer logout from walgreens:
+| Source |
+| Global |
+
+And "DWAR-DOPAGEVALIDATION-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   		| SheetName            | RowId 	         |
+| DWARLinkVerification  | DigitalOffers        | Couponshubpage       |
+
+And "DWAR-DOPAGEVALIDATION-4" Customers verifies the Auto Clip Functionality:
+| InputFileName	   | SheetName        | RowId 	            |
+|DWAR              | CouponsUrl       |AutoClipValidation   |
+
+And "DWAR-DOPAGEVALIDATION-4" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName        | RowId              |
+| CommonData  	 | DynamicLogin     | LoyaltyLightUser	 |
+
+And "DWAR-DOPAGEVALIDATION-4" Customers verifies the Auto Clip Functionality:
+| InputFileName	   | SheetName        | RowId 	            |
+|DWAR              | CouponsUrl       |AutoClipValidation   |
+
+Then "DWAR-DOPAGEVALIDATION-4" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "DWAR-DOPAGEVALIDATION-4" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                      |
+| QC-DWAR	    | DOPAGEVALIDATION   | DWAR-DOPAGEVALIDATION-4    |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

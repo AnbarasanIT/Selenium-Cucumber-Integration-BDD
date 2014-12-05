@@ -1,0 +1,393 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class PSCDrugPricingLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Verify Search Drug Results from PSC Dash Board page
+     * @author - Siva
+     * @Created -28-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void searchaDrugFromPSCPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String DrugName_TXT = "input#drugname~CSS";
+	String GO_BTN = "//input[@title='Go' or contains(@name,'searchDrug')]~XPATH";
+	String SearchResultsMessage_ELM = "//*[contains(text(),'results for')]~XPATH";
+	String EmptySearchorlessCharactersErrorMessage_ELM = "//strong[contains(text(),'You must enter at least the first three letters of a drug to search by name.')]";
+	String NoDrugsFoundErrorMessage_ELM = "//strong[contains(text(),'No results found for:')]";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DrugName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DrugName");
+	    String SearchType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SearchType");
+	    if (DrugName != null && !DrugName.equals("-")) {
+		if (!clearAndEnterText(DrugName_TXT, DrugName, browser)) {
+		    messagesMap.put("Drug Nmae", "Not able to Enter Drug Name");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(GO_BTN, browser)) {
+		throw new Exception("Not able to Click on Go Button");
+	    }
+	    if (SearchType != null && (SearchType.equalsIgnoreCase("Empty") || SearchType.equalsIgnoreCase("Lessthan3Char"))) {
+		if (!isElementPresentVerification(EmptySearchorlessCharactersErrorMessage_ELM, browser)) {
+		    messagesMap.put("Error Message for Empty/less than 3 Char", "Error message is Missing");
+		    status = WARNING;
+		}
+	    } else if (SearchType != null && SearchType.equalsIgnoreCase("InvalidDrug")) {
+		if (!isElementPresentVerification(NoDrugsFoundErrorMessage_ELM, browser)) {
+		    messagesMap.put("No Drug Results", "Error message is Missing");
+		    status = WARNING;
+		}
+	    } else {
+		if (!isElementPresentVerification(SearchResultsMessage_ELM, browser)) {
+		    messagesMap.put("Drug Search Results", "Results Message is missing");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Entering info in Drug Dosage Overaly and validate results.
+     * @author - Siva
+     * @Created -01-JULY-2013
+     * @Modified By -Thangaraj R	
+     * @Modified Date -16-10-2013
+     ************************************************************* 
+     */
+
+    public static void enterInfoinDrugDosageOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String GeneralDrugTablet_LNK = "//a[contains(@title,'TABLET')]~XPATH";
+	String GeneralDrugPackage_LNK = "//a[contains(@title,'%')]~XPATH";
+	String GeneralDrugLiquid_LNK = "//a[contains(@title,'ML')]~XPATH";
+	String SelectedinSearchResults = null;
+	String DisplayedDruginOverlay_ELM = "//*[contains(text(),'ABC')]~XPATH";
+	String PrescriptionQuantity_TXT = "input[id*='qty_prescription']~CSS";
+	String ThirtyDays_RADIO = "input#days_30~CSS";
+	String NintyDays_RADIO = "input#days_90~CSS";
+	String OtherDays_RADIO = "input#days_dyn~CSS";
+	String NoofDays_TXT = "input#pres_last_txt~CSS";
+	String RefillsPeryear_TXT = "input#refills_year~CSS";
+	String DosageType_LST = "select#unit_dosage_type~CSS";
+	String SeeDrugPrices_BTN = "//input[@id='drugprices' or @alt='See Drug Prices' or @title='See drug prices']~XPATH";
+	String ServerlineErrorValidation_ELM = "//strong[contains(text(),'Please correct any missing or invalid information to continue')]~XPATH";
+	String QuantityFieldErrorMessage_ELM = "//p[contains(text(),'Please enter a quantity of at least one.')]~XPATH";
+	String DosageListErrorMessage_ELM = "//p[contains(text(),'Please select a dosing unit.')]~XPATH";
+	String RefillPerYearErrorMessage_ELM = "//div[@id='refills_yearErrorText']~XPATH";
+	String DrugPriceHeader_ELM = "//*[contains(text(),'Drug Prices')]~XPATH";
+	String DrugPricingTable_ELM = "//table[@summary='Projected Annual Savings']/tbody/tr~XPATH";
+	String QuantityTypeLabel_ELM = "//label[@for='qty_prescription1']~XPATH";
+	String RefillPerYearErrorMessage = "Please enter a number; 0 or greater.";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // get Drug Type and required Drug from Data sheet.
+	    String DrugType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DrugType");
+	    String RequiredDrugName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RequiredDrugName");
+	    // if we want to select specific drug then provide drug name.
+	    if (RequiredDrugName != null && !RequiredDrugName.equals("-")) {
+		String requiredDrugNameLink = "//a[contains(text(),'" + RequiredDrugName + "')]~XPATH";
+		SelectedinSearchResults = RequiredDrugName;
+		if (!isElementPresentVerifyClick(requiredDrugNameLink, browser)) {
+		    throw new Exception("Not able to click on Drug Name Link");
+		}
+	    } else {
+		// if drug type is Tablet it will select the first available
+		// Tablet drug
+		if (DrugType.equalsIgnoreCase("Tablet")) {
+		    SelectedinSearchResults = getElementByProperty(GeneralDrugTablet_LNK, browser).getText();
+		    if (!isElementPresentVerifyClick(GeneralDrugTablet_LNK, browser)) {
+			throw new Exception("Not able to click on Tablet Drug Name Link");
+		    }
+		}
+		// if drug type is Liquid it will select the first available
+		// Liquid drug
+		else if (DrugType.equalsIgnoreCase("Liquid")) {
+		    SelectedinSearchResults = getElementByProperty(GeneralDrugLiquid_LNK, browser).getText();
+		    if (!isElementPresentVerifyClick(GeneralDrugLiquid_LNK, browser)) {
+			throw new Exception("Not able to click on Liquid Drug Name Link");
+		    }
+		}
+		// if drug type is Package it will select the first available
+		// Package drug
+		else if (DrugType.equalsIgnoreCase("Package")) {
+		    SelectedinSearchResults = getElementByProperty(GeneralDrugPackage_LNK, browser).getText();
+		    if (!isElementPresentVerifyClick(GeneralDrugPackage_LNK, browser)) {
+			throw new Exception("Not able to click on Package Drug Name Link");
+		    }
+		}
+	    }
+	    switchToOverlay(browser);
+	    // Validate the dispaly drug in the Overlay
+	    System.err.print(SelectedinSearchResults);
+	    DisplayedDruginOverlay_ELM = DisplayedDruginOverlay_ELM.replace("ABC", SelectedinSearchResults);
+	    if (!isElementPresentVerification(DisplayedDruginOverlay_ELM, browser)) {
+		messagesMap.put("Search Results display in Overaly", "Results are not dispalying for the selected Drug");
+		status = WARNING;
+	    }
+	    // multiple rows
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// get dosage details
+		String Quantity = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Quantity");
+		String NoofDays = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoofDays");
+		String DosageType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DosageType");
+		String NoofRefills = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoofRefills");
+		String ErrorFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorFields");
+		// enter Quantity
+		if (!clearAndEnterText(PrescriptionQuantity_TXT, Quantity, browser)) {
+		    messagesMap.put("Quantity222", "Not able to Enter Quantity");
+		    status = WARNING;
+		}
+		// Select Dosage type
+		if (DosageType != null && !DosageType.equals("-")) {
+		    new Select(getElementByProperty(DosageType_LST, browser)).selectByVisibleText(DosageType);
+		    String SelectedOption = new Select(getElementByProperty(DosageType_LST, browser)).getFirstSelectedOption().getText();
+		    // Verify Selected Option is dispalyed in Drop Down or not
+		    if (!SelectedOption.equals(DosageType)) {
+			messagesMap.put("Selected Dosage Type", "Selected Dosage Type is not dispalying");
+			status = WARNING;
+		    }
+		    String QuantityLableText = getElementByProperty(QuantityTypeLabel_ELM, browser).getText();
+		    if (DosageType.equalsIgnoreCase("Package")) {
+			DosageType = DosageType.toLowerCase();
+		    }
+		    // Verifying Quantity lable is changed or not based on
+		    // Dosage Option
+		    if (!QuantityLableText.contains(DosageType)) {
+			messagesMap.put("Dosage Type in Quantity field Lable for " + DosageType, "Value (Text) is not chaning dynamically");
+			status = WARNING;
+		    }
+		}
+		// Select No of Days
+		if (NoofDays != null && NoofDays.equalsIgnoreCase("30")) {
+		    if (!checkBoxSelection(browser, ThirtyDays_RADIO, "SELECT")) {
+			messagesMap.put("30 Days Radio Button", "Not able to Select Radio Button");
+			status = WARNING;
+		    }
+		} else if (NoofDays != null && NoofDays.equalsIgnoreCase("90")) {
+		    if (!checkBoxSelection(browser, NintyDays_RADIO, "SELECT")) {
+			messagesMap.put("90 Days Radio Button", "Not able to Select Radio Button");
+			status = WARNING;
+		    }
+		} else if (NoofDays != null && !NoofDays.equals("-")) {
+		    if (!checkBoxSelection(browser, OtherDays_RADIO, "SELECT")) {
+			messagesMap.put("Other Days Radio Button", "Not able to Select Radio Button");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(NoofDays_TXT, NoofDays, browser)) {
+			messagesMap.put("No of Days", "Not able to enter Days");
+			status = WARNING;
+		    }
+		}
+		// Enter No of Refills Per Year
+		if (!clearAndEnterText(RefillsPeryear_TXT, NoofRefills, browser)) {
+		    messagesMap.put("Refills Per Year", "Not able to enter Refills per year.");
+		    status = WARNING;
+		}
+		// click on See Drug Prices
+		if (!isElementPresentVerifyClick(SeeDrugPrices_BTN, browser)) {
+		    throw new Exception("Not able to click on See Drug Price Button");
+		}
+		// Validate error Messages if any else validate Drug Pricing
+		// Results
+		if (ErrorFields != null && !ErrorFields.equals("-")) {
+		    String[] ErrorvalidationFields = ErrorFields.split(":");
+		    if (!isElementPresentVerification(ServerlineErrorValidation_ELM, browser)) {
+			messagesMap.put("Server Line Error Message", "Message is Missing");
+			status = WARNING;
+		    }
+		    for (int k = 0; k < ErrorvalidationFields.length; k++) {
+			if (ErrorvalidationFields[k].equalsIgnoreCase("Quantity")) {
+			    if (!isElementPresentVerification(QuantityFieldErrorMessage_ELM, browser)) {
+				messagesMap.put("Quantity Field", "Error Message is Missing");
+				status = WARNING;
+			    }
+			} else if (ErrorvalidationFields[k].equalsIgnoreCase("Dosage")) {
+			    if (!isElementPresentVerification(DosageListErrorMessage_ELM, browser)) {
+				messagesMap.put("Dosage List", "Error Message is Missing");
+				status = WARNING;
+			    }
+			} else if (ErrorvalidationFields[k].equalsIgnoreCase("Refills")) {
+			    String DisplayedErrorMessage = getElementByProperty(RefillPerYearErrorMessage_ELM, browser).getText();
+			    if (!DisplayedErrorMessage.equals(RefillPerYearErrorMessage)) {
+				messagesMap.put("Refill Per year", "Error Message is Missing");
+				status = WARNING;
+			    }
+			}
+		    }
+		} else {
+		    switchToDefault(browser);
+		    // Valdiate Drug Pricing Results
+		    if (!isElementPresentVerification(DrugPriceHeader_ELM, browser)) {
+			messagesMap.put("Drug Price Header", "Object is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(DrugPricingTable_ELM, browser)) {
+			messagesMap.put("Drug Pricing Table", "Table is Missing");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Drug Search Results for an Alternative Drug
+     * @author - Siva
+     * @Created -02-JULY-2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -16-10-13
+     ************************************************************* 
+     */
+
+    public static void alternativeDrugPricing(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PriceAlterNativeDrug_LNK = "//a[@title='Price an alternative drug']";
+	String PriceAlterNativeDrugsPageHeader_ELM = "//h2[contains(text(),'Price Alternative Drug List Page')]~XPATH";
+	String AddtoDrugPriceTable_BTN = "input[title='Add to Drug Price Table']~CSS";
+	String DrugPriceResults_TABLE = "//table[@summary='Projected Annual Savings']/tbody~XPATH";
+	String PotentialAlternativeDrugText_ELM = "//p[contains(text(),'(Potential alternative drug)')]";
+	String AlterNativeDrugs_DIV = "//div[@id='content']/div[3]/form[@method='post']";
+	String DrugPricesHeader_ELM = "//*[contains(text(),'Drug Prices')]~XPATH";
+	boolean isAlterNativeDrugFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// get Drug Type and required Drug from Data sheet.
+		String RequiredDrugName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RequiredDrugName");
+		String AlterNativeDrug = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AlterNativeDrug");
+		String NoofAlterNativeDruginPricingTable = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i),
+			"NoofAlterNativeDruginPricingTable");
+		// getting the Table rows
+		List<WebElement> DrugPricingTableRows = getElementByProperty(DrugPriceResults_TABLE, browser).findElements(By.tagName("tr"));
+		WebElement PriceAlterNativeDrug = null;
+		// Identifyin the required Price an Alternative drug link for
+		// the given drug
+		for (int k = 0; k < DrugPricingTableRows.size(); k++) {
+		    if (DrugPricingTableRows.get(k).getText().contains(RequiredDrugName)) {
+			List<WebElement> AvailableLinks = DrugPricingTableRows.get(k + 1).findElements(By.tagName("a"));
+			for (int m = 0; m < AvailableLinks.size(); m++) {
+			    if (AvailableLinks.get(m).getText().equalsIgnoreCase("Price an alternative drug")) {
+				PriceAlterNativeDrug = AvailableLinks.get(m);
+				break;
+			    }
+			}
+			break;
+		    }
+		}
+		// click on Price Alternative Drug
+		if (PriceAlterNativeDrug != null) {
+		    PriceAlterNativeDrug.click();
+		    if (!isElementPresentVerification(PriceAlterNativeDrugsPageHeader_ELM, browser)) {
+			messagesMap.put("Price AlterNative Drugs Header", "Object is missing");
+			status = WARNING;
+		    }
+		} else {
+		    throw new Exception("Not able to find Price AlterNative Drug Link");
+		}
+		// Identify the required Alternative drg
+		List<WebElement> pTagElementsinAlterNativeDrugDiv = getElementByProperty(AlterNativeDrugs_DIV, browser).findElements(By.tagName("p"));
+		WebElement AlterNativeDrugRadioButton = null;
+		for (int j = 0; j < pTagElementsinAlterNativeDrugDiv.size(); j++) {
+		    if (pTagElementsinAlterNativeDrugDiv.get(j).getText().contains(AlterNativeDrug)) {
+			AlterNativeDrugRadioButton = pTagElementsinAlterNativeDrugDiv.get(j).findElement(By.tagName("input"));
+			break;
+		    }
+		}
+		// click on Alternative Drug
+		if (AlterNativeDrugRadioButton != null) {
+		    AlterNativeDrugRadioButton.click();
+		} else {
+		    throw new Exception("Not able to find Alter Native Drug in the listed Drugs");
+		}
+		// click on Add to Drug Price Table
+		if (!isElementPresentVerifyClick(AddtoDrugPriceTable_BTN, browser)) {
+		    throw new Exception("Not able to Click on Add to Drug Price Table Button");
+		}
+		// Verify Drug Price header
+		if (!isElementPresentVerification(DrugPricesHeader_ELM, browser)) {
+		    messagesMap.put("Drug Price Header", "Drug Price Results Page is not found after Selecting AlterNative Drug");
+		    status = WARNING;
+		}
+		// Verify wether alternate drug is added to the respective base
+		// drug.
+		DrugPricingTableRows = getElementByProperty(DrugPriceResults_TABLE, browser).findElements(By.tagName("tr"));
+		for (int k = 0; k < DrugPricingTableRows.size(); k++) {
+		    if (DrugPricingTableRows.get(k).getText().contains(RequiredDrugName)) {
+			String DisplayedAlterNativeDrug = DrugPricingTableRows.get(k + 4).findElement(By.tagName("td")).getText();
+			if (DisplayedAlterNativeDrug.contains(AlterNativeDrug)) {
+			    isAlterNativeDrugFound = true;
+			    break;
+			}
+		    }
+		}
+		// if drug is not found then throw WARNING.
+		if (!isAlterNativeDrugFound) {
+		    messagesMap.put("Selected AlterNative Drug", "Drug is missing in Drug Price Results Page");
+		    status = WARNING;
+		}
+		// Verify the dispaly of available Alternate drug in the Pricing
+		// Table
+		if (NoofAlterNativeDruginPricingTable != null && !NoofAlterNativeDruginPricingTable.equals("-")) {
+		    List<WebElement> noofAlterNativeDrugs = browser.findElements(By.xpath(PotentialAlternativeDrugText_ELM));
+		    int intNoofAlterNativeDruginPricingTable = Integer.parseInt(NoofAlterNativeDruginPricingTable);
+		    if (noofAlterNativeDrugs.size() != intNoofAlterNativeDruginPricingTable) {
+			messagesMap.put("No of Avaliable AlterNative Drugs mismatch", "Expected-" + intNoofAlterNativeDruginPricingTable + " But Acutal-" + noofAlterNativeDrugs.size());
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

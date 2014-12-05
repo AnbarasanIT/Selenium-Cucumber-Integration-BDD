@@ -1,0 +1,325 @@
+@pharmacy @psc @PSCDashboradAndDrugPricing
+Feature: All the scenarios in this feature file are related to PSC Drug pricing validations.
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-1
+Scenario: Customer validates Error messages for invalid, less characters and empty drug search from PSC Landing Page.
+
+Given "RX-PSCDASHBRDANDPRICING-1" Customer starts the scenario:
+| InputFileName | SheetName 		   | RowId         	  		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-1 |
+
+And "RX-PSCDASHBRDANDPRICING-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-1" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId      	   |
+| 	Pharmacy  	| PSCDrugData  | EmptySearchResults|
+
+And "RX-PSCDASHBRDANDPRICING-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	   |
+| PharmacyLinkVerification  | Anonymous  | BreadcrumPSCLink|
+
+Then "RX-PSCDASHBRDANDPRICING-1" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId      	  		   |
+| 	Pharmacy  	| PSCDrugData  | Lessthan3CharSearchResults|
+
+And "RX-PSCDASHBRDANDPRICING-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	   |
+| PharmacyLinkVerification  | Anonymous  | BreadcrumPSCLink|
+
+Then "RX-PSCDASHBRDANDPRICING-1" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId      	  	 |
+| 	Pharmacy  	| PSCDrugData  | InvalidSearchResults|
+
+Then "RX-PSCDASHBRDANDPRICING-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-1 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-2
+Scenario: Customer is able to add PSC item to Cart by registering through sign-in page after selection of Membership Type
+
+Given "RX-PSCDASHBRDANDPRICING-2" Customer starts the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   	       |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-2 |
+
+And "RX-PSCDASHBRDANDPRICING-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-2" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "RX-PSCDASHBRDANDPRICING-2" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Guest	  |
+
+Given "RX-PSCDASHBRDANDPRICING-2" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma13 |
+
+Then "RX-PSCDASHBRDANDPRICING-2" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "RX-PSCDASHBRDANDPRICING-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   	       |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-2 |
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-3
+Scenario: Customer is able to select Family membership by adding family and does checkout.
+
+Given "RX-PSCDASHBRDANDPRICING-3" Customer starts the scenario:
+| InputFileName | SheetName 	 		| RowId         	  	    |
+| QC-RX	        | PSCDASHBRDANDPRICING  | RX-PSCDASHBRDANDPRICING-3 |
+
+And "RX-PSCDASHBRDANDPRICING-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Family       | Guest	  |
+
+Given "RX-PSCDASHBRDANDPRICING-3" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |SaveUserNameFlag |
+| Registration  | RxRegistration | RxPharma13 |		Yes		    |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | Yes            |			-                           |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer fills out the fields on the family member information  Overlay and clicks on Continue:
+| InputFileName  | SheetName       | RowId          |
+| Registration   | RxRegistration  | FamilyMember1  |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |VerifyPSCTempID |
+| yes         | -                       | -                         | -                    | -                        |   Yes		   |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+And "RX-PSCDASHBRDANDPRICING-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+| PharmacyLinkVerification  | Anonymous  | RenewMembershipOnline  |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma13 |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "RX-PSCDASHBRDANDPRICING-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	 		| RowId         	  	    |
+| QC-RX	        | PSCDASHBRDANDPRICING  | RX-PSCDASHBRDANDPRICING-3 |
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-4
+Scenario: Customer is able to login  through PSC login page and lands on Your Membership Information Page
+
+Given "RX-PSCDASHBRDANDPRICING-4" Customer starts the scenario:
+| InputFileName | SheetName 		   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-4 |
+
+And "RX-PSCDASHBRDANDPRICING-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | FamilyMembershipButton |
+
+Then "RX-PSCDASHBRDANDPRICING-4" Customer login through the dynamic login section and validates destination page:
+| InputFileName   | SheetName      | RowId   	    |
+| CommonData      |   DynamicLogin | PSCAuthuser1	|
+
+Then "RX-PSCDASHBRDANDPRICING-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "RX-PSCDASHBRDANDPRICING-4" Customer finished testing the scenario:
+| InputFileName | SheetName 		   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-4 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-5
+Scenario: Customer is able to land on Renew configuration Page by clicking on Renew your Prescription Savings Club membership online today link in landing Page. 
+
+Given "RX-PSCDASHBRDANDPRICING-5" Customer starts the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-5 |
+
+Given "RX-PSCDASHBRDANDPRICING-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | 		RowId      		 |
+| Pharmacy      | login	    | PSCCardExpriedUser1	 |
+
+And "RX-PSCDASHBRDANDPRICING-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  	 | PrescriptionSavingsClub|
+| PharmacyLinkVerification  | Authenticated  | RenewMembershipOnline  |
+
+#Then "RX-PSCDASHBRDANDPRICING-5" Customer logout from walgreens:
+#|Source  |
+#| Global |
+
+Then "RX-PSCDASHBRDANDPRICING-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-5 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-6
+Scenario: Customer is able to validate Error Message from Durg Dosage Overlay and then validates Tablet Drug Pricing Results by Providing valid data. 
+
+Given "RX-PSCDASHBRDANDPRICING-6" Customer starts the scenario:
+| InputFileName | SheetName 	 	   | RowId         	  	       |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-6 |
+
+And "RX-PSCDASHBRDANDPRICING-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  	 | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-6" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId         |
+| 	Pharmacy  	| PSCDrugData  | QuanityNoEntry|
+
+Then "RX-PSCDASHBRDANDPRICING-6" Customer fills required fields and observes the results from Durg Dosage Overaly:
+| InputFileName | SheetName    | RowId         			|
+| 	Pharmacy  	| PSCDrugData  | QuanityNoEntry			|
+| 	Pharmacy  	| PSCDrugData  | InvalidRefillEntry 	|
+| 	Pharmacy  	| PSCDrugData  | NegativeQuantityEntry  |
+| 	Pharmacy  	| PSCDrugData  | ZeroRefillEntry	    |
+
+Then "RX-PSCDASHBRDANDPRICING-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	 	   | RowId         	  	       |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-6 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-7
+Scenario: Customer is able to validate Error Message from Liquid Durg Dosage Overlay and then validates liquid Drug Pricing Results by Providing valid data. 
+
+Given "RX-PSCDASHBRDANDPRICING-7" Customer starts the scenario:
+| InputFileName | SheetName 	 		| RowId         	 	    |
+| QC-RX	        | PSCDASHBRDANDPRICING  | RX-PSCDASHBRDANDPRICING-7 |
+
+And "RX-PSCDASHBRDANDPRICING-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  	 | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-7" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId         	   |
+| 	Pharmacy  	| PSCDrugData  | DosageTypeTeaspoon|
+
+Then "RX-PSCDASHBRDANDPRICING-7" Customer fills required fields and observes the results from Durg Dosage Overaly:
+| InputFileName | SheetName    | RowId         				|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeTeaspoon			|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeTableSpoon 		|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeMilliliter  		|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeCubiCentimeter	|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeUnits	    	|
+| 	Pharmacy  	| PSCDrugData  | DosageTypeDrops	    	|
+| 	Pharmacy  	| PSCDrugData  | DosageTypePackage	    	|
+| 	Pharmacy  	| PSCDrugData  | ValidliquidEntry	    	|
+
+Then "RX-PSCDASHBRDANDPRICING-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	 		| RowId         	 	    |
+| QC-RX	        | PSCDASHBRDANDPRICING  | RX-PSCDASHBRDANDPRICING-7 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-8
+Scenario: Rx Authenticated User is able to Price an alternative drug for base drug from Drug Pricing Results Page. 
+
+Given "RX-PSCDASHBRDANDPRICING-8" Customer starts the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-8 |
+
+Given "RX-PSCDASHBRDANDPRICING-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       |
+| CommonData    | login	    | newRx1	  |
+
+And "RX-PSCDASHBRDANDPRICING-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  	 | PrescriptionSavingsClub|
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId         	   	   |
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug1|
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer fills required fields and observes the results from Durg Dosage Overaly:
+| InputFileName | SheetName    | RowId         			|
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug1	|
+
+And "RX-PSCDASHBRDANDPRICING-8" Customer searches for an Alternative Drug from Drug Price Results page:
+| InputFileName | SheetName    | RowId         			|
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug1	|
+| 	Pharmacy  	| PSCDrugData  | AlterNativeDrug1		|
+
+And "RX-PSCDASHBRDANDPRICING-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	    |
+| PharmacyLinkVerification  | Anonymous  	 | PriceAnotherDrug |
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer searches for a Drug from PSC Page and validates results:
+| InputFileName | SheetName    | RowId         	   	   |
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug2|
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer fills required fields and observes the results from Durg Dosage Overaly:
+| InputFileName | SheetName    | RowId         			|
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug2	|
+
+And "RX-PSCDASHBRDANDPRICING-8" Customer searches for an Alternative Drug from Drug Price Results page:
+| InputFileName | SheetName    | RowId         			|
+| 	Pharmacy  	| PSCDrugData  | LescolAlterNativeDrug2	|
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "RX-PSCDASHBRDANDPRICING-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	 	   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-8 |
+
+#------------------------------------------------------------------------------------------------
+@RX-PSCDASHBRDANDPRICING-9
+Scenario: verify whether Rx Authenticated non PSC Member is able to land on Member Card Information when he clicks on view your current savings link
+
+Given "RX-PSCDASHBRDANDPRICING-9" Customer starts the scenario:
+| InputFileName | SheetName 		   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-9 |
+
+Given "RX-PSCDASHBRDANDPRICING-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       |
+| CommonData    | login	    | newRx1	  |
+
+And "RX-PSCDASHBRDANDPRICING-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  	 | RowId      	 		  	 |
+| PharmacyLinkVerification  | Anonymous  	 | PrescriptionSavingsClub   |
+| PharmacyLinkVerification  | Authenticated	 | ViewYourSavingsLink       |
+
+Then "RX-PSCDASHBRDANDPRICING-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "RX-PSCDASHBRDANDPRICING-9" Customer finished testing the scenario:
+| InputFileName | SheetName 		   | RowId         	   		   |
+| QC-RX	        | PSCDASHBRDANDPRICING | RX-PSCDASHBRDANDPRICING-9 |

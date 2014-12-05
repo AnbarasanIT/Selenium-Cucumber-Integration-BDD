@@ -1,0 +1,288 @@
+@checkout @pharmacyCheckout @TransferPrescriptionCheckout
+Feature: I want to verify that Customer can Transfer Prescriptions from other pharmacies
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer1
+Scenario: Customer Transfers Prescription from other pharmacy and picks up in the store
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated3 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+
+#When "" Customer adds a Transfer Prescription to the cart:
+#| FamilyMemberOption | -                |
+#| isNinetyDay        | yes              |
+#| PharmacyName       | cvs              |
+#| PharmacyPhone      | 123-123-1234     |
+#| PrescriptionName   | CVS Transfer Rx  |
+#| PrescriptionNumber | 123654           |
+
+
+#DSL for Keyword POC
+When "" Customer enters text in the text box:
+|PageName             | PharmacyPhone |
+|TransferPrescription | 3124444321    |
+
+When "" Customer enters text in the text box:
+|PageName             | PrescriptionName   |
+|TransferPrescription | CVS Transfer Rx    |
+
+
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage |
+| PickUpInStore  | Pickup Location    |
+
+Then "" Customer selects rx pick up date and time and click on continue
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer2
+Scenario: Customer Transfers 90 day Prescription from other pharmacy and picks up in the store
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated3 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | yes          | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage |
+| PickUpInStore  | Pickup Location    |
+
+Then "" Customer selects rx pick up date and time and click on continue
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer3
+Scenario: Customer Transfers Prescription from other pharmacy and have
+          it shipped to home address using standard delivery
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated3 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage   |
+| ShipToYou      | Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer4
+Scenario: Customer Transfers Prescription from other pharmacy and have
+          it shipped to shipping address using standard delivery
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated3 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage   |
+| ShipToYou      | Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer5
+Scenario: Customer Transfers Prescription from other pharmacy and have
+          it shipped to new shipping address using standard delivery
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated3 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage   |
+| ShipToYou      | Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | no                  | -                | -         | -         | 104 wilmot rd  | Deerfield | 16    | 60015   | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer6
+Scenario: Customer who has family members Transfers Prescription for self and family members
+
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticatedhoh1 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 2                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 1                  | no           | target       | 123-123-1234  | Target Transfer Rx  | 123654             |
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | target       | 123-123-1234  | Target Transfer Rx  | 123654             |
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 4                  | no           | walmart      | 123-123-1234  | Walmart Transfer Rx | 123654             |
+
+#And "" Customer selects a family member:
+#| FamilyMemberOption | self |
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| 0                  | no           | Jewel        | 123-123-1234  | Jewel Transfer Rx   | 123654             |
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage   |
+| ShipToYou      | Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       | -                        | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@transfer7
+Scenario: Customer who does not have family members Transfers a Prescription and also Buys a Daily Living Item
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticatedhoh1 |
+
+And "" Customer Clears the Shopping Cart
+
+When "" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | dl1   |
+
+Then "" Customer adds Daily Living items to the cart from search.
+
+Then "" Customer Goes to the Shopping Cart
+
+Then "" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage   |
+| ShipToYou      | Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| expedited       | standard                 | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+

@@ -1,0 +1,80 @@
+@sdd @pickupInformation
+Feature: All the scenarios and Steps in this feature are to validate the Same Day Delivery (SDD) functionality in Pickup Information page
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-PickupInfo-0
+Scenario: Guest User is able to add SDD Eligible Product to Cart by using Local Deliery Options based on Store number in Search Results page
+
+Given  "SDD-PickupInfo-0" Customer starts the scenario:
+| InputFileName | SheetName  | RowId      		 |
+| QC-SDD        | PickupInfo | SDD-PickupInfo-0  |
+
+Given "SDD-PickupInfo-0" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | SDDRxUser1 |
+
+And "SDD-PickupInfo-0" Customer Clears the Shopping Cart
+
+When  "SDD-PickupInfo-0" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx6 |
+
+And "SDD-PickupInfo-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+#Then "SDD-PickupInfo-0" Customer selects an option to choose between all products or local delivery from search results page:
+#| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+#|        -               |	Yes			  	   | 	 -           | -        		 |  -     		                   |     -	        |			
+
+#Then "SDD-BrowseSearch-0" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+#| InputFileName | SheetName 	 | RowId   		   |
+#| SDDData       | storedetails  | storeselection1 |
+
+Then "SDD-PickupInfo-0" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-PickupInfo-0" Customer Goes to the Shopping Cart
+
+Then "SDD-PickupInfo-0" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-PickupInfo-0" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection4 |
+
+Then "SDD-PickupInfo-0" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | ProductInformation1 |
+
+Then "SDD-PickupInfo-0" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-PickupInfo-0" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PikckUpDetails	  |
+
+Then "SDD-PickupInfo-0" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		 |
+| SDDData       | pickuppage   | mixedcomboinfo1 |
+
+
+# Run the following query to verify, if the store is CurbSide or not and then store it in the Map
+#Then "QUERY-DB-1" Customer runs the Required Query from the DB:
+#| InputFileName | SheetName  | RowId      	  |
+#|  DataBase     | Query      | DBSelectQuery1 |
+
+
+#Then "SDD-PickupInfo-0" Customer verifies the PickUp Window Details from Pickup Information page:
+#| PrescriptionPickupInOrder | StoreHours  | PharamcyHours | VerifyCurbsideMessage | PrescriptionUrgentMessage |
+#| - or yes                  | - no or yes | - no or yes   | - or Yes              | - or Yes                  |
+
+# Use the Map to store the pickup product information to pass to this step
+#Then "SDD-PickupInfo-0" Customer verifies the Product and Contact Details from Pickup Information page:
+#| EmailAddress | PhoneNo   | MobileUpdate | PrescriptionsforPickup | ProductsForPickup |
+#| - or yes     | - or yes  | - or yes     | - 0r Yes               | - 0r Yes          |
+
+
+Then "SDD-PickupInfo-0" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId      		 |
+| QC-SDD        | PickupInfo | SDD-PickupInfo-0  |
+

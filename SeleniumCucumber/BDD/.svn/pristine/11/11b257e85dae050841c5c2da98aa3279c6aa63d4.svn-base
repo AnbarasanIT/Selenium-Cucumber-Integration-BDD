@@ -1,0 +1,395 @@
+package walgreens.ecom.batch.automation.stepdefinitions.customerservice;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.csc.CSCCustomerValidationLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.And;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class CSCCustomerSteps {
+
+    @And("^\"([^\"]*)\" Customer Searches for a User:")
+    public void Customer_Searches_for_an_User(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Searches for a User:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getCSCBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.cscCustomerSearch(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @And("^\"([^\"]*)\" Customer Authenticates an user:")
+    public void Customer_Authenticates_an_user(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Authenticates an user:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getCSCBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.cscRxCustomerAuthentication(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer creates user in CSC:$")
+    public void Customer_creates_user_in_CSC(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer creates user in CSC");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.createNewCustomer(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer Searches for an Order in CSC and selects the Order:$")
+    public void Customer_Searches_for_an_Order_in_CSC_and_Selects_the_Order(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Searches for an Order in CSC and selects the Order");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.searchAndSelectCSCOrder(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @And("^\"([^\"]*)\" Customer gets the current BR points and compare:$")
+    public void Customer_gets_the_current_BR_points_and_compare(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer gets the current BR points and compare");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.getBRPointsAndCompare(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @And("^\"([^\"]*)\" Customer adds the product to cart from Add product by ID page:$")
+    public void Customer_adds_the_product_to_cart_from_Add_product_by_ID_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer adds the product to cart from Add product by ID page");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.addProductByWICId(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the shipping method:$")
+    public void Customer_selects_the_shipping_method(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the shipping method");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.selectShippingMethod(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer adds the payment information:$")
+    public void Customer_adds_the_payment_information(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer adds the payment information");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.enterPaymentInfo(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the shipping address:$")
+    public void Customer_selects_the_shipping_address(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the shipping address:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.selectShippingaddress(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer submits the order and get the order number:$")
+    public void Customer_submits_the_order_and_get_the_order_number(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer submits the order and get the order number:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.submitCSCOrder(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @And("^\"([^\"]*)\" Customer selects patient and prescriber information:$")
+    public void Customer_selects_patient_and_prescriber_information(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects patient and prescriber information:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.selectPatientAndDoctor(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer releases Pre-Order item order details in the Queue from CSC:$")
+    public void Customer_releases_PreOrder_item_order_details_in_the_Queue_from_CSC(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer releases Pre-Order item order details in the Queue from CSC:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.releasePreOrderItemFromCSC(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer returns the order in CSC:$")
+    public void Customer_returns_returns_the_order_in_CSC(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer returns the order in CSC:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.orderReturnInCSC(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer Manually Matches a Dotcom Registered User:$")
+    public void Customer_Manually_Matches_a_Dotcom_Registered_User(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Manually Matches a Dotcom Registered User:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.manuallyMatchCustomer(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the required Store:$")
+    public void Customer_selects_the_required_Store(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the required Store:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.selectStore(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer applies Promotions for Orders:$")
+    public void Customer_applies_Promotions_for_Orders(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer applies Promotions for Orders:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.applyPromotionForOrders(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer does the copy order and updates the product quantity:$")
+    public void Customer_does_the_copy_order_and_updates_the_product_quantity(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer does the copy order and updates the product quantity:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.copyOrder(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies pickup details,enters required information and clicks on continue:$")
+    public void Customer_verifies_pickup_details_enters_required_information_and_clicks_on_continue(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies pickup details,enters required information and clicks on continue:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CSCCustomerValidationLibrary.verifyAndenterInfoinPickupOptionPage(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

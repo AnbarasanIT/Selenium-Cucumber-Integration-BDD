@@ -1,0 +1,614 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class ExpressRefillVerificationLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to navigate to Express Refill Order
+     *          Placement.(Inlcuding Error validation if needed.)Old
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -Thangaraj R
+     * @Modified Date -13-Feb-13
+     ************************************************************* 
+     */
+    public static void enterExpressRxDetailsOld(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ExpressRxNumber_TXT = "input[id*='prescription-number']~CSS";
+	String ExpressRxContinue_BTN = "//input[@id='refill' or @title='Continue']~XPATH";
+	String ServiceErrorMessage_DIV = "//div[@class='error']~XPATH";
+	String RxNumberErrorMessage_DIV = "//form[@id='express-refill']/div[@class='error']~XPATH";
+	String ExpressRxSubmit_BTN = "input[alt='Submit']~CSS";
+	String ExpressConfirmation_ELM = "//*[contains(text(),'Thank you. Your order has been received.')]~XPATH";
+	String strExpressRxNumber = null, strErrorValidation = null, strServiceError = null, strRxError = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// getting Rx number from data sheet
+		strExpressRxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpressRefillNo");
+		strServiceError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ServiceFailureError");
+		strErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "strErrorValidationType");
+		strRxError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage");
+		// if Rx number is not empty then enter the Rx number
+		if (strExpressRxNumber != null && !strExpressRxNumber.equals("-")) {
+		    if (!clearAndEnterText(ExpressRxNumber_TXT, strExpressRxNumber, browser)) {
+			messagesMap.put("Express Refill Number", "Not able to Enter Express Refill Number");
+			status = WARNING;
+		    }
+		}
+		// click on Express Rx continue button
+		if (!isElementPresentVerifyClick(ExpressRxContinue_BTN, browser)) {
+		    throw new Exception("Not able to click on Express Rx Continue");
+		}
+		// Error Validation for Invalid Rx
+		if (strErrorValidation.equalsIgnoreCase("InvalidRx")) {
+		    if (!getElementByProperty(ServiceErrorMessage_DIV, browser).getText().equals(strServiceError)) {
+			messagesMap.put("Service Error message", "Service Error Message is not dispalying correclty for invalid Rx");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxNumberErrorMessage_DIV, browser).getText().equals(strRxError)) {
+			messagesMap.put("Rx Error message", "Invalid Rx Number error message is not dispalying correclty");
+			status = WARNING;
+		    }
+		}
+		// error validation for Empty Rx Number
+		else if (strErrorValidation.equalsIgnoreCase("EmptyRxNumber")) {
+		    if (!getElementByProperty(RxNumberErrorMessage_DIV, browser).getText().contains(strRxError)) {
+			messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			status = WARNING;
+		    }
+		}
+		// if Error Message type is not mentioned then verify for the
+		// submit button in review Order Page and place the order
+		else {
+		    if (!isElementPresentVerification(ExpressRxSubmit_BTN, browser)) {
+			messagesMap.put("Express Submit button", "Express RX submit button is not present");
+			status = WARNING;
+		    }
+		    if (dataMap.get("SubmitOrder") != null) {
+			if (dataMap.get("SubmitOrder").get(0).equalsIgnoreCase("-")) {
+			    // Dont do anything
+			}
+		    } else {
+			if (!isElementPresentVerifyClick(ExpressRxSubmit_BTN, browser)) {
+			    throw new Exception("Not able to click on Submit button");
+			}
+
+			if (!isElementPresentVerification(ExpressConfirmation_ELM, browser)) {
+			    messagesMap.put("Express Refill Confirmation", "Confirmaion message is not present");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+	 ************************************************************* 
+	 * @Purpose - Method to navigate to Express Refill Order
+	 *          Placement.(Inlcuding Error validation if needed.)
+	 * @author - Chezhiyan E
+	 * @Created -
+	 * @Modified By -Thangaraj R
+	 * @Modified Date -03-Sep-13
+	 ************************************************************* 
+	 */
+	public static void enterExpressRxDetails(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String ExpressRefillHeader_H="//div[@id='header_bar']//h1[contains(text(),'Refill with Rx number')]";
+		String ExpressRefillTextBox1_TXT="//input[@id='prescription-number-1']";
+		String ExpressRxContinue_BTN = "//input[@id='refill' or @title='Continue']~XPATH";
+		String ServiceErrorMessage_DIV = "//div[@class='error']~XPATH";
+		String ExpressRxSubmit_BTN = "input[alt='Submit order']~CSS";
+		String ExpressConfirmation_ELM = "//h1[contains(text(),'Thank you for shopping at Walgreens.')]~XPATH";
+		String StreetAddress_TXT = "input[name*='street1']~CSS";
+		String City_TXT = "input[name*='city']~CSS";
+		String State_LST = "//select[@id='statee']~XPATH";
+		String ZipCode_TXT = "//input[@id='zipCodeProvider']~XPATH";
+		String ShipMethod_LST = "//select[@id='shipMethod']~XPATH";
+		String CardNumber_TXT = "//input[@id='cardNumProvider']~XPATH";
+		String ExpirationMonth_LST = "//select[@id='exp_month']~XPATH";
+		String ExpirationYear_LST = "//select[@id='exp_year']~XPATH";
+		String ZipCodeErrorMessage_DIV = "//p[contains(text(),'Please enter a valid 5-digit zip code, e.g. 60601.')]~XPATH";
+		String CardNumberErrorMessage_DIV = "//p[contains(text(),'Enter a valid credit card number.')]~XPATH";
+		String ExpirationDateErrorMessage_DIV = "//p[contains(text(),'Enter a valid month and year.')]~XPATH";
+		String Cancel_BTN = "//input[@alt='Cancel']~XPATH";
+		String Remove_LNK = "//a[@class='fs12']~XPATH";
+		String OrderDetail_ELM = "//div/p[@class='confirmmsg']~XPATH";
+		String Shippingaddr_DIV = "//div[@class='float-left padLt10px']~XPATH";
+		String OrderNumber_DIV = "//div/p[contains(text(),'Order #')]~XPATH";
+		String Creditcard_DIV = "//div/p[contains(text(),'************1111')]";
+		String Prescription_DIV = "//div[@class='prescripItemWrap']~XPATH";
+		String ShippingMethod_DIV = "//div[5][@class='float-left padLt10px']~XPATH";
+		String EmailAddress_TXT = "//input[@id='email-address']~XPATH";
+		String ExpressShipOrderIDContainer_ELM="//div[@id='leftnav']//div/p[contains(text(),'Order')]";
+		String WagExpressRefillNumber_TXT="//div[@id='refill_textbox']//form//input[@id='quickNum']~XPATH";
+		String WagExpressRefill_BTN="//div[@id='refill_textbox']//form//input[@id='refill_button']~XPATH";
+		int NoofPrescription = 0, m = 1;
+		String[] ErrorBoxesArray = null;
+		String[] ErrorTextboxesEquivDIV = { "3", "5", "7", "9", "11", "13" };
+		String strrxNumber = "";
+		String OrderID = null;
+		String SubmitOrder = "";
+		String strErrorValidation = null, strServiceError = null, strRxError = null, strEmailAddress = null, strStreetAddress = null, strCity = null, strState = null, strZipCode = null, strCardNumber = null, strExpressRxNumber1 = null, UIValidationCheckout = null, strInvalidZipCodeError = null, strInvalidCardNumberError = null, strInvalidExpirationDateError = null, CancelButton = null, Removelink = null, SwitchToShipping = null;
+		Map<String, String> messagesMap = null;
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			boolean isRxEntered = false;
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+				CancelButton = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CancelButton");
+				Removelink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Removelink");
+				SwitchToShipping = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SwitchToShipping");
+				// getting Rx number from data sheet
+				ErrorBoxesArray = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorTextboxes").toString().split(":");
+
+				strServiceError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ServiceFailureError");
+				strErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "strErrorValidationType");
+				strRxError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage");
+				NoofPrescription = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoofPrescription1"));
+				strEmailAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EmailAddress");
+				strStreetAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StreetAddress");
+				strCity = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+				strState = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+				strZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipCode");
+				strCardNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CardNumber");
+				strInvalidZipCodeError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InvalidZipcodeErrorMessage");
+				strInvalidCardNumberError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InvalidCardErrorMessage");
+				strInvalidExpirationDateError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InvalidExpirationDateErrorMessage");
+				SubmitOrder = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SubmitOrder");
+
+				System.out.println("EMAIL=" + strEmailAddress);
+
+				if(dataMap.containsKey("NavFromWagHome") && dataMap.get("NavFromWagHome").get(i).equalsIgnoreCase("Yes")){
+
+					browser.get(EcommTestRunner.config.getString("walgreensURL"));
+					strrxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "rxNumber1");
+
+					if (strrxNumber != null && !strrxNumber.equals("-")) {
+						if (!clearAndEnterText(WagExpressRefillNumber_TXT, strrxNumber, browser)) {
+							messagesMap.put("Express Refill Number", "Not able to Enter Express Refill Number in Wag home page");
+							status = WARNING;
+						}
+
+						if(!isElementPresentVerifyClick(WagExpressRefill_BTN, browser)){
+							messagesMap.put("Express Refillbutton", "Not able to click Express Refill button");
+							status = WARNING;
+						}
+
+						if(isElementPresentVerification(ExpressRefillHeader_H, browser)){
+							String RxValue=getElementByProperty(ExpressRefillTextBox1_TXT, browser).getAttribute("value").trim();
+							System.out.println("RxValue="+RxValue);
+							if(!RxValue.equals(strrxNumber)){
+								messagesMap.put("Rx Number", "The Rx Number entered ["+strrxNumber+"] in the Wag Home page Express Refill page is not Present in Express refil page. Instead '"+RxValue+"' is shown");
+								status = WARNING;
+							}
+						}
+					}
+
+				}
+
+				for (m = 1; m <= NoofPrescription; m++) {
+					String rxNumber1_TXT11 = "//input[@id='prescription-number-" + m + "']";
+					strrxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "rxNumber" + m);
+
+					if (strrxNumber != null && !strrxNumber.equals("-")) {
+						if (!clearAndEnterText(rxNumber1_TXT11, strrxNumber, browser)) {
+							messagesMap.put("Express Refill Number", "Not able to Enter Express Refill Number");
+							status = WARNING;
+							continue;
+						}
+						isRxEntered = true;
+					}
+				}
+
+				if (strEmailAddress != null && !strEmailAddress.equals("-")) {
+					if (!clearAndEnterText(EmailAddress_TXT, strEmailAddress, browser)) {
+						messagesMap.put("email Address", "Not able to Enter email Address");
+						status = WARNING;
+					}
+				}
+
+				// click on Express Rx continue button for combined RX
+				if (isRxEntered) {
+					if (!isElementPresentVerifyClick(ExpressRxContinue_BTN, browser)) {
+						throw new Exception("Not able to click on Express Rx Continue");
+					}
+				}
+				// SARAVANAN M-06/JUNE/2013- Error Validations for blank Rx
+				// fields
+				if (strErrorValidation.equalsIgnoreCase("EmptyRxErrorValidation")) {
+
+					if (!isElementPresentVerifyClick(ExpressRxContinue_BTN, browser)) {
+						throw new Exception("Not able to click on Express Rx Continue");
+					}
+
+					if (!getElementByProperty(ServiceErrorMessage_DIV, browser).getText().equals(strServiceError)) {
+						messagesMap.put("Service Error message", "Service Error Message is not dispalying correclty for Empty RX");
+						status = WARNING;
+					}
+				}
+				if (strErrorValidation.equalsIgnoreCase("RXErrorValidation")) {
+					if (!getElementByProperty(ServiceErrorMessage_DIV, browser).getText().equals(strServiceError)) {
+						messagesMap.put("Service Error message", "Service Error Message is not dispalying correclty for combined RX");
+						status = WARNING;
+					}
+
+					// Verifying the service error message for the Rx fields
+					if (ErrorBoxesArray != null && !ErrorBoxesArray.equals("-")) {
+						for (int j = 1; j <= ErrorBoxesArray.length; j++) {
+							String RxNumberErrorMessagee_DIV = "//form[@id='express-refill']/div[" + ErrorTextboxesEquivDIV[(Integer.parseInt(ErrorBoxesArray[j - 1].toString())) - 1] + "]/div/p";
+							if (!getElementByProperty(RxNumberErrorMessagee_DIV, browser).getText().equals(
+									getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage" + j))) {
+								messagesMap.put("Rx Error message", "RX Error Message is not dispalying correclty for combined RX11");
+								status = WARNING;
+							}
+						}
+					}
+				} else // Error validation for shipping type RXs in Billing and
+					// Shipping info page
+				{
+					// #Sasikala J-05/June/2013-Rx type Validation
+					if (!strrxNumber.equals("-")) {
+						if (strrxNumber.split("-")[1].trim().startsWith("3")) {
+							if (CancelButton.equalsIgnoreCase("Yes")) {
+								if (!isElementPresentVerifyClick(Cancel_BTN, browser)) {
+									throw new Exception("Not able to click on Cancel button");
+								}
+							} else {
+								if (Removelink.equalsIgnoreCase("Yes")) {
+									if (!isElementPresentVerifyClick(Remove_LNK, browser)) {
+										throw new Exception("Not able to click on Remove link");
+									}
+								} else {
+									if (strStreetAddress != null && !strStreetAddress.equals("-")) {
+										if (!clearAndEnterText(StreetAddress_TXT, strStreetAddress, browser)) {
+											messagesMap.put("Street Address", "Not able to Enter Street Address");
+											status = WARNING;
+										}
+									}
+									if (strCity != null && !strCity.equals("-")) {
+										if (!clearAndEnterText(City_TXT, strCity, browser)) {
+											messagesMap.put("City", "Not able to Enter City");
+											status = WARNING;
+										}
+									}
+									new Select(getElementByProperty(State_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i),
+											dataMap.get("RowId").get(i), "State"));
+
+									if (strZipCode != null && !strZipCode.equals("-")) {
+										if (!clearAndEnterText(ZipCode_TXT, strZipCode, browser)) {
+											messagesMap.put("ZipCode", "Not able to enter ZipCode ");
+											status = WARNING;
+										}
+									}
+									new Select(getElementByProperty(ShipMethod_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap
+											.get("RowId").get(i), "ShipMethod"));
+
+									if (strCardNumber != null && !strCardNumber.equals("-")) {
+										if (!clearAndEnterText(CardNumber_TXT, strCardNumber, browser)) {
+											messagesMap.put("CardNumber", "Not able to enter Card number ");
+											status = WARNING;
+										}
+									}
+
+									if(!strErrorValidation.equalsIgnoreCase("InvalidExpirationDate")){
+										new Select(getElementByProperty(ExpirationMonth_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i),
+												dataMap.get("RowId").get(i), "ExpirationMonth"));
+										new Select(getElementByProperty(ExpirationYear_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i),
+												dataMap.get("RowId").get(i), "ExpirationYear"));
+									}
+									if (SubmitOrder.equalsIgnoreCase("-")) {
+										// do nothing
+									} else {
+										if (!isElementPresentVerifyClick(ExpressRxSubmit_BTN, browser)) {
+											throw new Exception("Not able to click on Submit button");
+										}
+
+										if (strErrorValidation.equalsIgnoreCase("InvalidZipCode")) {
+											if (!getElementByProperty(ZipCodeErrorMessage_DIV, browser).getText().equals(strInvalidZipCodeError)) {
+												messagesMap.put("Zip Code Error message", "Zip Code Error message is not dispalying correclty");
+												status = WARNING;
+											}
+										} else if (strErrorValidation.equalsIgnoreCase("InvalidCardNumber")) {
+											if (!getElementByProperty(CardNumberErrorMessage_DIV, browser).getText().equals(strInvalidCardNumberError)) {
+												messagesMap.put("Card Number Error message", "Card Number Error message is not dispalying correclty");
+												status = WARNING;
+											}
+										} else if (strErrorValidation.equalsIgnoreCase("InvalidExpirationDate")) {
+											if (!getElementByProperty(ExpirationDateErrorMessage_DIV, browser).getText().equalsIgnoreCase(strInvalidExpirationDateError)) {
+												messagesMap.put("Expiration Date Error message", "Expiration Date Error message is not dispalying correclty ");
+												status = WARNING;
+											}
+										}
+
+										// # Ambika C-20-June-2013 => Express
+										// refill order cionfirmation page
+										// validations
+										if(strErrorValidation.equalsIgnoreCase("-"))//change
+										{//change
+
+
+
+											if (!isElementPresentVerification(OrderDetail_ELM, browser)) {
+												messagesMap.put("Express Refill Order Confirmation details", "Order confirmation details section is not present");
+												status = WARNING;
+											}
+											if (!getElementByProperty(Shippingaddr_DIV, browser).getText().trim().contains(strStreetAddress)) {
+												messagesMap.put("Shipping address details", "Shipping address does not match ");
+												status = WARNING;
+											}
+											if (!isElementPresentVerification(ShippingMethod_DIV, browser)) {
+												messagesMap.put("Shipping method details", "Shipping method not found ");
+												status = WARNING;
+											}
+											if (!getElementByProperty(Creditcard_DIV, browser).getText().contains(strCardNumber.trim().subSequence(1, 1))) {
+												messagesMap.put("Payment details", "Payment detail does not match ");
+												status = WARNING;
+											}
+											if (!getElementByProperty(Prescription_DIV, browser).getText().contains(strrxNumber)) {
+												messagesMap.put("Prescription details", "Prescription numbers does not match ");
+												status = WARNING;
+											}
+
+											OrderID = getElementByProperty(ExpressShipOrderIDContainer_ELM, browser).getText().split(":")[1].trim();
+											if(OrderID.contains(",")){
+												String[] orderArr=OrderID.split(",");
+												for(int inc=0;inc<orderArr.length;inc++){
+													TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_"+(inc+1), orderArr[inc].trim());
+													if (!(orderArr[inc].trim().startsWith("W") || orderArr[inc].trim().startsWith("G") || orderArr[inc].trim().startsWith("T"))) {
+														messagesMap.put("Order number validation", "Order number generated in Z");
+														status = WARNING;
+													}
+												}
+											}else{
+												TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1", OrderID.trim());
+												if (!(OrderID.startsWith("W") || OrderID.startsWith("G") || OrderID.startsWith("T"))) {
+													messagesMap.put("Order number validation", "Order number generated in Z");
+													status = WARNING;
+												}
+											}
+										}//change
+									}
+								}
+							}
+						} else {
+							if (SubmitOrder.equalsIgnoreCase("-")) {
+								// Dont do anything
+							} else {
+								if (!isElementPresentVerifyClick(ExpressRxSubmit_BTN, browser)) {
+									throw new Exception("Not able to click on Submit button");
+								} else {
+									if (!isElementPresentVerification(ExpressConfirmation_ELM, browser)) {
+										messagesMap.put("Express Refill Confirmation", "Confirmaion message is not present");
+										status = WARNING;
+
+									}
+								}
+								OrderID = getElementByProperty(ExpressShipOrderIDContainer_ELM, browser).getText().split(":")[1].trim();
+								if(OrderID.contains(",")){
+									String[] orderArr=OrderID.split(",");
+									for(int inc=0;inc<orderArr.length;inc++){
+										TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_"+(inc+1), orderArr[inc].trim());
+									}
+								}else{
+									TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1", OrderID.trim());
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Place an order in the GSK, VIIV & Bridge Access pages and Error validations
+     * @Created - Ambika C
+     * @Created Date - 11-JULY-2013
+     * @Modified By -Ambika C
+     * @Modified Date - 08-AUG-2013
+     ************************************************************* 
+     */
+    public static void PlaceOrderInGskViivPages(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ZipCode_TXT = "//input[@id='zip']";
+	String Submit_BTN = "//input[@id='Submit']~XPATH";
+	String Remove_LNK = "//a[contains(text(),'Remove')]~XPATH";
+	String RefillRx_BTN = "img[alt='Refill Rx']~CSS";
+	String Confirmation1_ELM = "//*[contains(text(),'You successfully submitted ')]~XPATH";
+	String Prescription_ELM = "//div[contains(@class,'rx')]~XPATH";
+	String GSKPageHeader = "//h1[contains(text(),'Refill GSK Access Prescriptions')]~XPATH";
+	String VIIVPageHeader_H="//h1[contains(text(),'Refill ViiV Healthcare Patient Assistance Program Prescriptions')]~XPATH";
+	String BRIDGESPageHeader_H="//h1[contains(text(),'Refill BRIDGES TO ACCESS Prescriptions')]~XPATH";
+	String ZipCodeErrorMessage_DIV = "//div/label/p[@class='nopad zipRedError']~XPATH";
+	String RxErrorMessage_DIV = "//div/label/p[@class='nopad rxRedError']~XPATH";
+	String OrderNumber_DIV="//h2[@class='presHeading mrgBtm0px padAll5px padLt4px']~XPATH";
+	String TryAgainPage_H = "//h1[contains(text(),'Please Try Again to Refill Rx')]~XPATH";
+	String TryAgainError_DIV = "//div[5]/p[@class='nopad']~XPATH";
+	String TryAgainGlobalError_DIV = "//div[3]/p[contains(text(),'There are')]~XPATH";
+	String UpdateRx_BTN = "//input[@id='UpdateRx']~XPATH";
+	int NoofPrescription = 0, m = 1, j=1;
+	String OrderID = null;
+	String strrxNumber = "";
+	Map<String, String> messagesMap = null;
+	String strZipCode = null, Removelink = null, strErrorValidationType=null, strInvalidZipCodeError=null, strInvalidZipcodeErrorMessage=null,strRxErrorMessage1=null, strRxErrorMessage2=null,strRxErrorMessage3=null, strValidRx=null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		Removelink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Removelink");
+		// getting Rx number and zipcode from data sheet
+		strZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipCode");
+		strValidRx = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ValidRx"); 
+		strErrorValidationType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "strErrorValidationType");
+		strRxErrorMessage1 = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage1");
+		strRxErrorMessage2 = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage2");
+		strRxErrorMessage3 = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxErrorMessage3");
+		strInvalidZipCodeError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InvalidZipcodeErrorMessage");
+		NoofPrescription = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoofPrescription1"));
+		for (m = 1; m <= NoofPrescription; m++) {
+		    String rxNumber1_TXT = "//input[@id='rx" + m + "']";
+		    strrxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "rxNumber" + m);
+		    if (strrxNumber != null && !strrxNumber.equals("-")) {
+			if (!clearAndEnterText(rxNumber1_TXT, strrxNumber, browser)) {
+			    messagesMap.put("Rm number", "Not able to enter rx number ");
+			    status = WARNING;
+			}
+		    }
+		}
+		if (strZipCode != null && !strZipCode.equals("-")) {
+		    if (!clearAndEnterText(ZipCode_TXT, strZipCode, browser)) {
+			messagesMap.put("ZipCode", "Not able to enter ZipCode ");
+			status = WARNING;
+
+		    }
+		}
+
+		// click on Submit button
+		if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		    throw new Exception("Not able to click on submit button");
+		}
+
+		//ADDED Ambika C -JULY-29-2013 - Error validation
+		else if (strErrorValidationType.equalsIgnoreCase("InvalidRxandZipcode")) {
+		    if (!getElementByProperty(RxErrorMessage_DIV, browser).getText().contains(strRxErrorMessage1)) {
+			messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			status = WARNING;
+		    }
+		}
+		// error validation for Empty Rx Number
+		else if (strErrorValidationType.equalsIgnoreCase("EmptyRxNumber")) {
+		    if (!getElementByProperty(RxErrorMessage_DIV, browser).getText().contains(strRxErrorMessage1)) {
+			messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			status = WARNING;
+		    }
+		}
+		// error validation for invalid zipcode
+		else if (strErrorValidationType.equalsIgnoreCase("InvalidZipCode")) {
+		    if (!getElementByProperty(ZipCodeErrorMessage_DIV, browser).getText().equals(strInvalidZipCodeError)) {
+			messagesMap.put("Zip Code Error message", "Zip Code Error message is not dispalying correclty");
+			status = WARNING;
+			continue;
+		    }
+		}
+		// error validation for empty zipcode
+		else if (strErrorValidationType.equalsIgnoreCase("EmptyZipcode")) {
+		    if (!getElementByProperty(ZipCodeErrorMessage_DIV, browser).getText().contains(strInvalidZipCodeError)) {
+			messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			status = WARNING;
+			continue;
+		    }
+		}
+		// error validation for Try again page and update rx
+		else if(isElementPresentVerification(TryAgainPage_H, browser)){
+		    if (strErrorValidationType.equalsIgnoreCase("InvalidRxnumber")) {
+			if (!getElementByProperty(TryAgainError_DIV, browser).getText().contains(strRxErrorMessage2)) {
+			    messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			    status = WARNING;
+
+			}
+		    }
+		    // error validation for expired Rx Number
+		    else if (strErrorValidationType.equalsIgnoreCase("ExpiredRxnumber")) {
+			if (!getElementByProperty(TryAgainError_DIV, browser).getText().contains(strRxErrorMessage2)) {
+			    messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			    status = WARNING;
+			}
+		    }
+		    if (!getElementByProperty(TryAgainGlobalError_DIV, browser).getText().contains(strRxErrorMessage3)) {
+			messagesMap.put("Empty Rx Number field", "Empty Error Message Was displaying wrongly");
+			status = WARNING;
+
+		    }
+		    String rxNumber2_TXT = "//input[@name='rxNumber_0']";
+		    if (!clearAndEnterText(rxNumber2_TXT, strValidRx, browser)) {
+			messagesMap.put("Rx Entry", "Not able to enter rx again ");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(UpdateRx_BTN, browser)) {
+			throw new Exception("Not able to click on Update button");
+		    }
+
+		}
+		if (Removelink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Remove_LNK, browser)) {
+			throw new Exception("Not able to click on Remove link");
+		    }
+		    else {
+			//ADDED Saravanan M -JULY-12-2013 - To validate the Single prescription removal and its target page
+			if (NoofPrescription == 1) {
+			    if (!(isElementPresentVerification(GSKPageHeader, browser)|| isElementPresentVerification(VIIVPageHeader_H, browser) || isElementPresentVerification(BRIDGESPageHeader_H, browser))) {
+				messagesMap.put("Remove RX", "Removing the prescription is not taking the user to the Rx Entering page in case only one RX entered");
+				status = WARNING;
+			    }
+			}
+		    }
+
+		    if (NoofPrescription > 1 || !(Removelink.equalsIgnoreCase("Yes"))) {
+			if (!isElementPresentVerifyClick(RefillRx_BTN, browser)) {
+			    throw new Exception("Not able to click on Refill Rx button");
+			}
+
+			if (!isElementPresentVerification(Confirmation1_ELM, browser)) {
+			    messagesMap.put("Confirmation", "Confirmaion message is not present");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerification(Prescription_ELM, browser)) {
+			    messagesMap.put("Prescription details", "Prescription numbers does not match ");
+			    status = WARNING;
+			    continue;
+			}
+			//ADDED Ambika C -JULY-24-2013 - To validate the Order number
+			OrderID=getElementByProperty(OrderNumber_DIV, browser).getText().split("#")[1].trim();
+			TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID", OrderID);
+		    }
+		}
+	    }
+	}
+	catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+
+	}
+    }
+}

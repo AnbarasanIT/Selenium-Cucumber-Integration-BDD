@@ -1,0 +1,2038 @@
+package walgreens.ecom.batch.automation.library.loginandregistration;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class LoyaltyRegistrationLibrary extends CheckoutLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Required Option(Join Now/Activate Now/Login
+     *          Now) from Loyalty Banner section in Shopping Cart Page
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void functionalityofLoyaltyRegistrationbutton(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Activenow_BTN = "input#attachLoyalty~CSS";
+	String Joinnow_BTN = "input#joinLoyalty~CSS";
+	String Loginnow_BTN = "input#signinLoyalty~CSS";
+	// String JoinnowBalanceRewards_Header =
+	// "//h1[contains(text(),'Join Balance')]~XPATH";
+	String BalanceRewardsorPoints = "input#rewards~CSS";
+	String BalanceRewardsSigninPage = "//p[contains(text(),'in order to manage your membership.')]~XPATH";
+	String ActivateBalanceRewards_Header = "//h1[contains(text(),'Activate Balance')]";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("JoinNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Joinnow_BTN, browser)) {
+		    throw new Exception("Not able to click on Join Now Button");
+		}
+		/*
+		 * if
+		 * (!isElementPresentVerification(JoinnowBalanceRewards_Header,
+		 * browser)) throw new
+		 * Exception("Join Now Balnace Rewadards Page Header is Missing"
+		 * ); if (getElementByProperty(BalanceRewardsorPoints,
+		 * browser).isDisplayed()) throw new Exception(
+		 * "Balance Rewards or Points Field should not be displayed");
+		 */
+	    } else if (dataMap.get("ActivateNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Activenow_BTN, browser)) {
+		    throw new Exception("Not able to click on Active Now Button");
+		}
+		if (!isElementPresentVerification(ActivateBalanceRewards_Header, browser)) {
+		    messagesMap.put("Activate Now", "Activate Now Balnace Rewadards Page Header is Missing");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Activate Now Balnace Rewadards Page Header is Missing");
+		}
+		if (!getElementByProperty(BalanceRewardsorPoints, browser).isDisplayed()) {
+		    messagesMap.put("Balance Rewards or Points", "Balance Rewards or Points Field is not getting displayed");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Balance Rewards or Points Field is not getting displayed");
+		}
+
+	    } else if (dataMap.get("LoginNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Loginnow_BTN, browser)) {
+		    throw new Exception("Not able to click on Login Now Button");
+		}
+		if (!isElementPresentVerification(BalanceRewardsSigninPage, browser)) {
+		    messagesMap.put("Sign-in Page", "Sign-in Page is not displayed");
+		    status = WARNING;
+		    // throw new Exception("Sign-in in Page is not displayed");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Required Option(Join Now/Activate Now/Login
+     *          Now) from Loyalty Banner section in Shopping Cart Page
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void attachLoyaltyFromHomepageViaBalanceRewards(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String HomepageBalanceRewards_LNK = "a[title='Balance Rewards']~CSS";
+	String AttachLoyalty_TXT = "input[id='rewardsno']~CSS";
+	String ActivateNow_BTN = "input[title='Activate Now']~CSS";
+	String LoyaltySignInOption = null, BalanceRewardsNo = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    LoyaltySignInOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyOption");
+
+	    if (!isElementPresentVerifyClick(HomepageBalanceRewards_LNK, browser)) {
+		throw new Exception("Not able to click on Balance Rewards button in home page.");
+	    }
+
+	    if (LoyaltySignInOption.equalsIgnoreCase("Activate")) {
+		BalanceRewardsNo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BalanceRewardsNo");
+		if (!clearAndEnterText(AttachLoyalty_TXT, BalanceRewardsNo, browser)) {
+		    messagesMap.put("Unable to attach loyalty", "Unable to enter Balance Rewards number to attach loyalty");
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerifyClick(ActivateNow_BTN, browser)) {
+		    throw new Exception("Not able to click on activate now in Balance Rewards page.");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to seelct Required Member ship tpe(New / ActivNow) from
+     *          Join Balance Rewards Page
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void selectionfromJoinBalRewardsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CreateMbrship_RADIO = "input#newmembership~CSS";
+	String ActivateNow_RADIO = "input#existingmembership~CSS";
+	String UsenewInfoFile_CHK = "input#new_check~CSS";
+	String UseExistingInfoFile_CHK = "input#existing_check~CSS";
+	String Sumbit_BTN = "input#form_submit~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("CreateNewMembership").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(CreateMbrship_RADIO, browser))
+		    throw new Exception("Not able to Click  the Create Membership Radio Button");
+	    }
+	    if (dataMap.get("ActivateNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ActivateNow_RADIO, browser))
+		    throw new Exception("Not able to Click  the Activate Now Radio Button");
+	    }
+	    if (dataMap.get("UseInformationonFileCheck").get(0).equalsIgnoreCase("Yes")) {
+		if (getElementByProperty(UsenewInfoFile_CHK, browser).isDisplayed())
+		    getElementByProperty(UsenewInfoFile_CHK, browser).click();
+		else if (getElementByProperty(UseExistingInfoFile_CHK, browser).isDisplayed())
+		    getElementByProperty(UseExistingInfoFile_CHK, browser).click();
+		else
+		    throw new Exception("Not able to locate Use file info Checkbox");
+	    }
+	    if (dataMap.get("Submit").get(0).equalsIgnoreCase("yes")) {
+		if (!isElementPresentVerifyClick(Sumbit_BTN, browser))
+		    throw new Exception("Not able to Click  on Sumbit Button");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to enter user(Anonymous/Lite/Rx/Steps user) Information
+     *          in Join Balance rewards page (including Light Register data for
+     *          anonymous user)
+     * @author - Siva
+     * @Created -
+     * @Modified By -SARAVANAN M
+     * @Modified Date -24-OCT-2013
+     ************************************************************* 
+     */
+    public static void enterInfoonJoinBalRewardsPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Zipcode_TXT1 = "//input[@id='regzipcode']~XPATH";
+	String Zipcode_TXT2 = "//input[@id='regzipcode1']~XPATH";
+	String PhoneNumber_TXT = "input#regphonenumber~CSS";
+	String DOBMonth_LST1 = "//select[@id='dob_reg1_Month']~XPATH";
+	String DOBMonth_LST2 = "div[id='existingmembershipdiv'] select[id='dob_reg_Month']~CSS";
+	String DOBDate_LST1 = "//select[@id='dob_reg1_Day']~XPATH";
+	String DOBDate_LST2 = "div[id='existingmembershipdiv'] select[id='dob_reg_Day']~CSS";
+	String DOBYear_LST1 = "//select[@id='dob_reg1_Year']~XPATH";
+	String DOBYear_LST2 = "div[id='existingmembershipdiv'] select[id='dob_reg_Year']~CSS";
+	String Sumbit_BTN = "//input[@id='form_submit' or @title='Submit']~XPATH";
+	String BalanceRewardsorPhone_TXT = "input[id='rewards']~CSS";
+	String FirstName_TXT = "input#firstname~CSS";
+	String LastName_TXT = "input#lastname~CSS";
+	String Emailadd_TXT = "input#emailAddress~CSS";
+	String RetypeEmail_TXT = "input#confirmemailAddress~CSS";
+	String Password_TXT = "input#password_1~CSS";
+	String ConfirmPassword_TXT = "input#confirmpassword~CSS";
+	String HereFromUs_CHK = "input#optIn~CSS";
+	String ActivateNow_RADIO = "input#existingmembership~CSS";
+	String CreateNow_RADIO = "input#newmembership~CSS";
+	//String MaybeLater_RADIO = "input[title='No, may be later']~CSS";
+	String MaybeLater_RADIO = "input[id='no']~CSS";
+	String BalanceRewardsorPhoneFieldName_TXT = "//label[contains(text(),'Balance Rewards # or Phone #:')]~XPATH";
+	String BalanceRewardsNoSpaceorDash_TXT = "//p[contains(text(),'No spaces or dashes')]~XPATH";
+	String LoyaltySuccessMsg_ELM = "//h2[contains(text(),'Rewards Membership Has Been Created')]~XPATH";
+	String LoyaltyActivationSuccessMessage_ELM = "//h2[contains(text(),'Rewards Membership Has Been Activated Online')]~XPATH";
+	String Register_BTN = "//form/input[@name='Register']~XPATH";
+	String StepsRegister_LNK = "a[alt='Register Now']~CSS";
+	String ScreenName_TXT = "input#screenName~CSS";
+	String GenderMale_RDO = "input#genderMale~CSS";
+	String GenderFemale_RDO = "input#genderFemale~CSS";
+	String DWARLandingPage_URL = "steps/stepslanding.jsp";
+	String SignUpforBasicAccess_BTN = "img[alt='Sign up for Basic Access']~CSS";
+	String ZipcodeExtn1_ELM = "//input[@id='regzipcode1extn']~XPATH";
+	String ZipcodeExtn2_ELM = "////input[@id='regzipcodeextn']~XPATH";
+	String AARPNumberField_TXT = "input[id='memberNumber']~CSS";
+	String Password = "", emailAddress = "", RegistrationConfirmationElement = "", VerifySuccessMessage = "", ScreenNameData = "", GenderData = "", FName = "", LName = "";
+	Map<String, String> messagesMap = null;
+	String PhoneNumber = null;
+	String[] DOB = new String[3];
+	String strDOB = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+
+	    // "RegistrationType" Parameter will be used to create walgreens
+	    // account from Steps landing Page etc....
+	    if (dataMap.get("RegistrationType") != null) {
+		// Generate Random Screen Name Data
+		Calendar cal = Calendar.getInstance();
+		String timeinmills = Long.toString(cal.getTimeInMillis());
+		ScreenNameData = ("Screen" + timeinmills).substring(0, 19);
+		GenderData = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Geneder");
+		if (dataMap.get("RegistrationType").get(0).equalsIgnoreCase("Steps")) {
+		    String loginUrl = EcommTestRunner.config.getString("walgreensURL") + DWARLandingPage_URL;
+		    getUrl(browser, loginUrl);
+		    getElementByProperty(StepsRegister_LNK, browser).click();
+		    getElementByProperty(Register_BTN, browser).click();
+		}
+		if (!clearAndEnterText(ScreenName_TXT, ScreenNameData, browser)) {
+		    messagesMap.put("Screen Name", "Not able to Enter Screen Name");
+		    status = WARNING;
+		}
+		if (GenderData != null && GenderData.equalsIgnoreCase("Male")) {
+		    if (!checkBoxSelection(browser, GenderMale_RDO, "SELECT")) {
+			throw new Exception("Not abel to Click on Male Radio Button");
+		    }
+		} else if (GenderData != null && GenderData.equalsIgnoreCase("FeMale")) {
+		    if (!checkBoxSelection(browser, GenderFemale_RDO, "SELECT")) {
+			throw new Exception("Not abel to Click on Female Radio Button");
+		    }
+		}
+	    }
+	    if (dataMap.get("GuestUser").get(0).equalsIgnoreCase("Yes")) {
+		// --Newly Added code to click light reg button in the new Reg
+		// page--SIVA
+		if (isElementPresentVerification(SignUpforBasicAccess_BTN, browser)) {
+		    getElementByProperty(SignUpforBasicAccess_BTN, browser).click();
+		}
+		// ENDED--
+		FName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+		LName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+		Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		String HearFromUsCheckbox = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "HearfromusChkbox");
+		emailAddress = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "EmailAddress");
+		String ConfirmEmailadd = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ConfirmEmailAddress");
+		VerifySuccessMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerifySuccessMessage");
+		RegistrationConfirmationElement = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RegistrationConfirmationElement");
+		String ConfirmPassword = Password;
+		if (FName != null && FName.equalsIgnoreCase("Random")) {
+		    FName = randomNameGenerator();
+		}
+		if (LName != null && LName.equalsIgnoreCase("Random")) {
+		    LName = randomNameGenerator();
+		}
+		if (emailAddress == null || emailAddress.equals("-") || emailAddress.equalsIgnoreCase("Random")) {
+		    emailAddress = randomEmailGenerator();
+		    ConfirmEmailadd = emailAddress;
+		}
+		// Saving the dps_contactInfo Select Query
+		String DPSContactInfoTableSelectQuery = "select * from dps_contact_info where first_name='" + FName + "' and last_name='" + LName + "'";
+		sharedProperties.put("DPSContactInfoTableSelectQuery", DPSContactInfoTableSelectQuery);
+		if (!clearAndEnterText(FirstName_TXT, FName, browser)) {
+		    messagesMap.put("FirstName", "Not able to Enter FirstName");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(LastName_TXT, LName, browser)) {
+		    messagesMap.put("Last Name", "Not able to Enter Last Name");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Emailadd_TXT, emailAddress, browser)) {
+		    messagesMap.put("Email Address", "Not able to Enter Email Address");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(RetypeEmail_TXT, ConfirmEmailadd, browser)) {
+		    messagesMap.put("Confirm Email Address", "Not able to Enter Confirm Email Address");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Password_TXT, Password, browser)) {
+		    messagesMap.put("Password", "Not able to Enter Password");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(ConfirmPassword_TXT, ConfirmPassword, browser)) {
+		    messagesMap.put("Confirm Password", "Not able to Enter Confirm Password");
+		    status = WARNING;
+		}
+		if (HearFromUsCheckbox != null && HearFromUsCheckbox.equalsIgnoreCase("No")) {
+		    if (!isElementPresentVerifyClick(HereFromUs_CHK, browser)) {
+			messagesMap.put("Here From Us Checkbox", "Not able to deselect Here From Us Checkbox");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("BalanceRewardsOption").get(0).equalsIgnoreCase("CreateNew")) {
+		if (!CommonLibrary.checkBoxSelection(browser, CreateNow_RADIO, "SELECT"))
+		    throw new Exception("Not able to Click  the Create New Radio Button");
+	    } else if (dataMap.get("BalanceRewardsOption").get(0).equalsIgnoreCase("ActivateNow")) {
+		if (!CommonLibrary.checkBoxSelection(browser, ActivateNow_RADIO, "SELECT"))
+		    throw new Exception("Not able to Click  the Activate Now Radio Button");
+	    } else if (dataMap.get("BalanceRewardsOption").get(0).equalsIgnoreCase("MaybeLater")) {
+
+		if (!CommonLibrary.checkBoxSelection(browser, MaybeLater_RADIO, "SELECT"))
+		    throw new Exception("Not able to Click  on May be Later Radio Button");
+	    }
+	    if (!dataMap.get("ZipCode").get(0).equalsIgnoreCase("-")) {
+		// SARAVANAN M-24/OCT/2013
+		String Zipcode = dataMap.get("ZipCode").get(0);
+		if (Zipcode.equalsIgnoreCase("FromSheet")) {
+		    Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode");
+		}
+
+		if ((getElementByProperty(Zipcode_TXT1, browser) != null) && getElementByProperty(Zipcode_TXT1, browser).isDisplayed()) {
+		    clearAndEnterText(Zipcode_TXT1, Zipcode, browser);
+		} else if ((getElementByProperty(Zipcode_TXT2, browser) != null) && getElementByProperty(Zipcode_TXT2, browser).isDisplayed()) {
+		    clearAndEnterText(Zipcode_TXT2, Zipcode, browser);
+		} else {
+		    messagesMap.put("Zipcode", "Not able to locate Zipcode field");
+		    status = WARNING;
+		}
+	    }
+	    // New Code to enter data in Zipcode Extn
+	    if (dataMap.get("ZipcodeExt") != null) {
+		if (!dataMap.get("ZipcodeExt").get(0).equalsIgnoreCase("-")) {
+		    if (isElementPresentVerification(ZipcodeExtn1_ELM, browser) && getElementByProperty(ZipcodeExtn1_ELM, browser).isDisplayed()) {
+			clearAndEnterText(ZipcodeExtn1_ELM, dataMap.get("ZipcodeExt").get(0), browser);
+		    } else if (isElementPresentVerification(ZipcodeExtn2_ELM, browser) && getElementByProperty(ZipcodeExtn2_ELM, browser).isDisplayed()) {
+			clearAndEnterText(ZipcodeExtn2_ELM, dataMap.get("ZipcodeExt").get(0), browser);
+		    } else {
+			messagesMap.put("Zipcode", "Not able to locate Zipcode field");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("AARPNumber") != null) {
+		if (!dataMap.get("AARPNumber").get(0).equals("-")) {
+		    if (!clearAndEnterText(AARPNumberField_TXT, dataMap.get("AARPNumber").get(0), browser)) {
+			messagesMap.put("AARP Number", "Not able to enter AARP Number");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // Ended
+	    PhoneNumber = dataMap.get("Phone").get(0);
+	    if (PhoneNumber != null && PhoneNumber.equalsIgnoreCase("Random")) {
+		PhoneNumber = randomPhoneNumberGenerator();
+	    }
+	    if (!dataMap.get("Phone").get(0).equalsIgnoreCase("-")) {
+		// SARAVANAN M - 24/OCT/2013
+		if (PhoneNumber.equalsIgnoreCase("FromSheet")) {
+		    PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Phone");
+		}
+		if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+		    messagesMap.put("Phone number", "Not able to Enter the Phone number");
+		    status = WARNING;
+		}
+	    }
+	    DOB[0] = dataMap.get("DOB-Month").get(0);
+	    DOB[1] = dataMap.get("DOB-Day").get(0);
+	    DOB[2] = dataMap.get("DOB-Year").get(0);
+	    strDOB = randomDOBGenerator();
+	    if (!dataMap.get("DOB-Month").get(0).equals(null)) {
+		if (dataMap.get("DOB-Month").get(0).equalsIgnoreCase("Random")) {
+		    DOB[0] = strDOB.split(":")[0];
+		    DOB[0] = dateFormatChanger(DOB[0], "MM", "MMM").toUpperCase();
+		}
+
+		if (dataMap.get("DOB-Day").get(0).equalsIgnoreCase("Random")) {
+		    DOB[1] = strDOB.split(":")[1];
+		}
+
+		if (dataMap.get("DOB-Year").get(0).equalsIgnoreCase("Random")) {
+		    DOB[2] = strDOB.split(":")[2];
+		}
+	    }
+	    if (!dataMap.get("DOB-Month").get(0).equalsIgnoreCase("-")) {
+		// SARAVANAN M - 24/OCT/2013
+		if (dataMap.get("DOB-Month").get(0).equalsIgnoreCase("FromSheet")) {
+		    DOB[0] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MonthOfBirth");
+		}
+
+		if (isElementPresentVerification(DOBMonth_LST1, browser) && getElementByProperty(DOBMonth_LST1, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBMonth_LST1, browser)).selectByVisibleText(DOB[0]);
+		else if (isElementPresentVerification(DOBMonth_LST2, browser) && getElementByProperty(DOBMonth_LST2, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBMonth_LST2, browser)).selectByVisibleText(DOB[0]);
+		else {
+		    messagesMap.put("DOB Month List", "Not able to locate the DOB Month List");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("DOB-Day").get(0).equalsIgnoreCase("-")) {
+		// SARAVANAN M - 24/OCT/2013
+		if (dataMap.get("DOB-Day").get(0).equalsIgnoreCase("FromSheet")) {
+		    DOB[1] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DayOfBirth");
+		}
+
+		if (isElementPresentVerification(DOBDate_LST1, browser) && getElementByProperty(DOBDate_LST1, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBDate_LST1, browser)).selectByVisibleText(DOB[1]);
+		else if (isElementPresentVerification(DOBDate_LST2, browser) && getElementByProperty(DOBDate_LST2, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBDate_LST2, browser)).selectByVisibleText(DOB[1]);
+		else {
+		    messagesMap.put("DOB Date List", "Not able to locate the DOB Date List");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("DOB-Year").get(0).equalsIgnoreCase("-")) {
+		// SARAVANAN M - 24/OCT/2013
+		if (dataMap.get("DOB-Year").get(0).equalsIgnoreCase("FromSheet")) {
+		    DOB[2] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "YearOfBirth");
+		}
+
+		if (isElementPresentVerification(DOBYear_LST1, browser) && getElementByProperty(DOBYear_LST1, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBYear_LST1, browser)).selectByVisibleText(DOB[2]);
+		else if (isElementPresentVerification(DOBYear_LST2, browser) && getElementByProperty(DOBYear_LST2, browser).isDisplayed())
+		    new Select(getElementByProperty(DOBYear_LST2, browser)).selectByVisibleText(DOB[2]);
+		else {
+		    messagesMap.put("DOB Year List", "Not able to locate the DOB Year List");
+		    status = WARNING;
+		}
+	    }
+	    String BalanceRewardsNumber = dataMap.get("BalanceRewardsOrPhoneNumber").get(0);
+	    if (!BalanceRewardsNumber.equalsIgnoreCase("-")) {
+
+		// SARAVANAN M - 24/OCT/2013
+		if (BalanceRewardsNumber.equalsIgnoreCase("FromSheet")) {
+		    BalanceRewardsNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Phone");
+		    if (BalanceRewardsNumber.contains("E")) {
+			BalanceRewardsNumber = BalanceRewardsNumber.replace(".", "").split("E")[0];
+		    }
+		}
+
+		if (!isElementPresentVerification(BalanceRewardsorPhoneFieldName_TXT, browser)) {
+		    messagesMap.put("Balance Rewards or Phone Number", "Balance Rewards Field Name is displaying wrongly");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(BalanceRewardsNoSpaceorDash_TXT, browser)) {
+		    messagesMap.put("Balance Rewards or Phone Number", "No spaces or dashes text message is not getting displayed");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(BalanceRewardsorPhone_TXT, BalanceRewardsNumber, browser)) {
+		    messagesMap.put("Balance Rewards or Phone Number", "Not able to Enter the Balance Rewards or Phone Number");
+		    status = WARNING;
+		}
+		// Using for inline validations
+		getElementByProperty(BalanceRewardsorPhone_TXT, browser).sendKeys(Keys.TAB);
+	    }
+	    if (dataMap.get("ScreenName") != null) {
+		if (!dataMap.get("ScreenName").get(0).equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(ScreenName_TXT, dataMap.get("ScreenName").get(0), browser)) {
+			messagesMap.put("Screen Name", "Not able to Enter Screen Name specified");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("Submit") != null) {
+		if (dataMap.get("Submit").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Sumbit_BTN, browser))
+			throw new Exception("Not able to click on Submit button");
+		}
+	    } else {
+		getElementByProperty(Sumbit_BTN, browser).sendKeys(Keys.RETURN);
+	    }
+	    // Validating Success Message if required(message will be varied
+	    // depend on the pages)
+	    if (VerifySuccessMessage != null && VerifySuccessMessage.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RegistrationConfirmationElement, browser)) {
+		    messagesMap.put("Walgreens Registration Success Message", "Walgreens Registration Success Message is not displayed");
+		    status = WARNING;
+		}
+
+		if (dataMap.get("BalanceRewardsOption").get(0).equalsIgnoreCase("CreateNew")) {
+		    if (!isElementPresentVerification(LoyaltySuccessMsg_ELM, browser)) {
+			messagesMap.put("Loyalty Registration Success Message", "Walgreens Registration - Loyalty Success Message is not displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("BalanceRewardsOption").get(0).equalsIgnoreCase("ActivateNow")) {
+		    if (!isElementPresentVerification(LoyaltyActivationSuccessMessage_ELM, browser)) {
+			messagesMap.put("Loyalty ActivationSuccess Message", "Loyalty Activation Success Message is not displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // If "RegistrationType" Exists, and value equals to "steps" then
+	    // validate for User Welcome section in Top Left.
+	    if (dataMap.get("RegistrationType") != null) {
+		if (dataMap.get("RegistrationType").get(0).equalsIgnoreCase("Steps")) {
+		    browser.get(browser.getCurrentUrl());
+		    // Verifying Profile name
+		    String ProfileName = getElementByProperty("//*[contains(text(),'Welcome,')]~XPATH", browser).getText().trim();
+		    if (!(ProfileName.equalsIgnoreCase("Welcome, " + ScreenNameData))) {
+			messagesMap.put("Profile Name", "Profile name is displayed wrongly");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // New Parameter for saving test user credentials
+	    if (dataMap.get("saveUserNameAndPasswordInDataSheet") != null) {
+		if (dataMap.get("saveUserNameAndPasswordInDataSheet").get(0).equalsIgnoreCase("Yes")) {
+		    // Getting Test Data Sheet info to Store the details
+		    String putDataFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataFileName");
+		    String putDataSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataSheetName");
+		    String putDataRowId = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataRowId");
+		    // Storing the UserName and password in the given location
+		    TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "UserName", emailAddress.toLowerCase());
+		    TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "Password", Password);
+		}
+	    }
+	    // Save User personal Information
+	    if (dataMap.get("SaveUserPersonalInfo") != null) {
+		if (dataMap.get("SaveUserPersonalInfo").get(0).equalsIgnoreCase("Yes")) {
+		    // Getting Test Data Sheet info to Store the details
+		    String putDataFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataFileName");
+		    String putDataSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataSheetName");
+		    String putDataRowId = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "putDataRowId");
+		    if (dataMap.get("GuestUser").get(0).equalsIgnoreCase("Yes")) {
+			TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "FirstName", FName);
+			TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "LastName", LName);
+		    }
+		    TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "Day", DOB[1]);
+		    TestDataDBManager.putTestData(putDataFileName, putDataSheetName, putDataRowId, "Month", DOB[0]);
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Congrats Message(New
+     *          Membershhip/Activate membership) in the Overlay
+     * @author - Siva
+     * @Created -
+     * @Modified By - Aditya
+     * @Modified Date -11-SEP-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyCongratsMsg(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String NewMemberShipSuccessMessage_Header = null;
+	String ActivationSuccessMessage_Header = null;
+	String LoyaltyLogo = "//img[contains(@src,'balance-care-w_phone') or @title='Balance Rewards Logo' or @alt='Balance Rewards']~XPATH";
+	String WagAccountSuccessMessage_ELM = "//h1[contains(text(),'Your Walgreens.com Account Has Been Created')]~XPATH";
+	String WalkHeader_ELM = "//h1[contains(text(),'Your Steps Membership ')]~XPATH";
+	String Coupons_ELM = "//h1[contains(text(),'Ready to Clip Coupons')]~XPATH";
+	Map<String, String> messagesMap = null;
+	String NewMembershipSuccessMessage = null, ActivationSuccessMessage = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    NewMembershipSuccessMessage = getTestData("CommonData", "loyaltyinfo", "NewMembershipSuccessMessage", "Message");
+	    ActivationSuccessMessage = getTestData("CommonData", "loyaltyinfo", "ActivationSuccessMessage", "Message");
+	    NewMemberShipSuccessMessage_Header = "//h2[contains(text(),'" + NewMembershipSuccessMessage + "')]~XPATH";
+	    ActivationSuccessMessage_Header = "//h2[contains(text(),'" + ActivationSuccessMessage + "')]~XPATH";
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(LoyaltyLogo, browser)) {
+		messagesMap.put("Loyalty Logo", "Loyalty Logo is not being displayed");
+		status = WARNING;
+	    }
+	    if (dataMap.get("MembershipType").get(0).equalsIgnoreCase("New")) {
+		if (!isElementPresentVerification(NewMemberShipSuccessMessage_Header, browser)) {
+		    messagesMap.put("New Membership Success Message", "Not able to find the Loyalty New Membership Success Message on the Confirmation Overlay");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("MembershipType").get(0).equalsIgnoreCase("Activation")) {
+		if (!isElementPresentVerification(ActivationSuccessMessage_Header, browser)) {
+		    messagesMap.put("Activation Membership Success Message", "Not able to find the Loyalty Activation Membership Success Message on the Confirmation Overaly");
+		    status = WARNING;
+		}
+	    } else {
+		messagesMap.put("Proper MembershipType", "Please Enter Proper value for MembershipType Parameter in the feature file");
+		status = WARNING;
+	    }
+	    if (dataMap.get("WagSuccessMsg") != null) {
+		if (dataMap.get("WagSuccessMsg").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(WagAccountSuccessMessage_ELM, browser)) {
+			messagesMap.put("Walgreens Account Success Message", "Message is not getting displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // newly added steps message verification in the confirmation modal
+	    if (dataMap.get("Steps") != null) {
+		if (dataMap.get("Steps").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(WalkHeader_ELM, browser)) {
+			messagesMap.put("Walgreens Account Success Message", "Message is not getting displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // newly added coupons message verification in the confirmation
+	    // modal
+	    if (dataMap.get("Coupon") != null) {
+		if (dataMap.get("Coupon").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(Coupons_ELM, browser)) {
+			messagesMap.put("Walgreens Account Success Message", "Coupons Message is not getting displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    switchToDefault(browser);
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select Required Option from Sign-in or Regster
+     *          page(Signin or Register or GuestCheckout)
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -23-APR-2013
+     ************************************************************* 
+     */
+    public static void selectioninSigninorRegisterPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String UserName_TXT = "input#uname~CSS";
+	String Password_TXT = "//input[@id='password2' or @id='pwd']~XPATH";
+	String Signin_BTN = "//input[@title='Sign In' or @alt='Sign In']~XPATH";
+	String Register_BTN = "input[alt='Register']~CSS";
+	String GlobalRegister_LNK = "a[title='Register']~CSS";
+	String AccountInformation_HEADER = "//h2[contains(text(),'Account Information')]~XPATH";
+	String CreateYourFreeWAGAcountHeader_ELM = "//*[contains(text(),'Create Your FREE Walgreens.com Account')]~XPATH";
+	String GlobalSignin_LNK = "a[title='Sign In']~CSS";
+	String Continue_BTN = "a[title='Continue']~CSS";
+	String ShippingInfoPage_Header = "//*[contains(text(),'Shipping Information') or contains(text(),'Ship address')]~XPATH";
+	String LoyaltyLandingpageRewardsPoints_ELM = "//p[contains(@class,'head_color')]/span~XPATH";
+	String CreateAccount_ELM = "//p[contains(text(),'Create Your FREE Walgreens.com Account')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.get("UserisonSigninPage").get(0).equalsIgnoreCase("No")) {
+		if (!isElementPresentVerifyClick(GlobalSignin_LNK, browser))
+		    throw new Exception("Not able to click on Global Sign-in Link");
+	    }
+	    // modified by Chezhiyan to include clicking on register link in
+	    // global sign in page
+	    else if (dataMap.get("UserisonSigninPage").get(0).equalsIgnoreCase("Global Register")) {
+		if (!isElementPresentVerifyClick(GlobalRegister_LNK, browser)) {
+		    throw new Exception("Not able to click on Global Register link");
+		}
+		if (!isElementPresentVerification(CreateAccount_ELM, browser)) {
+		    messagesMap.put("Create Walgreens.com Account Page", "Page is not navigated to Create Walgreens.com Account Page");
+		    status = WARNING;
+		}
+	    }
+
+	    if (dataMap.get("Signin").get(0).equalsIgnoreCase("Yes")) {
+		String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+		String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		if (!clearAndEnterText(UserName_TXT, userName, browser)) {
+		    messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		    status = WARNING;
+		}
+
+		if (!clearAndEnterText(Password_TXT, password, browser)) {
+		    messagesMap.put("password", "Not able to Enter password in the Text Field.");
+		    status = WARNING;
+		}
+		getElementByProperty(Signin_BTN, browser).sendKeys(Keys.RETURN);
+	    } else if (dataMap.get("Register").get(0).equalsIgnoreCase("Yes")) {
+		getElementByProperty(Register_BTN, browser).click();
+		if (!(isElementPresentVerification(AccountInformation_HEADER, browser) || isElementPresentVerification(CreateYourFreeWAGAcountHeader_ELM, browser))) {
+		    messagesMap.put("Create Walgreens.com Account Page", "Page is not navigated to Create Walgreens.com Account Page");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("GuestCheckout") != null) {
+		if (dataMap.get("GuestCheckout").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+			throw new Exception("Not able to find the Continue button");
+		    }
+		    if (!isElementPresentVerification(ShippingInfoPage_Header, browser)) {
+			messagesMap.put("Shipping Information Page Header", "Not able to find the Shipping Information Page Header");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("ExpectedTargetPage") != null) {
+		if (dataMap.get("ExpectedTargetPage").get(0).equalsIgnoreCase("LoyaltyLandingPage")) {
+
+		    if (isElementPresentVerification(LoyaltyLandingpageRewardsPoints_ELM, browser)) {
+			long Points = Integer.parseInt(getElementByProperty(LoyaltyLandingpageRewardsPoints_ELM, browser).getText().replace(",", ""));
+			if (Points < 0) {
+			    messagesMap.put("Loyalty Points", "Loyalty Points are displaying as Negative");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Loyalty Landing Page", "Page is not navigated to Loyalty Landing Page or Loyalty Points object is changed");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Success Message in Balance Rewards
+     *          creating Page for Anonymous/logged user and Dupe message for
+     *          Loyalty User
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -08-MAY-2013
+     ************************************************************* 
+     */
+    public static void verifyLoyaltySuccessMsginAccountCreationPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String WagAccountCongrats_ELM = "//h1[contains(text(),'Your Walgreens.com Account Has Been Created') or contains(text(),'Your Account Has Been Created')]~XPATH";
+	String LoyaltySuccessMsg_ELM = "//h2[contains(text(),'Rewards Membership Has Been Created')]~XPATH";
+	String LoyaltyActivationSuccessMessage_ELM = "//h2[contains(text(),'Rewards Membership Has Been Activated Online')]~XPATH";
+	String DupeMessage_ELM = "//h1[contains(text(),'Looks Like You Already Have a Balance')]~XPATH";
+	String AARPInconvenienceFailureMessage_ELM = "//*[contains(text(),'We Apologize for the Inconvenience')]~XPATH";
+	String AARPSuccessMessage_ELM = "//h1[contains(text(),'Your AARP Information Has Been Saved')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("RegisteredAs").get(0).equalsIgnoreCase("Guest")) {
+		if (!isElementPresentVerification(WagAccountCongrats_ELM, browser)) {
+		    messagesMap.put("Walgreens Account Message", "Not able to find the Walgreens Account created Congrats Message");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("MembershipType").get(0).equalsIgnoreCase("New")) {
+		if (!isElementPresentVerification(LoyaltySuccessMsg_ELM, browser)) {
+		    messagesMap.put("Loyalty Registration Success Message", "Loyalty Success Message is not displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("MembershipType").get(0).equalsIgnoreCase("Activate")) {
+		if (!isElementPresentVerification(LoyaltyActivationSuccessMessage_ELM, browser)) {
+		    messagesMap.put("Loyalty ActivationSuccess Message", "Loyalty Activation Success Message is not displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("AARPMessageType") != null) {
+		if (dataMap.get("AARPMessageType").get(0).equalsIgnoreCase("Inconvenience")) {
+		    if (!isElementPresentVerification(AARPInconvenienceFailureMessage_ELM, browser)) {
+			messagesMap.put("AARP Inconvenience Failure Meesage", "not able to identify the Message");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("AARPMessageType").get(0).equalsIgnoreCase("Success")) {
+		    if (!isElementPresentVerification(AARPSuccessMessage_ELM, browser)) {
+			messagesMap.put("AARP Success Meesage", "not able to identify the Message");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("DupeMessage") != null) {
+		if (dataMap.get("DupeMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(DupeMessage_ELM, browser)) {
+			messagesMap.put("Dupe Message", "not able to identify the Dupe Message");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("DupeMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(DupeMessage_ELM, browser)) {
+			messagesMap.put("Dupe Message", "Dupe Message should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Required Option from Single Match Page for
+     *          Loyalty Account creation
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void selectionFromSingleMatchPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String SinglePageMatch_ELM = "//h1[contains(text(),'Found a Match - Is This You?')]~XPATH";
+	String ThisisNotMe_BTN = "//input[contains(@title,'This is not me')]~XPATH";
+	String YesUseThisInfo_BTN = "input[title='Yes - Use this Information']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerification(SinglePageMatch_ELM, browser)) {
+		messagesMap.put("Single Page Match H1", "Single Page Match H1 is not being displayed");
+		status = WARNING;
+		// throw new
+		// Exception("Single Page Match H1 is not being displayed");
+	    }
+	    if (dataMap.get("IsThisYOu").get(0).contains("Yes")) {
+		if (!isElementPresentVerifyClick(YesUseThisInfo_BTN, browser)) {
+		    throw new Exception("Not able to click on Yes-Use this Info button");
+		}
+	    } else if (dataMap.get("IsThisYOu").get(0).contains("No")) {
+		if (!isElementPresentVerifyClick(ThisisNotMe_BTN, browser)) {
+		    throw new Exception("Not able to click on This is not me button");
+		}
+	    } else {
+		throw new Exception("please provide a proper value for IsThisYOu option ");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to to Click Sumbit button and select required option
+     *          Update/Notnow in discrepency overly (if required) in We found
+     *          you Page
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void selectionFromWeFoundYouPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String WeFoundYouPage_ELM = "//h1[contains(text(),'We Found You!')]~XPATH";
+	String Submit_BTN = "//*[@title='Submit']~XPATH";
+	String Update_BTN = "img[title='Update']~CSS";
+	String NotNow_BTN = "img[title='Not now']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerification(WeFoundYouPage_ELM, browser)) {
+		messagesMap.put("We Found Page H1 title", "Not able to find the H1 title of We Found Page");
+		status = WARNING;
+		// throw new
+		// Exception("Not able to find the H1 title of We Found Page");
+	    }
+	    if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		throw new Exception("Not able to click on Sumbit button");
+	    }
+	    if (dataMap.get("DiscrepencyOverly").get(0).equalsIgnoreCase("Yes")) {
+		switchToOverlay(browser);
+		if (dataMap.get("Update").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Update_BTN, browser)) {
+			throw new Exception("Not able to click on Update button in the overlay");
+		    }
+		} else if (dataMap.get("NotNow").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NotNow_BTN, browser)) {
+			throw new Exception("Not able to click on Not Now button in the overlay");
+		    }
+		}
+		switchToDefault(browser);
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify No mathc Found Message in Balance Rewards
+     *          creation Page and verfiying No match found/validation failure
+     *          Message in the Overlay.
+     * @author - Siva
+     * @Created -
+     * @Modified By - Ygnash
+     * @Modified Date -18-Nov-13
+     ************************************************************* 
+     */
+    public static void errorValidationforLoyaltyReg(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Submit_BTN = "//*[@title='Submit']~XPATH";
+	String nomatchErrorMsgFrontEnd = "//div[@class='notifyMsg']~XPATH";
+	String ValidationFailure_MSG = "//p[contains(text(),'We were unable to create your Balance')]~XPATH";
+	String NomatchFoundMsg = "//h2[contains(text(),'Your Balance™ Rewards Membership Has NOT Been Activated Online')]~XPATH";
+	String NoMatchFoundMessageFromFrontEnd = "";
+	String NoMatchFoundMessageTextToBeVerified = "We didn't find a match based on the information provided. Please verify the information below. If you continue to experience difficulties you can choose to create a new Balance™ Rewards membership or contact Customer Service at (877) 250-5823.";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("nomatcherrorMsg").get(0).equalsIgnoreCase("Yes")) {
+		NoMatchFoundMessageFromFrontEnd = getElementByProperty(nomatchErrorMsgFrontEnd, browser).getText();
+		if (!NoMatchFoundMessageFromFrontEnd.equalsIgnoreCase(NoMatchFoundMessageTextToBeVerified)) {
+		    messagesMap.put("No match error message", "Not able to find the no match error message in the Account registration page");
+		    status = WARNING;
+		}
+	    }
+
+	    if (dataMap.get("Submit").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+		    throw new Exception("Not able to click on Submit button");
+		}
+	    }
+	    if (dataMap.get("NoMatchFoundOverlayMessage").get(0).equalsIgnoreCase("Yes")) {
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(NomatchFoundMsg, browser)) {
+		    messagesMap.put("No match error message in Overlay", "not able to identify the No Match Found error message in Overlay");
+		    status = WARNING;
+		    // throw new
+		    // Exception("not able to identify the No Match Found error message");
+		}
+		switchToDefault(browser);
+	    }
+	    if (dataMap.get("ValidationFailureOverlayMsg").get(0).equalsIgnoreCase("Yes")) {
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(ValidationFailure_MSG, browser)) {
+		    messagesMap.put("Validation failure message in Overlay", "not able to identify the Validation failure message in Overlay");
+		    status = WARNING;
+		    // throw new
+		    // Exception("not able to identify the Validation failure message");
+		}
+		switchToDefault(browser);
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Congrats Message and page text in the
+     *          Balance Rewards creation page for Anonymous/logged users
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -15-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyingUIinBalRewardsCongratsMessagepage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewardsLogo = "img[title='Balance Rewards']~CSS";
+	String LearnMore_LNK = "a[title='Learn more']~CSS";
+	String SetupAutoRefillInactiveState = "//img[contains(@src,'SetUpRefillReminder_inactive.png')]~XPATH";
+	String RefillRxInactiveState = "//img[contains(@src,'RefillPrescriptions_inactive.png')]~XPATH";
+	String EntirePageDiv = "//div[@id='full_902']~XPATH";
+	String Continue_BTN = "img[title='Continue']~CSS";
+	String RequiredLinkName = null;
+	String RequiredElement = null;
+	String PageSourceText = null;
+	String RequiredText = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    PageSourceText = getElementByProperty(EntirePageDiv, browser).getText();
+	    if (!isElementPresentVerification(BalanceRewardsLogo, browser)) {
+		messagesMap.put("Loyalty Logo", "Not able to identify the Loyalty Logo");
+		status = WARNING;
+		// throw new Exception("Not able to identify the Loyalty Logo");
+	    }
+	    if (dataMap.get("RegisteredAs").get(0).contains("Anonymous")) {
+		if (!isElementPresentVerification(Continue_BTN, browser)) {
+		    messagesMap.put("Continue Button", "Continue Button in Pharmacy Section is not displaying");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Continue Button in Pharmacy Section is not displaying");
+		}
+		if (dataMap.get("MembeshipType").get(0).contains("NewMembership")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!(PageSourceText.contains(RequiredText))) {
+			messagesMap.put("New Membership Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new
+			// Exception("Required Text not found in the Page");
+		    }
+		} else if (dataMap.get("MembeshipType").get(0).contains("Activation")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!PageSourceText.contains(RequiredText)) {
+			messagesMap.put("Activation Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new Exception("Required Text not found");
+		    }
+		    if (!isElementPresentVerification(LearnMore_LNK, browser)) {
+			messagesMap.put("Learn More link", "Learn More is missing");
+			status = WARNING;
+			// throw new Exception("Learn More is missing");
+		    }
+		}
+	    } else if (dataMap.get("RegisteredAs").get(0).contains("Light")) {
+		if (dataMap.get("MembeshipType").get(0).contains("NewMembership")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!PageSourceText.contains(RequiredText)) {
+			messagesMap.put("New Membership Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new Exception("Required Text not found");
+		    }
+		} else if (dataMap.get("MembeshipType").get(0).contains("Activation")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!PageSourceText.contains(RequiredText)) {
+			messagesMap.put("Activation Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new Exception("Required Text not found");
+		    }
+		    if (!isElementPresentVerification(LearnMore_LNK, browser)) {
+			messagesMap.put("Learn More link", "Learn More is missing");
+			status = WARNING;
+			// throw new Exception("Learn More is missing");
+		    }
+		}
+		if (!isElementPresentVerification(SetupAutoRefillInactiveState, browser)) {
+		    messagesMap.put("Set up Autorefill link", "Set up Autorefill link is Enabled");
+		    status = WARNING;
+		    // throw new Exception("Set up Autorefill link is Enabled");
+		}
+		if (!isElementPresentVerification(RefillRxInactiveState, browser)) {
+		    messagesMap.put("Refill Rx link", "Refill Rx link is Enabled");
+		    status = WARNING;
+		    // throw new Exception("Refill Rx link is Enabled");
+		}
+	    } else if (dataMap.get("RegisteredAs").get(0).contains("Pharmacy")) {
+		if (dataMap.get("MembeshipType").get(0).contains("NewMembership")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!PageSourceText.contains(RequiredText)) {
+			messagesMap.put("New Membership Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new Exception("Required Text not found");
+		    }
+		} else if (dataMap.get("MembeshipType").get(0).contains("Activation")) {
+		    RequiredText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyRegistrationText");
+		    if (!PageSourceText.contains(RequiredText)) {
+			messagesMap.put("Activation Required Text", "Required Text not found in the Page");
+			status = WARNING;
+			// throw new Exception("Required Text not found");
+		    }
+		    if (!isElementPresentVerification(LearnMore_LNK, browser)) {
+			messagesMap.put("Learn More link", "Learn More is missing");
+			status = WARNING;
+			// throw new Exception("Learn More is missing");
+		    }
+		}
+		if (isElementPresentVerification(SetupAutoRefillInactiveState, browser)) {
+		    messagesMap.put("Set up Autorefill link ", "Set up Autorefill link should be enabled");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Set up Autorefill link should be enabled");
+		}
+		if (isElementPresentVerification(RefillRxInactiveState, browser)) {
+		    messagesMap.put("Refill Rx link ", "Refill Rx link should be enabled");
+		    status = WARNING;
+		    // throw new Exception("Refill Rx link should be enabled");
+		}
+	    }
+	    if (dataMap.get("MembeshipType").get(0).equalsIgnoreCase("NewMembership")) {
+		for (int i = 1; i <= 15; i++)// 15 links were available in the
+		    // Page
+		{
+		    RequiredLinkName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LinkName_" + i);
+		    RequiredElement = "//*[contains(@title,'" + RequiredLinkName + "')]~XPATH";
+		    if (!isElementPresentVerification(RequiredElement, browser)) {
+			messagesMap.put(RequiredLinkName, " link was not found in the Page");
+			status = WARNING;
+			// throw new Exception(RequiredLinkName +
+			// " link was not found in the Page");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Enter users(Anonymous) information in the
+     *          Loyalty+walgreens account creation Page if CL items in cart.
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -15-MAR-2013
+     ************************************************************* 
+     */
+    public static void WAGandLoyaltyRegistrationforCLiteminCart(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FirstName_TXT = "input#firstname~CSS";
+	String LastName_TXT = "input#lastname~CSS";
+	String Date_LST = "select#dobMonth~CSS";
+	String Month_LST = "select#dobDay~CSS";
+	String Year_LST = "select#dobYear~CSS";
+	String Emailadd_TXT = "input#emailAddress~CSS";
+	String RetypeEmail_TXT = "input#confirmemailAddress~CSS";
+	String Password_TXT = "input#password_1~CSS";
+	String ConfirmPassword_TXT = "input#confirmpassword~CSS";
+	String HereFromUs_CHK = "input#optIn~CSS";
+	String AgeRestricted_DIV = "div#dobYearErrorText~CSS";
+	String LoyaltyRegWarning_DIV = "//div[contains(@class,'notifyMsg')]~XPATH";
+	String ActivateNow_RADIO = "input#existingmembership~CSS";
+	String CreateNow_RADIO = "input#newmembership~CSS";
+	String MaybeLater_RADIO = "input[title='No, may be later'],input[id='no']~CSS";
+	String Zipcode1_TXT = "input#regzipcode~CSS";
+	String Zipcode2_TXT = "input#regzipcode1~CSS";
+	String PhoneNumber_TXT = "input#regphonenumber~CSS";
+	String BalanceRewardsNumber_TXT = "input#rewards~CSS";
+	String Submit_BTN = "input[title='Submit']~CSS";
+	String BalanceRewardsorPhoneFieldName_TXT = "//label[contains(text(),'Balance Rewards # or Phone #:')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String FName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FirstName");
+		String Lname = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LastName");
+		String Date = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Day");
+		String Month = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Month");
+		String Year = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Year");
+		String Password = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Password");
+		if (FName != null && FName.equalsIgnoreCase("Random")) {
+		    FName = randomNameGenerator();
+		}
+		if (Lname != null && Lname.equalsIgnoreCase("Random")) {
+		    Lname = randomNameGenerator();
+		}
+		String ConfirmPassword = Password;
+		String HearFromUsCheckbox = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "HearfromusChkbox");
+		String emailAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Email");
+		if (emailAddress.equalsIgnoreCase("-")) {
+		    emailAddress = randomEmailGenerator();
+		}
+		String ConfirmEmailadd = emailAddress;
+		String AgeRestrictedMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AgeRestrictedMsg");
+		String ZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipCode");
+		String PhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Phone");
+		String BalanceRewardNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "BalanceRewardsNumber");
+		String VerifyDOBYearList = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOBYearList");
+		if (PhoneNumber != null && PhoneNumber.equalsIgnoreCase("Random")) {
+		    PhoneNumber = randomPhoneNumberGenerator();
+		}
+		if (!FName.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(FirstName_TXT, FName, browser)) {
+			messagesMap.put("FirstName", "Not able to Enter FirstName");
+			status = WARNING;
+			// throw new Exception("Not able to Enter FirstName");
+		    }
+		}
+		if (!Lname.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(LastName_TXT, Lname, browser)) {
+			messagesMap.put("Last Name", "Not able to Enter Last Name");
+			status = WARNING;
+			// throw new Exception("Not able to Enter Last Name");
+		    }
+		}
+		if (!Date.equalsIgnoreCase("-")) {
+		    new Select(getElementByProperty(Date_LST, browser)).selectByIndex(Integer.parseInt(Date));
+		}
+		if (!Month.equalsIgnoreCase("-")) {
+		    new Select(getElementByProperty(Month_LST, browser)).selectByIndex(Integer.parseInt(Month));
+		}
+		if (!Year.equalsIgnoreCase("-")) {
+		    new Select(getElementByProperty(Year_LST, browser)).selectByIndex(Integer.parseInt(Year));
+		}
+		if (!emailAddress.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(Emailadd_TXT, emailAddress, browser)) {
+			messagesMap.put("Email Address", "Not able to Enter Email Address");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter Email Address");
+		    }
+		    if (!clearAndEnterText(RetypeEmail_TXT, ConfirmEmailadd, browser)) {
+			messagesMap.put("Confirm Email Address", "Not able to Enter Confirm Email Address");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter Confirm Email Address");
+		    }
+		}
+		if (!Password.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(Password_TXT, Password, browser)) {
+			messagesMap.put("Password", "Not able to Enter Password");
+			status = WARNING;
+			// throw new Exception("Not able to Enter Password");
+		    }
+		    if (!clearAndEnterText(ConfirmPassword_TXT, ConfirmPassword, browser)) {
+			messagesMap.put("Confirm Password", "Not able to Enter confirm Password");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter confirm Password");
+		    }
+		}
+		if (HearFromUsCheckbox.equalsIgnoreCase("No")) {
+		    if (!isElementPresentVerifyClick(HereFromUs_CHK, browser)) {
+			messagesMap.put("Here From Us Checkbox", "Not able to deselect Here From Us Checkbox");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to deselect Here From Us Checkbox");
+		    }
+		}
+		if (VerifyDOBYearList != null && VerifyDOBYearList.equalsIgnoreCase("Yes")) {
+		    List<WebElement> AvailableYearElements = new Select(getElementByProperty(Year_LST, browser)).getOptions();
+		    String LastYearinList = AvailableYearElements.get(AvailableYearElements.size() - 1).getText();
+		    String currentYear = EcommTestRunner.currentDate.split("-")[2];
+		    // Displayed Year should be lessthan 11 years Current Years
+		    int RequiredYearinDropDown = Integer.parseInt(currentYear) - 11;
+		    String strRequiredYear = Integer.toString(RequiredYearinDropDown);
+		    if (!LastYearinList.equals(strRequiredYear)) {
+			messagesMap.put("Years in Drop Down box", "Years are not displaying till" + RequiredYearinDropDown + " in the Year drop down box.");
+			status = WARNING;
+			// throw new
+			// Exception("Years are not displaying till 2001 in the Year drop down box.");
+		    }
+		}
+		if (dataMap.get("MembershipType").get(i).equalsIgnoreCase("New")) {
+		    if (!isElementPresentVerifyClick(CreateNow_RADIO, browser)) {
+			throw new Exception("Not able to click on New Membership Radio button");
+		    }
+		    if (!clearAndEnterText(Zipcode1_TXT, ZipCode, browser)) {
+			messagesMap.put("ZipCode", "Not able to Enter ZipCode");
+			status = WARNING;
+			// throw new Exception("Not able to Enter ZipCode");
+		    }
+		    if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+			messagesMap.put("Phone Number", "Not able to Enter Phone Number");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter Phone Number");
+		    }
+		} else if (dataMap.get("MembershipType").get(i).equalsIgnoreCase("Activate")) {
+		    if (!isElementPresentVerifyClick(ActivateNow_RADIO, browser)) {
+			throw new Exception("Not able to click on Activate Radio button");
+		    }
+		    if (!isElementPresentVerification(BalanceRewardsorPhoneFieldName_TXT, browser)) {
+			messagesMap.put("Balance Rewards or Phone Number", "Balance Rewards Field Name is displaying wrongly");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(BalanceRewardsNumber_TXT, BalanceRewardNumber, browser)) {
+			messagesMap.put("Balance Rewards Number", "Not able to Enter Balance Rewards Number");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter Balance Rewards Number");
+		    }
+		    if (!clearAndEnterText(Zipcode2_TXT, ZipCode, browser)) {
+			messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+			status = WARNING;
+			// throw new Exception("Not able to Enter Zipcode");
+		    }
+		} else if (dataMap.get("MembershipType").get(i).equalsIgnoreCase("Maybelater")) {
+		    if (!isElementPresentVerifyClick(MaybeLater_RADIO, browser)) {
+			throw new Exception("Not able to click on May be Later Radio button");
+		    }
+		}
+		if (dataMap.get("Submit").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+			throw new Exception("Not able to click on Submit Button");
+		    }
+		}
+		if (dataMap.get("ErrorType").get(i).equalsIgnoreCase("AgeRestricted")) {
+		    if (!getElementByProperty(AgeRestricted_DIV, browser).getText().equalsIgnoreCase(AgeRestrictedMessage)) {
+			messagesMap.put("Age Restricted Error", "Age Restricted Error Message is wrongly getting displayed");
+			status = WARNING;
+			// throw new
+			// Exception("Age Restricted Error Message is wrongly getting displayed");
+		    }
+		} else if (dataMap.get("ErrorType").get(i).equalsIgnoreCase("NoMatchError")) {
+		    String LoylatyWarningMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoMatchWarnMessage");
+		    if (!getElementByProperty(LoyaltyRegWarning_DIV, browser).getText().equalsIgnoreCase(LoylatyWarningMessage)) {
+			messagesMap.put("Loyalty Warning Error", "Loyalty Warning Error Message is wrongly getting displayed");
+			status = WARNING;
+			// throw new
+			// Exception("Loyalty Warning Error Message is wrongly getting displayed");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyatly Service Down
+     *          Messages(Validation/Timeout) in the Overlay.
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -08-Jan-2012
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyFailureMessage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ValidationFailureMessage = "//p[contains(text(),'match based on the information provided')]~XPATH";
+	String LtyAttachFailuerMessage_ELM = "//h2[contains(text(),'Rewards Membership Has NOT Been Activated Online')]~XPATH";
+	String FailureMessage = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    switchToOverlay(browser);
+	    FailureMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Message");
+	    if (dataMap.get("FailureMsgType").get(0).equalsIgnoreCase("Validation")) {
+		if (!isElementPresentVerification(LtyAttachFailuerMessage_ELM, browser)) {
+		    messagesMap.put("Validation Failure Header", "Header is missing or wrongly getting displayed");
+		    status = WARNING;
+		}
+		if (!getElementByProperty(ValidationFailureMessage, browser).getText().equals(FailureMessage)) {
+		    messagesMap.put("Validation Failure message", "Validation Failure message is displaying wrongly");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Validation Failure message is displaying wrongly");
+		}
+	    } else {
+		messagesMap.put("Proper value", "Please Enter Proper value for FailureMsgType Parameter in the feature file");
+		status = WARNING;
+		// throw new
+		// Exception("Please Enter Proper value for FailureMsgType Parameter in the feature file");
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Error Validation for Balance Rewards and
+     *          Zipcode Fields in Loyalty/Walgreens Account Creation Page
+     * @author - Siva
+     * @Created -10 Dec 2012
+     * @Modified By -Aditya
+     * @Modified Date -05-JUL-2013
+     ************************************************************* 
+     */
+    public static void errorValidationinLtyAccountCreationPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewardsorPhoneError_DIV = "div#rewardsErrorText~CSS";
+	String BalanceRewardsField_TXT = "input#rewards~CSS";
+	String PhoneNumberError_DIV = "//div[@id='regphonenumberErrorText' or @id='phonenumberErrorText']~XPATH";
+	String PhoneNumber_TXT = "//input[@id='regphonenumber' or @id='phonenumber']~XPATH";
+	String Zipcode_TXT1 = "//input[@id='regzipcode' or @id='regzipcode2']~XPATH";
+	String Zipcode_TXT2 = "//input[@id='regzipcode1']~XPATH";
+	String ZipcodeFieldError2_DIV = "//div[@id='regzipcode1ErrorText' or @id='regzipcode2ErrorText']~XPATH";
+	String ZipcodeFieldError1_DIV = "//div[@id='regzipcodeErrorText' or @id='regzipcode2ErrorText']~XPATH";
+	String ZipcodeExtnError1_ELM = "//div[@id='regzipcodeextnErrorText' or @id='regzipcode2extnErrorText']~XPATH";
+	String ZipcodeExtnError2_ELM = "//div[@id='regzipcode1extnErrorText' or @id='regzipcode2extnErrorText']~XPATH";
+	String ScreenNameError_DIV = "//div[@id='screenNameErrorText']~XPATH";
+	String GenderErr_DIV = "//div[@id='genderMaleErrorText']~XPATH";
+	String DobErr_DIV = "//p[contains(text(),'Please enter a complete date of birth.')]~XPATH";
+	Map<String, String> messagesMap = null;
+	String BalanceRewardsErrorMessage = null, PhoneErrorMessage = null, ZipcodeValue = null, ZipcodeErrorMessage = null, ScreenErrorMessage = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.get("BalanceRewardsorPhone").get(0).equalsIgnoreCase("Lessthan10digit")) {
+		BalanceRewardsErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BalanceRewardsorPhoneMessage");
+		if (!getElementByProperty(BalanceRewardsorPhoneError_DIV, browser).getText().equals(BalanceRewardsErrorMessage)) {
+		    messagesMap.put("Balance Rewards Field", "Lessthan10digit Error Message is Wrongly displaying");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("BalanceRewardsorPhone").get(0).equalsIgnoreCase("Lessthan13digit")) {
+		BalanceRewardsErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BalanceRewardsorPhoneMessage");
+		if (!getElementByProperty(BalanceRewardsorPhoneError_DIV, browser).getText().equals(BalanceRewardsErrorMessage)) {
+		    messagesMap.put("Balance Rewards Field", "Lessthan13digit Error Message is Wrongly displaying");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("BalanceRewardsorPhone").get(0).equalsIgnoreCase("Invalid13digit")) {
+		BalanceRewardsErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BalanceRewardsorPhoneMessage");
+		if (!getElementByProperty(BalanceRewardsorPhoneError_DIV, browser).getText().equals(BalanceRewardsErrorMessage)) {
+		    messagesMap.put("Balance Rewards Field", "Invalid 13digit Error Message is Wrongly displaying");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("BalanceRewardsorPhone").get(0).equalsIgnoreCase("SpecialCharacters")) {
+		String ValueinBalanceRewardsField = getElementByProperty(BalanceRewardsField_TXT, browser).getAttribute("value");
+		if (!ValueinBalanceRewardsField.equals("")) {
+		    messagesMap.put("Balance Rewards Field", "Special Characters should not be allowed");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("BalanceRewardsorPhone").get(0).equalsIgnoreCase("NoEntry")) {
+		BalanceRewardsErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BalanceRewardsorPhoneMessage");
+		if (!getElementByProperty(BalanceRewardsorPhoneError_DIV, browser).getText().equals(BalanceRewardsErrorMessage)) {
+		    messagesMap.put("Balance Rewards Field", "No Entry Error Message is Wrongly displaying");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("Phone").get(0).equalsIgnoreCase("Lessthan10digit")) {
+		PhoneErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumberErrorMessage");
+		if (!getElementByProperty(PhoneNumberError_DIV, browser).getText().equalsIgnoreCase(PhoneErrorMessage)) {
+		    messagesMap.put("Phone Number Field", "Lessthan10digit Error Message is Wrongly displaying");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("Phone").get(0).equalsIgnoreCase("SpecialCharacter")) {
+		if (!getElementByProperty(PhoneNumber_TXT, browser).getAttribute("value").equalsIgnoreCase("")) {
+		    messagesMap.put("Phone Number Field", "It is allowing Special Characters");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("Phone").get(0).equalsIgnoreCase("Only10digit")) {
+		if (!getElementByProperty(PhoneNumber_TXT, browser).getAttribute("maxlength").equals("10")) {
+		    messagesMap.put("Phone Number Field", "It is allowing More than 10 Characters");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("Zipcode").get(0).equalsIgnoreCase("SpecialCharacter")) {
+		if (isElementPresentVerification(Zipcode_TXT1, browser) && getElementByProperty(Zipcode_TXT1, browser).isDisplayed()) {
+		    ZipcodeValue = getElementByProperty(Zipcode_TXT1, browser).getAttribute("value").split("\n")[1];
+		} else if (isElementPresentVerification(Zipcode_TXT2, browser) && getElementByProperty(Zipcode_TXT2, browser).isDisplayed()) {
+		    ZipcodeValue = getElementByProperty(Zipcode_TXT2, browser).getAttribute("value").split("\n")[1];
+		}
+		if (!ZipcodeValue.equalsIgnoreCase("")) {
+		    messagesMap.put("Zipcode", "It is allowing Special Characters");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("Zipcode").get(0).equalsIgnoreCase("Lessthan5digit")) {
+		ZipcodeErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipcodErrorMessage");
+		String ApplicationErrorMessage = null;
+		if (getElementByProperty(Zipcode_TXT1, browser).isDisplayed()) {
+		    ApplicationErrorMessage = getElementByProperty(ZipcodeFieldError1_DIV, browser).getText().split("\n")[1];
+		} else if (getElementByProperty(Zipcode_TXT2, browser).isDisplayed()) {
+		    ApplicationErrorMessage = getElementByProperty(ZipcodeFieldError2_DIV, browser).getText().split("\n")[1];
+		}
+		if (!ApplicationErrorMessage.equals(ZipcodeErrorMessage)) {
+		    messagesMap.put("Zipcode", "Less Than 5 digit Error Message is wrongly displaying");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("ZipcodeExtn") != null) {
+		if (dataMap.get("ZipcodeExtn").get(0).equalsIgnoreCase("Lessthan4digit")) {
+		    String ZipcodeExtnErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipcodeExtnErrorMessage");
+		    String AppErrorMessage = null;
+		    if (isElementPresentVerification(ZipcodeExtnError1_ELM, browser) && getElementByProperty(ZipcodeExtnError1_ELM, browser).isDisplayed()) {
+			AppErrorMessage = getElementByProperty(ZipcodeExtnError1_ELM, browser).getText();
+		    } else {
+			AppErrorMessage = getElementByProperty(ZipcodeExtnError2_ELM, browser).getText();
+		    }
+		    if (!AppErrorMessage.trim().equals(ZipcodeExtnErrorMessage.trim())) {
+			messagesMap.put("Zipcode Extn ", "Less Than 4 digit Error Message is wrongly displaying");
+			status = WARNING;
+		    }
+		}
+
+	    }
+	    if (dataMap.get("ScreenName") != null) {
+		if (dataMap.get("ScreenName").get(0).equalsIgnoreCase("Existing")) {
+		    ScreenErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ScreenErrorMessage");
+		    if (!getElementByProperty(ScreenNameError_DIV, browser).getText().equalsIgnoreCase(ScreenErrorMessage)) {
+			messagesMap.put("Screen name Field", "Screen name already exists error message not displaying");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ScreenName").get(0).equalsIgnoreCase("LessData")) {
+		    ScreenErrorMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ScreenErrorMessage");
+		    if (!getElementByProperty(ScreenNameError_DIV, browser).getText().equalsIgnoreCase(ScreenErrorMessage)) {
+			messagesMap.put("Screen name Field", "Screen name must be between 6 -25 message not displaying");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // Newly Added Error Validations
+	    if (dataMap.get("DOBErrorMessage") != null) {
+		if (dataMap.get("DOBErrorMessage").get(0).equalsIgnoreCase("BlankValue")) {
+		    if (!isElementPresentVerification(DobErr_DIV, browser)) {
+			messagesMap.put("DOB field", "Please enter complete DOB text not present");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("GenderErrorMessage") != null) {
+		if (dataMap.get("GenderErrorMessage").get(0).equalsIgnoreCase("NoSelection")) {
+		    if (!isElementPresentVerification(GenderErr_DIV, browser)) {
+			messagesMap.put("Gender section", "Please select your gender not present");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     * ************************************************************
+     * 
+     * @Purpose - Method To validate profile prepopulated info in Balnce Rewards
+     *          Account Creation Page
+     * @author - Siva
+     * @Created -09-MAY-2013
+     * @Modified By -SIVA
+     * @Modified Date -15-MAY-2013
+     *           ************************************************************
+     **/
+    public static void validatePrePopInfoinBalanceRewardsAccountCreationPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	// Personal Info Page Elements
+	String FirstName_ELM = "//div[@id='personal_info_module']/div/div[2]/div[3]~XPATH";
+	String LastName_ELM = "//div[@id='personal_info_module']/div/div[2]/div[6]~XPATH";
+	String EmailAddress1_ELM = "//div[@id='security_info_module']/div/div[2]/div[6]~XPATH";
+	String EmailAddress2_ELM = "//div[@id='security_info_module']/div/div[3]/div[6]~XPATH";
+	String PhoneNumber_ELM = "//div[@id='personal_info_module']/div/div[2]/div[12]/p[2]~XPATH";
+	String DOB_ELM = "//div[@id='personal_info_module']/div/div[2]/div[15]~XPATH";
+	String ZipCode_ELM = "//div[@id='personal_info_module']/div/div[2]/div[9]/p~XPATH";
+
+	// AARP & Balance Rewards Join Page Elements
+	String AARPPageFirstName_ELM = "//form[@id='aarpregn']/div[3]/div/div[4]/div[2]~XPATH";
+	String AARPPageLastName_ELM = "//form[@id='aarpregn']/div[3]/div/div[5]/div[2]~XPATH";
+	String AARPPageEmailAddress_ELM = "//form[@id='aarpregn']/div[3]/div/div[6]/div[2]~XPATH";
+	String AARPPageBalanceRewardsNumber_ELM = "//form[@id='aarpregn']/div[3]/div/div[7]/div[2]~XPATH";
+
+	// Balance Rewards Element in Your Account Page
+	String BalanceRewardsNumber_ELM = "//div[@id='yourAccountLandingPage']/div[2]/div[2]/div/div/div[2]/div[2]/div/p~XPATH";
+
+	// Balance Rewards Join Page Elements
+	String BRPage_FirstName_ELM = "//div[contains(@class,'innerdiv')]/div/div[2]~XPATH";
+	String BRPage_LastName_ELM = "//div[contains(@class,'innerdiv')]/div[2]/div[2]~XPATH";
+	String BalanceRewardsorPhoneNumber_TXT = "//input[@id='rewards']~XPATH";
+	String Zipcode1_TXT = "//input[@id='regzipcode1']~XPATH";
+	String Zipcode2_TXT = "//input[@id='regzipcode']~XPATH";
+	String PhoneNumber_TXT = "//input[@id='regphonenumber']~XPATH";
+	String DOBMonth1_LST = "//select[@id='dob_reg1_Month']~XPATH";
+	String DOBMonth2_LST = "//select[@id='dob_reg_Month']~XPATH";
+	String DOBDate1_LST = "//select[@id='dob_reg1_Day']~XPATH";
+	String DOBDate2_LST = "//select[@id='dob_reg_Day']~XPATH";
+	String DOBYear1_LST = "//select[@id='dob_reg1_Year']~XPATH";
+	String DOBYear2_LST = "//select[@id='dob_reg_Year']~XPATH";
+
+	String PersonalInfoPage_URL = "youraccount/default.jsp#show_personal_info";
+	String YourAccountPage_URL = "youraccount/default.jsp";
+
+	String PersonalInfoFName = null, PersonalInfoLName = null, PersonalInfoEmail = null, PersonalInfoPhone = null, PersonalInfoDOB = null, PersonalInfoZipcode = null, ActualBalanceRewardsNumber = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    String ValidateFName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ValidateFName");
+	    String ValidateLName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ValidateLName");
+	    String ValidateEmail = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ValidateEmail");
+	    String ValidatePhone = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ValidatePhone");
+	    String validateZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "validateZipcode");
+	    String validateDOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "validateDOB");
+	    String validateBalanceRewardsNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "validateBalanceRewardsNumber");
+
+	    String personalInfoPageURL = EcommTestRunner.config.getString("walgreensURL") + PersonalInfoPage_URL;
+	    getUrl(browser, personalInfoPageURL);
+	    if (!isElementPresentVerification(FirstName_ELM, browser)) {
+		messagesMap.put("Personal Settings", "Page is not loaded on time");
+		status = WARNING;
+	    }
+	    PersonalInfoFName = getElementByProperty(FirstName_ELM, browser).getText().trim();
+	    PersonalInfoLName = getElementByProperty(LastName_ELM, browser).getText().trim();
+	    if (isElementPresentVerification(EmailAddress1_ELM, browser)) {
+		PersonalInfoEmail = getElementByProperty(EmailAddress1_ELM, browser).getText().trim();
+	    } else {
+		PersonalInfoEmail = getElementByProperty(EmailAddress2_ELM, browser).getText().trim();
+	    }
+	    PersonalInfoPhone = getElementByProperty(PhoneNumber_ELM, browser).getText();
+	    PersonalInfoDOB = getElementByProperty(DOB_ELM, browser).getText();
+	    PersonalInfoZipcode = getElementByProperty(ZipCode_ELM, browser).getText();
+	    String[] ZipcodeSplitValues = PersonalInfoZipcode.split(" ");
+	    PersonalInfoZipcode = ZipcodeSplitValues[ZipcodeSplitValues.length - 1].trim();
+	    PersonalInfoPhone = PersonalInfoPhone.split("/")[0].trim().replace(")", "").replace("(", "").replace("-", "").replace(" ", "").trim();
+	    browserBack(browser);
+
+	    // Save Profile zipcode & Phone in HashMap
+	    sharedProperties.put("ProfileZipcode", PersonalInfoZipcode);
+	    sharedProperties.put("ProfilePhone", PersonalInfoPhone);
+	    if (ValidateFName != null && ValidateFName.equalsIgnoreCase("Yes")) {
+		String PrepopulatedFName = null;
+		if (isElementPresentVerification(BRPage_FirstName_ELM, browser)) {
+		    PrepopulatedFName = getElementByProperty(BRPage_FirstName_ELM, browser).getText();
+		} else {
+		    PrepopulatedFName = getElementByProperty(AARPPageFirstName_ELM, browser).getText();
+		}
+		if (!PrepopulatedFName.equalsIgnoreCase(PersonalInfoFName)) {
+		    messagesMap.put("First Name", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (ValidateLName != null && ValidateLName.equalsIgnoreCase("Yes")) {
+		String PrepopulatedLName = null;
+		if (isElementPresentVerification(BRPage_LastName_ELM, browser)) {
+		    PrepopulatedLName = getElementByProperty(BRPage_LastName_ELM, browser).getText();
+		} else {
+		    PrepopulatedLName = getElementByProperty(AARPPageLastName_ELM, browser).getText();
+		}
+		if (!PrepopulatedLName.equalsIgnoreCase(PersonalInfoLName)) {
+		    messagesMap.put("Last Name", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (ValidateEmail != null && ValidateEmail.equalsIgnoreCase("Yes")) {
+		String PrepopulatedEmail = null;
+		PrepopulatedEmail = getElementByProperty(AARPPageEmailAddress_ELM, browser).getText();
+		if (!PrepopulatedEmail.equalsIgnoreCase(PersonalInfoEmail)) {
+		    messagesMap.put("Email Address", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (ValidatePhone != null && ValidatePhone.equalsIgnoreCase("Yes")) {
+		String PrepopulatedPhone = null;
+		if (isElementPresentVerification(BalanceRewardsorPhoneNumber_TXT, browser) && getElementByProperty(BalanceRewardsorPhoneNumber_TXT, browser).isDisplayed()) {
+		    PrepopulatedPhone = getElementByProperty(BalanceRewardsorPhoneNumber_TXT, browser).getAttribute("value").trim();
+		} else {
+		    PrepopulatedPhone = getElementByProperty(PhoneNumber_TXT, browser).getAttribute("value").trim();
+		}
+		PersonalInfoPhone = PersonalInfoPhone.split("/")[0].trim().replace(")", "").replace("(", "").replace("-", "").replace(" ", "").trim();
+		if (!PrepopulatedPhone.equalsIgnoreCase(PersonalInfoPhone)) {
+		    messagesMap.put("Phone Number", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (validateZipcode != null && validateZipcode.equalsIgnoreCase("Yes")) {
+		String PrepopulatedZipcode = null;
+		if (isElementPresentVerification(Zipcode1_TXT, browser) && getElementByProperty(Zipcode1_TXT, browser).isDisplayed()) {
+		    PrepopulatedZipcode = getElementByProperty(Zipcode1_TXT, browser).getAttribute("value").trim();
+		} else {
+		    PrepopulatedZipcode = getElementByProperty(Zipcode2_TXT, browser).getAttribute("value").trim();
+		}
+		// PersonalInfoZipcode =
+		// PersonalInfoZipcode.split("-")[0].trim();
+		if (!PrepopulatedZipcode.equalsIgnoreCase(PersonalInfoZipcode)) {
+		    messagesMap.put("Zipcode", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (validateDOB != null && validateDOB.equalsIgnoreCase("Yes")) {
+		String PrepopulatedDOB = null, PrepopulatedMonth = null, PrepopulatedDate = null, PrepopulatedYear = null;
+		if (isElementPresentVerification(DOBMonth1_LST, browser) && getElementByProperty(DOBMonth1_LST, browser).isDisplayed()) {
+		    PrepopulatedMonth = new Select(getElementByProperty(DOBMonth1_LST, browser)).getFirstSelectedOption().getText().trim();
+		} else {
+		    PrepopulatedMonth = new Select(getElementByProperty(DOBMonth2_LST, browser)).getFirstSelectedOption().getText().trim();
+		}
+		if (isElementPresentVerification(DOBDate1_LST, browser) && getElementByProperty(DOBDate1_LST, browser).isDisplayed()) {
+		    PrepopulatedDate = new Select(getElementByProperty(DOBDate1_LST, browser)).getFirstSelectedOption().getText().trim();
+		} else {
+		    PrepopulatedDate = new Select(getElementByProperty(DOBDate2_LST, browser)).getFirstSelectedOption().getText().trim();
+		}
+		if (isElementPresentVerification(DOBYear1_LST, browser) && getElementByProperty(DOBYear1_LST, browser).isDisplayed()) {
+		    PrepopulatedYear = new Select(getElementByProperty(DOBYear1_LST, browser)).getFirstSelectedOption().getText().trim();
+		} else {
+		    PrepopulatedYear = new Select(getElementByProperty(DOBYear2_LST, browser)).getFirstSelectedOption().getText().trim();
+		}
+		PrepopulatedMonth = dateFormatChanger(PrepopulatedMonth, "MMM", "MM");
+		PrepopulatedDOB = PrepopulatedMonth + "/" + PrepopulatedDate + "/" + PrepopulatedYear;
+		if (!PrepopulatedDOB.equalsIgnoreCase(PersonalInfoDOB)) {
+		    messagesMap.put("DOB", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+	    if (validateBalanceRewardsNumber != null && validateBalanceRewardsNumber.equalsIgnoreCase("Yes")) {
+		String BalanceRewardsSettingsPageURL = EcommTestRunner.config.getString("walgreensURL") + YourAccountPage_URL;
+		getUrl(browser, BalanceRewardsSettingsPageURL);
+		ActualBalanceRewardsNumber = getElementByProperty(BalanceRewardsNumber_ELM, browser).getText().split("\n")[0].split(":")[1].trim();
+		browserBack(browser);
+		String PrepopulatedBalanceRewardsNumber = getElementByProperty(AARPPageBalanceRewardsNumber_ELM, browser).getText();
+		if (!PrepopulatedBalanceRewardsNumber.equalsIgnoreCase(ActualBalanceRewardsNumber)) {
+		    messagesMap.put("Balance Rewards Number", "Value Wrongly prepopulated");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to enroll the loyalty account in store
+     * @author - SARAVANAN M
+     * @Created - 24-OCT-2013
+     * @Modified By - RAM
+     * @Modified Date - 24-OCT-2013
+     ************************************************************* 
+     */
+    public static void registerLoyaltyAccountInStore(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String KioskEnrollHome_IMG = "img[class='welcomeHead']~CSS";
+	String FirstName_TXT = "input[id='fname']~CSS";
+	String LastName_TXT = "input[id='lname']~CSS";
+	String Email_TXT = "input[id='emailText']~CSS";
+	String Zipcode_TXT = "input[id='zipcode']~CSS";
+	String PhoneNumber_TXT = "input[id='phone']~CSS";
+	String DayOfBirth_LST = "//ul[contains(@class,'sbclass2')]";
+	String MonthOfBirth_LST = "//ul[contains(@class,'sbclass1')]";
+	String YearOfBirth_LST = "//ul[@class='sb-dropdown sbclass3']";
+	String PhoneOption_LST = "//ul[contains(@class,'sbclass0')]";
+	String ReceiveDeals_CHK = "a[id='checkLink']~CSS";
+	String Next_BTN = "input[id='submitForm']~CSS";
+	String DOBMon_BTN = "input[class='sb-select'][data-id='1']~CSS";
+	String DOBDay_BTN = "input[class='sb-select'][data-id='2']~CSS";
+	String DOBYear_BTN = "input[class='sb-select'][data-id='3']~CSS";
+	String PhoneOpt_BTN = "input[class='sb-select'][data-id='0']~CSS";
+	String AddressText_LBL = "//strong[contains(text(),'Please enter your address or click Next')]~XPATH";
+	String AddressLine1_TXT = "input[id='custAddr1']~CSS";
+	String AddressLine2_TXT = "input[id='custAddr2']~CSS";
+	String City_TXT = "input[id='custCity']~CSS";
+	String State_LST = "//ul[contains(@class,'sbclass0')]";
+	String StateOpt_BTN = "input[class='sb-select'][data-id='0']~CSS";
+	String EnrollmentSuccessMsg_LBL = "//div[@class='congrats']~XPATH";
+	String YearScrollBottom = "img[class*='scrollBtmImg13']~CSS";
+	String LoyaltyForm_ELM="//div[@id='content']~XPATH";
+	String FinalURLToNavigate=null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String Email = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    String PhoneOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneOption");
+	    String ReceiveDeals = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ReceiveDeals");
+	    String DayOfBirth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DayOfBirth");
+	    String MonthOfBirth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MonthOfBirth");
+	    String YearOfBirth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "YearOfBirth").trim();
+	    String WriteOnFile = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WriteOnFile");
+	    String WriteOnSheet = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WriteOnSheet");
+	    String WriteOnRow = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WriteOnRow");
+	    String AddressLine1 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddressLine1");
+	    String AddressLine2 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddressLine2");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+
+	    // Navigating to kiosk page
+	    String StoreURL = "loyalty/enrollment/kiosk/loyalty_registration.jsp";
+	    String BaseUrl=EcommTestRunner.config.getString("walgreensURL");
+
+	    if(EcommTestRunner.config.getString("runEnvironment").equalsIgnoreCase("production")){
+		BaseUrl="http://www3.walgreens.com/";
+	    }
+	    FinalURLToNavigate =BaseUrl  + StoreURL;
+	    getUrl(browser, FinalURLToNavigate);
+	    browser.manage().window().maximize();
+
+	    if (!isElementPresentVerification(KioskEnrollHome_IMG, browser)) {
+		throw new Exception("Unable to reach the loyalty enrollment home page");
+	    }
+	    if (FirstName != null && FirstName.equalsIgnoreCase("Random")) {
+		FirstName = randomNameGenerator();
+	    }
+	    if (LastName != null && LastName.equalsIgnoreCase("Random")) {
+		LastName = randomNameGenerator();
+	    }
+	    if (Email == null || Email.equals("-") || Email.equalsIgnoreCase("Random")) {
+		Email = randomEmailGenerator();
+	    }
+	    if (PhoneNumber != null && PhoneNumber.equalsIgnoreCase("Random")) {
+		PhoneNumber = randomPhoneNumberGenerator();
+	    }
+
+	    if (ReceiveDeals.equalsIgnoreCase("No")) {
+		if (!(getElementByProperty(ReceiveDeals_CHK, browser).isSelected())) {
+		    int flag = 0;
+		    do {
+			getElementByProperty(ReceiveDeals_CHK, browser).click();
+			flag++;
+		    } while (flag < 4 && getElementByProperty(ReceiveDeals_CHK, browser).isSelected());
+		}
+	    }
+
+	    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+		messagesMap.put("First Name", "Not able to Enter FirstName");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+		messagesMap.put("Last Name", "Not able to Enter Last Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Email_TXT, Email, browser)) {
+		messagesMap.put("Email Address", "Not able to Enter Email Address");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Zipcode", "Not able to locate Zipcode field");
+		status = WARNING;
+	    }
+
+	    if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+		messagesMap.put("Phone number", "Not able to Enter the Phone number");
+		status = WARNING;
+	    }
+
+	    if (isElementPresentVerifyClick(PhoneOpt_BTN, browser)) {
+		getElementByProperty(PhoneOption_LST + "/li/p[contains(text(),'" + PhoneOption + "')]", browser).click();
+	    }
+
+	    for(int KeyDown=0;KeyDown<=3;KeyDown++){
+		getElementByProperty(LoyaltyForm_ELM, browser).sendKeys(Keys.ARROW_DOWN);
+	    }
+
+	    if (isElementPresentVerifyClick(DOBMon_BTN, browser)) {
+		getElementByProperty(MonthOfBirth_LST + "/li/p[contains(text(),'" + MonthOfBirth + "')]", browser).click();
+	    }
+
+	    if (isElementPresentVerifyClick(DOBDay_BTN, browser)) {
+		getElementByProperty(DayOfBirth_LST + "/li/p[contains(text(),'" + DayOfBirth + "')]", browser).click();
+	    }
+
+	    if (isElementPresentVerifyClick(DOBYear_BTN, browser)) {
+
+		// RAM - 10/24 - Modified to make year list work
+		// ---------------------------------------------------------------------------------------------------------------
+		String YearToSelect = YearOfBirth_LST + "/li[@data-value='" + YearOfBirth + "']/p[contains(text(),'" + YearOfBirth + "')]~XPATH";
+		String SelectedYear = YearOfBirth_LST + "/li[@data-value='" + YearOfBirth + "'][@class='selected']~XPATH";
+		int intYearScrollCnt = 0;
+
+		// Loop until the year value gets selected
+		while (!isElementPresentVerification(SelectedYear, browser)) {
+		    intYearScrollCnt = +intYearScrollCnt; // Keep an eye on the
+		    // scroll
+		    // Check if the year that needs to be selected is displayed
+		    // & scroll down till displayed
+		    if (!getElementByProperty(YearToSelect, browser).isDisplayed()) {
+			getElementByProperty(YearScrollBottom, browser).click();
+		    }
+		    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		    getElementByProperty(YearToSelect, browser).click();
+
+		    if (intYearScrollCnt >= 5) { // Exit the while
+			messagesMap.put("Year", "Not able to year even after 5 attempts");
+			status = WARNING;
+			break;
+		    }
+
+		}
+		// ---------------------------------------------------------------------------------------------------------------
+
+	    }
+	    if (!isElementPresentVerifyClick(Next_BTN, browser)) {
+		throw new Exception("Unable to click on Next button");
+	    }
+
+	    if (!isElementPresentVerification(AddressText_LBL, browser)) {
+		throw new Exception("Unable to navigate to Address page");
+	    }
+
+	    if (!AddressLine1.equals("-")) {
+		if (!clearAndEnterText(AddressLine1_TXT, AddressLine1, browser)) {
+		    messagesMap.put("AddressLine1", "Not able to Enter AddressLine1");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!AddressLine2.equals("-")) {
+		if (!clearAndEnterText(AddressLine2_TXT, AddressLine2, browser)) {
+		    messagesMap.put("AddressLine2", "Not able to Enter AddressLine2");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!City.equals("-")) {
+		if (!clearAndEnterText(City_TXT, City, browser)) {
+		    messagesMap.put("City", "Not able to Enter City");
+		    status = WARNING;
+		}
+	    }
+
+	    if (!State.equals("-")) {
+		if (isElementPresentVerifyClick(StateOpt_BTN, browser)) {
+		    getElementByProperty(State_LST + "/li/p[contains(text(),'" + State + "')]", browser).click();
+		}
+	    }
+	    if (!isElementPresentVerifyClick(Next_BTN, browser)) {
+		throw new Exception("Unable to click on Next button-Address page");
+	    }
+
+	    Thread.sleep(3000);
+	    String SuccessMsg = getElementByProperty(EnrollmentSuccessMsg_LBL, browser).getText();
+	    if (!(SuccessMsg.contains("Congratulations!") && SuccessMsg.contains("Rewards Membership") && SuccessMsg.contains("Has Been Created"))) {
+		throw new Exception("Unable to enroll the loyalty account");
+	    }
+
+	    // Save the Details to datasheet
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "FirstName", FirstName);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "LastName", LastName);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "EmailAddress", Email);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "ConfirmEmailAddress", Email);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "ZipCode", Zipcode);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "Phone", PhoneNumber);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "MonthOfBirth", MonthOfBirth.toUpperCase());
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "DayOfBirth", DayOfBirth);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "YearOfBirth", YearOfBirth);
+	    TestDataDBManager.putTestData(WriteOnFile, WriteOnSheet, WriteOnRow, "PhoneType", PhoneOption);
+
+	    getUrl(browser, EcommTestRunner.config.getString("walgreensURL"));
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

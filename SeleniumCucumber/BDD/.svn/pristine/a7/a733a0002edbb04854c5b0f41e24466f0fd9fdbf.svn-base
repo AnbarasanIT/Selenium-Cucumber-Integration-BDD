@@ -1,0 +1,325 @@
+@dailyliving @AddressValidation
+Feature: Verify the Address validation scenarios in dotcom
+
+#----------------------------------------------------------------------------------------------------
+
+@SS-AddressValidation-1
+Scenario: Newly registered User perform Checkout while selecting Yes to Save address option( Including Back to address validation in County Validation)
+
+Given  "SS-AddressValidation-1" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-1  |
+
+And "SS-AddressValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+| HomepageLinks  | Homepage  | register1	  |
+
+Then "SS-AddressValidation-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName  | SheetName   		 			 | RowId 		   |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -       | -     | -		   | -       | -        | Yes       | SelfService    | AddressValidationRegistration | LoyaltyLightUser|Yes								|
+
+And "SS-AddressValidation-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-1" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-1" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-AddressValidation-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           			 | PhoneNumber  |CountyBacktoAddress |
+| newshippingaddress  | -                   | -                | Test Order | Test Order | SomeStreet      | Somewhere | 16    | 60015   | addressvalidation123@testebiz.com | 847122345127 |BacktoAddress		 |
+
+Then "SS-AddressValidation-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           			 | PhoneNumber  |
+| newshippingaddress  | yes                 | -                | Test Order | Test Order | 104 Wilmot Road | Deerfield | 16    | 60015   | addressvalidation123@testebiz.com | 847122345127 |
+
+Then "SS-AddressValidation-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-AddressValidation-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress 				| SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | NewBillingAddress              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "SS-AddressValidation-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-AddressValidation-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    					 | RowId           	  	 |
+| SelfService  			| AddressValidationOrderdetails  |SS-AddressValidation-1 |
+
+Then "SS-AddressValidation-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-AddressValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName    		 | RowId                   |
+| QC-SS	    	| AddressValidation  | SS-AddressValidation-1  |
+#----------------------------------------------------------------------------------------------------
+
+@SS-AddressValidation-2
+Scenario: Authenticated User perform Checkout while selecting Yes to Save address option
+
+Given  "SS-AddressValidation-2" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-2  |
+
+Given "SS-AddressValidation-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login    | Pharmauser1   |
+
+And "SS-AddressValidation-2" Customer Clears the Shopping Cart
+
+And "SS-AddressValidation-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-2" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-2" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-AddressValidation-2" Customer performs error validations on shipping information page:
+| InputFileName         | SheetName    					 | RowId           	  	 |
+| SelfService  			| AddressValidationRegistration  |SS-AddressValidation-2 |
+
+Then "SS-AddressValidation-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           			 | PhoneNumber  |
+| newshippingaddress  | yes                 | -                | Test Order | Test Order | 104 Wilmot Road | Deerfield | 16    | 60015   | addressvalidation123@testebiz.com | 847122345127 |
+
+Then "SS-AddressValidation-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-AddressValidation-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress 				| SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | NewBillingAddress              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "SS-AddressValidation-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-AddressValidation-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    					 | RowId           	  	 |
+| SelfService  			| AddressValidationOrderdetails  |SS-AddressValidation-2 |
+
+Then "SS-AddressValidation-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-AddressValidation-2" Customer finished testing the scenario:
+| InputFileName | SheetName    		 | RowId                   |
+| QC-SS	    	| AddressValidation  | SS-AddressValidation-2  |
+##85118318 addressvalidation1@testebiz.com
+#----------------------------------------------------------------------------------------------------
+@SS-AddressValidation-3
+Scenario: Registered User Verifies Suggested shipping address and generated suggested counties
+
+Given  "SS-AddressValidation-3" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-3  |
+
+Given "SS-AddressValidation-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   	 |
+| CommonData    | login     | Address_Light   |
+
+And "SS-AddressValidation-3" Customer Clears the Shopping Cart
+
+And "SS-AddressValidation-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-3" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-3" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-AddressValidation-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           			 | PhoneNumber  |
+| newshippingaddress  | yes                 | -                | Test Order | Test Order | Test Cross road | Deerfield | 16    | 60015   | addressvalidation123@testebiz.com | 847122345127 |
+
+Then "SS-AddressValidation-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-AddressValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      		  | RowId   	        	|
+| SelfService  				 | LinkVerification  	  | Tax_ShippingMethod   	|
+
+Then "SS-AddressValidation-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-AddressValidation-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress 				| SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment |
+| NewCreditCard    | NewBillingAddress              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "SS-AddressValidation-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-AddressValidation-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    					 | RowId           	  	 |
+| SelfService  			| AddressValidationOrderdetails  |SS-AddressValidation-3 |
+
+Then "SS-AddressValidation-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-AddressValidation-3" Customer finished testing the scenario:
+| InputFileName | SheetName    		 | RowId                   |
+| QC-SS	    	| AddressValidation  | SS-AddressValidation-3  |
+
+#----------------------------------------------------------------------------------------------------
+
+@SS-AddressValidation-4
+Scenario: Registered User Verifies Change Address link in shipping method page
+
+Given  "SS-AddressValidation-4" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-4  |
+
+Given "SS-AddressValidation-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   	 |
+| CommonData    | login     | Address_Light   |
+
+And "SS-AddressValidation-4" Customer Clears the Shopping Cart
+
+And "SS-AddressValidation-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-4" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-4" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-AddressValidation-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName   | StreetAddress   | City      | State | ZipCode | EmailAddress           			 | PhoneNumber  |
+| newshippingaddress  | yes                 | -                | Test Order | Test Order | 104 Wilmot road | Deerfield | 16    | 60015   | addressvalidation123@testebiz.com | 847122345127 |
+
+Then "SS-AddressValidation-4" Customer clicks on an object and validates the expected results:
+| InputFileName 		     | SheetName      		  | RowId   	        	|
+| SelfService  				 | LinkVerification  	  | ChangeShipping   		|
+
+Then "SS-AddressValidation-4" Customer finished testing the scenario:
+| InputFileName | SheetName    		 | RowId                   |
+| QC-SS	    	| AddressValidation  | SS-AddressValidation-4  |
+
+#----------------------------------------------------------------------------------------------------
+@SS-AddressValidation-5
+Scenario: Logged in User selects Change address option in Order review page ( Payment option is Paypal)
+
+Given  "SS-AddressValidation-5" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-5  |
+
+Given "SS-AddressValidation-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | Address_Light  |
+
+And "SS-AddressValidation-5" Customer Clears the Shopping Cart
+
+And "SS-AddressValidation-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-5" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-5" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "SS-AddressValidation-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | yes                 | -                | Testuser      | Checkout    | 3432 SALEM WALK | NORTHBROOK | 16    | 60062    | 8495  |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "SS-AddressValidation-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	        | standard		         |     -			        |
+
+Then "SS-AddressValidation-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	  |GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | Addr_Paypal    | -		   |
+
+Then "SS-AddressValidation-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+#Then "SS-AddressValidation-5" Customer logout from walgreens:
+#| Source  |
+#| Global  |
+
+Then "SS-AddressValidation-5" Customer finished testing the scenario:
+| InputFileName | SheetName    		 | RowId                   |
+| QC-SS	    	| AddressValidation  | SS-AddressValidation-5  |
+
+#----------------------------------------------------------------------------------------------------
+@SS-AddressValidation-6
+Scenario: Guest performs address validation in shipping information page and submits Order
+
+Given  "SS-AddressValidation-6" Customer starts the scenario:
+| InputFileName | SheetName 			 	| RowId                   |
+| QC-SS	        | AddressValidation         | SS-AddressValidation-6  |
+
+And "SS-AddressValidation-6" Customer Clears the Shopping Cart
+
+And "SS-AddressValidation-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | DC1      |
+
+Then "SS-AddressValidation-6" Customer adds Daily Living items to the cart from search.
+
+Then "SS-AddressValidation-6" Customer Goes to the Shopping Cart
+
+Then "SS-AddressValidation-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "SS-AddressValidation-6" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "SS-AddressValidation-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail  |
+| newshippingaddress  | -                   | -                | Siva      | Reddy     | Somestreet     | Somewhere | 16    | 60015   |   5121 |guestuser@testebiz.com  | 8471234567   |  Yes	       |
+
+Then "SS-AddressValidation-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "SS-AddressValidation-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "SS-AddressValidation-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-AddressValidation-6" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    					 | RowId           	  	 |
+| SelfService  			| AddressValidationOrderdetails  |SS-AddressValidation-6 |
+
+Then "SS-AddressValidation-6" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                |
+| QC-CHECKOUT          | DLCheckout      | SS-AddressValidation-6|
+#----------------------------------------------------------------------------------------------------

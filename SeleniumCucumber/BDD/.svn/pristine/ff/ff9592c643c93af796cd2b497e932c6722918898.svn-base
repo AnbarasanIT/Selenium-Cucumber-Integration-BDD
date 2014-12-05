@@ -1,0 +1,444 @@
+package walgreens.ecom.batch.automation.library.dynadmin;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class DynAdminLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to Dyn Admin
+     * @author - Siva
+     * @Created - 12-MAR-2013
+     * @Modified By - Siva
+     * @Modified Date -NOV-22-2013
+     ************************************************************* 
+     */
+    public static void dynAdminLogin(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean) {
+	String status = PASS;
+	String dynAdminURL = "branch_info.jsp";
+	String ApplicationInfo_LNK = "//*[contains(text(),'Application Info')]~XPATH";
+	String SystemName_ELM = "//table[@id='applicationInfo']/tbody/tr[5]/td[2]";
+	String ServerPort_ELM = "//table[@id='applicationInfo']/tbody/tr[7]/td[2]";
+	String Service_LNK = "//a[contains(text(),'Service')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String dynAdminUrl = EcommTestRunner.config.getString("walgreensURL") + dynAdminURL;
+	    getUrl(browser, dynAdminUrl);
+
+	    if (!isElementPresentVerifyClick(ApplicationInfo_LNK, browser)) {
+		throw new Exception("Not able to Click on Application Info Link");
+	    }
+	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+	    String SystemName = getElementByProperty(SystemName_ELM, browser).getText().trim();
+	    String ServerPort = getElementByProperty(ServerPort_ELM, browser).getText().trim();
+	    // DYN ADMIN URL
+	    String DynAdminInstanceURL = "http://admin:butterfly@" + SystemName + ".walgreens.com:" + ServerPort + "/dyn/admin/nucleus/atg/dynamo/servlet/sessiontracking/GenericSessionManager/";
+	    getUrl(browser, DynAdminInstanceURL);
+	    WebDriverWait wait = new WebDriverWait(browser, 3);
+	    try {
+		if ((wait.until(ExpectedConditions.alertIsPresent()) != null)) {
+		    browser.switchTo().alert().accept();
+		}
+	    } catch (Exception e) {
+		// e.printStackTrace();
+	    }
+	    if (!isElementPresentVerifyClick(Service_LNK, browser)) {
+		throw new Exception("Not able to Click on Service Link");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to Feeds Instance
+     * @author - Siva
+     * @Created - 10-APR-2013
+     * @Modified By - SARAVANAN M
+     * @Modified Date -NOV-22-2013
+     ************************************************************* 
+     */
+    public static void feedsLogin(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean) {
+	String status = PASS;
+	String Service_LNK = "//a[contains(text(),'Service')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Feeds URL
+	    String FeedsIntance = EcommTestRunner.config.getString("feedsURL").replace("http://", "");
+	    String completefeedsUrl = "http://admin:butterfly@" + FeedsIntance + "dyn/admin/nucleus/atg/dynamo/servlet/sessiontracking/GenericSessionManager/";
+	    getUrl(browser, completefeedsUrl);
+	    WebDriverWait wait = new WebDriverWait(browser, 3);
+	    try {
+		if ((wait.until(ExpectedConditions.alertIsPresent()) != null)) {
+		    browser.switchTo().alert().accept();
+		}
+	    } catch (Exception e) {
+		// e.printStackTrace();
+	    }
+	    if (!isElementPresentVerifyClick(Service_LNK, browser)) {
+		throw new Exception("Not able to Click on Service Link");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to Dyn Admin
+     * @author - Siva
+     * @Created - 12-MAR-2013
+     * @Modified By -Siva
+     * @Modified Date -07-OCT-2013
+     ************************************************************* 
+     */
+    public static void performActioninDynAdminConfiguration(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String NewValue_TXT = "//textarea[@name='newValue']~XPATH";
+	String True_RADIO = "//input[@value='true']~XPATH";
+	String False_RADIO = "//input[@value='false']~XPATH";
+	String Change_BTN = "//input[@name='change']~XPATH";
+	String Invoke_BTN = "//input[@value='Invoke Method']~XPATH";
+	String InvokedMethodStatus_ELM = "//h1[contains(text(),'Method')]~XPATH";
+	String Service_LNK = "//a[contains(text(),'Service')]~XPATH";
+	String FinalURL = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Getting data from Excel
+		String DestinationURL = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DestinationURL");
+		String ActionType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ActionType");
+		String RequiredSwitchorLinkName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RequiredSwitchorLinkName");
+
+		// Assinged Final required URL to a string
+		FinalURL = browser.getCurrentUrl() + DestinationURL;
+		getUrl(browser, FinalURL);
+
+		// Required Process switch/other link Name. (Name should be
+		// given as
+		// it appeares in Application)
+		String RequiredSwitchorLinkName_LNK = "//a[contains(text(),'" + RequiredSwitchorLinkName + "')]~XPATH";
+		if (!isElementPresentVerifyClick(RequiredSwitchorLinkName_LNK, browser)) {
+		    throw new Exception("Not able to Click on Required Switch/Link");
+		}
+
+		// If action type is a switch then set true or false.
+		if (ActionType.equalsIgnoreCase("Switch")) {
+		    String SwitchStatus = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SwitchStatus");
+		    if (!SwitchStatus.equals("-")) {
+			SwitchStatus = SwitchStatus.toLowerCase();
+		    }
+		    // if switch contains radio buttons , then select required
+		    // radio
+		    // button
+		    if (isElementPresentVerification(True_RADIO, browser)) {
+			if (SwitchStatus.equalsIgnoreCase("true")) {
+			    if (!isElementPresentVerifyClick(True_RADIO, browser)) {
+				throw new Exception("Not able to click on True Radio Button");
+			    }
+			} else {
+			    if (!isElementPresentVerifyClick(False_RADIO, browser)) {
+				throw new Exception("Not able to click on False Radio Button");
+			    }
+			}
+		    }
+		    // if switch does not have radio buttons then enter switch
+		    // value
+		    // in the text box
+		    else {
+			if (!clearAndEnterText(NewValue_TXT, SwitchStatus, browser)) {
+			    messagesMap.put("New Value", "Not able to Enter new switch Value");
+			    status = WARNING;
+			}
+		    }
+		    // Click on Change button
+		    if (!isElementPresentVerifyClick(Change_BTN, browser)) {
+			throw new Exception("Not able to click on Change Button");
+		    }
+		    // validating whether selected status is displaying or not.
+		    String UpdatedSwithStatus_ELM = "//span[contains(text(),'" + SwitchStatus + "')]~XPATH";
+		    if (!isElementPresentVerification(UpdatedSwithStatus_ELM, browser)) {
+			messagesMap.put("Swith Status", "Switch was not changed");
+			status = WARNING;
+		    }
+		}
+		// if Action type is Invalidate cache then invoke required
+		// method
+		else if (ActionType.equalsIgnoreCase("InvalidateCache") || ActionType.equalsIgnoreCase("performJob")) {
+		    if (!isElementPresentVerifyClick(Invoke_BTN, browser)) {
+			throw new Exception("Not able to click on Invoke Mehtod button");
+		    }
+		    // verifying whether method invoked successfully or not.
+		    if (!getElementByProperty(InvokedMethodStatus_ELM, browser).getText().contains("invoked")) {
+			messagesMap.put("Invoked Method Status", "Operation Failed");
+			status = WARNING;
+		    }
+		}
+		// clicking Service link to go back to DYN Admin home page. So
+		// that we can append next URL easily.
+		if (!isElementPresentVerifyClick(Service_LNK, browser)) {
+		    throw new Exception("Not able to Click on Service Link");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Update Parameter values & run the required job from
+     *          DYN Admin
+     * @author - Siva
+     * @Created - AUG 12 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateParameterValuesorRunJob(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String NewValue_TXT = "//textarea[@name='newValue']~XPATH";
+	String Change_BTN = "//input[@name='change']~XPATH";
+	String Invoke_BTN = "//input[@value='Invoke Method']~XPATH";
+	String InvokedMethodStatus_ELM = "//h1[contains(text(),'Method')]~XPATH";
+	String Service_LNK = "//a[contains(text(),'Service')]~XPATH";
+	String FinalURL = null, RetrieveFileName = null, RetrieveSheetName = null, RetrieveRowID = null, RetrieveColumnID = null;
+	Map<String, String> messagesMap = null;
+	String OrderID = null, OperaStatus = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Getting data from Excel
+		String DestinationURL = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DestinationURL");
+		String ActionType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ActionType");
+		String RequiredSwitchorLinkName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RequiredSwitchorLinkName");
+		String OperationWaitTime = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OperationWaitTime");
+		String StoreFileNameType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StoreFileNameType");
+
+		// Assinged Final required URL to a string
+		if (DestinationURL != null && !DestinationURL.equals("-")) {
+		    FinalURL = browser.getCurrentUrl() + DestinationURL;
+		    getUrl(browser, FinalURL);
+		}
+		// Required Process switch/other link Name. (Name should be
+		// given as it appeares in Application)
+		String RequiredSwitchorLinkName_LNK = "//a[contains(text(),'" + RequiredSwitchorLinkName + "')]~XPATH";
+		if (!isElementPresentVerifyClick(RequiredSwitchorLinkName_LNK, browser)) {
+		    throw new Exception("Not able to Click on Required Switch/Link=" + RequiredSwitchorLinkName);
+		}
+		// If action type is a switch then set true or false.
+		if (ActionType.equalsIgnoreCase("EditValue")) {
+		    String EditValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EditValue");
+		    if (EditValue.equalsIgnoreCase("getFromDifferentFile")) {
+			RetrieveFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveFileName");
+			RetrieveSheetName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveSheetName");
+			RetrieveRowID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveRowID");
+			RetrieveColumnID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveColumnID");
+			EditValue = getTestData(RetrieveFileName, RetrieveSheetName, RetrieveRowID, RetrieveColumnID);
+			// This will be used to ge the DC fulfillment XML file
+			// Name
+			OrderID = EditValue;
+		    } else {
+			// This will be used to ge the DC fulfillment XML file
+			// Name
+			OperaStatus = EditValue;
+		    }
+		    // enter new value in the text box
+		    if (!clearAndEnterText(NewValue_TXT, EditValue, browser)) {
+			messagesMap.put("New Value", "Not able to Enter new Value");
+			status = WARNING;
+		    }
+		    // Click on Change button
+		    if (!isElementPresentVerifyClick(Change_BTN, browser)) {
+			throw new Exception("Not able to click on Change Button");
+		    }
+		    // validating whether selected status is displaying or not.
+		    String UpdatedSwithStatus_ELM = "//span[contains(text(),'" + EditValue + "')]~XPATH";
+		    if (!isElementPresentVerification(UpdatedSwithStatus_ELM, browser)) {
+			messagesMap.put("Swith Status", "Edit Value was not changed");
+			status = WARNING;
+		    }
+		}
+		// if Action type is Invalidate cache then invoke required
+		// method
+		else if (ActionType.equalsIgnoreCase("performJob")) {
+		    if (!isElementPresentVerifyClick(Invoke_BTN, browser)) {
+			throw new Exception("Not able to click on Invoke Mehtod button");
+		    }
+		    // verifying whether method invoked successfully or not.
+		    if (!getElementByProperty(InvokedMethodStatus_ELM, browser).getText().contains("invoked")) {
+			messagesMap.put("Invoked Method Status", "Operation Failed");
+			status = WARNING;
+		    }
+		}
+		// Waiting some time to get the required job done. Since some
+		// jobs takes time to reflect the changes.
+		if (OperationWaitTime != null && !OperationWaitTime.equals("-")) {
+		    Thread.sleep(Integer.parseInt(OperationWaitTime) * 1000);
+		}
+		// StoreFileName in Hash Map
+		if (StoreFileNameType != null && StoreFileNameType.equalsIgnoreCase("DCInboundFile")) {
+		    String strDCInboundFileName = OrderID + "_" + OperaStatus + ".xml";
+		    sharedProperties.put("DCInboundFile", strDCInboundFileName);
+		}
+		// clicking Service link to go back to DYN Admin home page. So
+		// that we can append next URL easily.
+		if (!isElementPresentVerifyClick(Service_LNK, browser)) {
+		    throw new Exception("Not able to Click on Service Link");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to PCPlus/snbdap01
+     * @author - SARAVANAN M
+     * @Created - 08-NOV-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateOrderStatusInPCPLUS(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String snbdap01URL = "http://snbdap01.walgreens.com:8980/branch_info.jsp";
+	String PCPlusUI = "http://snbdap01.walgreens.com:8980/apiservices-int/PcPlusTool/pcplusresponse.jsp";
+	String DynAdmin_LNK = "//a[contains(text(),'Dyn Admin')]~XPATH";
+	String Service_LNK = "//a[contains(text(),'Service')]~XPATH";
+	String OrderID_TXT = "//input[@name='orderId']~XPATH";
+	String Status_TXT = "//input[@name='orderStatus']~XPATH";
+	String Success_LBL = "//h5[contains(text(),'completed')]~XPATH";
+	String Submit_BTN = "//input[@title='Submit']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		String LoginTo = dataMap.get("LoginTo").get(0);
+		if (LoginTo.equalsIgnoreCase("PCPlus")) {
+		    String OrderNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderNumber");
+		    String Status = dataMap.get("Status").get(i).trim();
+
+		    getUrl(browser, PCPlusUI);
+		    if (!clearAndEnterText(OrderID_TXT, OrderNumber, browser)) {
+			messagesMap.put("Order Number", "Not able to Enter Order Number");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(Status_TXT, Status, browser)) {
+			messagesMap.put("Status", "Not able to Enter status");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+			messagesMap.put("Submit", "Not able to click on Submit");
+			status = WARNING;
+		    }
+		    Thread.sleep(2000);
+		    if (!isElementPresentVerification(Success_LBL, browser)) {
+			messagesMap.put("Submit", "Not able to change the status");
+			status = WARNING;
+		    }
+
+		    Thread.sleep(50000);// Giving time to status update in DB
+					// for each status update
+
+		} else if (LoginTo.equalsIgnoreCase("SNBDAP01")) {
+		    getUrl(browser, snbdap01URL);
+
+		    if (!isElementPresentVerifyClick(DynAdmin_LNK, browser)) {
+			throw new Exception("Not able to click on Dyn Admin link");
+		    }
+		    if (!isElementPresentVerification(Service_LNK, browser)) {
+			browser.switchTo().alert();
+		    }
+		    Runtime.getRuntime().exec("cmd /c start " + System.getProperty("user.dir") + "\\Extensions\\DynaAdminLogin.exe");
+		    for (String Handle : browser.getWindowHandles()) {
+			browser.switchTo().window(Handle);
+			if (browser.switchTo().window(Handle).getTitle().contains("Branch Info")) {
+			    browser.close();
+			} else if (browser.switchTo().window(Handle).getTitle().contains("Service Center")) {
+			    browser.close();
+			} else {
+			    break;
+			}
+		    }
+		    if (!isElementPresentVerification(Service_LNK, browser)) {
+			throw new Exception("Dyn Admin Login Process Failed");
+		    }
+		    if (!isElementPresentVerifyClick(Service_LNK, browser)) {
+			throw new Exception("Not able to Click on Service Link");
+		    }
+
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

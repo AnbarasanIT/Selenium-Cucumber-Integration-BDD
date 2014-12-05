@@ -1,0 +1,75 @@
+warFile=batch
+          
+# locatio n of web root
+web.root=build
+#test  
+# location of WEB-INF
+web.root.web-inf=
+
+# location of META-INF in web root
+web.root.metainf=
+ 
+# location of java classes
+web.root.classes=build
+
+# location of lib in web root
+web.root.lib=lib
+
+# distribution directory
+dist=dist
+
+pmd.excludemarker=NOPMD-
+
+build.libs = lib
+
+template.includes=template
+bin.includes=bin
+lib.includes=lib
+setup.includes=setup
+
+photo.jdk.version=1.5
+photo.jdk.target=${photo.jdk.version}
+photo.admin.email=ecommArch@walgreens.com,ecomQA@walgreens.com,Geri.Goeransson@walgreens.com,Babur.Sheikh@walgreens.com,William.Luerssen@walgreens.com
+
+other.jdk.version=1.5
+other.jdk.target=${other.jdk.version}
+
+emailfeeds.jdk.version=1.5
+emailfeeds.jdk.target=${emailfeeds.jdk.version}
+emailfeeds.admin.email=${admin.email}
+
+############## SMTP INFO ########################
+# all property must be defined with double $$ for runtime expansion
+email.rollback.subject=CoreBuild - $${config.properties.env}: Rollback $${warFile} - $${project.name} on $${serverLists}
+# all property must be defined with double $$ for runtime expansion
+email.rollback.message=Rollback: $${warFile} - $${project.name} on $${serverLists} $${line.separator}$${line.separator}
+
+# all property must be defined with double $$ for runtime expansion
+email.queueenable.subject=CoreBuild - $${config.properties.env}: Enabled queue: $${warFile} - $${project.name} on $${serverLists}
+# all property must be defined with double $$ for runtime expansion
+email.queueenable.message=Enabled queue: $${warFile} - $${project.name} on $${serverLists} $${line.separator}$${line.separator}
+
+# all property must be defined with double $$ for runtime expansion
+email.queuedeployment.subject=CoreBuild - $${config.properties.env}: Queued $${rcs.branch} $${warFile} - $${project.name} to $${serverLists}
+# all property must be defined with double $$ for runtime expansion
+email.queuedeployment.message=Queued $${warFile} - $${project.name} to $${serverLists} $${line.separator}$${line.separator} \
+	Queued files tagged with: $${tagName} $${line.separator}$${line.separator} \
+	Files checked out using tag name: $${rcs.project.tagname} $${line.separator}$${line.separator}
+
+# all property must be defined with double $$ for runtime expansion
+email.deployment.subject=CoreBuild - $${config.properties.env}: Deployed $${rcs.branch} $${warFile} - $${project.name} to $${serverLists}
+# all property must be defined with double $$ for runtime expansion
+email.deployment.message=Deployed $${warFile} to $${serverLists} $${line.separator}$${line.separator} \
+	Project Deployed: $${project.name} $${line.separator}$${line.separator} \
+	Deployed files tagged with: $${tagName} $${line.separator}$${line.separator} \
+	Files checked out using tag name: $${rcs.project.tagname} $${line.separator}$${line.separator}
+
+# all property must be defined with double $$ for runtime expansion
+email.patch.subject=CoreBuild - $${config.properties.env}: Patch $${rcs.branch} $${warFile} - $${project.name}  to $${serverLists}
+# all property must be defined with double $$ for runtime expansion
+email.patch.message=CoreBuild: Patch $${warFile} to $${serverLists} $${line.separator}$${line.separator} \
+	Project Deployed: $${project.name} $${line.separator}$${line.separator} \
+	Patched files tagged with: $${tagName} $${line.separator}$${line.separator} \
+	Files checked out using tag name: $${rcs.project.tagname} $${line.separator}$${line.separator}
+############## END: SMTP INFO ########################
+

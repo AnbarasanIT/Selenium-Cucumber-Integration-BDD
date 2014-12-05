@@ -1,0 +1,931 @@
+package walgreens.ecom.batch.automation.library.selfservice;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class SelfServiceMiscellaneousLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - UI validation in Account Registration page
+     * @author - Mohana JanakaValli K
+     * @Created - 15 Mar 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyAccountRegistrationPageUI(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Submit_BTN = "input[title='Submit']~CSS";
+	String EmailPreferenceText1_ELM = "//label[contains(text(),'Receive deals, offers, and valuable health information from Walgreens.')]~XPATH";
+	String EmailPreferenceText2_ELM = "//b[contains(text(),'Would you like to hear from us?')]~XPATH";
+	String PasswordCondition_ELM = "//p[contains(text(),'(Min. 8 characters, 1 number, case-sensitive)')]~XPATH";
+	String EmailCondition_ELM = "//p[contains(text(),'(Your email address will be your username)')]~XPATH";
+	String IntroductoryMessage_ELM = "//p[contains(text(),'View our')]~XPATH";
+	String AccountInformation_ELM = "//h2[contains(text(),'Account Information')]~XPATH";
+	String AllRequired_ELM = "//p[contains(text(),'All fields are required unless otherwise noted.')]~XPATH";
+	String FirstName_ELM = "//p/label[contains(text(),'First Name:')]~XPATH";
+	String LastName_ELM = "//p/label[contains(text(),'Last Name:')]~XPATH";
+	String Email_ELM = "//p/label[contains(text(),'Email:')]~XPATH";
+	String ConfirmEmail_ELM = "//p/label[contains(text(),'Re-type Email:')]~XPATH";
+	String Password_ELM = "//p/label[contains(text(),'Password:')]~XPATH";
+	String ConfirmPassword_ELM = "//p/label[contains(text(),'Re-type Password:')]~XPATH";
+	String Cancel_LNK = "input[title='Cancel']~CSS";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // UI VALIDATION IN LIGHT ACCOUNT REGISTRATION PAGE
+	    if (!isElementPresentVerification(IntroductoryMessage_ELM, browser)) {
+		messagesMap.put("IntroductoryMessage", "IntroductoryMessage text not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(AccountInformation_ELM, browser)) {
+		messagesMap.put("AccountInformation", "AccountInformation header text not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(AllRequired_ELM, browser)) {
+		messagesMap.put("All fields required", "All fields are required text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(FirstName_ELM, browser)) {
+		messagesMap.put("First Name", "First name text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(LastName_ELM, browser)) {
+		messagesMap.put("Last Name", "Last Name text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Email_ELM, browser)) {
+		messagesMap.put("Email", "Email text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(EmailCondition_ELM, browser)) {
+		messagesMap.put("Email Condition", "Email condition text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ConfirmEmail_ELM, browser)) {
+		messagesMap.put("Confirm Email", "Confirm Email text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Password_ELM, browser)) {
+		messagesMap.put("Password", "Password text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(PasswordCondition_ELM, browser)) {
+		messagesMap.put("Password Condition", "Password Condition text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ConfirmPassword_ELM, browser)) {
+		messagesMap.put("Confirm Password", "Confirm Password text is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Submit_BTN, browser)) {
+		messagesMap.put("Submit button", "Submit button is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Cancel_LNK, browser)) {
+		messagesMap.put("Cancel Link", "Cancel link is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(EmailPreferenceText1_ELM, browser)) {
+		messagesMap.put("Email Preference", "Deals,offers and health information checkbox is not present");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(EmailPreferenceText2_ELM, browser)) {
+		messagesMap.put("Email Preference", "Email Preference text is not present");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Form validation in Account Registration page
+     * @author - Mohana Janakavalli K
+     * @Created - 15 Mar 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateRegisterAccountForm(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	int FNameMaxLength = 0, LNameMaxLength = 0, EmailMaxLength = 0, CEmailMaxLength = 0;
+	String[] Textboxdata = null;
+	String flagVal = null;
+	String FirstName_TXT = "input[id='firstname']~CSS";
+	String LastName_TXT = "input[id='lastname']~CSS";
+	String Email_TXT = "input[id='emailAddress']~CSS";
+	String ConfirmEmail_TXT = "input[id='confirmemailAddress']~CSS";
+	String Password_TXT = "input[id='password_1']~CSS";
+	String RetypePassword_TXT = "input[id='confirmpassword']~CSS";
+	String FNameAlphaErr_ELM = "//*[contains(text(),'Please enter a valid first name only with letters.')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String LNameAlphaErr_ELM = "//*[contains(text(),'Please enter a valid last name only with letters.')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String InvalidEmailErr_ELM = "//*[contains(text(),'Please enter a valid email address')]~XPATH";
+	String InvalidEmailErr1_ELM = "//div[@id='confirmemailAddressErrorText']/p[contains(text(),'Please enter a valid email address')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String PasswordAlphaErr_ELM = "//*[contains(text(),'Password needs to have a minimum of 8 characters')]~XPATH";
+	String PasswordAlphaErr1_ELM = "//div[@id='confirmpasswordErrorText']/p[contains(text(),'Password needs to have a minimum of 8 characters')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String Submit_BTN = "input[title='Submit']~CSS";
+	String MismatchEmailErr_ELM = "//*[contains(text(),'Email does not match')]~xpath";
+	String PasswordConstraintErr_ELM = "//*[contains(text(),'Your password must contain both numbers and letters')]~XPATH";
+	String PasswordConstraintErr1_ELM = "//div[@id='confirmpasswordErrorText']/p[contains(text(),'Your password must contain both numbers and letters')]~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String EmailCondition_ELM = "//p[contains(text(),'(Your email address will be your username)')]~XPATH";
+	String FNameBlankErr_ELM = "//p[contains(text(),'Please enter your first name')]~XPATH";
+	String LNameBlankErr_ELM = "//p[contains(text(),'Please enter your last name')]~XPATH";
+	String EmailBlankErr_ELM = "//p[contains(text(),'Please enter your email address')]~XPATH";
+	String CEmailBlankErr_ELM = "//p[contains(text(),'Please confirm your email address')]~XPATH";
+	String PasswordBlankErr_ELM = "//p[contains(text(),'Please enter your password')]~XPATH";
+	String RePasswordBlankErr_ELM = "//p[contains(text(),'Please confirm your password')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // VALIDATES THE MAXIMUM LENGTH OF FIRST NAME, LAST NAME AND EMAIL
+	    // FIELDS
+	    FNameMaxLength = Integer.parseInt(getElementByProperty(FirstName_TXT, browser).getAttribute("maxlength"));
+	    LNameMaxLength = Integer.parseInt(getElementByProperty(LastName_TXT, browser).getAttribute("maxlength"));
+	    EmailMaxLength = Integer.parseInt(getElementByProperty(Email_TXT, browser).getAttribute("maxlength"));
+	    CEmailMaxLength = Integer.parseInt(getElementByProperty(ConfirmEmail_TXT, browser).getAttribute("maxlength"));
+	    if (FNameMaxLength != 14) {
+		messagesMap.put("First Name", "Maximum length for first name allowed is incorrect");
+		status = WARNING;
+	    }
+	    if (LNameMaxLength != 20) {
+		messagesMap.put("Last Name", "Maximum length for last name allowed is incorrect");
+		status = WARNING;
+	    }
+	    if (EmailMaxLength != 64) {
+		messagesMap.put("Email", "Maximum length for email allowed is incorrect");
+		status = WARNING;
+	    }
+	    if (CEmailMaxLength != 64) {
+		messagesMap.put("Confirm Email", "Maximum length for confirm email allowed is incorrect");
+		status = WARNING;
+	    }
+	    // ERROR MESSAGE VALIDATIONS FOR REGISTRATION PAGE FIELDS
+	    String[] TextboxArr = { FirstName_TXT, LastName_TXT, Email_TXT, ConfirmEmail_TXT, Password_TXT, RetypePassword_TXT };
+	    String[] ErrorMessageArr1 = { FNameAlphaErr_ELM, LNameAlphaErr_ELM, InvalidEmailErr_ELM, InvalidEmailErr1_ELM, PasswordAlphaErr_ELM, PasswordAlphaErr1_ELM };
+	    String[] ErrorMessageArr2 = { FNameAlphaErr_ELM, LNameAlphaErr_ELM, EmailCondition_ELM, MismatchEmailErr_ELM, PasswordConstraintErr_ELM, PasswordConstraintErr1_ELM };
+	    String[] ErrorMessageArr3 = { FNameBlankErr_ELM, LNameBlankErr_ELM, EmailBlankErr_ELM, CEmailBlankErr_ELM, PasswordBlankErr_ELM, RePasswordBlankErr_ELM };
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int count = 0; count < totalRowCount; count++) {
+		Textboxdata = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "Textboxdata").split(";");
+		flagVal = getTestData(dataMap.get("InputFileName").get(count), dataMap.get("SheetName").get(count), dataMap.get("RowId").get(count), "Flag");
+		for (int i = 0; i < TextboxArr.length; i++) {
+		    getElementByProperty(TextboxArr[i], browser).clear();
+		    getElementByProperty(TextboxArr[i], browser).sendKeys(Textboxdata[i]);
+		}
+		// FIRST SET OF INVALID DATA VALIDATION
+		getElementByProperty(Submit_BTN, browser).click();
+		if (flagVal.equalsIgnoreCase("InvalidDataSet1")) {
+		    for (int i = 0; i < ErrorMessageArr1.length; i++) {
+			if (!isElementPresentVerification(ErrorMessageArr1[i], browser)) {
+			    messagesMap.put("Error Message", "Appropriate error message is not displayed");
+			    status = WARNING;
+			}
+		    }
+		    // SECOND SET OF INVALID DATA VALIDATION
+		} else if (flagVal.equalsIgnoreCase("InvalidDataSet2")) {
+		    for (int i = 0; i < ErrorMessageArr2.length; i++) {
+			if (!isElementPresentVerification(ErrorMessageArr2[i], browser)) {
+			    messagesMap.put("Error Message", "Appropriate error message is not displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+		// THIRD SET OF BLANK FIELDS VALIDATION
+		else if (flagVal.equalsIgnoreCase("InvalidDataSet3")) {
+		    for (int i = 0; i < ErrorMessageArr3.length; i++) {
+			if (!isElementPresentVerification(ErrorMessageArr3[i], browser)) {
+			    messagesMap.put("Error Message", "Appropriate error message is not displayed");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Customer validates Clear All Selection and SortBy
+     *          functionality in ProductListing page
+     * @author - Mohana JanakaValli K
+     * @Created - 02 Apr 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateclearallselectionandsortBy(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String ItemCount_ELM = "//div[contains(text(),'Items')]~XPATH";
+	String ProductType_CHK = "//img[@title='Unchecked Box']~XPATH"; // SIMEON - 8/29/13 - Fixed
+	String ClearAllSelection_LNK = "a[title='Clear all selections']~CSS";
+	String SortBy_LST = "//select[contains(@id,'sortSelect')]~XPATH";
+	String[] Options = null;
+	List<WebElement> SortOptions;
+	int totalItemCount, CountAfterFilter, CountAfterClear = 0;
+	try {
+	    Options = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DropdownValues").split(",");
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Verifies the Clear All Selection Link Functionality
+	    // GETS THE ITEM COUNT BEFORE CHOOSING PRODUCT TYPE
+	    totalItemCount = Integer.parseInt(getElementByProperty(ItemCount_ELM, browser).getText().split("Items")[0].trim());
+	    if (!isElementPresentVerifyClick(ProductType_CHK, browser)) {
+		messagesMap.put("Product Type sub category", "Not bale to select options under Product type");
+		status = WARNING;
+	    }
+	    // GETS THE ITEM COUNT AFTER CHOOSING PRODUCT TYPE
+	    CountAfterFilter = Integer.parseInt(getElementByProperty(ItemCount_ELM, browser).getText().split("Items")[0].trim());
+	    if (CountAfterFilter == totalItemCount) {
+		messagesMap.put("Product type filter", "Results are not refined according to the selection");
+		status = WARNING;
+	    }
+	    // GETS THE ITEM COUNT AFTER CLEAR ALLL SELECTIONS
+	    if (!isElementPresentVerifyClick(ClearAllSelection_LNK, browser)) {
+		messagesMap.put("Clear All Selection", "Link not found");
+		status = WARNING;
+	    }
+	    // COMPARES TOTAL ITEM COUNT WITH COUNT AFTER CLEAR ALL SELECTIONS
+	    CountAfterClear = Integer.parseInt(getElementByProperty(ItemCount_ELM, browser).getText().split("Items")[0].trim());
+	    if (totalItemCount != CountAfterClear) {
+		messagesMap.put("Clear All Selection", "Refined results are not cleared");
+		status = WARNING;
+	    }
+	    // Checks for the values in the Sort By Dropdown in Product Listing
+	    // Page
+	    SortOptions = new Select(getElementByProperty(SortBy_LST, browser)).getOptions();
+	    for (int i = 1; i < SortOptions.size(); i++) {
+		if (!SortOptions.get(i).getText().equals(Options[i])) {
+
+		    messagesMap.put("SortBy Dropdown", "Same values are not present");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose -Customer validates Availability Indicator messages for
+     *          different Products
+     * @author - Mohana JanakaValli K
+     * @Created - 02 Apr 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateavailabilityindicators(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String DesinationPage = null;
+	String AvailabilityType = null;
+	
+	// For search results page validations
+	String InStoreOnly_ELM = "//b[contains(text(),'Priced per store')]~XPATH";
+	String OutOfStock_ELM = "//*[contains(text(),'Temporarily out of stock')]~XPATH";
+	
+	// For quicklook page validations -------
+	// 'not online available'
+	String NotOnlineAvailable_ELM = "//*[contains(text(), 'Not available')]~XPATH";
+	String NotOnlineCheckMark_IMG = "//p/img[@alt='Unavailable']~XPATH";
+	String ShipToYou_ELM = "//*[contains(text(),'Ship to you')]~XPATH";
+	
+	// 'online'
+	String ShipAvailableCheckMark_IMG = "//p/img[@alt='available']~XPATH";
+	String FreeShippingMsg_ELM = "//p[contains(text(),'FREE on orders of')]~XPATH";
+	
+	// 'in store'
+	String StoreAvailableCheckMark_IMG = "//p[3]/img[@alt='available']~XPATH";
+	String FindAtAStore_LNK = "//a[@title='Find at a store']~XPATH";
+	String InStores_ELM = "//*[contains(text(),'Pick up in store')]~XPATH";
+	
+	// 'not in store'
+	String NotInStoreCheckMark_IMG = "//p[3]/img[@alt='Unavailable']~XPATH";
+	String NotSoldInStores_ELM = "//*[contains(text(),'Not sold in stores')]~XPATH";
+	// ---------------
+	
+	// For vpd page validations --------
+	// 'not online available'
+	String VPD_NotOnlineCheckMark_IMG = "//div/div/img[@alt='Unavailable']~XPATH";
+	
+	// 'online'
+	
+	// 'in store'
+	
+	// 'not in store'
+	String VPD_NotInStoreCheckMark_IMG = "//div[2]/div/img[@alt='Unavailable']~XPATH";
+	
+	// String ShipAvailableCheckMarkVpd_IMG = "img[alt='available']~CSS"; // SIMEON - 9/4/13 - Removed; no such elm in vpd page
+	String ShipCheckbox_ELM = "//input[@id='seesameday']~XPATH"; // SIMEON - 9/4/13 - Added
+	String StoreCheckbox_ELM = "//a[@id='faywl']~XPATH"; // SIMEON - 9/4/13 - Added
+	
+	// String StoreAvailableCheckMarkVpd_IMG = "//div[@id='avail_instore']/div/img~XPATH"; // SIMEON - 9/4/13 - Removed; no such elm in vpd page
+	String FreeShippingOrders_ELM = "//div[@class='divShipToYou']//a[contains(@href,'shiprules')]";
+	// String
+	// ShipsForFree_ELM="//div[@id='vpd_special_offer_shipping']/div~XPATH";
+	// String FlatShippingRate_ELM="";
+	
+	
+	
+	String FindAtAStoreVpd_LNK = "//a[contains(text(),'Find at a store')]~XPATH";
+	// ---------------
+	
+	String CloseOverlay_IMG = "//a[@id='overlayClose']~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    DesinationPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DesinationPage");
+	    AvailabilityType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AvailabilityType");
+	    // CHECKS AVAILABILITY INDICATOR MESSAGES IN SEARCH RESULTS PAGE
+	    if (DesinationPage.equalsIgnoreCase("SearchResultsPage")) {
+		if (AvailabilityType.equalsIgnoreCase("SearchResultsOutOfStock_ELM")) {
+		    if (!isElementPresentVerification(OutOfStock_ELM, browser)) {
+			messagesMap.put("Availability Indicators", "Out of Stock text is not displayed");
+			status = WARNING;
+		    }
+		} else if (AvailabilityType.equalsIgnoreCase("InStoreOnly")) {
+		    if (!isElementPresentVerification(InStoreOnly_ELM, browser)) {
+			messagesMap.put("Availability Indicators", "Instore only text is not displayed");
+			status = WARNING;
+		    }
+		}
+		// CHECKS AVAILABILITY INDICATOR MESSAGES IN PRODUCT DETAILS
+		// PAGE
+	    } else if (DesinationPage.equalsIgnoreCase("ProductDetailsPage")) {
+		if (AvailabilityType.equalsIgnoreCase("NotOnlineAvailable")) {
+		    if ((!isElementPresentVerification(VPD_NotOnlineCheckMark_IMG, browser)) || (!isElementPresentVerification(ShipToYou_ELM, browser))
+			    || (!isElementPresentVerification(NotOnlineAvailable_ELM, browser))) { // SIMEON - 9/4/13 - Changed to verify 'not available' elm
+			messagesMap.put("Availability Indicators", "Indication for Not Sold Online product is not displayed");
+			status = WARNING;
+		    }
+		} else if (AvailabilityType.equalsIgnoreCase("Online")) {
+		    if ((!isElementPresentVerification(ShipCheckbox_ELM, browser)) || (!isElementPresentVerification(ShipToYou_ELM, browser))
+			    || (!isElementPresentVerification(FreeShippingOrders_ELM, browser))) {
+			// ||(!isElementPresentVerification(ShipsForFree_ELM,browser))||(!isElementPresentVerification(FlatShippingRate_ELM,browser)))
+			// if
+			// (!isElementPresentVerification(FreeShippingOrders_ELM,
+			// browser)) {
+			messagesMap.put("Availability Indicators", "Indication for Online Product is not displayed");
+			status = WARNING;
+		    }
+		} else if (AvailabilityType.equalsIgnoreCase("InStore")) {
+
+		    if ((!isElementPresentVerification(StoreCheckbox_ELM, browser)) || (!isElementPresentVerification(InStores_ELM, browser))
+			    || (!isElementPresentVerification(FindAtAStoreVpd_LNK, browser))) {
+			messagesMap.put("Availability Indicators", "Indications for a InStore product is not displayed");
+			status = WARNING;
+		    }
+		} else if (AvailabilityType.equalsIgnoreCase("NotInStore")) {
+		    if ((!isElementPresentVerification(VPD_NotInStoreCheckMark_IMG, browser)) || (!isElementPresentVerification(NotSoldInStores_ELM, browser))) { // SIMEON - 9/25/13 - Change '&&' to '||'
+			messagesMap.put("Availability Indicators", "Indications for not InStore product is not displayed");
+			status = WARNING;
+		    }
+		}
+	    }// CHECKS AVAILABILITY INDICATOR MESSAGES IN QUICKLOOK OVERLAY
+	    else if (DesinationPage.equalsIgnoreCase("QuicklookOverlay")) {
+		if (AvailabilityType.equalsIgnoreCase("NotOnlineAvailable")) {
+		    if ((!isElementPresentVerification(NotOnlineCheckMark_IMG, browser)) || (!isElementPresentVerification(ShipToYou_ELM, browser))
+			    || (!isElementPresentVerification(NotOnlineAvailable_ELM, browser))) { // SIMEON - 9/4/13 - Changed to verify 'not available' elm
+			messagesMap.put("Availability Indicators", "Indication for Not Sold Online product is not displayed");
+			status = WARNING;
+		    }
+		    switchToDefault(browser);
+		    getElementByProperty(CloseOverlay_IMG, browser).click();
+		} else if (AvailabilityType.equalsIgnoreCase("Online")) {
+		    if ((!isElementPresentVerification(ShipAvailableCheckMark_IMG, browser)) || (!isElementPresentVerification(ShipToYou_ELM, browser))
+			    || (!isElementPresentVerification(FreeShippingMsg_ELM, browser))) {
+			// ||
+			// (!isElementPresentVerification(ShipsForFree_ELM,browser))||(!isElementPresentVerification(FlatShippingRate_ELM,browser)))
+			// if
+			// (!isElementPresentVerification(FreeShippingOrders_ELM,
+			// browser)) {
+			messagesMap.put("Availability Indicators", "Indication for Online Product is not displayed");
+			status = WARNING;
+			// }
+		    }
+		    switchToDefault(browser);
+		    getElementByProperty(CloseOverlay_IMG, browser).click();
+		} else if (AvailabilityType.equalsIgnoreCase("InStore")) {
+		    if ((!isElementPresentVerification(StoreAvailableCheckMark_IMG, browser)) || (!isElementPresentVerification(InStores_ELM, browser))
+			    || (!isElementPresentVerification(FindAtAStore_LNK, browser))) {
+			messagesMap.put("Availability Indicators", "Indications for a InStore product is not displayed");
+			status = WARNING;
+		    }
+		    switchToDefault(browser);
+		    getElementByProperty(CloseOverlay_IMG, browser).click();
+		} else if (AvailabilityType.equalsIgnoreCase("NotInStore")) {
+		    if ((!isElementPresentVerification(NotInStoreCheckMark_IMG, browser)) || (!isElementPresentVerification(NotSoldInStores_ELM, browser))) { // SIMEON - 9/25/13 - Change '&&' to '||'
+			messagesMap.put("Availability Indicators", "Indications for not InStore product is not displayed");
+			status = WARNING;
+		    }
+		    switchToDefault(browser);
+		    getElementByProperty(CloseOverlay_IMG, browser).click();
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Validate UI of Find at a store Overlay
+     * @Input -
+     * @author - Siva
+     * @Created -17-APR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateUIofFindAtAStoreOverlay(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FindaStore_LNK = "a[id='faywl']~CSS";
+	String Zipcode_TXT = "input[title='zip code']~CSS";
+	String FindStore_BTN = "input[title='Find a store']~CSS";
+	String Product_IMG = "//div[@id='imgValue']/img~XPATH";
+	String ProductName_ELM = "//div[@id='itemName']~XPATH";
+	String ChangLocation_LNK = "a[id='changestorelnk']~CSS";
+	String ErrorMessage_ELM = "//div[@id='errorDiv']/p~XPATH";
+	String Next_LNK = "//a[@title='Next']~XPATH";
+	String Previous_LNK = "//a[@title='Previous']~XPATH";
+	// String PreviousLinkInActive_LNK="//div[@id='prevInActT']~XPATH";
+	// String SearchResultsTable_DIV = "//div[@id='resultDiv']/table/tbody";
+	String SeeStoreHours_LNK = "//*[contains(text(),'see store hours')]~XPATH";
+	String StoreHoursheader_ELM = "//*[contains(text(),'Store Hours')]~XPATH";
+	String PharmacyHorusheader_ELM = "//*[contains(text(),'Pharmacy Hours')]~XPATH";
+	String InstockMessage_ELM = "//*[contains(text(),'In Stock')]~XPATH";
+	String NotAvaliableMessage_ELM = "//*[contains(text(),'Not Available Here')]~XPATH";
+	String OutofStocketMessage_ELM = "//*[contains(text(),'Out of Stock')]~XPATH";
+	String ContactStoreMessage_ELM = "//*[contains(text(),'Contact Store')]~XPTH";
+	String CloseButton_LNK = "//a[@id='overlayClose']~XPATH";
+	// String StoreSeachResultsMessage_elm =
+	// "//*[contains(text(),'Stores near')]~XPATH";
+	Map<String, String> messagesMap = null;
+	String Zipcode = null, verifyErrorMessage = null, ErrorMessage = null, VerifyUIofOverlay = null;
+	boolean isProductStatusMessageFound = false, isNextDisplayed = false;
+	// int NoofMessageFound = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(FindaStore_LNK, browser)) {
+		throw new Exception("Not able to Click on Find a Store Link");
+	    }
+	    switchToOverlay(browser);
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		verifyErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyErrorMessage");
+		ErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorMessage");
+		VerifyUIofOverlay = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyUIofOverlay");
+		if (Zipcode != null && !Zipcode.equals("-")) {
+		    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+			messagesMap.put("Zipcode Field", "Not able to Enter Zipocde");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerifyClick(FindStore_BTN, browser)) {
+		    throw new Exception("Not able to click on find a store button");
+		}
+		if (verifyErrorMessage.equalsIgnoreCase("Yes")) {
+		    String AppErrorMessageText = getElementByProperty(ErrorMessage_ELM, browser).getText();
+		    if (!AppErrorMessageText.equalsIgnoreCase(ErrorMessage)) {
+			messagesMap.put("Error Messge", "Message is getting dispalyed Wronlgy");
+			status = WARNING;
+		    }
+		}
+		if (VerifyUIofOverlay.equalsIgnoreCase("Yes")) {
+		    String ZipcodeElement = "//*[contains(text(),'" + Zipcode + "')]";
+		    Thread.sleep(5000);
+		    String[] SearchElementsToVerify = { Product_IMG, ProductName_ELM, ChangLocation_LNK, ZipcodeElement };
+		    for (int j = 0; j < SearchElementsToVerify.length; j++) {
+			if (!isElementPresentVerification(SearchElementsToVerify[j], browser)) {
+			    messagesMap.put(SearchElementsToVerify[j], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		    getElementByProperty(Next_LNK, browser).click();
+		    Thread.sleep(4000);
+		    if (!getElementByProperty(Previous_LNK, browser).isDisplayed()) {
+			messagesMap.put("Previous Link", "Previous Link is not displayed.So Next link functionality is not working");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(Previous_LNK, browser)) {
+			throw new Exception("Not able to click on Previous Link");
+		    }
+		    Thread.sleep(4000);
+		    // Page content is taking time to load. Did not find any
+		    // other better option than Thread.sleep. will be changed
+		    // once we find better solution
+		    if (getElementByProperty(Previous_LNK, browser).isDisplayed()) {
+			messagesMap.put("Previous Link", "Previous Link is displayed.So Previous link functionality is not working");
+			status = WARNING;
+		    }
+		    List<WebElement> Tablerows = browser.findElements(By.xpath("//div[@id='resultDiv']/table/tbody/tr"));
+		    int NoofTableRows = Tablerows.size();
+		    float NoofStoreResultsPerpage = NoofTableRows / 3;
+		    if (NoofStoreResultsPerpage > 5) {
+			messagesMap.put("Search Results Per page", "Store Results are dispalying more than 5 per Page");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(SeeStoreHours_LNK, browser)) {
+			throw new Exception("Not able to click on See Store Hours Link");
+		    }
+		    if (!getElementByProperty(StoreHoursheader_ELM, browser).isDisplayed()) {
+			messagesMap.put("Store Hours", "Store Hours are not getting displayed");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(PharmacyHorusheader_ELM, browser).isDisplayed()) {
+			messagesMap.put("Store Hours", "Pharmacy Hours are not getting displayed");
+			status = WARNING;
+		    }
+		    boolean InstockMessagFound = false, OutofStockMeesage = false, contactStoreMessage = false, NotAvailableMessage = false;
+		    do {
+
+			if (!InstockMessagFound) {
+			    if (isElementPresentVerification(InstockMessage_ELM, browser)) {
+				InstockMessagFound = true;
+			    }
+			}
+			if (!OutofStockMeesage) {
+			    if (isElementPresentVerification(OutofStocketMessage_ELM, browser)) {
+				OutofStockMeesage = true;
+			    }
+			}
+			if (!contactStoreMessage) {
+			    if (isElementPresentVerification(ContactStoreMessage_ELM, browser)) {
+				contactStoreMessage = true;
+			    }
+			}
+			if (!NotAvailableMessage) {
+			    if (isElementPresentVerification(NotAvaliableMessage_ELM, browser)) {
+				NotAvailableMessage = true;
+			    }
+			}
+			if (InstockMessagFound && OutofStockMeesage && contactStoreMessage && NotAvailableMessage) {
+			    isProductStatusMessageFound = true;
+			    break;
+			} else {
+			    if (getElementByProperty(Next_LNK, browser).isDisplayed()) {
+				getElementByProperty(Next_LNK, browser).click();
+				Thread.sleep(6000);
+				isNextDisplayed = true;
+			    } else {
+				isNextDisplayed = false;
+			    }
+			}
+		    } while (!isProductStatusMessageFound && isNextDisplayed);
+
+		    if (!isProductStatusMessageFound) {
+			messagesMap.put("Product Status messages", "One/Few/All Product Status Messages is/are Missing");
+			status = WARNING;
+		    }
+
+		}
+	    }
+	    if (!isElementPresentVerifyClick(CloseButton_LNK, browser)) {
+		throw new Exception("Not able to click on Close Button");
+	    }
+	    switchToDefault(browser); // SIMEON - 9/5/13 - Moved this here, after close
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose -Customer validates UI of Shopping Cart and checks navigation as
+     *          Anonymous User and Logged In User
+     * @author - Mohana JanakaValli K
+     * @param dataMap 
+     * @Created - 17 Apr 2013
+     * @Modified By -Mohana JanakaValli K
+     * @Modified Date -7 Apr 2013
+     ************************************************************* 
+     */
+    public static void validateshoppingcart(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String ShoppingCart_ELM = "//h2[contains(text(),'Shopping Cart')]~XPATH";
+	String ProductInformation_ELM = "//th[contains(text(),'Product Information')]~XPATH";
+	String Price_ELM = "//th[contains(text(),'Price')]~XPATH";
+	String RecieveVia_ELM = "//th[contains(text(),'Receiving Options')]~XPATH";
+	String Qty_ELM = "//th[contains(text(),'Qty')]~XPATH";
+	String Total_ELM = "//th[contains(text(),'Total')]~XPATH";
+	String CouponCodeSection_DIV = "//div[@class='couponCodeLayout']~XPATH";
+	String CouponOffer_ELM = "//*[contains(text(),'Have a special promotion or coupon code')]~XPATH";
+	String SubtotalSection_DIV = "//div[@id='order_summary_section']~XPATH";
+	String ItemSubtotal_ELM = "//p[contains(text(),'Item Subtotal:')]~XPATH";
+	String ContinueShopping_IMG = "a[title='Continue shopping']~CSS";
+	String ProceedToCheckout_INPUT = "//div[6]/div/input[@value='Proceed to checkout']~XPATH";
+	String GlobalHeader_DIV = "//div[3]/div[2]~XPATH";
+	String GlobalFooter_DIV = "div[id='page-bottom'] div~CSS";
+	String ProductPrice_ELM = "//p/span/strong~XPATH";
+	String ProductQuantity_INPUT = "//input[contains(@title,'Quantity')]~XPATH";
+	String ProductTotal_ELM = "//td[@class='totalCartProd']/h3/strong~XPATH";
+	String PromoTextbox_INPUT = "input[name='ccode']~CSS";
+	String InvalidCouponErrorMessage_ELM = "//p[contains(text(),'Invalid code. ')]~XPATH";
+	String ApplyCode_INPUT="input[title='Apply Code']~CSS";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String InvalidPromoCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InvalidPromoCode");
+	    // CHECKS FOR THE SHOPPING CART TITLE
+	    if (!isElementPresentVerification(ShoppingCart_ELM, browser)) {
+		messagesMap.put("Shopping Cart Title", "Shopping Cart page is not displayed");
+		status = WARNING;
+	    }
+	    // CHECKS FOR DIFFERENT COLUMNS DISPLAYED
+	    if (!isElementPresentVerification(ProductInformation_ELM, browser)) {
+		messagesMap.put("Product Information Section", "Product Information Column is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(RecieveVia_ELM, browser)) {
+		messagesMap.put("Recieve Via Section", "Recieve Via Column is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Qty_ELM, browser)) {
+		messagesMap.put("Quantity Section", "Quantity Column  is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Price_ELM, browser)) {
+		messagesMap.put("Price Section", "Price Column  is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Total_ELM, browser)) {
+		messagesMap.put("Total Section", "Total Column  is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    // CHECKS FOR PRICE,QUANTITY AND TOTAL OF A PRODUCT IN SHOPPING CART
+	    if (!isElementPresentVerification(ProductPrice_ELM, browser)) {
+		messagesMap.put("Product Price", "Product Price  is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ProductQuantity_INPUT, browser)) {
+		messagesMap.put("Product Quantity", "Product Quantity is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ProductTotal_ELM, browser)) {
+		messagesMap.put("Product Total", "Product Total is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+
+	    // CHECKS FOR THE COUPON CODE AND PROMOTION SECTION IN THE SHOPPING
+	    // CART PAGE
+	    if ((!isElementPresentVerification(CouponCodeSection_DIV, browser)) || (!isElementPresentVerification(CouponOffer_ELM, browser))) {
+		messagesMap.put("COUPON CODE AND PROMOTION SECTION", "Coupon Code and Promotion Section is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    
+	    if (!clearAndEnterText(PromoTextbox_INPUT, InvalidPromoCode, browser)) {
+		messagesMap.put("COUPON CODE", "Coupon Code textbox not present");
+		status = WARNING;
+	    }
+	    
+	    if(!isElementPresentVerifyClick(ApplyCode_INPUT, browser))
+	    {
+		throw new Exception("Not able to click apply code button");
+	    }
+	    if (!isElementPresentVerification(InvalidCouponErrorMessage_ELM, browser)) {
+		messagesMap.put("INVALID COUPON CODE", "Appropriate Error message is not displayed");
+		status = WARNING;
+	    }
+	    // CHECKS FOR THE SUBTOTAL SECTION IN THE SHOPPING CART PAGE
+	    if ((!isElementPresentVerification(SubtotalSection_DIV, browser)) || (!isElementPresentVerification(ItemSubtotal_ELM, browser))) {
+		messagesMap.put("SUBTOTAL SECTION", "Subtotal Section is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    // CHECKS FOR CONTINUE SHOPPING AND PROCEED TO CHECKOUT BUTTONS IN
+	    // SHOPPING CART PAGE
+	    if (!isElementPresentVerification(ContinueShopping_IMG, browser)) {
+		messagesMap.put("Continue Shopping Button", "Continue Shopping Button is not present in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ProceedToCheckout_INPUT, browser)) {
+		messagesMap.put("Proceed To Checkout Button", "Proceed To Checkout Button is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    // CHECKS GLOBAL HEADER AND FOOTER IN SHOPPING CART
+	    if (!isElementPresentVerification(GlobalHeader_DIV, browser)) {
+		messagesMap.put("Global Header", "Global header section is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(GlobalFooter_DIV, browser)) {
+		messagesMap.put("Global Footer", "Global footer section is not displayed in the shopping cart");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose -Customer validates Quantity textbox in Product Details Page
+     * @author - Mohana JanakaValli K
+     * @Created - 7 Apr 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validatequantitytextbox(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = "Pass";
+	Map<String, String> messagesMap = null;
+	String Quantity_INPUT = "//input[@id='txtQuantity']~XPATH";
+	String ErrorMessage_ELM = "//div[contains(text(),'Please enter a quantity to continue')]~XPATH";
+	int QuantityBoxValue = 0;
+	String QuantityBox = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    QuantityBoxValue = Integer.parseInt(getElementByProperty(Quantity_INPUT, browser).getAttribute("value"));
+	    if (QuantityBoxValue != 1) {
+		messagesMap.put("Default value of Quantity textbox", "Default value 1 is not displayed in Quantity textbox of Product's details page");
+		status = WARNING;
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String Quantity = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Quantity");
+		String ErrorValidationType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidationType");
+
+		if (!clearAndEnterText(Quantity_INPUT, Quantity, browser)) {
+		    messagesMap.put("Zipcode Field", "Not able to Enter Zipocde");
+		    status = WARNING;
+		}
+		QuantityBox = getElementByProperty(Quantity_INPUT, browser).getAttribute("value");
+		if (ErrorValidationType.equalsIgnoreCase("SpecialCharacters") || ErrorValidationType.equalsIgnoreCase("Alphabets")) {
+		    if (!QuantityBox.equals("")) {
+			messagesMap.put("Error validation on Quantity textbox", "Allows invalid data to be entered in the Quantity textbox");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(ErrorMessage_ELM, browser)) {
+			messagesMap.put("Quantity textbox Error Message", "Error message is not displayed");
+			status = WARNING;
+		    }
+		}
+		if (ErrorValidationType.equalsIgnoreCase("morethan3digits")) {
+		    int QuantityBoxSize = QuantityBox.length();
+		    if (QuantityBoxSize > 2) {
+			messagesMap.put("Error validation on Quantity textbox", "Exceeds Maximum length of Quantity Textbox");
+			status = WARNING;
+		    }
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Customer checks UI of Contact Lens page
+     * @Input - Object Name, Check Status
+     * @author -Rukmani
+     * @Created - 9/5/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+    public static void cLValidations(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	int numbers = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String LinkName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LinkName");
+	    String ExpectedPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedPage");
+
+	    if (!isElementPresentVerifyClick(LinkName, browser)) {
+		throw new Exception("Not able to click on specific contact lens Link");
+	    }
+	    if (!isElementPresentVerification(ExpectedPage, browser)) {
+		throw new Exception("Specific brand of Contact Lenses header is not displayed");
+	    }
+	    browserBack(browser);
+	    numbers = 678987;
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Customer Enters the zipcode in quick look overlay and verify
+     *          the results
+     * @Input -
+     * @author -Thangaraj
+     * @Created - 30/7/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+    public static void searchStoreInQuickLookoverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ZipCode_TXT = "input[title='zip code']~CSS";
+	String FindAtstore_LNK = "a[title='Find at a store']~CSS";
+	String BackToQL_LNK = "//a[contains(text(),'Back to Quick Look')]~XPATH";
+	String SavetoShoppinglist_LNK = "a[id*='save-to-shopping-list']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ZipCode = dataMap.get("ZipCode").get(0);
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerifyClick(FindAtstore_LNK, browser)) {
+		throw new Exception("Not able to click on Find at store Link");
+	    }
+	    if (!clearAndEnterText(ZipCode_TXT, ZipCode, browser)) {
+		messagesMap.put("Zipcode Field", "Not able to Enter Zipocde");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(FindAtstore_LNK, browser)) {
+		throw new Exception("Not able to click on Find at store Link");
+	    }
+	    if (!isElementPresentVerifyClick(BackToQL_LNK, browser)) {
+		throw new Exception("Not able to click on back to quick look Link");
+	    }
+	    if (!isElementPresentVerification(SavetoShoppinglist_LNK, browser)) {
+		throw new Exception("SavetoShoppinglist_LNK is not displayed");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

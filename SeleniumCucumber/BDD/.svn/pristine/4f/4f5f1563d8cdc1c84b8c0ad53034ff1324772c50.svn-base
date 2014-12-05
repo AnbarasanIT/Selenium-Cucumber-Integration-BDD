@@ -1,0 +1,47 @@
+@checkout @Paypal
+Feature: Customer is able to add daily living items to the cart
+
+@paypal1
+Scenario: Customer buys daily living items and ships it to home address using standard shipping
+
+Given  "" Customer opens the browser
+
+Given " " Customer login to the paypal.com:
+| InputFileName | SheetName | RowId   |
+| CACData       | Paypal    | paypal1 |
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData    | login     | autenticated5 |
+
+And "" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | dl1   |
+
+Then "" Customer adds Daily Living items to the cart from search.
+
+Then "" Customer Goes to the Shopping Cart
+
+Then "" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+|ShippingAddressType| SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+|shippingaddress| -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+#(Customer selects Paypal option)
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | PaypalInputFileName | PaypalSheetName | PaypalRowId |
+| Paypal        | CACData             | Paypal          | sandbox1    |
+
+Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+|SubmitOrder|ChangeStoreOrPickUpTime|ChangeShippingInformation|ChangeShippingMethod|ChangeBillingInformation|
+|Yes|-|-|-|-| 
+

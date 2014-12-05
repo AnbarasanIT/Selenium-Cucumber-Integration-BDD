@@ -1,0 +1,375 @@
+package walgreens.ecom.batch.framework.poc;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class ExcelPOC {
+
+    public static String FAIL_SHEET = "FailTCs";
+    public static String PASS_SHEET = "PassTCs";
+    public static String SUMMARY_SHEET = "summarysheetreport";
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+	String rowId = "LTY-E2E-2";
+	String scenarioFeatureName = "LoyaltyE2E.feature";
+	String stepName = "Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:";
+	String statusDescription = "test description";
+	String scenarioBrowserName = "Firfox";
+	String scenarioCurrentUrl = "http://qa2.walgreens.com/";
+	String stepStatus = "fail";
+
+	String excelDirectory = "C:\\EcomQA\\workspace\\batch9qaSonicExcelPOC\\report\\excel\\staging\\regression\\";
+	String excelFilePath = excelDirectory + "Report-10-10-2012.xls";
+
+	// String sheetName = "PassTCs";
+	String sheetName = "FailTCs";
+	ScenarioBean scenario = new ScenarioBean();
+	StepBean step = new StepBean();
+	POIFSFileSystem pfs = null;
+	HSSFWorkbook workbook = null;
+
+	try {
+	    scenario.setScenarioId(rowId);
+	    scenario.setScenarioFeatureName(scenarioFeatureName);
+	    step.setStepName(stepName);
+	    step.setStepStatus(stepStatus);
+	    step.setStatusDescription(statusDescription);
+	    scenario.setScenarioBrowserName(scenarioBrowserName);
+	    scenario.setScenarioCurrentUrl(scenarioCurrentUrl);
+
+	    File excelDir = new File(excelDirectory);
+	    if (!excelDir.exists()) {
+		excelDir.mkdirs();
+	    }
+	    boolean isFileExists = new File(excelFilePath).exists();
+	    if (isFileExists) {
+		pfs = new POIFSFileSystem(new FileInputStream(new File(excelFilePath)));
+		workbook = new HSSFWorkbook(pfs);
+
+		removeMatchingRows(rowId, excelFilePath, workbook, sheetName);
+		postFailTestData(null, scenario, step, excelFilePath, workbook, sheetName);
+	    }
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    private static void removeMatchingRows(String rowId, String excelFilePath, HSSFWorkbook workbook, String sheetName) {
+	FileOutputStream fos = null;
+	ArrayList<Integer> matchingRowsIndexes = null;
+
+	try {
+	    matchingRowsIndexes = (ArrayList<Integer>) findMatchingRowList(rowId, workbook, sheetName);
+	    while (matchingRowsIndexes != null && matchingRowsIndexes.size() > 0) {
+		int lastRowNum = workbook.getSheet(sheetName).getLastRowNum();
+		int rowIndex = matchingRowsIndexes.get(0).intValue();
+
+		HSSFRow row = workbook.getSheet(sheetName).getRow(rowIndex);
+		if (row != null) {
+		    workbook.getSheet(sheetName).removeRow(row);
+		}
+
+		if (rowIndex >= 0 && rowIndex < lastRowNum) {
+		    workbook.getSheet(sheetName).shiftRows(rowIndex + 1, lastRowNum, -1);
+		}
+		fos = new FileOutputStream(excelFilePath);
+		workbook.write(fos);
+
+		if (fos != null) {
+		    fos.close();
+		}
+
+		matchingRowsIndexes = (ArrayList<Integer>) findMatchingRowList(rowId, workbook, sheetName);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+
+    private static void removeEmptyRows(HSSFWorkbook workbook, String sheetName) {
+	HSSFSheet hsheet = workbook.getSheet(sheetName);
+
+	boolean stop = false;
+	boolean nonBlankRowFound;
+	short c;
+	HSSFRow lastRow = null;
+	HSSFCell cell = null;
+
+	while (stop == false) {
+	    nonBlankRowFound = false;
+	    lastRow = hsheet.getRow(hsheet.getLastRowNum());
+	    for (c = lastRow.getFirstCellNum(); c <= lastRow.getLastCellNum(); c++) {
+		cell = lastRow.getCell(c);
+		if (cell != null && lastRow.getCell(c).getCellType() != HSSFCell.CELL_TYPE_BLANK) {
+		    nonBlankRowFound = true;
+		}
+	    }
+	    if (nonBlankRowFound == true) {
+		stop = true;
+	    } else {
+		hsheet.removeRow(lastRow);
+	    }
+	}// End of while
+
+    }
+
+    private static List<Integer> findMatchingRowList(String rowId, HSSFWorkbook workbook, String sheetName) {
+	ArrayList<Integer> matchingRowsIndexes = null;
+	int lastRowNum = workbook.getSheet(sheetName).getLastRowNum();
+
+	for (int i = 0; i <= lastRowNum; i++) {
+	    HSSFRow hssfRow = workbook.getSheet(sheetName).getRow(i);
+	    if (hssfRow != null) {
+		HSSFCell cell = hssfRow.getCell(0);
+		if (cell != null) {
+		    String firstCellValue = cell.getStringCellValue();
+		    if ((firstCellValue != null && firstCellValue.equalsIgnoreCase(rowId)) || (cell.getCellType() == cell.CELL_TYPE_BLANK)) {
+			if (matchingRowsIndexes == null) {
+			    matchingRowsIndexes = new ArrayList<Integer>();
+			}
+			matchingRowsIndexes.add(Integer.valueOf(hssfRow.getRowNum()));
+		    }
+		} else if (cell == null) {
+		    if (matchingRowsIndexes == null) {
+			matchingRowsIndexes = new ArrayList<Integer>();
+		    }
+		    matchingRowsIndexes.add(Integer.valueOf(hssfRow.getRowNum()));
+		}
+	    } else {
+		if (i <= lastRowNum) {
+		    if (matchingRowsIndexes == null) {
+			matchingRowsIndexes = new ArrayList<Integer>();
+		    }
+		    matchingRowsIndexes.add(Integer.valueOf(i));
+		}
+	    }
+	}
+
+	return matchingRowsIndexes;
+    }
+
+    private static void postFailTestData(EventFiringWebDriver browser, ScenarioBean scenario, StepBean step, String excelFilePath, HSSFWorkbook workbook, String sheetName) throws IOException {
+	createExcelSheet(excelFilePath, FAIL_SHEET);
+
+	FileOutputStream fos = null;
+	HSSFRow objRow = null;
+	HSSFCell objCell = null;
+	int lastRowNum = 0;
+
+	// Make Sure the empty rows are removed
+	// removeEmptyRows(workbook, sheetName);
+
+	lastRowNum = workbook.getSheet(sheetName).getLastRowNum();
+	objRow = workbook.getSheet(sheetName).createRow(lastRowNum + 1);
+
+	objCell = objRow.createCell(0);
+	objCell.setCellValue(scenario.getScenarioId());
+	objCell = objRow.createCell(1);
+	objCell.setCellValue(scenario.getScenarioFeatureName());
+	objCell = objRow.createCell(2);
+	objCell.setCellValue(step.getStepName());
+	objCell = objRow.createCell(3);
+	objCell.setCellValue(step.getStatusDescription());
+	objCell = objRow.createCell(4);
+	objCell.setCellValue(EcommTestRunner.currentBrowserName);
+	objCell = objRow.createCell(5);
+	objCell.setCellValue(scenario.getScenarioCurrentUrl());
+	objCell = objRow.createCell(6);
+	if (CommonLibrary.FAIL.equalsIgnoreCase(step.getStepStatus()) || "fail".equalsIgnoreCase(step.getStepStatus())) {
+	    objCell.setCellValue("FAIL");
+	} else if (CommonLibrary.WARNING.equalsIgnoreCase(step.getStepStatus()) || "warning".equalsIgnoreCase(step.getStepStatus())) {
+	    objCell.setCellValue("WARNING");
+	}
+
+	if (scenario.isALMReportEnabled()) {
+	    objCell = objRow.createCell(7);
+	    objCell.setCellValue("yes");
+	}
+
+	fos = new FileOutputStream(excelFilePath);
+	workbook.write(fos);
+	if (fos != null) {
+	    fos.close();
+	}
+
+    }
+
+    private static void postPassTestData(EventFiringWebDriver browser, ScenarioBean scenario, StepBean step, String excelFilePath, String sheetName) throws IOException {
+	createExcelSheet(excelFilePath, PASS_SHEET);
+
+	FileOutputStream fos = null;
+	POIFSFileSystem pfs = null;
+	HSSFWorkbook workbook = null;
+	HSSFSheet excelSheet = null;
+	HSSFRow objRow = null;
+	HSSFCell objCell = null;
+
+	pfs = new POIFSFileSystem(new FileInputStream(new File(excelFilePath)));
+	workbook = new HSSFWorkbook(pfs);
+	excelSheet = workbook.getSheet(sheetName);
+	objRow = excelSheet.createRow(excelSheet.getLastRowNum() + 1);
+
+	objCell = objRow.createCell(0);
+	objCell.setCellValue(scenario.getScenarioId());
+	objCell = objRow.createCell(1);
+	objCell.setCellValue(scenario.getScenarioFeatureName());
+	objCell = objRow.createCell(2);
+	objCell.setCellValue(EcommTestRunner.currentBrowserName);
+
+	if (scenario.isALMReportEnabled()) {
+	    objCell = objRow.createCell(3);
+	    objCell.setCellValue("yes");
+	}
+
+	fos = new FileOutputStream(excelFilePath);
+	workbook.write(fos);
+	if (fos != null) {
+	    fos.close();
+	}
+
+	System.out.println("Scenario Status: " + scenario.getScenarioStatus());
+    }
+
+    public static void createExcelSheet(String excelFilePath, String sheetName) throws IOException {
+	FileOutputStream fos = null;
+	try {
+	    HSSFWorkbook workbook = null;
+	    if (new File(excelFilePath).createNewFile()) {
+		workbook = new HSSFWorkbook();
+	    } else {
+		POIFSFileSystem pfs = new POIFSFileSystem(new FileInputStream(new File(excelFilePath)));
+		workbook = new HSSFWorkbook(pfs);
+	    }
+	    if (workbook.getSheet(sheetName) == null) {
+		fos = new FileOutputStream(excelFilePath);
+		workbook.createSheet(sheetName);
+		workbook.write(fos);
+		if (fos != null) {
+		    fos.close();
+		}
+
+		// Create Header for the newly Created Sheet
+		if (FAIL_SHEET.equalsIgnoreCase(sheetName)) {
+		    createFailReportHeader(excelFilePath, sheetName);
+		} else if (PASS_SHEET.equalsIgnoreCase(sheetName)) {
+		    createPassReportHeader(excelFilePath, sheetName);
+		} else if (SUMMARY_SHEET.equalsIgnoreCase(sheetName)) {
+		    ;
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    if (fos != null) {
+		fos.close();
+	    }
+	}
+    }
+
+    private static void createFailReportHeader(String excelFilePath, String sheetName) throws IOException {
+	FileOutputStream fos = null;
+	try {
+	    POIFSFileSystem pfs = new POIFSFileSystem(new FileInputStream(new File(excelFilePath)));
+	    HSSFWorkbook workbook = new HSSFWorkbook(pfs);
+
+	    HSSFCellStyle style = workbook.createCellStyle();
+
+	    style.setBorderBottom(HSSFCellStyle.BORDER_THICK);
+	    style.setBorderTop(HSSFCellStyle.BORDER_THICK);
+	    style.setBorderLeft(HSSFCellStyle.BORDER_THICK);
+	    style.setBorderRight(HSSFCellStyle.BORDER_THICK);
+
+	    style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+	    // creating a custom palette for the workbook
+	    // HSSFPalette palette = workbook.getCustomPalette();
+	    // HSSFColor myColor = palette.addColor((byte) 153, (byte) 0, (byte)
+	    // 0);
+
+	    // style.setFillBackgroundColor(HSSFColor.BLUE.index);
+	    style.setFillForegroundColor(HSSFColor.BLUE.index);
+
+	    HSSFSheet excelSheet = workbook.getSheet(sheetName);
+	    HSSFRow objRow = excelSheet.createRow(0);
+
+	    HSSFCell objCell = objRow.createCell(0);
+	    objCell.setCellValue("ScenarioID");
+	    objCell.setCellStyle(style);
+
+	    objCell = objRow.createCell(1);
+	    objCell.setCellValue("FeatureName:");
+	    objCell = objRow.createCell(2);
+	    objCell.setCellValue("ScenarioStep");
+	    objCell = objRow.createCell(3);
+	    objCell.setCellValue("StepStatusDescription");
+	    objCell = objRow.createCell(4);
+	    objCell.setCellValue("BrowserName");
+	    objCell = objRow.createCell(5);
+	    objCell.setCellValue("ScenarioCurrentUrl");
+	    objCell = objRow.createCell(6);
+	    objCell.setCellValue("Status");
+	    objCell = objRow.createCell(7);
+	    objCell.setCellValue("AlmReport");
+
+	    fos = new FileOutputStream(excelFilePath);
+	    workbook.write(fos);
+	    if (fos != null) {
+		fos.close();
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    if (fos != null) {
+		fos.close();
+	    }
+	}
+    }
+
+    private static void createPassReportHeader(String excelFilePath, String sheetName) throws IOException {
+	FileOutputStream fos = null;
+	try {
+	    POIFSFileSystem pfs = new POIFSFileSystem(new FileInputStream(new File(excelFilePath)));
+	    HSSFWorkbook workbook = new HSSFWorkbook(pfs);
+	    HSSFSheet excelSheet = workbook.getSheet(sheetName);
+	    HSSFRow objRow = excelSheet.createRow(0);
+
+	    HSSFCell objCell = objRow.createCell(0);
+	    objCell.setCellValue("ScenarioID");
+	    objCell = objRow.createCell(1);
+	    objCell.setCellValue("FeatureName:");
+	    objCell = objRow.createCell(2);
+	    objCell.setCellValue("BrowserName");
+	    objCell = objRow.createCell(3);
+	    objCell.setCellValue("AlmReport");
+
+	    fos = new FileOutputStream(excelFilePath);
+	    workbook.write(fos);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    if (fos != null) {
+		fos.close();
+	    }
+	}
+    }
+
+}

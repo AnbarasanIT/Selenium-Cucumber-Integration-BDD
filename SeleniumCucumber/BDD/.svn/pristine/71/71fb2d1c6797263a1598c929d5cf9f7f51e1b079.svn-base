@@ -1,0 +1,473 @@
+package walgreens.ecom.batch.automation.library.marketing.storeLocator;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.accountdashboard.pharmacy_health.ManageHealthHistoryLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class StoreLocatorValidationsLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify pick any store from Find a store results
+     * @author - Chezhiyan
+     * @Created - 18-jan-2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -11-Feb-2013
+     ************************************************************* 
+     */
+    public static void selectRequiredStoreInFindAStore(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String StoreSearchResultsContainer_ELM = "div[id='storeSearchResult']~CSS";
+	String StoreCells_ELM = "div[class*='resultContainer']";
+	String DetailsAndDirections_LNK = "a[title='Details and Directions']";
+	String StoreServices_ELM = "p[class='storeService']";
+	String SearchResultsNext_LNK = "a[title='Next']~CSS";
+	String FindStoreZipcode_TXT = "input[id='locator']~CSS";
+	String ShowMore_IMG = "img[title='Show More']~CSS";
+	String AllAvailableServices_ELM = "div[id='allservices']~CSS";
+	String ServiceCheckbox_CHK = "input[name='filterCheckBox']";
+	String FindAStore_BTN = "input[id='findstore']~CSS";
+	String ClearAllSelections_LNK = "a[title='Clear all selections']~CSS";
+	String DuaneReadeService_CHK = "//div[@id='convenience']//li[3]/input~XPATH";
+	String SelectThisStore_IMG = "img[title='Select this store']~CSS";
+	String ErrorMsg_TXT = "//p[contains(text(),'No results found for your search.Verify your location')]~XPATH";
+	String StoreSelectedInApplication = null;
+	String Makethismystore_INPUT = "input[alt='Select this store']~CSS";
+	String PreviousNotClickable_ELM = "//span[contains(text(),'Previous')]~XPATH";
+	String PreviousClickable_LNK = "a[title='Previous']~CSS";
+	String GoogleMap_IMG = "//div[@id='googleMapCanvas']~XPATH";
+	String ZoomOption_IMG = "div[title='Click to zoom'] img~CSS";
+	int ServiceFlag = 0;
+	List<WebElement> FilterOptions = null;
+	String OptionToGoBack = null;
+	String Zipcode = null;
+	String Filters = null;
+	int SelectStoreFlag = 0;
+	String StoreName = null;
+	String StoreServices = null;
+	boolean isNextPresent = false;
+	String SelectStoreOption = null;
+	String MakeThisMyStoreOption = null;
+	List<WebElement> StoreResults = null;
+	Map<String, String> messagesMap = null;
+	// Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // if (sharedProperties == null) {
+	    // sharedProperties = new HashMap<String, String>();
+	    // stepBean.setStepStatusMessages(sharedProperties);
+	    // }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+
+	    for (int i = 0; i < totalRowCount; i++) {
+		Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		Filters = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Filters");
+		SelectStoreOption = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StoreOptionToSelect");
+		OptionToGoBack = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GoBack");
+		MakeThisMyStoreOption = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MakeThisMyStoreOption");
+		String[] arrFilters = Filters.split(":");
+		if (!Zipcode.trim().equals("-")) {
+		    clearAndEnterText(FindStoreZipcode_TXT, Zipcode, browser);
+		}
+		if (!Filters.trim().equals("-")) {
+		    if (isElementPresentVerification(ShowMore_IMG, browser)) {
+			if (!isElementPresentVerifyClick(ShowMore_IMG, browser)) {
+			    messagesMap.put("Store Locator page", "Unable to click show more image.");
+			    status = WARNING;
+			}
+
+			// arrFilters = Filters.split(":");
+			// } else {
+			// arrFilters[0] = Filters;
+
+			// Select all specified filters.
+			FilterOptions = getElementByProperty(AllAvailableServices_ELM, browser).findElements(By.tagName("li"));
+			for (int FilterSelectionIterator = 0; FilterSelectionIterator < FilterOptions.size(); FilterSelectionIterator++) {
+			    // get the List items's that hold the service text
+			    if (!FilterOptions.get(FilterSelectionIterator).getAttribute("class").equals("bigfont")) {
+				for (int ServiceIterator = 0; ServiceIterator < arrFilters.length; ServiceIterator++) {
+				    // look for the services specified by the
+				    // user
+				    if (arrFilters[ServiceIterator].toUpperCase().contains("DUANE")) {
+					getElementByProperty(DuaneReadeService_CHK, browser).click();
+					ServiceFlag++;
+				    } else if (FilterOptions.get(FilterSelectionIterator).getText().contains(arrFilters[ServiceIterator])) {
+					// click the checkbox thats the child
+					// element of the desired service
+					FilterOptions.get(FilterSelectionIterator).findElement(By.cssSelector(ServiceCheckbox_CHK)).click();
+					ServiceFlag++;
+				    }
+				    if (ServiceFlag == arrFilters.length) {
+					break;
+				    }
+				}
+			    }
+			    if (ServiceFlag == arrFilters.length) {
+				break;
+			    }
+			}
+			if (ServiceFlag != arrFilters.length) {
+			    messagesMap.put("Store Locator page", "Unable to select one or more of the specified service(s)");
+			    status = WARNING;
+			}
+		    }
+		}
+
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Unable to click on Find a Store button, to search for stores in specified area.");
+		}
+		// Verify the error for invalid entry
+		if (dataMap.containsKey("ErrorValidation")) {
+		    if (dataMap.get("ErrorValidation").get(0).equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerification(ErrorMsg_TXT, browser)) {
+			    messagesMap.put("Store Locator page", "Unable to find the  invalid error message");
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    do {
+			// Select preferred store or any random store or a store
+			// based on its index, specified by the user.
+			Thread.sleep(3000);
+			StoreResults = getElementByProperty(StoreSearchResultsContainer_ELM, browser).findElements(By.cssSelector(StoreCells_ELM));
+			for (int StorePositionIterator = 0; StorePositionIterator < StoreResults.size(); StorePositionIterator++) {
+			    int serviceIterator = 0;
+			    StoreName = StoreResults.get(StorePositionIterator).findElement(By.cssSelector(DetailsAndDirections_LNK)).getText();
+			    StoreServices = StoreResults.get(StorePositionIterator).findElement(By.cssSelector(StoreServices_ELM)).getText();
+			    // Verify if every mentioned filter is present in
+			    // the
+			    // Modified by Ygnash
+			    // 18-May-2013 Comments : Loop logical error needed
+			    // to add below if loop
+			    if (arrFilters.length == 1 && arrFilters[0].equalsIgnoreCase("-")) {
+				serviceIterator = 1;
+			    }
+			    for (; serviceIterator < arrFilters.length; serviceIterator++) {
+				// Since this service does not show up with its
+				// complete name in the list of services
+				// provided by
+				// store
+				if (arrFilters[serviceIterator].equalsIgnoreCase("Redbox DVD Rentals")) {
+				    arrFilters[serviceIterator] = "Redbox";
+				}
+				if (!StoreServices.toUpperCase().contains(arrFilters[serviceIterator].toUpperCase())) {
+				    messagesMap.put("Service Selection verification", "The specified service is not offered by this store: " + StoreName);
+				    status = WARNING;
+				}
+			    }
+
+			    if (SelectStoreOption.contains("Position")) {
+				StoreSelectedInApplication = StoreResults.get(Integer.parseInt(SelectStoreOption.split(":")[1])).findElement(By.cssSelector(DetailsAndDirections_LNK)).getText();
+				StoreResults.get(Integer.parseInt(SelectStoreOption.split(":")[1])).findElement(By.cssSelector(DetailsAndDirections_LNK)).click();
+				SelectStoreFlag = 1;
+				break;
+			    } else if (SelectStoreOption.contains("-")) {
+				// CHECKS FOR THE PREVIOUS LINK WHICH IS NOT
+				// CLICKABLE
+				if (!isElementPresentVerification(PreviousNotClickable_ELM, browser)) {
+				    messagesMap.put("Previous Link in first page", "Previous is not present as non clickable element");
+				    status = WARNING;
+				}
+				// CHECKS FOR THE MAP DISPLAY WITH ZOOMING
+				// CONTROLS
+				if ((!isElementPresentVerification(GoogleMap_IMG, browser)) && (!isElementPresentVerification(ZoomOption_IMG, browser))) {
+				    messagesMap.put("Google map and Zooming Controls", "Map is not present with zooming options");
+				    status = WARNING;
+				}
+				// CHECKS FOR THE PREVIOUS CLICK WHICH IS
+				// CLICKABLE AFTER NAVIGATING TO NEXT PAGE
+				if (!isElementPresentVerifyClick(SearchResultsNext_LNK, browser)) {
+				    throw new Exception("Not able to click Next Link");
+				}
+
+				if (!isElementPresentVerification(PreviousClickable_LNK, browser)) {
+				    messagesMap.put("Previous Link after clicking previous link", "Previous is not present as clickable link");
+				    status = WARNING;
+				}
+
+				SelectStoreFlag = 1;
+				break;
+			    } else {
+				if (StoreName.contains(SelectStoreOption)) {
+				    StoreSelectedInApplication = StoreResults.get(StorePositionIterator).findElement(By.cssSelector(DetailsAndDirections_LNK)).getText();
+				    StoreResults.get(StorePositionIterator).findElement(By.cssSelector(DetailsAndDirections_LNK)).click();
+				    SelectStoreFlag = 1;
+				    break;
+				}
+			    }
+			}
+
+			if (SelectStoreFlag != 1) {
+			    isNextPresent = isElementPresentVerifyClick(SearchResultsNext_LNK, browser);
+			} else {
+			    break;
+			}
+		    } while (isNextPresent);
+		}
+		// Verifications for Selected store
+
+		// This is set to Yes if the user wants to verify data for more
+		// than one store.
+		if (OptionToGoBack.equalsIgnoreCase("Yes")) {
+		    browserBack(browser);
+		    if (!Filters.trim().equals("-")) {
+			if (!isElementPresentVerifyClick(ClearAllSelections_LNK, browser)) {
+			    messagesMap.put("Service Selection verification", "Unable to clear selected services" + StoreName);
+			    status = WARNING;
+			}
+		    }
+		} else if (MakeThisMyStoreOption.equalsIgnoreCase("Yes")) {
+		    // Modified
+		    if (isElementPresentVerification(SelectThisStore_IMG, browser)) {
+			if (!isElementPresentVerifyClick(SelectThisStore_IMG, browser)) {
+			    messagesMap.put("Make This my store", "Unable to Save as preferred store." + StoreName);
+			    status = WARNING;
+			}
+
+		    } else if (isElementPresentVerification(Makethismystore_INPUT, browser)) {
+			if (!isElementPresentVerifyClick(Makethismystore_INPUT, browser)) {
+			    messagesMap.put("Make This my store", "Unable to Save as preferred store." + StoreName);
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Make This my store", "Unable to Save as preferred store." + StoreName);
+			status = WARNING;
+		    }
+
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate UI of make this my store Overlay
+     * @author - Ygnash
+     * @Created - 16-5-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validatesstoredetailsoverlay(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String MakeThisMyStorewithoutLogin_CSS = "img[alt='Select this store']~CSS";
+	String MakeThisMyStore_ELM = " //h1[contains(text(),'Make This')]~XPATH ";
+	String Cancel_LNK = "img[alt='Cancel']~CSS";
+	String OveralyClose_IMG = "//*[@id='overlayClose']~XPATH";
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String SignIn_ELM = "//h1[contains(text(),'Sign In or Register')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(MakeThisMyStorewithoutLogin_CSS, browser)) {
+		messagesMap.put("Make This My Store Button", "Button is not present");
+		status = WARNING;
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(MakeThisMyStore_ELM, browser)) {
+		messagesMap.put("Make This My Store", "Overlay not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+		messagesMap.put("Make This My Store Overlay", "Cancel link is not present");
+		status = WARNING;
+	    }
+	    switchToDefault(browser);
+	    if (!isElementPresentVerifyClick(MakeThisMyStorewithoutLogin_CSS, browser)) {
+		messagesMap.put("Make This My Store Button", "Button is not present");
+		status = WARNING;
+	    }
+	    getElementByProperty(OveralyClose_IMG, browser).click();
+	    if (!isElementPresentVerifyClick(MakeThisMyStorewithoutLogin_CSS, browser)) {
+		messagesMap.put("Make This My Store Button", "Button is not present");
+		status = WARNING;
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		messagesMap.put("Make This My Store Overlay", "Continue button is not present");
+		status = WARNING;
+	    }
+	    switchToDefault(browser);
+	    if (!isElementPresentVerification(SignIn_ELM, browser)) {
+		messagesMap.put("Make This My Store Overlay", "Not navigated to Sign In page");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Customer verifies the store Locator Link validations and the
+     *          corresponding checkbox verification
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created - 5/june/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void StoreLocatorPageVerifications(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Zipcode_TXT = "//input[@id='locator']~XPATH";
+	String FindStore_BTN = "//input[@id='findstore']~XPATH";
+	String Details_LNK = "//a[@title='Details']~XPATH";
+	String Directions_LNK = "//a[@title='Directions']~XPATH";
+	String VaccineAvaliablity_LNK = "//a[contains(text(),'Vaccine Availability')]~XPATH";
+	String Waittime_LNK = "//a[@title='Wait Time']~XAPTH";
+	String VaccineOverlayHealthCare_TXT = "//img[@title='healthcare clinic']~XPATH";
+	String VaccineOverlayVaccAvail_TXT = "//h1[contains(text(),'Vaccine Availability')]~XPATH";
+	String VaccineOverlayErrorMsg_TXT = "//div[contains(@class,'error-msg')]~XPATH";
+	String PharmacyAvaliablity_LNK = "a[title*='Immunizations4']~CSS";
+	String PharmacyImg_TXT = "//img[@title='pharmacy']~XPATH";
+	String PharmacyOverlayAvailImmunization_TXT = "//h1[contains(text(),'Available Immunizations at This Pharmacy*')]~XPATH";
+	String Directions_TXT = "//h3/strong[contains(text(),'Get Directions')]~XPATH";
+	String populaService = "//div[@id='popular-services']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // HealthCare Service checkbox selection
+	    String elementtobeClicked = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "elementtobeClicked");
+	    List<WebElement> totalServices = getElementByProperty(populaService, browser).findElements(By.tagName("li"));
+
+	    if (totalServices.get(0).getText().equalsIgnoreCase("Popular Services")) {
+		for (int i = 1; i < totalServices.size(); i++) {
+		    WebElement curElemnt = totalServices.get(i);
+		    if (curElemnt.getText().equalsIgnoreCase(elementtobeClicked)) {
+			WebElement curChkbox = curElemnt.findElement(By.tagName("input"));
+			curChkbox.click();
+		    } else {
+			continue;
+		    }
+		}
+	    }
+	    // Getting testdata for the zipcode
+	    if (!clearAndEnterText(Zipcode_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode"), browser)) {
+		messagesMap.put("Unable to enter text", "Unable to enter text in Zipcode field");
+		status = WARNING;
+	    }
+	    // Clicking findstore button
+	    if (!isElementPresentVerifyClick(FindStore_BTN, browser)) {
+		throw new Exception("Not able to click on findstore button");
+	    }
+	    // Clicking Directions link and verify the navigation
+//	    if (!isElementPresentVerifyClick(Waittime_LNK, browser)) {
+//		throw new Exception("Not able to click on Directions link");
+//	    }
+	    if (!isElementPresentVerifyClick(Directions_LNK, browser)) {
+		throw new Exception("Not able to click on Directions link");
+	    }
+	    if (!isElementPresentVerifyClick(Directions_TXT, browser)) {
+		throw new Exception("Not able to Find Directions Text");
+	    }
+	    CommonLibrary.browserBack(browser);
+	    // Clicking Deatils link after the search result page
+	    if (!isElementPresentVerifyClick(Details_LNK, browser)) {
+		throw new Exception("Not able to click on Details link");
+	    }
+	    if (dataMap.containsKey("PageValidation")) {
+		if (!dataMap.get("PageValidation").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("PageValidation").get(0).equalsIgnoreCase("Yes")) {
+			// Verifying the Text present in the Details page
+			String TextToBeVerified[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TextToBeVerified").split(":");
+			if (TextToBeVerified.length == TextToBeVerified.length)
+			    for (int j = 0; j < TextToBeVerified.length; j++) {
+				if (!isElementPresentVerification(TextToBeVerified[j], browser)) {
+				    messagesMap.put("Pharmacy service Details page", TextToBeVerified[j] + "Expected Text is not displayed.");
+				    status = WARNING;
+				}
+			    }
+			// Validating the links present in the Details page and
+			// getting data form datasheet
+			String ObjectToBeClick[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ObjectToBeClick").split(":");
+			String ObjectToBeVerified[] = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ObjectToBeVerified").split(":");
+
+			if (ObjectToBeClick.length == ObjectToBeVerified.length)
+			    for (int i = 0; i < ObjectToBeClick.length; i++)
+				if (isElementPresentVerifyClick(ObjectToBeClick[i], browser)) {
+				    if (!isElementPresentVerification(ObjectToBeVerified[i], browser)) {
+					messagesMap.put("Pharmacy service", ObjectToBeVerified[i] + " object is not displayed.");
+					status = WARNING;
+				    }
+				    CommonLibrary.browserBack(browser);
+				}
+			// Veryfing Vaccine avaliablity ovelay
+			if (!isElementPresentVerifyClick(VaccineAvaliablity_LNK, browser)) {
+			    throw new Exception("Not able to click VaccineAvaliablity Link");
+			}
+			switchToOverlay(browser);
+			if (!isElementPresentVerification(VaccineOverlayHealthCare_TXT, browser)) {
+			    messagesMap.put("Vaccination overlay- Vaccination", "Expected message is not displayed.");
+			    status = WARNING;
+
+			    if (!isElementPresentVerification(VaccineOverlayVaccAvail_TXT, browser)) {
+				messagesMap.put("Vaccination overlay-Vaccination Available", "Expected message is not displayed.");
+				status = WARNING;
+			    } else {
+				if (!isElementPresentVerification(VaccineOverlayErrorMsg_TXT, browser)) {
+				    messagesMap.put("Vaccination overlay-Vaccination Available Error msg", "Expected message is not displayed.");
+				    status = WARNING;
+				}
+			    }
+			}
+			switchToDefault(browser);
+			// Veryfing Pharmacy avaliablity overlay
+			if (!isElementPresentVerifyClick(PharmacyAvaliablity_LNK, browser)) {
+			    throw new Exception("Not able to click" + PharmacyAvaliablity_LNK);
+			}
+			switchToOverlay(browser);
+			if (!isElementPresentVerification(PharmacyImg_TXT, browser)) {
+			    messagesMap.put("Pharmacyoverlay-Immunization", "Expected PharmacyImg is not displayed.");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerification(PharmacyOverlayAvailImmunization_TXT, browser)) {
+			    messagesMap.put("Pharmacyoverlay-Immunization", "Expected pharmacy message is not displayed.");
+			    status = WARNING;
+			}
+			switchToDefault(browser);
+			CommonLibrary.browserBack(browser);
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

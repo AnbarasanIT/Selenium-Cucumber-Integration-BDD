@@ -1,0 +1,228 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.crypto.spec.PSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class MedHelpVerificationLibrary extends CommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Create MedHelp Account by selecting Avatar Image &
+     *          ScreenName
+     * @author - Siva
+     * @Created - 16-MAY-2013
+     * @Modified By - Siva
+     * @Modified Date - 19-Jul-2013
+     ************************************************************* 
+     */
+
+    public static void createMedHelpAccount(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String ScreenName_TXT = "//input[@class='user_login_input']~XPATH";
+	String AvatarImage_IMG = "img.avatar_tn~CSS";
+	String TermsAndConditions_CHK = "input#terms_of_service~CSS";
+	String Create_BTN = "a#wg_user_signup_form_submit~CSS";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    Calendar cal = Calendar.getInstance();
+	    String timeinmills = Long.toString(cal.getTimeInMillis());
+	    String ScreenName = randomNameGenerator() + timeinmills;
+	    String TargetPageObjects = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TargetPageObjects");
+
+	    if (!isElementPresentVerification(ScreenName_TXT, browser)) {
+		messagesMap.put("Screen Name Field Missing", "May be Page is not loaded in time");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(ScreenName_TXT, ScreenName, browser)) {
+		messagesMap.put("ScreenName", "Not able to Enter ScreenName");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(AvatarImage_IMG, browser)) {
+		throw new Exception("Not able to Click on Avatar Image");
+	    }
+	    if (!isElementPresentVerifyClick(TermsAndConditions_CHK, browser)) {
+		throw new Exception("Not able to Click on Terms and conditions Check box");
+	    }
+	    if (!isElementPresentVerifyClick(Create_BTN, browser)) {
+		throw new Exception("Not able to Click on Creat Button");
+	    }
+	    if (TargetPageObjects != null && !TargetPageObjects.equals("-")) {
+		String[] ObjectsToVerify = TargetPageObjects.split("`");
+		for (int i = 0; i < ObjectsToVerify.length; i++) {
+		    if (!isElementPresentVerification(ObjectsToVerify[i], browser)) {
+			messagesMap.put(ObjectsToVerify[i], "Object is Missing");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Post the required Comments in MedHelp Post a
+     *          Question page
+     * @author - Siva
+     * @Created - 16-MAY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void postACommentinMedHelpPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String Postto_TXT = "//input[@id='post_to']~XPATH";
+	String PostMessage_TXT = "//textarea[@id='post_message']~XPATH";
+	String PostComment_BTN = "//*[contains(text(),'Post Comment') or contains(text(),'Post A Comment')]";
+	String SignInOrRegisterPage = "//h1[contains(text(),'Sign In or Register')]~XPATH";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String TargetPage = dataMap.get("Targetpage").get(0);
+	    String PostTo = randomNameGenerator();
+	    String Comment = randomNameGenerator();
+	    if (!clearAndEnterText(Postto_TXT, PostTo, browser)) {
+		messagesMap.put("Post To", "Not able to Enter text in Post to field");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PostMessage_TXT, Comment, browser)) {
+		messagesMap.put("Post Message", "Not able to Enter text in Post Message field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(PostComment_BTN, browser)) {
+		throw new Exception("Not able to Click on Post Comment");
+	    }
+	    if (TargetPage.equalsIgnoreCase("SigninPage")) {
+		if (!isElementPresentVerification(SignInOrRegisterPage, browser)) {
+		    messagesMap.put("Sign IN Page", "Page is not found");
+		    status = WARNING;
+		}
+	    } else {
+		String PostTo_ELM = "//*[contains(text(),'" + PostTo + "')]";
+		String PostedMessage_ELM = "//*[contains(text(),'" + Comment + "')]";
+		if (!isElementPresentVerification(PostTo_ELM, browser)) {
+		    messagesMap.put("Posted Question form to ", "object is missing ");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(PostedMessage_ELM, browser)) {
+		    messagesMap.put("comments", "Posted Comments are missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Post the required Comments in MedHelp Post a
+     *          Question page
+     * @author - Siva
+     * @Created - 26-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateHealthEmailPreferencesFromMedHelpDB(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String EmailHealthPreferences_ELM = "//pre[contains(text(),'watch_list_notification')]~XPATH";
+	String MedhelpURLWithoutMeID = "https://walgreens.medhelp.ws/email_preferences/show/";
+	String WatchListNotification_ELM = "//pre[contains(text(),'watch_list_notification')]~XPATH";
+	String WatchListFrequency_ELM = "//pre[contains(text(),'watch_list_frequency')]~XPATH";
+	String UserTrackerNotifications_ELM = "//pre[contains(text(),'user_tracker_notification')]~XPATH";
+	String PostNotification_ELM = "//pre[contains(text(),'post_notification')]~XPATH";
+	String MedhelpHealthPreferenceDBURL = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getDBValues = null;
+	String ME_ID = null, HealthPreferenceDBText = null, ExpectedStatus = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String WatchListFrequency = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WatchListFrequency");
+	    String WatchListNotification = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WatchListNotification");
+	    String PostNotification = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PostNotification");
+	    // Get ME_ID from Hash Map
+	    getDBValues = scenarioBean.getscenarioDBvalues();
+	    ME_ID = getDBValues.get("ME_ID");
+	    MedhelpHealthPreferenceDBURL = MedhelpURLWithoutMeID + ME_ID;
+	    // Navigate to Med Help DB URL
+	    getUrl(browser, MedhelpHealthPreferenceDBURL);
+	    browser.navigate().refresh();
+	    // Validation of four lables in the table
+	    String ElementstoVerify[] = { WatchListNotification_ELM, WatchListFrequency_ELM, UserTrackerNotifications_ELM, PostNotification_ELM };
+	    for (int i = 0; i < ElementstoVerify.length; i++) {
+		if (!isElementPresentVerification(ElementstoVerify[i], browser)) {
+		    messagesMap.put(ElementstoVerify[i], "Object is Missing");
+		    status = WARNING;
+		}
+	    }
+	    HealthPreferenceDBText = getElementByProperty(EmailHealthPreferences_ELM, browser).getText();
+	    HealthPreferenceDBText = HealthPreferenceDBText.replaceAll("\"", "");
+	    if (WatchListFrequency != null && WatchListFrequency.equalsIgnoreCase("immediate")) {
+		ExpectedStatus = "watch_list_frequency: immediate";
+		if (!HealthPreferenceDBText.contains(ExpectedStatus)) {
+		    messagesMap.put("WatchListFrequency Immediate", "Status is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (WatchListNotification != null && WatchListNotification.equalsIgnoreCase("false")) {
+		ExpectedStatus = "watch_list_notification: false";
+		if (!HealthPreferenceDBText.contains(ExpectedStatus)) {
+		    messagesMap.put("WatchListNotification False", "Status is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (PostNotification != null && PostNotification.equalsIgnoreCase("false")) {
+		ExpectedStatus = "post_notification: false";
+		if (!HealthPreferenceDBText.contains(ExpectedStatus)) {
+		    messagesMap.put("PostNotification False", "Status is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Navigating back to Wag application URL
+	    browserBack(browser);
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

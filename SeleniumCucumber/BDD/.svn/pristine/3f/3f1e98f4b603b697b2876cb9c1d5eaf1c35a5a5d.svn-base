@@ -1,0 +1,313 @@
+@sdd @browseAndSearch
+Feature: All the scenarios and Steps in this feature are to validate the Same Day Delivery (SDD) functionality in Browser and Search Page
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-0
+Scenario: Guest User is able to add SDD Eligible Product to Cart by using Local Deliery Options based on Store number in Search Results page
+
+Given  "SDD-BrowseSearch-0" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-0  |
+
+And "SDD-BrowseSearch-0" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-BrowseSearch-0" Customer selects an option to choose between all products or local delivery from search results page:
+| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+|        -         |		-		  	   | 	 -           | -        		 |  -     		                   |     Yes	        |			
+
+Then "SDD-BrowseSearch-0" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |
+| SDDData       | storedetails  | storeselection1 |
+
+# Second Method of Store Selection from Search Results Page
+#_______________________________________________________________________________________________________________________________________________
+#Then "SDD-BrowseSearch-0" Customer selects a store based upon a product availaibility in that store from search results page:
+#| ProductId |
+#| X12345X   |
+#_______________________________________________________________________________________________________________________________________________
+
+Then "SDD-BrowseSearch-0" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-0" Customer Goes to the Shopping Cart
+
+Then "SDD-BrowseSearch-0" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-0  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-1
+Scenario: Logged in User(no store in his profile) is able to add SDD eligible item to cart by selecting Local Delivery link using Store number from Search Resutls Page
+
+Given  "SDD-BrowseSearch-1" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-1  |
+
+Given "SDD-BrowseSearch-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | sdduser1   |
+
+And "SDD-BrowseSearch-1" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-BrowseSearch-1" Customer selects an option to choose between all products or local delivery from search results page:
+| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+|        -           | -	  			   | 	 -           | Yes		 		 |  -     		                   |     -	        |			
+
+Then "SDD-BrowseSearch-1" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |
+| SDDData       | storedetails  | storeselection1 |
+
+Then "SDD-BrowseSearch-1" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-1" Customer Goes to the Shopping Cart
+
+Then "SDD-BrowseSearch-1" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId     			 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-1  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-2
+Scenario: Logged in User(store in his profile) is able to add SDD eligible item to cart by changing store using Change store link from Search Resutls Page
+
+Given  "SDD-BrowseSearch-2" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-2  |
+
+Given "SDD-BrowseSearch-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | sdduser3   |
+
+And "SDD-BrowseSearch-2" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-BrowseSearch-2" Customer selects an option to choose between all products or local delivery from search results page:
+| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+|        -           | -	  			   | 	 -           | -		 		 |  -     		                   |   yes          |			
+
+Then "SDD-BrowseSearch-2" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		   |
+| SDDData       | storedetails  | newstoredetails1 |
+
+Then "SDD-BrowseSearch-2" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-2" Customer Goes to the Shopping Cart
+
+Then "SDD-BrowseSearch-2" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId     			 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-2  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-3
+Scenario: Verifying store inforamtion in Shopping Cart
+
+Given  "SDD-BrowseSearch-3" Customer starts the scenario:
+| InputFileName | SheetName    | RowId     		     |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-3  |
+
+Given "SDD-BrowseSearch-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | sdduser3	  |
+
+And "SDD-BrowseSearch-3" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-BrowseSearch-3" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-3" Customer Goes to the Shopping Cart
+
+Then "SDD-BrowseSearch-3" Customer validates the Store Information:
+| InputFileName | SheetName 	| RowId   		    |
+| SDDData       | storedetails  | CartStoredetails1 |
+
+#Then "SDD-BrowseSearch-3" Customer validates the Store Information:
+#| InputFileName | SheetName 	| RowId   		    |
+#| SDDData       | storedetails  | CartStoredetails2 |
+
+Then "SDD-BrowseSearch-3" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-3  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-4
+Scenario: This is to validate the information for the store in the overlay from search results page:
+
+Given  "SDD-BrowseSearch-4" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-4  |
+
+And "SDD-BrowseSearch-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId      |
+| CommonData    | search    | sdd_search |
+
+Then "SDD-BrowseSearch-4" Customer selects an option to choose between all products or local delivery from search results page:
+| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+|        -           | -	  			   | 	 -           | Yes		 		 |  -     		                   |     -	        |
+
+Then "SDD-BrowseSearch-4" Customer verifies Store Details in Store Selection Overlay:
+| InputFileName | SheetName    | RowId 			   |  
+| SDDData       | StoreDetails | storeinformation1 |
+
+
+Then "SDD-BrowseSearch-4" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId     			 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-4  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-5
+Scenario: This is to test the Browse and Search using InStore only product for search and cart pages.
+
+Given  "SDD-BrowseSearch-5" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-5  |
+
+#Given "SDD-BrowseSearch-5" Customer login to the walgreens.com:
+#| InputFileName | SheetName  | RowId      |
+#| CommonData    | login      | sdduser2	  |
+
+And "SDD-BrowseSearch-5" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 |
+| CommonData    | search    | sdd_web1   |
+
+Then "SDD-BrowseSearch-5" Customer adds Daily Living items to the cart from search.
+
+#And "SDD-BrowseSearch-5" Customer searches for a product using keywords in the search textbox:
+#| InputFileName | SheetName | RowId |
+#| CommonData    | search    | cl1   |
+
+#Then "SDD-BrowseSearch-5" Customer adds Contact Lens items to the cart from search:
+#| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+#| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-BrowseSearch-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 |
+| CommonData    | search    | sdd_web2   |
+
+Then "SDD-BrowseSearch-5" Customer selects an option to choose between all products or local delivery from search results page:
+| ShopAllProductsOption  | LocalDeliveryOption | StorePickUpLink | LocalDeliveryLink | FirstProductWithFindInStoreLink |ChangeStoreLink |
+|        -           | -	  			   | 	 -           | Yes		 		 |  -     		                   |     -	        |			
+
+Then "SDD-BrowseSearch-5" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |
+| SDDData       | storedetails  | storeselection1 |
+
+Then "SDD-BrowseSearch-5" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-5" Customer Goes to the Shopping Cart
+
+Then "SDD-BrowseSearch-5" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetaisl1   |
+
+Then "SDD-BrowseSearch-5" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-5  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-6
+Scenario: This is to test the Browse and Search using a product that is available for both web and store for search and cart pages.
+
+Given  "SDD-BrowseSearch-0" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-0  |
+
+Given "SDD-BrowseSearch-0" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | sdduser1	  |
+
+And "SDD-BrowseSearch-0" Customer Clears the Shopping Cart
+
+And "SDD-BrowseSearch-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_instore1 |
+
+Then "SDD-BrowseSearch-0" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-0" Customer Goes to the Shopping Cart
+
+#Then "SDD-BrowseSearch-5" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+#| ProductName                         | DeliveryOption                                            | Remove   | UpdateQuantity | ValidateItemPrice |
+#| Pond's Cold Cream for SkinSensitive | - or ShipToYou or PickUpInStore or LocalDeliveryFromStore | - or yes | - or 2         | - or yes          |
+
+#Then "SDD-BrowseSearch-5" Customer verifies the cart total from Shopping Cart page:
+#| ZipCode    | ApplyCoupon | CouponCode | ValidateItemSubtotal | ValidateEstimatedShipping | ValidateSameDayDelivery | EstimatedSalesTax | ValidateSubTotal |
+#| - or 60015 | - or yes    | - or XYZ   | - or yes             | - or yes                  | - or yes                | - or yes          | - or yes         |
+
+Then "SDD-BrowseSearch-0" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId               |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-0  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-BrowseSearch-7
+Scenario: This is to test whether customer is able to update quantity from shopping cart page
+
+Given  "SDD-BrowseSearch-7" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-7  |
+
+Given "SDD-BrowseSearch-7" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId      |
+| CommonData    | login      | sdduser2	  |
+
+And "SDD-BrowseSearch-7" Customer Clears the Shopping Cart
+
+#When  "SDD-BrowseSearch-7" Customer adds a New Prescription to the cart: 
+#|FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+#|-                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | No				  |
+
+And "SDD-BrowseSearch-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			|
+| CommonData    | search    | sdd_web2      	|
+
+Then "SDD-BrowseSearch-7" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-7" Customer Goes to the Shopping Cart
+
+And "SDD-BrowseSearch-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			|
+| CommonData    | search    | sdd_web4	      	|
+
+Then "SDD-BrowseSearch-7" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-BrowseSearch-7" Customer Goes to the Shopping Cart
+
+#And "SDD-BrowseSearch-7" Customer searches for a product using keywords in the search textbox:
+#| InputFileName | SheetName | RowId |
+#| CommonData    | search    | cl1   |
+
+#Then "SDD-BrowseSearch-7" Customer adds Contact Lens items to the cart from search:
+#| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+#| right | 1         | -     | -  | -        | -    | -        | -        |
+
+#And "SDD-BrowseSearch-7" Customer searches for a product using keywords in the search textbox:
+#| InputFileName | SheetName | RowId |
+#| CommonData    | search    | cl1   |
+
+#Then "SDD-BrowseSearch-7" Customer adds Contact Lens items to the cart from search:
+#| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+#| left  | 1			| -		| -  | - 		| -	   | - 		  | - 		 |
+
+Then "SDD-BrowseSearch-7" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			    |
+| SDDData       | Product Details  | ProductInformation2 |
+
+Then "SDD-BrowseSearch-7" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId               |
+| QC-SDD        | BrowseSearch | SDD-BrowseSearch-7  |

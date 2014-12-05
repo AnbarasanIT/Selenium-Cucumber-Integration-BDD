@@ -1,0 +1,95 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+public class ImmunizationLibrary extends CommonLibrary{
+    /**
+     ************************************************************* 
+     * @Purpose - To validate the functionality of Add Selected Record button in Immunization History page.
+     * @author -Ygnash
+     * @Created -1Jul2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addimmunizationrecord(EventFiringWebDriver browser,StepBean stepBean, ScenarioBean scenarioBean){
+	String status=PASS;
+	Map <String,String> messagesMap=null;
+	String ImmunizationRecords_TABLE="table[summary='Immunization']~CSS";
+	String DeleteRecord_LNK="//div[@class='btnCont']//a[contains(text(),'Delete')]~XPATH";
+	String Delete_IMG="img[title='Delete button']~CSS";
+	String ImmuninizationRecommendations_TABLE="//div/table[@summary='Immunization']/tbody";
+	String ImmunizationName=null;
+	String AddSelectedRecord_BTN="input[alt='Add Selected Records']~CSS";
+	String AddImmunization_CHK="input[name='addRecList']~CSS";
+	int Rowvalue=0;
+	try
+	{
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    //TO GET THE TEXT OF THE IMMUNIZATION WHICH WILL BE ADDED
+	    String RequiredImmunization=getElementByProperty(ImmuninizationRecommendations_TABLE, browser).findElement(By.tagName("a")).getText();	
+	    //TO CHECK FOR THE ALREADY EXISTING OCCURRENCE OF THE IMMUNIZATION WHICH WILL BE ADDED
+	    List <WebElement> Immunizations=getElementByProperty(ImmunizationRecords_TABLE, browser).findElements(By.tagName("tr"));
+	    int NoOfImmunizations=Immunizations.size();	    
+	    for(int i=1;i<NoOfImmunizations;i+=2)
+	    {
+		ImmunizationName=getElementByProperty("//tbody/tr["+i+"]/td/a", browser).getText();		
+		if(ImmunizationName.equalsIgnoreCase(RequiredImmunization))
+		{	
+		    //TO GET THE ROW VALUE OF THE FIRST OCCURRENCE OF THE IMMUNIZATION WHICH IS ALREADY PRESENT IN THE RECORD TABLE
+		    Rowvalue=i;
+		    break;
+		}		
+	    }
+	    //TO DELETE ALL THE OCCURRENCES FROM THE IMMUNIZATION RECORDS TABLE
+	    while(getElementByProperty("//tbody/tr["+Rowvalue+"]/td/a", browser).getText().contains(ImmunizationName))
+	    {
+		getElementByProperty("//tbody/tr["+Rowvalue+"]/td[6]/a[contains(text(),'Edit/Delete')]", browser).click();
+		Thread.sleep(2000);
+		if(!isElementPresentVerifyClick(DeleteRecord_LNK, browser))
+		{
+		    throw new Exception("Not able to click Edit/Delete link Immunization records table");
+		}
+		switchToOverlay(browser);
+		if(!isElementPresentVerifyClick(Delete_IMG, browser))
+		{
+		    throw new Exception("Not able to click Delete button");
+		}
+		switchToDefault(browser);
+	    }
+	    //ADDING A IMMUNIZATION FROM THE RECOMMENDATIONS TABLE
+	    if(!isElementPresentVerifyClick(AddImmunization_CHK, browser))
+	    {
+		throw new Exception("Not able to select the Immunization");
+	    }
+	    if(!isElementPresentVerifyClick(AddSelectedRecord_BTN, browser))
+	    {
+		throw new Exception("Not able to click Add selected records button");
+	    }
+	    //TO CHECK WHETHER SELECTED IMMUNIZATION HAS BEEN ADDED TO THE IMMUNIZATION RECORDS TABLE
+	    if(!getElementByProperty(ImmunizationRecords_TABLE, browser).getText().contains(RequiredImmunization))
+	    {
+		messagesMap.put("Added Immunization", "Selected Immunization not added");
+		status=WARNING;
+	    }
+	}catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,810 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.pharmacy_health;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class ManageHealthHistoryLibrary extends CommonLibrary {
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - customer Adds health history information to user`s account /
+	 *          adds health insurance information
+	 * @author - Ygnash
+	 * @Created -
+	 * @Modified By -Siva
+	 * @Modified Date -17-JUN-2013
+	 ************************************************************* 
+	 */
+	public static void addHealthHistoryOrAddHealthInsurance(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String AddHealthHistory_BUTTON = "input[id='add_healthhistory']~CSS";
+		String EditHealthHistory_BUTTON = "img[title='Edit']~CSS";
+		String ConfidentialHealthHistoryPg_Heading = "//h1[contains(text(),'Confidential Health History')]~XPATH";
+		String PrescriptionInsuranceInformationPg_Heading = "//h1[contains(text(),'Prescription Insurance Information')]~XPATH";
+		String AddHealthInsurance_Button = "input[id='add_prescriptionInsurance']~CSS";
+		String Medication_CHK = "input[type='checkbox']~CSS";
+		String HealthCondition_CHK = "//div[5]/p[2]/input[@type='checkbox']~XAPTH";
+		String AddAllergies_BUTTON = "input[alt='Add Allergies']~CSS";
+		String DrugName_TXT = "//input[@id='prescriptionName' or @id='order-no' or @name='search']~XPATH";
+		String Go_BUTTON = "//input[@name='orderId' or @name='submit']~XPATH";
+		String EasyOpenCapsYes_RADIO = "input[id='easyOpenCap-yes']~CSS";
+		String EasyOpenCapsNo_RADIO = "input[id='easyOpenCap-no']~CSS";
+		String AddHealthHistoryContinue_Button = "input[alt='Continue']~CSS";
+		String AddHealthHistoryConfirm_BUTTON = "input[alt='Confirm']~CSS";
+		String EditHealthHistory_LINK = "input[value='Edit Health History']~CSS";
+		String SelfPay_RADIO = "input[title='self pay']~CSS";
+		String InsuranceProvider_RADIO = "input[title='insurance provider']~CSS";
+		String AddInsuranceContinue_BUTTON = "//p//input[@title='Continue']~XPATH";
+		String SelfPay_ELM = "//p[contains(text(),'Self Pay')]~XPATH";
+		String InsuranceName_TXT = "input[id='insurance_name']~CSS";
+		String PrimaryCardHolder_TXT = "input[id='primary_cardholder']~CSS";
+		String PrimaryCardHolderDOB_TXT = "input[id='date_of_birth']~CSS";
+		String RelationshipToCardHolder_LST = "select[id='relationShip']~CSS";
+		String PrimaryCardHoldersPhoneNo_TXT = "input[id='primary_phone']~CSS";
+		String MemberNumber_TXT = "input[id='member_number']~CSS";
+		String PrimaryInsurance_ELM = "//p/strong[contains(text(),'Primary Insurance')]~XPATH";
+		String ModifiedHealthHistoryMsg_ELM = "//div[contains(text(),'You have successfully changed your health history')]~XPATH";
+		String PharmacyAndHealthTab_ELM = "//ul/li[2]/span/a[contains(text(),'Pharmacy')]~XPATH";
+		String HealthHistory_LNK = "a[id='health_history']~CSS";
+		String FamilyPrescription_LNK = "a[href*='managefamilyaccounts']~CSS";
+		String PersonalInformation_LNK = "//div[@id='exChangeDataContent']/div[5]/div/div[2]/div[3]/ul/li[3]/a~XPATH";
+		String DrugName_LNK = "//a[contains(@href,'checkdrug/intermediatedrugresults.jsp?')]~XPATH";
+		String SecondaryDrug_LNK = "//table/tbody/tr/td/a~XPATH";
+		String AddMedicationSecondDrug_LNK = "//td/ul/li/a~XPATH";
+		String SelectedAllergyDrug_CHK = "//input[@id='ABC' and contains(@name,'selDrugAllergies')]";
+		String SelectedMedication_CHK = "//input[@id='ABC' and contains(@name,'selAddlMeds')]";
+		String ManageHealthHistoryHeader_ELM = "//h2[contains(text(),'Manage Your Health History')]~XPATH";
+		String ResultsMessage_ELM = "//*[contains(text(),'results for') or contains(text(),'Search Results')]~XPATH";
+		String MedicationSecondaryDrugName = null;
+		String AllergySecondaryDrugName = null;
+		Map<String, String> messagesMap = null;
+		String AddMedications_IMG = "input[alt='Add Medications']~CSS";
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+				String AddHealthHistory = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddHealthHistory");
+				String AddHealthHistoryFromPage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddHealthHistoryFromPage");
+				String AddHealthInsurance = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddHealthInsurance");
+				String AdditionalMedication = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AdditionalMedication");
+				String HealthCondition = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "HealthCondition");
+				String DrugAllergies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DrugAllergies");
+				String SearchType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SearchType");
+				String DrugName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DrugName");
+				String EasyOpenCap = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EasyOpenCap");
+				String HealthInsuranceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "HealthInsuranceType");
+				String InsuranceName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InsuranceName");
+				String PrimaryCardHolder = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrimaryCardHolder");
+				String PrimaryCardHolderDOB = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrimaryCardHolderDOB");
+				String PrimaryCardHolderPhoneNo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrimaryCardHolderPhoneNo");
+				String MemberNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InsuranceMemberNumber");
+				String Relationship = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RelationShip");
+				String Healthhistory_URL = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Healthhistory_URL");
+				String DrugsAddedRowID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DrugsAddedRowID");
+				String ValidateAddedDrugsinHealthHistory = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i),
+						"ValidateAddedDrugsinHealthHistory");
+				// Adds Health History
+				if (AddHealthHistory.equalsIgnoreCase("Yes")) {
+					// Add health history from Pharmacy checkout pages
+					if (AddHealthHistoryFromPage.equalsIgnoreCase("Checkout")) {
+						if (!isElementPresentVerifyClick(AddHealthHistory_BUTTON, browser)) {
+							throw new Exception("Not able able to click Add Health History Button");
+						}
+					}
+					// Add health history from Your Account page
+					if (AddHealthHistoryFromPage.equalsIgnoreCase("YourAccount")) {
+
+						// temprory solution till mousehover issue fixed.
+						String HelathHistoryURL = EcommTestRunner.config.getString("walgreensURL") + Healthhistory_URL;
+						getUrl(browser, HelathHistoryURL);
+						if (!isElementPresentVerification(EditHealthHistory_BUTTON, browser)) {
+							messagesMap.put("Expected page", " Health History page of the user is not displayed");
+							status = WARNING;
+						}
+						if (!isElementPresentVerifyClick(EditHealthHistory_BUTTON, browser)) {
+							throw new Exception("Not able able to click Edit Health History Button");
+						}
+					}
+					if (AddHealthHistoryFromPage.equalsIgnoreCase("FamilyPrescription")) {
+						// navigates to family prescription page of Admin user
+						performHoverClickAction(getElementByProperty(PharmacyAndHealthTab_ELM, browser), FamilyPrescription_LNK, browser);
+						if (!isElementPresentVerifyClick(PersonalInformation_LNK, browser)) {
+							throw new Exception("Not able able to click personal Information link");
+						}
+						// Navigates to health history page of the family member
+						performHoverClickAction(getElementByProperty(PharmacyAndHealthTab_ELM, browser), HealthHistory_LNK, browser);
+						Thread.sleep(3000);
+						if (!isElementPresentVerification(EditHealthHistory_BUTTON, browser)) {
+							messagesMap.put("Expected page", " Health History page of family member is not displayed");
+							status = WARNING;
+						}
+						if (!isElementPresentVerifyClick(EditHealthHistory_BUTTON, browser)) {
+							throw new Exception("Not able able to click Edit Health History Button for family member");
+						}
+					}
+					// Validates confidential Health history page
+					if (!isElementPresentVerification(ConfidentialHealthHistoryPg_Heading, browser)) {
+						messagesMap.put("Expected page", "Confidential Health History page is not displayed");
+						status = WARNING;
+					}
+					// Adds additional medication
+					if (AdditionalMedication.equalsIgnoreCase("Yes")) {
+						// TO SELECT THE DRUG THROUGH ALPHABETS
+						if (SearchType != null && SearchType.equalsIgnoreCase("Alphabates")) {
+							if (!isElementPresentVerifyClick(AddMedications_IMG, browser)) {
+								throw new Exception("Not able to click Add Medications button");
+							}
+							String FirstLetterinDrugName = String.valueOf(DrugName.charAt(0));
+							String AlphabateLink = "//a[contains(@href,'DAV=" + FirstLetterinDrugName + "')]";
+							if (!isElementPresentVerifyClick(AlphabateLink, browser)) {
+								throw new Exception("Not able to click on Alphabate link");
+							}
+						}
+						// TO SELECT THE DRUG BY ENTERING DRUG NAME
+						else if (SearchType != null && SearchType.equalsIgnoreCase("DrugName")) {
+							if (!isElementPresentVerifyClick(AddMedications_IMG, browser)) {
+								throw new Exception("Not able to click Add Medications button");
+							}
+							if (!clearAndEnterText(DrugName_TXT, DrugName, browser)) {
+								messagesMap.put("Drug Name field", "Not able to enter information in additional drug allergy page");
+								status = WARNING;
+							}
+							if (!isElementPresentVerifyClick(Go_BUTTON, browser)) {
+								throw new Exception("Not able able to click GO button");
+							}
+						}
+						// TO SELECT THE SPECFIC DRUG FROM THE FIRST SELECTED
+						// DRUG
+						if (SearchType != null && (SearchType.equalsIgnoreCase("Alphabates") || SearchType.equalsIgnoreCase("DrugName"))) {
+							String DrugNameElement = "//*[contains(text(),'" + DrugName + "')]";
+							if (!isElementPresentVerifyClick(DrugNameElement, browser)) {
+								throw new Exception("Not able able to click Given Drug link");
+							}
+							// getting the text of the link name
+							MedicationSecondaryDrugName = getElementByProperty(AddMedicationSecondDrug_LNK, browser).getText().trim();
+							if (!isElementPresentVerifyClick(AddMedicationSecondDrug_LNK, browser)) {
+								throw new Exception("Not able able to click Secondary Drug Drug name link");
+							}
+							// Getting the Required Drug Name
+							SelectedMedication_CHK = SelectedMedication_CHK.replace("ABC", MedicationSecondaryDrugName);
+							if (!isElementPresentVerification(SelectedMedication_CHK, browser)) {
+								messagesMap.put("Selected Drug", "Not found in Confidential Health History Page");
+								status = WARNING;
+							}
+						} else {
+							if (!isElementPresentVerifyClick(Medication_CHK, browser)) {
+								throw new Exception("Not able able to click Medication checkbox");
+							}
+						}
+					}
+					// Adds Health Condition
+					if (HealthCondition.equalsIgnoreCase("Yes")) {
+						if (!isElementPresentVerifyClick(HealthCondition_CHK, browser)) {
+							throw new Exception("Not able able to click Health Condition checkbox");
+						}
+					}
+					// Adds Drug Allergies
+					if (DrugAllergies.equalsIgnoreCase("Yes")) {
+						if (!isElementPresentVerifyClick(AddAllergies_BUTTON, browser)) {
+							throw new Exception("Not able able to click Add allergies button");
+						}
+						if (SearchType != null && SearchType.equalsIgnoreCase("Alphabates")) {
+							String FirstLetterinDrugName = String.valueOf(DrugName.charAt(0));
+							String AlphabateLink = "//a[contains(@href,'DAV=" + FirstLetterinDrugName + "')]";
+							if (!isElementPresentVerifyClick(AlphabateLink, browser)) {
+								throw new Exception("Not able to click on Alphabate link");
+							}
+						} else {
+							if (!clearAndEnterText(DrugName_TXT, DrugName, browser)) {
+								messagesMap.put("Drug Name field", "Not able to enter information in additional drug allergy page");
+								status = WARNING;
+							}
+							if (!isElementPresentVerifyClick(Go_BUTTON, browser)) {
+								throw new Exception("Not able able to click GO button");
+							}
+						}
+						if (!isElementPresentVerification(ResultsMessage_ELM, browser)) {
+							messagesMap.put("Results", "Results are not getting displayed");
+							status = WARNING;
+						}
+						String DrugNameElement = "//a[contains(text(),' " + DrugName + "')]";
+						// If required Drug is Present Click that else Click the
+						// Default Drug
+						if (isElementPresentVerification(DrugNameElement, browser)) {
+							if (!isElementPresentVerifyClick(DrugNameElement, browser)) {
+								throw new Exception("Not able able to click Given Drug link");
+							}
+						} else {
+							if (!isElementPresentVerifyClick(DrugName_LNK, browser)) {
+								throw new Exception("Not able able to click Default Drug name link");
+							}
+						}
+						// getting the text of the link name
+						AllergySecondaryDrugName = getElementByProperty(SecondaryDrug_LNK, browser).getText().trim();
+						if (!isElementPresentVerifyClick(SecondaryDrug_LNK, browser)) {
+							throw new Exception("Not able able to click Secondary Drug Drug name link");
+						}
+						// Getting the Required Drug Name
+						SelectedAllergyDrug_CHK = SelectedAllergyDrug_CHK.replace("ABC", AllergySecondaryDrugName);
+						if (!isElementPresentVerification(SelectedAllergyDrug_CHK, browser)) {
+							messagesMap.put("Selected Drug", "Not found in Confidential Health History Page");
+							status = WARNING;
+						}
+					}
+					// Selects easy open cap option Yes/No based on user input
+					if (EasyOpenCap.equalsIgnoreCase("Yes")) {
+						if (!isElementPresentVerifyClick(EasyOpenCapsYes_RADIO, browser)) {
+							throw new Exception("Not able able to click Easy open cap radio Button in confidential health history page");
+						}
+					} else if (EasyOpenCap.equalsIgnoreCase("No")) {
+						if (!isElementPresentVerifyClick(EasyOpenCapsNo_RADIO, browser)) {
+							throw new Exception("Not able able to click Easy open cap radio Button in confidential health history page");
+						}
+					}
+					if (!isElementPresentVerifyClick(AddHealthHistoryContinue_Button, browser)) {
+						throw new Exception("Not able able to click Continue Button in confidential health history page");
+					}
+					if (!isElementPresentVerifyClick(AddHealthHistoryConfirm_BUTTON, browser)) {
+						throw new Exception("Not able able to click Confirm Button while adding health information");
+					}
+					if (AddHealthHistoryFromPage.equalsIgnoreCase("YourAccount")) {
+						if (!isElementPresentVerification(ModifiedHealthHistoryMsg_ELM, browser)) {
+							messagesMap.put("Success Message", "Object is Missing");
+							status = WARNING;
+						}
+						if (!isElementPresentVerification(ManageHealthHistoryHeader_ELM, browser)) {
+							messagesMap.put("Manage Your Helath History Page Header", "Object is Missing");
+							status = WARNING;
+						}
+						if (DrugAllergies != null && DrugAllergies.equalsIgnoreCase("Yes")) {
+							String SelectedDrug = "//p[contains(text(),'" + AllergySecondaryDrugName.toUpperCase() + "')]";
+							TestDataDBManager.putTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddedAllergies",
+									AllergySecondaryDrugName.toUpperCase());
+							if (!isElementPresentVerification(SelectedDrug, browser)) {
+								messagesMap.put("Selected Drug", "Drug is not added in Health History");
+								status = WARNING;
+							}
+						}
+						// TO SAVE THE DRUG SELECTED
+						if (AdditionalMedication != null && AdditionalMedication.equalsIgnoreCase("Yes")) {
+							String SelectedDrug = "//*[contains(text(),'" + MedicationSecondaryDrugName.toUpperCase() + "')]";// Object
+							// Changed
+							// -SARAVANAN
+							// M
+							// -
+							// AUG-05-2013
+							TestDataDBManager.putTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddedMedications",
+									MedicationSecondaryDrugName.toUpperCase());
+							if (!isElementPresentVerification(SelectedDrug, browser)) {
+								messagesMap.put("Selected Drug", "Drug is not added in Health History");
+								status = WARNING;
+							}
+						}
+					} else if (!AddHealthHistoryFromPage.equalsIgnoreCase("FamilyPrescription")) {
+						if ((!isElementPresentVerification(EditHealthHistory_LINK, browser)) && (!isElementPresentVerification(ModifiedHealthHistoryMsg_ELM, browser))) {
+							messagesMap.put("Add Health Information", "Health information is not added to the user`s profile");
+							status = WARNING;
+						}
+
+					} else {
+						if (!isElementPresentVerification(EditHealthHistory_BUTTON, browser)) {
+							messagesMap.put("Add Health Information", "Health information is not added for family member");
+							status = WARNING;
+						}
+					}
+				}
+				// Adds health insurance information
+				if (AddHealthInsurance.equalsIgnoreCase("Yes")) {
+					if (!isElementPresentVerifyClick(AddHealthInsurance_Button, browser)) {
+						throw new Exception("Not able able to click Add Health insurance Button ");
+					}
+					if (!isElementPresentVerification(PrescriptionInsuranceInformationPg_Heading, browser)) {
+						messagesMap.put("Expected Page", "Prescription insurance information page is not displayed");
+						status = WARNING;
+					}
+					if (!clearAndEnterText(InsuranceName_TXT, InsuranceName, browser)) {
+						messagesMap.put("InsuranceName field", "Not able to enter information");
+						status = WARNING;
+					}
+					if (!clearAndEnterText(PrimaryCardHolder_TXT, PrimaryCardHolder, browser)) {
+						messagesMap.put("PrimaryCardHolder field", "Not able to enter information");
+						status = WARNING;
+					}
+					if (!clearAndEnterText(PrimaryCardHolderDOB_TXT, PrimaryCardHolderDOB, browser)) {
+						messagesMap.put("PrimaryCardHolderDOB field", "Not able to enter information");
+						status = WARNING;
+					}
+					if (!clearAndEnterText(PrimaryCardHoldersPhoneNo_TXT, PrimaryCardHolderPhoneNo, browser)) {
+						messagesMap.put("PrimaryCardHolderPhoneNo field", "Not able to enter information");
+						status = WARNING;
+					}
+					if (!clearAndEnterText(MemberNumber_TXT, MemberNumber, browser)) {
+						messagesMap.put("MemberNumber field", "Not able to enter information");
+						status = WARNING;
+					}
+					if (!Relationship.equals("-")) {
+						new Select(getElementByProperty(RelationshipToCardHolder_LST, browser)).selectByVisibleText(Relationship);
+					}
+
+					if (!isElementPresentVerifyClick(AddInsuranceContinue_BUTTON, browser)) {
+						throw new Exception("Not able to Continue button in prescription insurance information page");
+					}
+					if (!isElementPresentVerification(PrimaryInsurance_ELM, browser)) {
+						messagesMap.put("Add Insurance info", "Prescription insurance information is not added");
+						status = WARNING;
+					}
+				}
+				if (ValidateAddedDrugsinHealthHistory != null && ValidateAddedDrugsinHealthHistory.equalsIgnoreCase("Yes")) {
+					String HelathHistoryURL = EcommTestRunner.config.getString("walgreensURL") + Healthhistory_URL;
+					getUrl(browser, HelathHistoryURL);
+					if (!isElementPresentVerification(EditHealthHistory_BUTTON, browser)) {
+						messagesMap.put("Expected page", " Health History page of the user is not displayed");
+						status = WARNING;
+					}
+					if (DrugAllergies != null && DrugAllergies.equalsIgnoreCase("Yes")) {
+						String AddedAllergies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), DrugsAddedRowID, "AddedAllergies");
+						String SelectedDrug = "//p[contains(text(),'" + AddedAllergies.toUpperCase() + "')]";
+						if (!isElementPresentVerification(SelectedDrug, browser)) {
+							messagesMap.put("Selected Drug", "Drug is not added in Health History");
+							status = WARNING;
+						}
+					}
+					// TO CHECK WHETHER CHANGES ARE UPDATED IN HEALTH HISTORY
+					// SECTION
+					if (AdditionalMedication != null && AdditionalMedication.equalsIgnoreCase("Yes")) {
+						String AddedMedication = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), DrugsAddedRowID, "AddedMedications");
+						String SelectedDrug = "//div[contains(@class,'mrgBtm10px')]/strong/p[contains(text(),'" + AddedMedication.toUpperCase() + "')]";
+						if (!isElementPresentVerification(SelectedDrug, browser)) {
+							messagesMap.put("Selected Drug", "Drug is not added in Health History");
+							status = WARNING;
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to perform validations of the values entered in Health
+     *          insurance overlay
+     * @author - Madusudanan.B.N
+     * @Created -01-Nov-2013
+     * @Modified By - Mukesh varun R S 
+     * @Modified Date - 03-DEC-13
+     ************************************************************* 
+     */
+
+    public static void verifyInformationAddedInAddNewInsuranceOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	// Step Status
+	String status = PASS;
+	// Messages Map for Step Status information
+	Map<String, String> messagesMap = null;
+	try {
+	    // Data from Sheet
+	    String InsuranceName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InsuranceName");
+	    String PrimaryCardHolder = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PrimaryCardHolder");
+	    // Get Month Alone
+	    String Month_DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PrimaryCHDOB_Mnth");
+	    // Logic to convert month to Integer(Number format of month)
+	    GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
+	    cal.setTime(new SimpleDateFormat("MMM").parse(Month_DOB));
+	    int monthInt = cal.get(Calendar.MONTH) + 1;
+	    String PrimaryDateOfBirth = String.valueOf(monthInt) + "/"
+		    + getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PrimaryCHDOB_Day") + "/"
+		    + getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PrimaryCHDOB_Year");
+	    String RelationToShipCardHolder = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RelationShipCH");
+	    String PrimaryCardHolderPhone = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PCHPhone");
+	    String MemberNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MemberNumber");
+	    String GroupNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "GroupNumber");
+	    String BINNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BINNumber");
+	    String ProviderPhone = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ProviderPhone");
+	    String Message_TXT="//p[contains(text(),'Your insurance information has been submitted to your preferred store')]~XPATH";
+	    
+	    String ProviderPhone1 = ProviderPhone.substring(3, 6)+"-"+ProviderPhone.substring(6);
+	    String PrimaryCardHolderPhone1 = PrimaryCardHolderPhone.substring(3, 6)+"-"+PrimaryCardHolderPhone.substring(6);	    
+	    ProviderPhone = "("+ProviderPhone.substring(0, 3)+") "+ProviderPhone.substring(3, 6)+"-"+ProviderPhone.substring(6);
+	    PrimaryCardHolderPhone = "("+PrimaryCardHolderPhone.substring(0, 3)+") "+PrimaryCardHolderPhone.substring(3, 6)+"-"+PrimaryCardHolderPhone.substring(6);
+	    // Data Locators
+	    String InsuranceName_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + InsuranceName + "')]";
+	    String PrimaryCardHolder_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + PrimaryCardHolder + "')]";
+	    String PrimaryCardHolderDateOfBirth_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + PrimaryDateOfBirth + "')]";
+	    String RelationShipToCardHolder_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + RelationToShipCardHolder + "')]";
+	    String PrimaryCardHolderPhone_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + PrimaryCardHolderPhone1 + "')]";
+	    String MemberNumber_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + MemberNumber + "')]";
+	    String GroupNumber_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + GroupNumber + "')]";
+	    String BINNumber_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + BINNumber + "')]";
+	    String ProviderPhone_TXT = "//div[@id='exChangeDataContent']//b[contains(text(),'" + ProviderPhone1 + "')]";
+
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Begin Validations for Data locators
+	    if (!isElementPresentVerification(InsuranceName_TXT, browser)) {
+		messagesMap.put("Insurance Name", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(PrimaryCardHolder_TXT, browser)) {
+		messagesMap.put("Primary CardHolder", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(PrimaryCardHolderDateOfBirth_TXT, browser)) {
+		messagesMap.put("Primary Date of Birth", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(RelationShipToCardHolder_TXT, browser)) {
+		messagesMap.put("Relationship to Cardholder", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(MemberNumber_TXT, browser)) {
+		messagesMap.put("Member Number", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(GroupNumber_TXT, browser)) {
+		messagesMap.put("Group Number", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(BINNumber_TXT, browser)) {
+		messagesMap.put("BIN Number", "Value in front end does not match the value in data sheet");
+		status = WARNING;
+		}
+		if(!browser.findElement(By.xpath(ProviderPhone_TXT)).getText().trim().contains(ProviderPhone)){
+			messagesMap.put("Provider Phone Number", " Value in front end does not match the value in data sheet");
+			status = WARNING;	
+		}
+		if(!browser.findElement(By.xpath(PrimaryCardHolderPhone_TXT)).getText().trim().contains(PrimaryCardHolderPhone)){
+			messagesMap.put("Primary Card Holder Phone", "Value in front end does not match the value in data sheet");
+			status = WARNING;	
+		}
+		
+		
+		TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Message",getElementByProperty(Message_TXT, browser).getText().trim());
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+    /**
+     ************************************************************* 
+     * @Purpose - Method to perform validations of the Success Message After Add New Insurance Overlay
+     * @author - Mukesh Varun R S
+     * @Created -01-DEC-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void verifySuccesMessageAfterAddNewInsuranceOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	// Step Status
+	String status = PASS;
+	String PhoneNumber_TXT="//p[@itemprop='telephone']~XPATH";
+	String GeneratedMessage=null,PhoneNumber=null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String SuccessMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Message");
+	    PhoneNumber = getElementByProperty(PhoneNumber_TXT, browser).getText().trim();
+	    PhoneNumber = "("+PhoneNumber.substring(0, 3)+") "+PhoneNumber.substring(4, 7)+PhoneNumber.substring(7);
+	    
+	    GeneratedMessage = "Your insurance information has been submitted to your preferred store. Note: it may take up to 24 hours for your online profile to be updated. Contact your store at "+PhoneNumber+" if you need assistance.";
+	    		if(!SuccessMessage.contains(GeneratedMessage)){
+	    			messagesMap.put("Success Meassage afte add insurance overlay", "Success message is not displayed as expected");
+	    			status = FAIL;	
+	    		}
+	    
+	    
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+    /**
+     ************************************************************* 
+     * @Purpose - Method to perform validations of the Store Locator Overlay After Add New Insurance Overlay
+     * @author - Mukesh Varun R S
+     * @Created -01-DEC-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void verifyStoreLocatorAfterAddNewInsuranceOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	// Step Status
+	String status = PASS;
+	String Locator_TXT="input[id='locator']~CSS";
+	String FindStore_BTN="input[id='findstore']~CSS";
+	String HeaderOfStoreLocator_TXT="//h1[contains(text(),'Add a Preferred Store Location')]~XPATH";
+	String ChangeLocation_LNK="a[title='Change location']~CSS";
+	String ShowStoreHours_LNK="//a[contains(text(),'Show store hours')]~XPATH";
+	String HideStorehours_LNK="//a[contains(text(),'Hide store hours')]~XPATH";
+	String StoreInfo_TXT="//p[contains(text(),'Holiday hours may differ from our regular store hours')]~XPATH";
+	String SelectStore_BTN="img[title='Select This Store']~CSS";
+	String Cancel_LNK="a[id='back']~CSS";
+	String Map_IMG="div[id='googleMapCanvas']~CSS";
+
+	String GeneratedMessage=null,PhoneNumber=null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    switchToOverlay(browser);
+	    if(!isElementPresentVerification(HeaderOfStoreLocator_TXT, browser)){
+	    	messagesMap.put("Store Locator overlay after add insurance information overlay", "header is not present in overlay");
+			status = WARNING;	
+	    }
+	    if (!clearAndEnterText(Locator_TXT, "60014", browser)) {
+			messagesMap.put("Store Locator overlay after add insurance information overlay", "unable to enter zipcode in overlay");
+			status = FAIL;
+		    }
+	    if(!isElementPresentVerifyClick(FindStore_BTN, browser)){
+	    	messagesMap.put("Store Locator overlay after add insurance information overlay", "FindStore button is not present in overlay");
+			status = FAIL;	
+	    }
+	    if(!isElementPresentVerification(HeaderOfStoreLocator_TXT, browser)){
+	    	messagesMap.put("Store Locator overlay after add insurance information overlay", "header is not present in overlay");
+			status = WARNING;	
+	    }
+	    if(!isElementPresentVerifyClick(ChangeLocation_LNK, browser)){
+	    	messagesMap.put("Store Locator overlay after add insurance information overlay", "change location link is not working");
+			status = WARNING;	
+	    }
+	    if (!clearAndEnterText(Locator_TXT, "60014", browser)) {
+			messagesMap.put("Store Locator overlay after add insurance information overlay", " #2 unable to enter zipcode in overlay");
+			status = FAIL;
+		    }
+	    if(!isElementPresentVerifyClick(FindStore_BTN, browser)){
+	    	messagesMap.put("Store Locator overlay after add insurance information overlay", "FindStore button is not present in overlay");
+			status = FAIL;	
+	    }
+	    
+	    String SearchResutlts_ELM="div[id='storeSearchResult']~CSS";
+	    List<WebElement> Stores= null,StoreTexts=null;
+	    int StoreToBeSelected=0,Brflag=0;
+	    Stores = getElementByProperty(SearchResutlts_ELM, browser).findElements(By.tagName("div"));
+	    StoreToBeSelected= generateRandomNumber(Stores.size() - 5, 0);
+	    for(int i=0;i<Stores.size();i++){
+	    if((Stores.get(i).getAttribute("class").contains("float-left resultContainer"))&&(i>=StoreToBeSelected)){
+	    	
+	    	StoreTexts=Stores.get(i).findElements(By.tagName("p"));
+	    	TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreAddress", StoreTexts.get(0).getText().trim());
+	    	
+	    	for(int j=0;j<StoreTexts.size();j++){
+	    		if(StoreTexts.get(j).getText().trim()!=null){
+	    			
+	    			//System.out.println("store Texts "+j+" :"+StoreTexts.get(j).getText().trim());
+	    		}
+	    		if(StoreTexts.get(j).getText().trim().contains("Show store hours")){
+	    			StoreTexts.get(j).findElement(By.xpath("//a[contains(text(),'Show store hours')]")).click();
+	    			 if(!isElementPresentVerification(StoreInfo_TXT, browser)){
+	    			    	messagesMap.put("Store Locator overlay after add insurance information overlay", "Store Info TEXT is not present in overlay");
+	    					status = WARNING;
+	    			    }
+	    			    if(!isElementPresentVerifyClick(HideStorehours_LNK, browser)){
+	    			    	messagesMap.put("Store Locator overlay after add insurance information overlay", "Hide Store Hours link is not present in overlay");
+	    					status = FAIL;	
+	    			    }
+	    			    Thread.sleep(1000);
+	    			    
+	    			    if(getElementByProperty(StoreInfo_TXT, browser).isDisplayed()){
+	    			    	messagesMap.put("Store Locator overlay after add insurance information overlay", "Store Info TEXT is  present in overlay after clicking the hide store details link");
+	    					status = WARNING;
+	    			    }
+	    		}
+	    		
+	    		Brflag=1;
+	    	}
+	    	Stores.get(i).findElement(By.cssSelector("img[title='Select This Store']")).click();
+	    	if(Brflag==1){break;}
+	    	
+	    }
+	    }
+	    switchToDefault(browser);
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+    /**
+     ************************************************************* 
+     * @Purpose - Method to perform validations of the Store Locator Overlay After Add New Insurance Overlay
+     * @author - Madusudanan.B.N
+     * @Created -01-Nov-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void verifySelectedStoreInAccountHomePage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	// Step Status
+	String status = PASS;
+	String Locator_TXT="input[id='locator']~CSS";
+	String FindStore_BTN="input[id='findstore']~CSS";
+	String HeaderOfStoreLocator_TXT="//h1[contains(text(),'Add a Preferred Store Location')]~XPATH";
+	String ChangeLocation_LNK="a[title='Change location']~CSS";
+	String ShowStoreHours_LNK="//a[contains(text(),'Show store hours')]~XPATH";
+	String HideStorehours_LNK="//a[contains(text(),'Hide store hours')]~XPATH";
+	String StoreInfo_TXT="//p[contains(text(),'Holiday hours may differ from our regular store hours')]~XPATH";
+	String SelectStore_BTN="img[title='Select This Store']~CSS";
+	String Cancel_LNK="a[id='back']~CSS";
+	String Map_IMG="div[id='googleMapCanvas']~CSS";
+	
+	//div[@id='yourAccountLandingPage']/div/div[3]/div/div[2]
+	//div[@id='psmMsg']/form/div[3]/div/div/div[2]
+	String Accounthome_BTN="a[title='Your Account']~CSS";
+	String StoreDetails_ELM="//div[@class='walgreensNearYouHt']~XPATH";
+
+	String StoreDetails=null,Storeselected=null,WithHypen=null,Phone=null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    Storeselected=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreAddress");
+	    if(!isElementPresentVerifyClick(Accounthome_BTN, browser)){
+	    	messagesMap.put("selected store info verification", "unable to navigate to account home page");
+			status = FAIL;	
+	    }
+	    StoreDetails=getElementByProperty(StoreDetails_ELM, browser).getText().trim();
+	    Phone = Storeselected.split("-")[1];
+	    WithHypen = Phone.substring(0, 3)+"-"+Phone.substring(3);
+	    if(!(StoreDetails.toUpperCase().contains(Storeselected.replace(Phone, WithHypen).toUpperCase()))){
+	    	messagesMap.put("selected store info verification", "unable to find selected store details o the acc home page");
+			status = FAIL;	
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    /**
+     ************************************************************* 
+     * @Purpose - Method to perform validations and value entry in Add new
+     *          Health insurance overlay
+     * @author - Madusudanan.B.N
+     * @Created -01-Nov-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyErrorMesssagesInsuranceOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	// Step Status
+	String status = PASS;
+	// Messages Map for Step Status information
+	Map<String, String> messagesMap = null;
+	// Elements map for the elements to be verified.This is retrieved and controlled entirely from sheet
+	Map<String, String> elementsMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+		// Locators for the elements in the Add insurance information overlay
+		if (elementsMap == null || elementsMap.size() == 0) {
+		    elementsMap = new HashMap<String, String>();
+		    elementsMap.put("InsuranceName", "input[id='insuranceName']~CSS");
+		    elementsMap.put("PrimaryCardHolder", "input[id='primaryCardholder']~CSS");
+		    elementsMap.put("PCHDateofBirth", "select[id='dobMonth']~CSS:select[id='dobDay']~CSS:select[id='primaryCardholderDOB']~CSS");
+		    elementsMap.put("RelationShipCH", "select[id='relationShipType']~CSS");
+		    elementsMap.put("PCHPhone", "input[id='primaryCardholderPhone']~CSS");
+		    elementsMap.put("MemberNumber", "input[id='memberNumber']~CSS");
+		    elementsMap.put("GroupNumber", "input[id='groupNumber']~CSS");
+		    elementsMap.put("BINNumber", "input[id='binNumber']~CSS");
+		    elementsMap.put("ProviderPhone", "input[id='providerPhoneNumber']~CSS");
+		}
+		// Submit Button
+		String SubmitBTN = "//input[@title='Submit']~XPATH";
+		// We get the total row count and iterate upon it
+		int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+		for (int row = 0; row < totalRowCount; row++) {
+		    isElementPresentVerifyClick("//a[@title='Add insurance - Opens a simulated dialog' or @title='Add new plan - Opens a simulated dialog']~XPATH", browser);
+		    switchToOverlay(browser);
+
+		    String[] ElementsArray = { "InsuranceName", "PrimaryCardHolder", "PCHDateofBirth", "RelationShipCH", "PCHPhone", "MemberNumber", "GroupNumber", "BINNumber", "ProviderPhone" };
+		    // We get all the error messages(elements)to be verified
+		    // from the sheet column "ErrorMessage" using ':' as the
+		    // separator
+		    String[] ErrorMsgArray = getTestData(dataMap.get("InputFileName").get(row).toString(), dataMap.get("SheetName").get(row).toString(), dataMap.get("RowId").get(row).toString(),
+			    "ErrorMessage").split(":");
+		    // For all the elements we loop through it and enter
+		    // corresponding values from the sheet in the front end
+		    for (int i = 0; i < ElementsArray.length; i++) {
+			String curElement = ElementsArray[i];
+			if (curElement.equalsIgnoreCase("PCHDateofBirth")) {
+			    selectByVisibleText(elementsMap.get(curElement).split(":")[0],
+				    getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), "PrimaryCHDOB_Mnth"), browser);
+			    selectByVisibleText(elementsMap.get(curElement).split(":")[1],
+				    getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), "PrimaryCHDOB_Day"), browser);
+			    selectByVisibleText(elementsMap.get(curElement).split(":")[2],
+				    getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), "PrimaryCHDOB_Year"), browser);
+			} else if (curElement.equalsIgnoreCase("RelationShipCH")) {
+			    selectByVisibleText(elementsMap.get(curElement),
+				    getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), "RelationShipCH"), browser);
+			} else {
+			    if (getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), curElement).equalsIgnoreCase("NULL")) {
+				getElementByProperty(elementsMap.get(curElement), browser).clear();
+
+			    } else
+				clearAndEnterText(elementsMap.get(curElement),
+					getTestData(dataMap.get("InputFileName").get(row), dataMap.get("SheetName").get(row), dataMap.get("RowId").get(row), curElement), browser);
+			}
+
+		    }
+		    // Now we check for the error messages we get from the sheet
+		    if (isElementPresentVerifyClick(SubmitBTN, browser)) {
+			if (!ErrorMsgArray[0].equalsIgnoreCase("None")) {
+			    for (int cnt = 0; cnt < ErrorMsgArray.length; cnt++) {
+				if (isElementPresentVerification(ErrorMsgArray[cnt], browser)) {
+				    messagesMap.put("Verifying the Error message element" + ErrorMsgArray[cnt] + " For the row: " + row, "The Error message Element'" + ErrorMsgArray[cnt]
+					    + "' Present as expected");
+				    status = PASS;
+				} else {
+				    messagesMap.put("The Error Message'", ErrorMsgArray[cnt] + "' is not Present for the Row: " + row);
+				    status = WARNING;
+				}
+			    }
+			}
+		    } else {
+			messagesMap.put("Add insurance information overlay", "The Submit button is not present in overlay");
+			status = FAIL;
+		    }
+		    // After the work is done we switch back to the main window
+		    switchToDefault(browser);
+		    	}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+       
+}
+}

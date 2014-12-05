@@ -1,0 +1,949 @@
+@dailyliving @PaypalExpressCheckout
+Feature: Customer is able to do checkout using checkout with paypal payment method in cart page
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-1
+Scenario: Verify Checkout with paypal button_DL ship in cart CWP_Yes_Remove DL add CL in Cart_NO CWP
+
+Given "CAC-PaypalExpress-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-1|
+
+And "CAC-PaypalExpress-1" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-1" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-1" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-1" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-1" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl4   |
+
+Then "CAC-PaypalExpress-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-PaypalExpress-1" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+Then "CAC-PaypalExpress-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-2
+Scenario: Verify Checkout with paypal button for logged in user_DL ship in cart CWP_Yes_Remove DL add CL in Cart_NO CWP and log out
+
+Given  "CAC-PaypalExpress-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-2|
+
+Given "CAC-PaypalExpress-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-2" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-2" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-2" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-2" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-2" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl4   |
+
+Then "CAC-PaypalExpress-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-PaypalExpress-2" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+Then "CAC-PaypalExpress-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-2|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-3
+Scenario: Verify PSC in cart for logged in user Check for Checkout with PayPal button in cart and proceed with checkout with expediten in eligbile Exception
+
+Given  "CAC-PaypalExpress-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-3|
+
+Given "CAC-PaypalExpress-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | refillRx3	  |
+
+And "CAC-PaypalExpress-3" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-PaypalExpress-3" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-PaypalExpress-3" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-PaypalExpress-3" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-PaypalExpress-3" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-3" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-3" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   		 |
+| CACData       | Paypal	| SubmitOrder1   |
+
+Then "CAC-PaypalExpress-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-3|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-4
+Scenario: Verify logged in user No Checkout with paypal button for Pickup only product and log out
+
+Given  "CAC-PaypalExpress-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-4|
+
+Given "CAC-PaypalExpress-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-4" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | PickupOnly1  |
+
+Then "CAC-PaypalExpress-4" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-4" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-4" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+Then "CAC-PaypalExpress-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-4|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-5
+Scenario: Verify Gift card in cart for logged in user Check for Checkout with PayPal button in cart and proceed with checkout
+
+Given  "CAC-PaypalExpress-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-5|
+
+Given "CAC-PaypalExpress-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-5" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | GiftCArd	   |
+
+Then "CAC-PaypalExpress-5" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-5" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-5" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-5" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-5" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId        |
+| CACData       | Paypal	| SubmitOrder2 |
+
+Then "CAC-PaypalExpress-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-5|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-6
+Scenario: DL Ship products with Rx and SRx in cart check for NO Checkout with PayPal button in cart and log out
+
+Given  "CAC-PaypalExpress-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-6|
+
+Given "CAC-PaypalExpress-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | 	RowId  	    |
+| CommonData    | login     | SpecialtyUser |
+
+And "CAC-PaypalExpress-6" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-6" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-6" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-6" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+When "CAC-PaypalExpress-6" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-PaypalExpress-6" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+When "CAC-PaypalExpress-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | SpecialtyRx5   |
+
+Then "CAC-PaypalExpress-6" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+Then "CAC-PaypalExpress-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-6|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-7
+Scenario: DL Ship products with Rx and MP in cart check for NO Checkout with PayPal button in cart and log out
+
+Given  "CAC-PaypalExpress-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-7|
+
+Given "CAC-PaypalExpress-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | 		RowId  	  	       |
+| CommonData    | login     | RefillFasterAuthenticated|
+
+And "CAC-PaypalExpress-7" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-7" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-7" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-7" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+When "CAC-PaypalExpress-7" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "CAC-PaypalExpress-7" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+When "CAC-PaypalExpress-7" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | mailRx2        |
+
+Then "CAC-PaypalExpress-7" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		NO     | -			 		 |
+
+Then "CAC-PaypalExpress-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-7|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-8
+Scenario: DL ship products for guest user Click on Checkout with PayPal button in cart and goes up till review order page and proceed with checkout
+
+Given  "CAC-PaypalExpress-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-8|
+
+And "CAC-PaypalExpress-8" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	        |
+| CommonData    | search    | loyaltysave1		|
+
+Then "CAC-PaypalExpress-8" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-8" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-8" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-8" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-8" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId        |
+| CACData       | Paypal	| SubmitOrder2 |
+
+Then "CAC-PaypalExpress-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-8|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-9
+Scenario: DL ship products for logged in user Click on Checkout with PayPal button in cart and goes up till review order page and proceed with checkout with expedited checkout with Eligble points in Review order
+
+Given  "CAC-PaypalExpress-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-9|
+
+Given "CAC-PaypalExpress-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-9" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		   |
+| CommonData    | search    | loyaltybonuspoints1  |
+
+Then "CAC-PaypalExpress-9" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-9" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-9" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-9" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-9" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId        |
+| CACData       | Paypal	| SubmitOrder3 |
+
+Then "CAC-PaypalExpress-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-9|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-10
+Scenario: DL ship Psc and Gift card for logged in user Click on Checkout with PayPal button in cart and goes up till review order page and proceed with checkout
+
+Given  "CAC-PaypalExpress-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-10|
+
+Given "CAC-PaypalExpress-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId  	|
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-10" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-10" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-10" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-10" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | GiftCArd	   |
+
+Then "CAC-PaypalExpress-10" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-10" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-10" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-PaypalExpress-10" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-PaypalExpress-10" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-PaypalExpress-10" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-PaypalExpress-10" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-10" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-10" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId     	|
+| CACData       | Paypal	| SubmitOrder2  |
+
+Then "CAC-PaypalExpress-10" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-10|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-11
+Scenario: DL ship for guest user Click on Checkout with PayPal button in cart and goes up till review order page Edit address changes address in review order and places order
+
+Given  "CAC-PaypalExpress-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-11|
+
+And "CAC-PaypalExpress-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-11" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-11" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-11" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-11" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-11" Customer makes the selection from Paypal Express Review Order and Submit page:
+|InputFileName | SheetName | RowId   	|
+|CACData       | Paypal	   | EditPaypal1 |
+
+Then "CAC-PaypalExpress-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-11|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-12
+Scenario: DL ship  for guest user Click on Checkout with PayPal button in cart goes to PayPal site changes address and lands on county page and places order
+
+Given  "CAC-PaypalExpress-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-12|
+
+And "CAC-PaypalExpress-12" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-12" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-12" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-12" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-12" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | Paypal	| Paypal3      |
+
+Then "CAC-PaypalExpress-12" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   	   |
+| CACData       | Paypal	| SubmitOrder2 |
+
+Then "CAC-PaypalExpress-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-12|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-13
+Scenario: DL ship  for guest user Click on Checkout with PayPal button in cart goes to PayPal site changes address and lands on county page and places order
+
+Given  "CAC-PaypalExpress-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-13|
+
+And "CAC-PaypalExpress-13" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-13" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-13" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-13" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-13" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-13" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   		 |
+| CACData       | Paypal	| SubmitOrder4   |
+
+Then "CAC-PaypalExpress-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-13|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-14
+Scenario: DL ship for guest user Click on Checkout with PayPal button in cart and goes up till review order page and clicks on back to cart and places order using CC
+
+Given  "CAC-PaypalExpress-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-14|
+
+And "CAC-PaypalExpress-14" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-14" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-14" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-14" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-14" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-14" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-PaypalExpress-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-PaypalExpress-14" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-PaypalExpress-14" Customer verifies the header blue box and Error message on shipping information:
+|Header|ChangeAddress|EditThisAddress|SaveAsPrefered|ErrorValidation|
+|yes   | -		 	 | 		- 		 | 		-		|		-		|
+
+Then "CAC-PaypalExpress-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |
+
+Then "CAC-PaypalExpress-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+And "CAC-PaypalExpress-14" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Anonymous	          | CreditcardRadio          |
+
+Then "CAC-PaypalExpress-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "CAC-PaypalExpress-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-PaypalExpress-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-14|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-15
+Scenario: DL ship Psc and Gift card for logged in user Click on Checkout with PayPal button in cart and goes up till review order page Edit address changes address in review order and places order
+
+Given  "CAC-PaypalExpress-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-15|
+
+Given "CAC-PaypalExpress-15" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-15" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-15" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-15" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-15" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | GiftCArd	   |
+
+Then "CAC-PaypalExpress-15" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-15" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-15" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-PaypalExpress-15" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-PaypalExpress-15" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-PaypalExpress-15" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-PaypalExpress-15" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-15" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-15" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId        |
+|CACData        | Paypal	| SubmitOrder2 |
+
+Then "CAC-PaypalExpress-15" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-15|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-16
+Scenario: DL ship Psc and Gift card for logged in user Click on Checkout with PayPal button in cart goes to PayPal site changes address and lands on county page selects Expedited as shipping method and places order
+
+Given  "CAC-PaypalExpress-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-16|
+
+Given "CAC-PaypalExpress-16" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | refillRx3|
+
+And "CAC-PaypalExpress-16" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-16" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-16" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-16" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | GiftCArd	   |
+
+Then "CAC-PaypalExpress-16" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-16" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-16" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-16" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-PaypalExpress-16" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-PaypalExpress-16" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-PaypalExpress-16" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-PaypalExpress-16" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-16" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal3   |
+
+Then "CAC-PaypalExpress-16" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   	  	 |
+| CACData       | Paypal	| SubmitOrder2   |
+
+Then "CAC-PaypalExpress-16" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-16|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-17
+Scenario: DL ship Psc and Gift card for logged in user Click on Checkout with PayPal button in cart and goes up till review order page and clicks on back to cart and places order using CC
+
+Given  "CAC-PaypalExpress-17" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-17|
+
+Given "CAC-PaypalExpress-17" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId  	    |
+| CommonData    | login     | refillRx3		|
+
+And "CAC-PaypalExpress-17" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-17" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-17" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-17" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | GiftCArd	   |
+
+Then "CAC-PaypalExpress-17" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-17" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-17" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Yes    | -			 		 |
+
+And "CAC-PaypalExpress-17" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "CAC-PaypalExpress-17" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "CAC-PaypalExpress-17" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "CAC-PaypalExpress-17" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "CAC-PaypalExpress-17" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-17" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-17" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-PaypalExpress-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-PaypalExpress-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| shippingaddress     | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "CAC-PaypalExpress-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -		                |
+
+And "CAC-PaypalExpress-17" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Anonymous	          | CreditcardRadio          |
+| PharmacyHomePageLinkVerification  | Anonymous	          | CreditcardInitialContinue|
+| PharmacyHomePageLinkVerification  | Anonymous	          | CreditcardSavedContinue  |
+
+Then "CAC-PaypalExpress-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-PaypalExpress-17" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-17|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-18
+Scenario: DL ship for guest user Click on Checkout with PayPal button in cart and goes up till review order page and clicks on back to cart and clicks on Checkout with paypal button and places order
+
+Given  "CAC-PaypalExpress-18" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-18|
+
+And "CAC-PaypalExpress-18" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-18" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-18" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-18" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-18" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-18" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-PaypalExpress-18" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | ReviewOrder 		 |
+
+Then "CAC-PaypalExpress-18" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   	  	 |
+| CACData       | Paypal	| SubmitOrder2   |
+
+Then "CAC-PaypalExpress-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-18|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-PaypalExpress-19
+Scenario: DL ship for logged in user Click on Checkout with PayPal button in cart and goes up till review order page and clicks on back to cart and clicks on Checkout with paypal button and places order
+
+Given  "CAC-PaypalExpress-19" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | PaypalExpress	| CAC-PaypalExpress-19|
+
+Given "CAC-PaypalExpress-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    |
+| CommonData    | login     | RefillRx3|
+
+And "CAC-PaypalExpress-19" Customer Clears the Shopping Cart
+
+And "CAC-PaypalExpress-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-PaypalExpress-19" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-PaypalExpress-19" Customer Goes to the Shopping Cart
+
+Then "CAC-PaypalExpress-19" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-PaypalExpress-19" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId   	|
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-PaypalExpress-19" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-PaypalExpress-19" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | ReviewOrder 		 |
+
+Then "CAC-PaypalExpress-19" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   	  	 |
+| CACData       | Paypal	| SubmitOrder2   |
+
+Then "CAC-PaypalExpress-19" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-PaypalExpress-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		   |
+| QC-CAC        | PaypalExpress	|  CAC-PaypalExpress-19|

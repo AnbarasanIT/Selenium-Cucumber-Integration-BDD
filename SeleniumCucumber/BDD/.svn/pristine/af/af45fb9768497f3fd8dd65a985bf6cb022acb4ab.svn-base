@@ -1,0 +1,781 @@
+<project name="Core Build Extension">
+	<description>Extend Core Build</description>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+	<!-- Define property '-skip-init' to prevent parent '-init' to run -->
+	<target name="-ext-init">
+		<wag-log message="Initializing Ant Extension Interface" />
+		<wag-log message="Cleaning ${projectPath}${file.separator}${web.root.classes}" />
+		<delete dir="${projectPath}${file.separator}${web.root.classes}" />
+		<mkdir dir="${projectPath}${file.separator}${web.root.classes}" />
+
+		<!-- name of project -->
+		<wag-promptProperty propertyName="project.name" message="Project Name?" validargs="${batch9.apps}" />
+
+		<!-- override configuration information -->
+		<if>
+			<isset property="${project.name}.serverLists" />
+
+			<!-- special project e.g. photo and emailfeeds -->
+			<then>
+				<propertycopy property="archiveScript" from="${project.name}.archiveScript" override="true" silent="false" />
+				<propertycopy property="archiveScriptPatch" from="${project.name}.archiveScriptPatch" override="true" silent="false" />
+				<propertycopy property="jdk.version" from="${project.name}.jdk.version" override="true" silent="false" />
+				<propertycopy property="jdk.target" from="${project.name}.jdk.target" override="true" silent="false" />
+
+				<propertycopy property="admin.email" from="${project.name}.admin.email" override="true" silent="false" />
+
+				<if>
+					<and>
+						<isset property="${project.name}.serverLists" />
+						<isset property="${project.name}.serverBoxes" />
+					</and>
+					<then>
+						<propertycopy property="serverLists" from="${project.name}.serverLists" override="true" silent="false" />
+						<!-- for each server, determine which server box it lives in -->
+						<for list="${serverLists}" trim="true" param="server" keepgoing="false">
+							<sequential>
+								<propertycopy property="serverLists[@{server}]" from="${project.name}.serverLists[@{server}]" override="true" silent="false" />
+							</sequential>
+						</for>
+
+						<propertycopy property="serverBoxes" from="${project.name}.serverBoxes" override="true" silent="false" />
+						<!-- create password list for each server -->
+						<for list="${serverBoxes}" trim="true" param="server" keepgoing="false">
+							<sequential>
+								<propertycopy property="esadmin_password[@{server}]" from="${project.name}.password[@{server}]" override="true" silent="false" />
+								<propertycopy property="esadmin_id[@{server}]" from="${project.name}.id[@{server}]" override="true" silent="false" />
+								<propertycopy property="user_esadmin_dir[@{server}]" from="${project.name}.dir[@{server}]" override="true" silent="false" />
+								<propertycopy property="archive_dir[@{server}]" from="${project.name}.archive_dir[@{server}]" override="true" silent="false" />
+								<propertycopy property="patch_dir[@{server}]" from="${project.name}.patch_dir[@{server}]" override="true" silent="false" />
+								<propertycopy property="queue_dir[@{server}]" from="${project.name}.queue_dir[@{server}]" override="true" silent="false" />	
+							</sequential>
+						</for>
+					</then>
+				</if>
+			</then>
+
+			<!-- other projects -->
+			<else>
+				<var name="archiveScript" value="${other.archiveScript}" />
+				<var name="archiveScriptPatch" value="${other.archiveScriptPatch}" />
+				<var name="jdk.version" value="${other.jdk.version}" />
+				<var name="jdk.target" value="${other.jdk.target}" />
+
+				<if>
+					<and>
+						<isset property="other.serverBoxes" />
+						<isset property="other.serverLists" />
+					</and>
+					<then>
+						<var name="serverLists" value="${other.serverLists}" />
+						<!-- for each server, determine which server box it lives in -->
+						<for list="${serverLists}" trim="true" param="server" keepgoing="false">
+							<sequential>
+								<propertycopy property="serverLists[@{server}]" from="other.serverLists[@{server}]" override="true" silent="false" />
+							</sequential>
+						</for>
+
+						<var name="serverBoxes" value="${other.serverBoxes}" />
+						<!-- create password list for each server -->
+						<for list="${serverBoxes}" trim="true" param="server" keepgoing="false">
+							<sequential>
+								<propertycopy property="esadmin_password[@{server}]" from="other.password[@{server}]" override="true" silent="false" />
+								<var name="esadmin_id[@{server}]" value="${other.id[@{server}]}" />
+								<var name="user_esadmin_dir[@{server}]" value="${other.dir[@{server}]}" />
+								<var name="archive_dir[@{server}]" value="${other.archive_dir[@{server}]}" />
+								<var name="patch_dir[@{server}]" value="${other.patch_dir[@{server}]}" />
+								<var name="queue_dir[@{server}]" value="${other.queue_dir[@{server}]}" />
+							</sequential>
+						</for>
+					</then>
+				</if>
+			</else>
+
+		</if>
+
+		<!-- expand properties that needs to be expanded after config customization -->
+		<!--var name="archiveScript" value="${archive_dir}/startArchive.sh" /-->
+		<!--var name="queueScript" value="${queue_dir}/startQueue.sh" /-->
+		<!--var name="enableQueueScript" value="${queue_dir}/enableQueue.sh" /-->
+		<!--var name="rollbackScript" value="${archive_dir}/rollBack.sh" /-->
+
+		<tstamp>
+			<format property="batchreloadpropertytimestamp" pattern="yyyyMMddHHmmss" />
+		</tstamp>
+		<mkdir dir="temp${file.separator}" />
+		<property name="batchpropertyreloaderfile" value="temp/corebuild_batch_reloadpropertyloader_${batchreloadpropertytimestamp}.properties" />
+
+		<echo file="${batchpropertyreloaderfile}" message="email.rollback.subject=${email.rollback.subject}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.rollback.message=${email.rollback.message}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.queueenable.subject=${emailqueueenable.subject}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.queueenable.message=${email.queueenable.message}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.queuedeployment.subject=${email.queuedeployment.subject}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.queuedeployment.message=${email.queuedeployment.message}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.deployment.subject=${email.deployment.subject}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.deployment.message=${email.deployment.message}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.patch.subject=${email.patch.subject}${line.separator}" append="true" />
+		<echo file="${batchpropertyreloaderfile}" message="email.patch.message=${email.patch.message}${line.separator}" append="true" />
+		<var name="email.deployment.subject" unset="true" />
+		<var name="email.deployment.message" unset="true" />
+		<var name="email.patch.subject" unset="true" />
+		<var name="email.patch.message" unset="true" />
+		<property file="${batchpropertyreloaderfile}" />
+		<delete file="${batchpropertyreloaderfile}" quiet="true" />
+	</target>
+
+	<target name="-ext-compile" depends="-ext-init">
+		<wag-log message="Custom -compile running" />
+
+		<wag-log message="Updating the config.xml..." />
+		<for param="configFilePath">
+			<fileset dir="${projectPath}/config/${project.name}">
+				<include name="**/config.xml" />
+			</fileset>
+			<sequential>
+				<copy tofile="@{configFilePath}" overwrite="true">
+					<fileset file="${projectPath}/${env.config}" includes="config.xml" />
+				</copy>
+			</sequential>
+		</for>
+
+		<!-- compile commons and utils package using 1.5 -->
+		<wag-javac jdk.version="1.5" jdk.target="1.5">
+			<src-path>
+				<src path="${projectPath}/${src.path}/walgreens/ecom/batch/common" />
+				<src path="${projectPath}/${src.path}/walgreens/ecom/batch/utils" />
+			</src-path>
+		</wag-javac>
+
+		<!-- Note: cannot merge this if-then into one since for non-photo project -->
+		<!-- directory ${projectPath}/${src.path}/walgreens/ecom/batch/${project.name} -->
+		<!-- does not exist and will cause ant to complain -->
+		<if>
+			<equals arg1="${project.name}" arg2="photo" casesensitive="false" trim="true" />
+
+			<!-- Photo (1.5 JDK) -->
+			<then>
+				<wag-log message="Compiling ${project.name} using ${jdk.version}" />
+				<wag-javac jdk.version="${jdk.version}" jdk.target="${jdk.target}">
+					<src-path>
+						<src path="${projectPath}/${src.path}/walgreens/ecom/${project.name}" />
+						<src path="${projectPath}/${src.path}/walgreens/ecom/batch/${project.name}" />
+					</src-path>
+				</wag-javac>
+			</then>
+
+			<!-- Others (use default jdk - 1.5 JDK) -->
+			<else>
+				<wag-log message="Compiling ${project.name} using ${jdk.version}" />
+				<wag-javac jdk.version="${jdk.version}" jdk.target="${jdk.target}">
+					<src-path>
+						<src path="${projectPath}/${src.path}/walgreens/ecom/batch/${project.name}" />
+					</src-path>
+				</wag-javac>
+			</else>
+		</if>
+
+		<wag-log message="Skip Default -compile" />
+		<property name="-skip-compile" value="" />
+	</target>
+
+	<target name="-ext-pmd" depends="-ext-init">
+		<wag-log message="PMD ${project.name}" />
+
+		<if>
+			<equals arg1="${project.name}" arg2="photo" casesensitive="false" trim="true" />
+
+			<!-- Photo (1.5 JDK) -->
+			<then>
+				<fileset id="pmd.filesets" dir="${projectPath}/${src.path}">
+					<!-- compile commons and utils package -->
+					<include name="walgreens/ecom/batch/common/**/*.java" />
+					<include name="walgreens/ecom/batch/utils/**/*.java" />
+
+					<!-- photo package -->
+					<include name="walgreens/ecom/${project.name}/**/*.java" />
+					<include name="walgreens/ecom/batch/${project.name}/**/*.java" />
+
+					<exclude name="**/*Test.java" />
+					<exclude name="**/Test*.java" />
+				</fileset>
+			</then>
+
+			<!-- Others (use default jdk - 1.5 JDK) -->
+			<else>
+				<fileset id="pmd.filesets" dir="${projectPath}/${src.path}">
+					<!-- compile commons and utils package -->
+					<include name="walgreens/ecom/batch/common/**/*.java" />
+					<include name="walgreens/ecom/batch/utils/**/*.java" />
+
+					<!-- other package -->
+					<include name="walgreens/ecom/batch/${project.name}/**/*.java" />
+
+					<exclude name="**/*Test.java" />
+					<exclude name="**/Test*.java" />
+				</fileset>
+			</else>
+		</if>
+
+		<!-- NO PMD for batch -->
+
+		<!-- define a property 'useCustomPMDFileSet' for 'pmd' target to not -->
+		<!-- override dataset 'pmd.filesets' defined in -ext-pmd -->
+		<!--property name="useCustomPMDFileSet" value="true" /-->
+	</target>
+
+	<!-- Define property '-skip-copy-config-final' to prevent parent '-copy-config-final' to run -->
+	<target name="-ext-copy-config-final">
+		<wag-log message="Custom -ext-copy-config-final running" />
+		<!-- if production, use config/env/prod/*.properties -->
+		<if>
+			<equals arg1="${config.properties.env}" arg2="${config.dir.prop.prod}" casesensitive="false" trim="true" />
+			<then>
+				<copy todir="${projectPath}/config" overwrite="true">
+					<fileset file="${projectPath}/config/env/prod/*.properties" />
+				</copy>
+			</then>
+
+			<!-- if staging, use config/env/stg/*.properties -->
+			<elseif>
+				<equals arg1="${config.properties.env}" arg2="${config.dir.prop.staging}" casesensitive="false" trim="true" />
+				<then>
+					<copy todir="${projectPath}/config" overwrite="true">
+						<fileset file="${projectPath}/config/env/stg/*.properties" />
+					</copy>
+				</then>
+			</elseif>
+		</if>
+	</target>
+
+	<target name="-ext-copy-config-local" depends="-ext-init">
+		<wag-log message="Custom -copy-config-local running" />
+
+		<!-- only copy the config files related to the project that we are building -->
+		<copy todir="${projectPath}/${web.root.classes}">
+			<fileset dir="${projectPath}/${src.path}">
+				<include name="walgreens/ecom/batch/common/**/*.properties" />
+				<include name="walgreens/ecom/batch/common/**/*.xsd" />
+				<include name="walgreens/ecom/batch/common/**/*.ser" />
+				<include name="walgreens/ecom/batch/common/**/*.xml" />
+				<include name="walgreens/ecom/batch/common/**/*.key" />
+			</fileset>
+			<fileset dir="${projectPath}/${src.path}">
+				<include name="walgreens/ecom/batch/utils/**/*.properties" />
+				<include name="walgreens/ecom/batch/utils/**/*.xsd" />
+				<include name="walgreens/ecom/batch/utils/**/*.ser" />
+				<include name="walgreens/ecom/batch/utils/**/*.xml" />
+				<include name="walgreens/ecom/batch/utils/**/*.key" />
+			</fileset>
+			<fileset dir="${projectPath}/${src.path}">
+				<include name="walgreens/ecom/batch/${project.name}/**/*.properties" />
+				<include name="walgreens/ecom/batch/${project.name}/**/*.xsd" />
+				<include name="walgreens/ecom/batch/${project.name}/**/*.ser" />
+				<include name="walgreens/ecom/batch/${project.name}/**/*.xml" />
+				<include name="walgreens/ecom/batch/${project.name}/**/*.key" />
+			</fileset>
+		</copy>
+
+		<wag-log message="Skip Default -copy-config-local" />
+		<property name="-skip-copy-config-local" value="" />
+	</target>
+
+	<!-- Define property '-skip-build-war' to prevent parent '-build-war' to run -->
+	<target name="-ext-build-war" depends="-ext-init, -ext-compile">
+		<wag-log message="Custom -build-war running" />
+
+		<delete dir="${projectPath}/${dist}" />
+		<mkdir dir="${projectPath}/${dist}" />
+		<!-- For manifest -->
+		   <property name="rcs.project.tagname" value="${rcs.project.tagname}" description="The tagname to checkout out files from RCS" />
+		   <property name="rcs.branch" value="${rcs.branch}" description="RCS branch" />
+		   <property name="rcs.project" value="${rcs.project}" description="RCS project" />
+		   <property name="atg9.app" value="${atg9.app}" description="ATG9 project" />
+		   <property name="tagName" value="${tagName}" description="Tag name used to tag all the files in this deployment" />
+
+		<wag-log message="Start compressing..." />
+		<jar destfile="${projectPath}/${dist}/${project.name}.jar" basedir="${projectPath}/${web.root.classes}">
+			<include name="walgreens/ecom/${project.name}/**/*" />
+			<include name="walgreens/ecom/batch/${project.name}/**/*" />
+			<manifest>
+			    <attribute name="Branch-Name" value="${rcs.branch}"/>
+				  <attribute name="Tag-Name" value="${tagName}"/>
+				  <attribute name="Project-Name" value="${project.name}" />
+			</manifest>
+		</jar>
+
+		<jar destfile="${projectPath}/${dist}/utils.jar" basedir="${projectPath}/${web.root.classes}">
+			<include name="walgreens/ecom/batch/utils/**/*" />
+			<manifest>
+					<attribute name="Branch-Name" value="${rcs.branch}"/>
+					<attribute name="Tag-Name" value="${tagName}"/>
+					<attribute name="Project-Name" value="${project.name}" />
+			</manifest>
+		</jar>
+
+		<jar destfile="${projectPath}/${dist}/common.jar" basedir="${projectPath}/${web.root.classes}">
+			<include name="walgreens/ecom/batch/common/**/*" />
+	    <manifest>
+				    <attribute name="Branch-Name" value="${rcs.branch}"/>
+					  <attribute name="Tag-Name" value="${tagName}"/>
+					  <attribute name="Project-Name" value="${project.name}" />
+			</manifest>
+		</jar>
+
+		<wag-log message="Skip Build War" />
+		<property name="-skip-build-war" value="" />
+	</target>
+
+	<!-- Reverse of what -ext-rollback does, so any change to this target requires similar -->
+	<!-- changes to -ext-rollback -->
+	<!-- Define property '-skip-archive-server-war' to prevent parent '-archive-server-war' to run -->
+	<target name="-ext-archive-server-war" depends="-ext-init">
+		<wag-log message="Custom -archive-server-war running" />
+
+		<tstamp>
+			<format property="fileTimeStamp" pattern="yyyy-MM-dd_HH-mm-ss" />
+		</tstamp>
+		<for list="${serverBoxes}" trim="true" param="server" keepgoing="false">
+		<sequential>
+		<!-- archive project jar file -->
+			
+				<if>
+																				<isset property="${project.name}.serverLists" />
+																				<then>	
+																								<propertycopy property="esadmin_password" from="${project.name}.password[@{server}]" override="true" silent="false" />
+																								<propertycopy property="esadmin_id" from="${project.name}.id[@{server}]" override="true" silent="false" />
+																								<propertycopy property="user_esadmin_dir" from="${project.name}.dir[@{server}]" override="true" silent="false" />
+																								<propertycopy property="archive_dir" from="${project.name}.archive_dir[@{server}]" override="true" silent="false" />
+																								<propertycopy property="patch_dir" from="${project.name}.patch_dir[@{server}]" override="true" silent="false" />
+																								<propertycopy property="queue_dir" from="${project.name}.queue_dir[@{server}]" override="true" silent="false" />	
+																				</then>
+																				<else>
+																					<propertycopy property="esadmin_password" from="other.password[@{server}]" override="true" silent="false" />
+																					<var name="esadmin_id" value="${other.id[@{server}]}" />
+																					<var name="user_esadmin_dir" value="${other.dir[@{server}]}" />
+																					<var name="archive_dir" value="${other.archive_dir[@{server}]}" />
+																					<var name="patch_dir" value="${other.patch_dir[@{server}]}" />
+																					<var name="queue_dir" value="${other.queue_dir[@{server}]}" />
+																				</else>
+																									
+				</if>	
+		<var name="archiveScript" value="${archive_dir}/startArchive.sh" />	
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${user_esadmin_dir}/${warFile}/build/${project.name}.jar" />
+		<var name="archiveCmd" value=". ${archiveScript} ${archive_file} ${archive_dest_dir} ${fileTimeStamp}" />
+		<var name="filesToArchive" value="mkdir -p ${archive_dest_dir}; ${archiveCmd}" />
+
+		<!-- archive utils.jar -->
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${user_esadmin_dir}/${warFile}/build/utils.jar" />
+		<var name="archiveCmd" value=". ${archiveScript} ${archive_file} ${archive_dest_dir} ${fileTimeStamp}" />
+		<var name="filesToArchive" value="${filesToArchive}; mkdir -p ${archive_dest_dir}; ${archiveCmd}" />
+
+		<!-- archive common.jar -->
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${user_esadmin_dir}/${warFile}/build/common.jar" />
+		<var name="archiveCmd" value=". ${archiveScript} ${archive_file} ${archive_dest_dir} ${fileTimeStamp}" />
+		<var name="filesToArchive" value="${filesToArchive}; mkdir -p ${archive_dest_dir}; ${archiveCmd}" />
+
+		<!-- archive launcher.xml -->
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/bin" />
+		<var name="archive_file" value="${user_esadmin_dir}/${warFile}/bin/launcher.xml" />
+		<var name="archiveCmd" value=". ${archiveScript} ${archive_file} ${archive_dest_dir} ${fileTimeStamp}" />
+		<var name="filesToArchive" value="${filesToArchive}; mkdir -p ${archive_dest_dir}; ${archiveCmd}" />
+
+		<!-- archive project config folder -->
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/config/${project.name}" />
+		<var name="archive_file" value="${user_esadmin_dir}/${warFile}/config/${project.name}" />
+		<var name="archiveCmd" value=". ${archiveScript} ${archive_file} ${archive_dest_dir} ${fileTimeStamp}" />
+		<var name="filesToArchive" value="${filesToArchive}; mkdir -p ${archive_dest_dir}; ${archiveCmd}" />
+
+		<wag-ssh command="${filesToArchive}" serverInstance="[@{server}]" />
+			</sequential>
+		</for>
+
+		<wag-log message="Skip Archive Server War" />
+		<property name="-skip-archive-server-war" value="" />
+	</target>
+
+	<!-- Define property '-skip-deploy-ftp' to prevent parent '-deploy-ftp' to run -->
+	<target name="-ext-deploy-ftp" depends="-ext-init, -ext-copy-config-local, -ext-build-war">
+		
+			
+		
+		<wag-log message="Custom -deploy-ftp running" />
+
+		<for list="${serverLists}" trim="true" param="serverInstance" keepgoing="true">
+			<sequential>
+			  
+				<if>
+											<isset property="${project.name}.serverLists" />
+											<then>	
+															<propertycopy property="esadmin_password" from="${project.name}.password[@{serverInstance}]" override="true" silent="false" />
+															<propertycopy property="esadmin_id" from="${project.name}.id[@{serverInstance}]" override="true" silent="false" />
+															<propertycopy property="user_esadmin_dir" from="${project.name}.dir[@{serverInstance}]" override="true" silent="false" />
+															<propertycopy property="archive_dir" from="${project.name}.archive_dir[@{serverInstance}]" override="true" silent="false" />
+															<propertycopy property="patch_dir" from="${project.name}.patch_dir[@{serverInstance}]" override="true" silent="false" />
+															<propertycopy property="queue_dir" from="${project.name}.queue_dir[@{serverInstance}]" override="true" silent="false" />	
+											</then>
+											<else>
+												<propertycopy property="esadmin_password" from="other.password[@{serverInstance}]" override="true" silent="false" />
+												<var name="esadmin_id" value="${other.id[@{serverInstance}]}" />
+												<var name="user_esadmin_dir" value="${other.dir[@{serverInstance}]}" />
+												<var name="archive_dir" value="${other.archive_dir[@{serverInstance}]}" />
+												<var name="patch_dir" value="${other.patch_dir[@{serverInstance}]}" />
+												<var name="queue_dir" value="${other.queue_dir[@{serverInstance}]}" />
+											</else>
+																
+				</if>
+				<if>
+						<and>					
+							<equals arg1="${config.properties.env}" arg2="Dev" casesensitive="false" trim="true" />
+							<equals arg1="@{serverInstance}" arg2="decbt01" casesensitive="false" trim="true" />	
+						</and>	
+						<then>
+						<wag-promptProperty propertyName="Instance.name" message="Instance to be changed for batch home?" validargs="${batch9.instance}" />
+						<replace file="${projectPath}/${bin.includes}/runbatch.sh" token="{HOME}/batch/bin" value="{HOME}/${Instance.name}/bin"/>
+						<replace file="${projectPath}/${bin.includes}/set_environment.sh" token="HOME/batch" value="HOME/${Instance.name}"/>
+						</then>
+				</if>
+				<if>
+										<and>					
+											<equals arg1="${config.properties.env}" arg2="Staging" casesensitive="false" trim="true" />
+											<equals arg1="@{serverInstance}" arg2="secbt01" casesensitive="false" trim="true" />	
+										</and>	
+										<then>
+										<wag-promptProperty propertyName="Instance.name" message="Instance to be changed for batch home?" validargs="${batch9.instance}" />
+										<replace file="${projectPath}/${bin.includes}/runbatch.sh" token="{HOME}/batch/bin" value="{HOME}/${Instance.name}/bin"/>
+										<replace file="${projectPath}/${bin.includes}/set_environment.sh" token="HOME/batch" value="HOME/${Instance.name}"/>
+										</then>
+					</if>
+				<if>
+														<and>					
+															<equals arg1="${config.properties.env}" arg2="Prod" casesensitive="false" trim="true" />
+															<equals arg1="@{serverInstance}" arg2="pecbt01" casesensitive="false" trim="true" />	
+														</and>	
+														<then>
+														<wag-promptProperty propertyName="Instance.name" message="Instance to be changed for batch home?" validargs="${batch9.instance}" />
+														<replace file="${projectPath}/${bin.includes}/runbatch.sh" token="{HOME}/batch/bin" value="{HOME}/${Instance.name}/bin"/>
+														<replace file="${projectPath}/${bin.includes}/set_environment.sh" token="HOME/batch" value="HOME/${Instance.name}"/>
+														</then>
+				</if>
+				<wag-log message="FTP jar files..." />
+				<wag-ssh command="mkdir -p ${user_esadmin_dir[@{serverInstance}]}/${warFile}/build" serverInstance="@{serverInstance}" />
+				<wag-scp remotedir="${user_esadmin_dir[@{serverInstance}]}/${warFile}/build" serverInstance="@{serverInstance}">
+					<!-- any change to here requires similar changes to -ext-deploy-queue-ftp -->
+					<fileset file="${projectPath}/${dist}/*.jar" />
+				</wag-scp>
+
+				<wag-log message="FTP template files..." />
+				<wag-log message="FTP bin files..." />
+				<wag-log message="FTP lib files..." />
+				<wag-log message="FTP configuration files..." />
+				<wag-scp remotedir="${user_esadmin_dir[@{serverInstance}]}/${warFile}" serverInstance="@{serverInstance}">
+					<!-- any change to here requires similar changes to -ext-deploy-queue-ftp -->
+					<fileset dir="${projectPath}">
+						<include name="${template.includes}/**/*" />
+						<include name="${bin.includes}/**/*" />
+						<include name="${lib.includes}/**/*" />
+						<include name="config/${project.name}/**/*" />
+						<!-- also ftp all files directly under 'config' -->
+						<include name="config/*" />
+						<!-- also ftp all files directly under 'config/utils' and 'config/common -->
+						<include name="config/utils/**/*" />
+						<include name="config/common/**/*" />
+					</fileset>
+				</wag-scp>
+				
+				<wag-ssh command="chmod 755 ${user_esadmin_dir[@{serverInstance}]}/${warFile}/${bin.includes}/runbatch.sh" serverInstance="@{serverInstance}" />
+				<wag-ssh command="chmod 755 ${user_esadmin_dir[@{serverInstance}]}/${warFile}/${bin.includes}/set_environment.sh" serverInstance="@{serverInstance}" />	
+			</sequential>
+		</for>
+		
+		<wag-email mailsubject="${email.deployment.subject}" mailto="${admin.email}" mailmessage="${email.deployment.message}" />
+
+		<wag-log message="Skip Deploy FTP" />
+		<property name="-skip-deploy-ftp" value="" />
+	</target>
+
+	<!-- Define property '-skip-stop-all-servers' to prevent parent '-stop-all-servers' to run -->
+	<target name="-ext-stop-all-servers" depends="-ext-init">
+		<wag-log message="Skip Stop All Servers" />
+		<property name="-skip-stop-all-servers" value="" />
+	</target>
+
+	<!-- Define property '-skip-start-all-servers' to prevent parent '-start-all-servers' to run -->
+	<target name="-ext-start-all-servers" depends="-ext-init">
+		<wag-log message="Skip Start All Servers" />
+		<property name="-skip-start-all-servers" value="" />
+	</target>
+
+	<!-- Define property '-skip-patch-ftp' to prevent parent '-patch-ftp' to run -->
+	<target name="-ext-patch-ftp" depends="-ext-init">
+		<loadfile property="finalPatchFileListContent" srcFile="${finalPatchFileList}" />
+
+		<for list="${serverLists}" trim="true" param="serverInstance" keepgoing="true">
+			<sequential>
+				<propertycopy property="patch_dir" from="patch_dir[@{serverInstance}]" override="true" silent="false" />
+
+				<wag-log message="Post-Build patching file to remote server location: ${patch_dir}" />
+				<wag-log message="Post-Build patch file list location: ${finalPatchFileList}" />
+				<wag-log message="Post-Build patch files: ${line.separator}${line.separator}${finalPatchFileListContent}${line.separator}" />
+
+				<wag-scp remotedir="${patch_dir}/.." serverInstance="@{serverInstance}">
+					<fileset dir="${projectPath}" includesfile="${finalPatchFileList}" />
+				</wag-scp>
+
+				<wag-scp remotedir="${patch_dir}" serverInstance="@{serverInstance}">
+					<fileset dir="${projectPath}/${web.root}" includesfile="${finalPatchFileList}" />
+				</wag-scp>
+
+				<wag-log message="Files patched successfully on @{serverInstance}" />
+			</sequential>
+		</for>
+
+		<wag-email mailsubject="${email.patch.subject}" mailto="${admin.email}" mailmessage="${email.patch.message}${line.separator}${line.separator}${finalPatchFileListContent}" />
+
+		<wag-log message="Skip Patch FTP" />
+		<property name="-skip-patch-ftp" value="" />
+	</target>
+
+	<!-- Define property '-skip-createFinalizedPatchFileList' to prevent parent '-createFinalizedPatchFileList' to run -->
+	<!-- Expect target -init-createFinalizedPatchFileList in parents buildCommons.xml to be called already -->
+	<target name="-ext-createFinalizedPatchFileList">
+		<!-- For each file to patch, we have to determine the file location after a build is run. 
+				 Once we identified the new location, we will put this information into ${finalPatchFileList}. 
+				 ${finalPatchFileList} will be a file that contains a list of files to patch, each file 
+				 is relative to ${web.root} -->
+		<for param="patchFile" trim="true" delimiter="${line.separator}; ," list="${patchFileListContent}">
+			<sequential>
+				<!-- Java source files	-->
+				<if>
+					<contains casesensitive="false" string="@{patchFile}" substring=".java" />
+					<then>
+						<var name="javaSrcFile" unset="true" />
+						<!-- Remove .java from the end of the source file name and remove the leading
+								 path structure so that we are left with just the java package path including
+								 the name of the class -->
+						<propertyregex property="javaSrcFile" input="@{patchFile}" regexp="^${src.path}/(.*).java" replace="\1" casesensitive="false" override="true" />
+
+						<!-- Find all the java class(es) for this source file -->
+						<for param="currentClassFile">
+							<path>
+								<fileset dir="${projectPath}/${web.root.classes}">
+									<include name="${javaSrcFile}.class" />
+									<include name="${javaSrcFile}$*.class" />
+								</fileset>
+							</path>
+							<sequential>
+								<var name="javaClassFile" unset="true" />
+								<!-- file listed in ${finalPatchFileList} needs to be relative to WebContent, trim
+									   the class file path to reflect this -->
+								<propertyregex property="javaClassFile" input="@{currentClassFile}" regexp="^.*[\\/]${web.root}[\\/](.*)" replace="\1" casesensitive="false" override="true" />
+								<echo append="true" file="${finalPatchFileList}" message="${javaClassFile}${line.separator}" />
+							</sequential>
+						</for>
+					</then>
+					<!-- all other files -->
+					<else>
+						<echo append="true" file="${finalPatchFileList}" message="@{patchFile}${line.separator}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+
+		<!-- make sure we are using '/' as directory separator -->
+		<replace file="${finalPatchFileList}" token="\" value="/" />
+
+		<wag-log message="Skip Create Finalized Patch File List" />
+		<property name="-skip-createFinalizedPatchFileList" value="" />
+
+	</target>
+
+	<!-- Define property '-skip-archive-patchFiles' to prevent parent '-archive-patchFiles' to run -->
+	<target name="-ext-archive-patchFiles" depends="-ext-init, -ext-copy-config-local, -ext-build-war">
+		<wag-log message="No customization needed for -archive-patchFiles" />
+	</target>
+
+	<!-- Define property '-skip-deploy-queue-ftp' to prevent parent '-deploy-queue-ftp' to run -->
+	<target name="-ext-deploy-queue-ftp">
+		<wag-log message="Custom -deploy-ftp running" />
+
+		<wag-log message="FTP jar files to queue..." />
+
+		<for list="${serverLists}" trim="true" param="serverInstance" keepgoing="true">
+			<sequential>
+				<wag-ssh command="mkdir -p ${queue_dir}/${warFile}/build" serverInstance="@{serverInstance}" />
+				<wag-scp remotedir="${queue_dir}/${warFile}/build" serverInstance="@{serverInstance}">
+					<!-- any change to here requires similar changes to -ext-deploy-ftp -->
+					<fileset file="${projectPath}/${dist}/*.jar" />
+				</wag-scp>
+
+				<wag-log message="FTP template files..." />
+				<wag-log message="FTP bin files..." />
+				<wag-log message="FTP lib files..." />
+				<wag-log message="FTP configuration files..." />
+				<wag-scp remotedir="${queue_dir}/${warFile}" serverInstance="@{serverInstance}">
+					<!-- any change to here requires similar changes to -ext-deploy-ftp -->
+					<fileset dir="${projectPath}">
+						<include name="${template.includes}/**/*" />
+						<include name="${bin.includes}/**/*" />
+						<include name="${lib.includes}/**/*" />
+						<include name="config/${project.name}/**/*" />
+						<!-- also ftp all files directly under 'config' -->
+						<include name="config/*" />
+						<!-- also ftp all files directly under 'config/utils' and 'config/common -->
+						<include name="config/utils/**/*" />
+						<include name="config/common/**/*" />
+					</fileset>
+				</wag-scp>
+
+				<!-- update queue files on remote server -->
+				<tstamp>
+					<format property="fileTimeStamp" pattern="yyyy-MM-dd_HH-mm-ss" />
+				</tstamp>
+				<var name="queueCmd" value=". ${queueScript} ${warFile} ${queue_dir} ${fileTimeStamp} " />
+				<wag-ssh command="${queueCmd};" serverInstance="@{serverInstance}" />
+			</sequential>
+		</for>
+
+		<wag-email mailsubject="${email.queuedeployment.subject}" mailto="${admin.email}" mailmessage="${email.queuedeployment.message}" />
+
+		<wag-log message="Skip Deploy Queue FTP" />
+		<property name="-skip-deploy-queue-ftp" value="" />
+	</target>
+
+	<!-- Define property '-skip-enable-queue' to prevent parent '-enable-queue' to run -->
+	<target name="-ext-enable-queue">
+		<wag-log message="Custom -enable-queue running" />
+
+		<wag-log message="Enabling queue - ${warFile}${warFile.extn}. Servers ${serverLists}" />
+
+		<!-- scp enableQueue.sh to server to run. This is only temporary. Once
+					enableQueue.sh is converted to Ant task, we should remove this -->
+		<ftp-scripts remoteDir="${queue_dir}" script="enableQueue.sh" />
+
+		<for list="${serverLists}" trim="true" param="serverInstance" keepgoing="true">
+			<sequential>
+				
+					<if>
+																<isset property="${project.name}.serverLists" />
+																<then>	
+																				<propertycopy property="esadmin_password" from="${project.name}.password[@{serverInstance}]" override="true" silent="false" />
+																				<propertycopy property="esadmin_id" from="${project.name}.id[@{serverInstance}]" override="true" silent="false" />
+																				<propertycopy property="user_esadmin_dir" from="${project.name}.dir[@{serverInstance}]" override="true" silent="false" />
+																				<propertycopy property="archive_dir" from="${project.name}.archive_dir[@{serverInstance}]" override="true" silent="false" />
+																				<propertycopy property="patch_dir" from="${project.name}.patch_dir[@{serverInstance}]" override="true" silent="false" />
+																				<propertycopy property="queue_dir" from="${project.name}.queue_dir[@{serverInstance}]" override="true" silent="false" />	
+																</then>
+																<else>
+																	<propertycopy property="esadmin_password" from="other.password[@{serverInstance}]" override="true" silent="false" />
+																	<var name="esadmin_id" value="${other.id[@{serverInstance}]}" />
+																	<var name="user_esadmin_dir" value="${other.dir[@{serverInstance}]}" />
+																	<var name="archive_dir" value="${other.archive_dir[@{serverInstance}]}" />
+																	<var name="patch_dir" value="${other.patch_dir[@{serverInstance}]}" />
+																	<var name="queue_dir" value="${other.queue_dir[@{serverInstance}]}" />
+																</else>
+																					
+					</if>
+				
+				<var name="enableQueueCmd" value=". ${enableQueueScript} ${queue_dir} ${user_esadmin_dir} ${warFile}${warFile.extn} ${warFile.extn}" />
+				<wag-ssh command="${enableQueueCmd};" serverInstance="@{serverInstance}" />
+				
+				<if>
+																		<and>					
+																			<equals arg1="${config.properties.env}" arg2="Prod" casesensitive="false" trim="true" />
+																			<equals arg1="@{serverInstance}" arg2="pecbt01" casesensitive="false" trim="true" />	
+																		</and>	
+																		<then>
+																		<wag-promptProperty propertyName="Instance.name" message="Instance to be changed for batch home?" validargs="${batch9.instance}" />
+																		<replace file="${projectPath}/${bin.includes}/runbatch.sh" token="{HOME}/batch/bin" value="{HOME}/${Instance.name}/bin"/>
+																		<replace file="${projectPath}/${bin.includes}/set_environment.sh" token="HOME/batch" value="HOME/${Instance.name}"/>
+																		</then>
+				</if>
+			</sequential>
+		</for>
+
+		<wag-log message="${warFile}${warFile.extn} queue enabled on ${serverLists}" />
+		<wag-email mailsubject="${email.queueenable.subject}" mailto="${admin.email}" mailmessage="${email.queueenable.message}" />
+
+		<wag-log message="Skip Custom Enable Queue" />
+		<property name="-skip-enable-queue" value="" />
+	</target>
+
+	<!-- Reverse of what -ext-archive-server-war does, so any change to this target requires similar -->
+	<!-- changes to -ext-archive-server-war -->
+	<!-- Define property '-skip-rollback' to prevent parent '-rollback' to run -->
+	<target name="-ext-rollback">
+		<wag-log message="Custom -rollback running" />
+
+		<wag-log message="Rollback - ${warFile}${warFile.extn}. Servers ${serverBoxes}" />
+
+		<!-- clear rollback live files backup directory -->
+		<var name="rollback_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/rollback" />
+		<var name="rollbackCmd" value="rm -rf ${rollback_dest_dir}; mkdir -p ${rollback_dest_dir};" />
+
+		<!-- project jar file: move current file to rollback directory for backup and back current file -->
+		<var name="live_file_backup_loc" value="${rollback_dest_dir}/build" />
+		<var name="live_file" value="${user_esadmin_dir}/${warFile}/build/${project.name}.jar" />
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${archive_dest_dir}/${project.name}.jar.*.bak1" />
+		<var name="rollbackCmd" value="${rollbackCmd} mkdir -p ${live_file_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} mv ${live_file} ${live_file_backup_loc}/.;" />
+		<var name="rollbackCmd" value="${rollbackCmd} cp ${archive_file} ${live_file};" />
+
+		<!-- utils.jar: move current file to rollback directory for backup and back current file -->
+		<var name="live_file_backup_loc" value="${rollback_dest_dir}/build" />
+		<var name="live_file" value="${user_esadmin_dir}/${warFile}/build/utils.jar" />
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${archive_dest_dir}/utils.jar.*.bak1" />
+		<var name="rollbackCmd" value="${rollbackCmd} mkdir -p ${live_file_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} mv ${live_file} ${live_file_backup_loc}/.;" />
+		<var name="rollbackCmd" value="${rollbackCmd} cp ${archive_file} ${live_file};" />
+
+		<!-- common.jar: move current file to rollback directory for backup and back current file -->
+		<var name="live_file_backup_loc" value="${rollback_dest_dir}/build" />
+		<var name="live_file" value="${user_esadmin_dir}/${warFile}/build/common.jar" />
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/build" />
+		<var name="archive_file" value="${archive_dest_dir}/common.jar.*.bak1" />
+		<var name="rollbackCmd" value="${rollbackCmd} mkdir -p ${live_file_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} mv ${live_file} ${live_file_backup_loc}/.;" />
+		<var name="rollbackCmd" value="${rollbackCmd} cp ${archive_file} ${live_file};" />
+
+		<!-- launcher.xml: move current file to rollback directory for backup and back current file -->
+		<var name="live_file_backup_loc" value="${rollback_dest_dir}/bin" />
+		<var name="live_file" value="${user_esadmin_dir}/${warFile}/bin/launcher.xml" />
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/bin" />
+		<var name="archive_file" value="${archive_dest_dir}/launcher.xml.*.bak1" />
+		<var name="rollbackCmd" value="${rollbackCmd} mkdir -p ${live_file_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} mv ${live_file} ${live_file_backup_loc}/.;" />
+		<var name="rollbackCmd" value="${rollbackCmd} cp ${archive_file} ${live_file};" />
+
+		<!-- archive project config folder -->
+		<var name="live_folder_backup_loc" value="${rollback_dest_dir}/config/" />
+		<var name="live_folder" value="${user_esadmin_dir}/${warFile}/config/${project.name}" />
+		<var name="archive_dest_dir" value="${archive_dir}/${warFile}/${archive_dir.deploy}/config" />
+		<var name="archive_folder" value="${archive_dest_dir}/${project.name}/${project.name}.*.bak1" />
+		<var name="rollbackCmd" value="${rollbackCmd} mkdir -p ${live_folder_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} mv ${live_folder} ${live_folder_backup_loc};" />
+		<var name="rollbackCmd" value="${rollbackCmd} cp -r ${archive_folder} ${live_folder};" />
+
+		<for list="${serverLists}" trim="true" param="serverInstance" keepgoing="true">
+			<sequential>
+				<wag-ssh command="${rollbackCmd}" serverInstance="@{serverInstance}" />
+			</sequential>
+		</for>
+
+		<wag-log message="${warFile}${warFile.extn} rolled back" />
+		<wag-email mailsubject="${email.rollback.subject}" mailto="${admin.email}" mailmessage="${email.rollback.message}" />
+
+		<wag-log message="Skip Rollback" />
+		<property name="-skip-rollback" value="" />
+	</target>
+
+	<!-- skip unit testing since we are having database connectivity issue from dev to -->
+	<!-- stg database during deployment -->
+	<!-- Define property '-skip-unitTest' to prevent parent '-unitTest' to run -->
+	<target name="-ext-unitTest">
+		<wag-log message="Skip UnitTest" />
+		<property name="-skip-unitTest" value="" />
+	</target>
+</project>

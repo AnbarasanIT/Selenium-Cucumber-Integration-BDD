@@ -1,0 +1,75 @@
+package walgreens.ecom.batch.automation.stepdefinitions.pharmacy.homepage;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.pharmacy.homepage.MedHelpVerificationLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class MedHelpVerificationSteps {
+    @Then("^\"([^\"]*)\" Customer selects Avatar Image, Screen Name and creates MedHelp Account:$")
+    public void Customer_selects_Avatar_Image_Screen_Name_and_creates_MedHelp_Account(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects Avatar Image, Screen Name and creates MedHelp Account:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    MedHelpVerificationLibrary.createMedHelpAccount(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer posts the comment in MedHelp Post A Question Page:$")
+    public void Customer_posts_the_comment_in_MedHelp_Post_A_Question_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer posts the comment in MedHelp Post A Question Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    MedHelpVerificationLibrary.postACommentinMedHelpPage(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @Then("^\"([^\"]*)\" Customer validates Health Center Email Preferences status from MedHelp DB:$")
+    public void Customer_validates_Health_Center_Email_Preferences_status_from_MedHelp_DB(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates Health Center Email Preferences status from MedHelp DB:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    MedHelpVerificationLibrary.validateHealthEmailPreferencesFromMedHelpDB(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

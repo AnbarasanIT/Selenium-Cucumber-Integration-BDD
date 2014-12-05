@@ -1,0 +1,1057 @@
+package walgreens.ecom.batch.automation.library.checkout_sdd;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ProductBean;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class SDDBrowseAndSearchLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select Filter Option(Local Delivery/Shop All
+     *          Products/store pickup) type from Product Search Results Page
+     * @author - Siva Santhi Reddy
+     * @Created - Jan 21 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectFilterOptionFromSearchResults(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ShopAllProducts_RADIO = "input#seeall~CSS";
+	String LocalDeliveryOption_RADIO = "//*[@id='seesameday' or contains(@href,'search/storelocator_overlay.jsp?')]~XPATH";
+	String StorePickup_LNK = "//a[contains(text(),'store pickup')]~XPATH";
+	String LocalDelivery_LNK = "//a[contains(text(),'local delivery')]~XPATH";
+	String FindAStore_LNK = "a[title='Find at your local Walgreens']~CSS";
+	String ZipcodeinSDDStoreOverlay_TXT = "input#store_number~CSS";
+	String ChangeStore_LNK = "//a[contains(text(),'Change store')]~XPATH";
+	String ShopThisStore_BTN = "input#shopStore~CSS";
+	String FindAStoreOverlay_HEADER = "//p[contains(text(),'Check product availability at a Walgreens near you.')]~XPATH";
+	String SelectedLocalDeliveryOptions_RADIO = "//label[contains(@class,'strSelect')][contains(text(),'Shop products at')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // verifying Shop All Products Radio is selected by default or not
+	    if (!getElementByProperty(ShopAllProducts_RADIO, browser).isSelected()) {
+		messagesMap.put("Shop All Productts", "Radio Button is not selected by default");
+		status = WARNING;
+	    }
+	    // select All Products Option
+	    if (dataMap.get("ShopAllProductsOption").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ShopAllProducts_RADIO, browser)) {
+		    throw new Exception("Not able to click on Shop All Products Radio button");
+		}
+	    }
+	    // select Local Delivery Radio button
+	    else if (dataMap.get("LocalDeliveryOption").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(LocalDeliveryOption_RADIO, browser)) {
+		    throw new Exception("Not able to click on Local Delivery Options Radio button");
+		}
+		// if change store link is there verifying search results for
+		// Local Delivery search
+		if (isElementPresentVerification(ChangeStore_LNK, browser)) {
+		    if (!isElementPresentVerification(SelectedLocalDeliveryOptions_RADIO, browser)) {
+			messagesMap.put("Search Results for Local Delivery Options", "is not getting displayed");
+			status = WARNING;
+		    }
+		}
+		// if Change Store link is not there verify the display of find
+		// a store overlay
+		else if (isElementPresentVerification(LocalDelivery_LNK, browser)) {
+		    switchToOverlay(browser);
+		    if (!isElementPresentVerification(ZipcodeinSDDStoreOverlay_TXT, browser)) {
+			messagesMap.put("Zip code filed in SDD store overlay", "Field is missing");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // click store pickup link
+	    else if (dataMap.get("StorePickUpLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(StorePickup_LNK, browser)) {
+		    throw new Exception("Not able to click on Store Pickup link button");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(ZipcodeinSDDStoreOverlay_TXT, browser)) {
+		    messagesMap.put("Zip code filed in SDD store overlay", "Field is missing");
+		    status = WARNING;
+		}
+	    }
+	    // click Local Delivery link
+	    else if (dataMap.get("LocalDeliveryLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(LocalDelivery_LNK, browser)) {
+		    throw new Exception("Not able to click on Local Delivery link button");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(ZipcodeinSDDStoreOverlay_TXT, browser)) {
+		    messagesMap.put("Zip code filed in SDD store overlay", "Field is missing");
+		    status = WARNING;
+		}
+	    }
+	    // click Change store link
+	    else if (dataMap.get("ChangeStoreLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ChangeStore_LNK, browser)) {
+		    throw new Exception("Not able to click on Change Store link button");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(ShopThisStore_BTN, browser)) {
+		    messagesMap.put("Previous Zipcode Results", "Previous Zipcode Results are not displaying");
+		    status = WARNING;
+		}
+	    }
+	    // click Find a store link of First Product in search Results.
+	    else if (dataMap.get("FirstProductWithFindInStoreLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(FindAStore_LNK, browser)) {
+		    throw new Exception("Not able to click on Find a Store link button");
+		}
+		switchToOverlay(browser);
+		if (isElementPresentVerification(FindAStoreOverlay_HEADER, browser)) {
+		    messagesMap.put("FindaStoreOverlay", "Header is missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     * *************************************************************
+     * 
+     * @Purpose - Method to select Store based on the Store
+     *          Offerings(LocalDelivery/StorePickup/CurbsidePickup/RxDriveThru)
+     * 
+     * @author - Siva Santhi Reddy
+     * 
+     * @Created - Jan 21 2013
+     * 
+     * @Modified By -Thangaraj R
+     * 
+     * @Modified Date -28 Oct 2013
+     * @Modification Modified the OR for Store address. *************
+     *               ***********************************************
+     */
+    public static void selectStoreBasedOnStoreOfferings(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Zipcode_TXT = "//input[@id='store_number' or @title='Find a Walgreens Near You']";
+	String FindAStore_BTN = "//input[@id='findstore']";
+	String StoreSearchResultcontainer = "//div[contains(@class,'storLocShopList')]~XPATH";
+	String Next_LNK = "//div[@id='storLoc']/div[3]/a[@title='Next']~XPATH";
+	String StoreDetails_ELM = "a#storeLocToolTipHldr~CSS";
+	String ChangeStore_LNK = "//a[contains(text(),'Change')]~XPATH";
+	String SearchResultsPageHeader_ELM = "//h1[contains(text(),'Search Results for')]~XPATH";
+	String ShoppingCartHeader_ELM = "//h2[contains(text(),'Shopping Cart')]~XPATH";
+	String WagStorePinImage_IMG = "img[title='walgreens']~CSS";
+	String WagStoreAddress_ELM = "//p[contains(@class,'storeAddress')]~XPATH";
+	String YourStoreText_ELM = "//p[contains(text(),'Your Store:')]~XPATH";
+	String ChangeStorelinkStoredetails_LNK = "//a[contains(@title,'Change store')]~XPATH";
+	String StoreName_ELM = "//p[contains(text(),'You already have items in your shopping cart for pickup')]/strong~XPATH";
+	String CloseOverlay_IMG = "//a[@id='overlayClose']~XPATH";
+	String SingleStoreSearchResultcontainer = "div#storeSearchResult~CSS";
+	String FastRefill_Overlay = "//h1[@id='header_bar_title']~XPATH";
+	String Error_Msg = "//div[contains(@class,'showSearchError')]/p[contains(text(),'Please try again using an address or ZIP Code')]";
+	List<WebElement> StoreResultsDiv = null;
+	boolean isStoreFound = false, isStorealreadySelected = false;
+	int NoofStorechoices = 0, StorechoiceFoundcounter = 0;
+	String StoreNameorNumber = null, CityName = null, StoreDetailsinOverlay = "";
+	Map<String, String> messagesMap = null;
+	String SingleClickChangeStore = null;
+	String ErrorValidation = null;
+	WebElement SelectStoreButton = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.get("SingleClickChangeStore") != null) {
+		SingleClickChangeStore = dataMap.get("SingleClickChangeStore").get(0);
+	    }
+	    // Modified Sasikala J 5/17/2013
+	    if (SingleClickChangeStore != null && SingleClickChangeStore.equalsIgnoreCase("Yes")) {
+		switchToOverlay(browser);
+	    }
+	    // Get Data from Excel sheet
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    String ChangeLocation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeLocation");
+	    String ChangeStoreZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeStoreZipcode");
+	    String LocalDelivery = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LocalDelivery");
+	    String StorePickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StorePickup");
+	    String CurbsidePickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CurbsidePickup");
+	    String RxDriveThru = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxDriveThru");
+	    String ExpectedTargetPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TargetPage");
+
+	    if (dataMap.get("ErrorValidation") != null) {
+		ErrorValidation = dataMap.get("ErrorValidation").get(0);
+	    }
+	    // Getting No of Store Choices Offered(Local delivery.Store Pickup/
+	    // curbside Pickup/RxDriveThrue)
+	    String[] NoofStoreOptions = { LocalDelivery, StorePickup, CurbsidePickup, RxDriveThru };
+	    for (int incrementer = 0; incrementer < NoofStoreOptions.length; incrementer++) {
+		if (NoofStoreOptions[incrementer].equalsIgnoreCase("Yes")) {
+		    NoofStorechoices = NoofStorechoices + 1;
+		}
+	    }
+	    // Enter Zipcode number if it is not equal to '-'
+	    if (!Zipcode.equalsIgnoreCase("-")) {
+		if (ErrorValidation != null && ErrorValidation.equalsIgnoreCase("Yes")) {
+		    if (!clearAndEnterText(Zipcode_TXT, "00000", browser)) {
+			messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+			throw new Exception("Not able to click on Find A Store Button");
+		    }
+		    if (!isElementPresentVerification(Error_Msg, browser)) {
+			throw new Exception("Error message not found");
+		    }
+		}
+		if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+		//
+	    }
+	    // Change Store if required.
+	    if (ChangeLocation != null && ChangeLocation.equalsIgnoreCase("Yes")) {
+		Thread.sleep(2000);
+		if (getElementByProperty(ChangeStore_LNK, browser).isDisplayed()) {
+		    if (!isElementPresentVerifyClick(ChangeStore_LNK, browser)) {
+			throw new Exception("Not able to click on Change store Link");
+		    }
+		}
+		if (!clearAndEnterText(Zipcode_TXT, ChangeStoreZipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter new Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+	    }
+	    if (isElementPresentVerification(StoreName_ELM, browser) && getElementByProperty(StoreName_ELM, browser).getText().contains(StoreNumber)) {
+		isStorealreadySelected = true;
+		switchToDefault(browser);
+		if (!isElementPresentVerifyClick(CloseOverlay_IMG, browser)) {
+		    throw new Exception("Not able to click on Close Overlay");
+		}
+	    } else {
+		do {
+		    // Getting Store Results Divisons
+		    // Modified Sasikala J 5/17/2013
+		    Thread.sleep(2000);
+		    if (getElementByProperty(StoreSearchResultcontainer, browser) != null) {
+			StoreResultsDiv = getElementByProperty(StoreSearchResultcontainer, browser).findElements(By.xpath("//div[contains(@class,'storLocShopList')]/div"));
+		    } else if (getElementByProperty(SingleStoreSearchResultcontainer, browser) != null) {
+			StoreResultsDiv = getElementByProperty(SingleStoreSearchResultcontainer, browser).findElements(By.cssSelector("div[class*='resultContainer']"));
+		    }
+		    int AvailableStores = StoreResultsDiv.size();
+		    for (int row = 0; row < AvailableStores; row++) {
+			// reset to '0' every time loop runs
+			StorechoiceFoundcounter = 0;
+			// if Store Number specifies select store based on Store
+			// Number
+			if (!StoreNumber.equals("-")) {
+			    if (StoreResultsDiv.get(row).getText().contains(StoreNumber)) {
+				isStoreFound = true;
+				int j = row + 1;
+				if (SingleClickChangeStore == null || !SingleClickChangeStore.equalsIgnoreCase("Yes")) {
+				    StoreDetailsinOverlay = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p")).getText();
+				    StoreNameorNumber = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p/span/strong")).getText();
+				    CityName = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p/span[2]")).getText().split(",")[0];
+				    SelectStoreButton = StoreResultsDiv.get(row).findElement(By.id("shopStore"));
+				} else {
+				    SelectStoreButton = StoreResultsDiv.get(row).findElement(By.xpath("//img[@title='Select Store']"));
+				}
+				if (SelectStoreButton != null) {
+				    SelectStoreButton.click();
+				} else {
+				    throw new Exception("Select Store Button is not available for this Store");
+				}
+				break;
+			    }
+			}
+			// Else select Store based on Choices offered
+			else {
+			    if (LocalDelivery != null && LocalDelivery.equalsIgnoreCase("Yes")) {
+				if (StoreResultsDiv.get(row).getText().contains("Local Delivery")) {
+				    StorechoiceFoundcounter++;
+				}
+			    }
+			    if (StorePickup != null && StorePickup.equalsIgnoreCase("Yes")) {
+				if (StoreResultsDiv.get(row).getText().contains("Store Pickup")) {
+				    StorechoiceFoundcounter++;
+				}
+			    }
+			    if (CurbsidePickup != null && CurbsidePickup.equalsIgnoreCase("Yes")) {
+				if (StoreResultsDiv.get(row).getText().contains("Curbside Pickup")) {
+				    StorechoiceFoundcounter++;
+				}
+			    }
+			    if (RxDriveThru != null && RxDriveThru.equalsIgnoreCase("Yes")) {
+				if (StoreResultsDiv.get(row).getText().contains("Rx Drive Thru")) {
+				    StorechoiceFoundcounter++;
+				}
+			    }
+			    // if NoofOfferedchoices required in Store equals to
+			    // Store Offered Choices means select the store,
+			    if (NoofStorechoices == StorechoiceFoundcounter) {
+				isStoreFound = true;
+				int j = row + 1;
+				// Modified Sasikala J 5/17/2013
+				if (!SingleClickChangeStore.equalsIgnoreCase("Yes")) {
+				    StoreDetailsinOverlay = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p")).getText();
+				    StoreNameorNumber = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p/span/strong")).getText();
+				    CityName = browser.findElement(By.xpath("//div[contains(@class,'storLocShopList')]/div[" + j + "]/div/div/p/span[2]")).getText().split(",")[0];
+
+				}// Modified Sasikala J 5/17/2013
+				if (StoreResultsDiv.get(row).findElement(By.xpath("//div/div/form/div[contains(@class,'float-left  wid110 mrgLt20px')]")) != null) {
+				    StoreResultsDiv.get(row).findElement(By.xpath("//div/div/form/div[contains(@class,'float-left  wid110 mrgLt20px')]")).click();
+				} else if (StoreResultsDiv.get(row).findElement(By.xpath("//a/img[@alt='Select Store']")) != null) {
+				    StoreResultsDiv.get(row).findElement(By.xpath("//a/img[@alt='Select Store']")).click();
+				} else {
+				    throw new Exception("Unable toSelect the Store");
+				}
+
+				break;
+			    }
+			}
+		    }
+		    // If store not found click Next Link
+		    if (!isStoreFound && isElementPresentVerification(Next_LNK, browser)) {
+			if (!isElementPresentVerifyClick(Next_LNK, browser)) {
+			    throw new Exception("Not able to click on Next Link");
+			}
+		    }
+		} while (!isStoreFound && isElementPresentVerification(Next_LNK, browser));
+		// If store Not found throw Exception
+		if (!isStoreFound) {
+		    throw new Exception("Not able to select the required Store");
+		}
+	    }
+	    // //////////////////
+	    switchToDefault(browser);
+	    // verifying Expected Page
+	    if (ExpectedTargetPage != null && ExpectedTargetPage.equalsIgnoreCase("SearchResults")) {
+		if (!isElementPresentVerification(SearchResultsPageHeader_ELM, browser)) {
+		    messagesMap.put("Search Results Page Header", "H1 title of the page not found");
+		    status = WARNING;
+		}
+		String StoreDetailsText = getElementByProperty(StoreDetails_ELM, browser).getText();
+		if (!StoreDetailsText.contains(StoreNameorNumber + ", " + CityName)) {
+		    messagesMap.put("Selected store", "Selected Store is wrongly getting displayed");
+		    status = WARNING;
+		}
+	    } else if (ExpectedTargetPage != null && ExpectedTargetPage.equalsIgnoreCase("ShoppingCart")) {
+		if (!isElementPresentVerification(ShoppingCartHeader_ELM, browser)) {
+		    messagesMap.put("shopping Cart Page Header", "Page Header Not found");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(WagStorePinImage_IMG, browser)) {
+		    messagesMap.put("Wag Store Image", "Image is not displaying");
+		    status = WARNING;
+		}
+		// Rmoved in Opel release
+		// if (!isElementPresentVerification(YourStoreText_ELM,
+		// browser)) {
+		// messagesMap.put("Your Store Text", "Text is not found");
+		// status = WARNING;
+		// }
+		if (!isElementPresentVerification(ChangeStorelinkStoredetails_LNK, browser)) {
+		    messagesMap.put("change store link", "link is missing");
+		    status = WARNING;
+		}
+		String StoreDetails = getElementByProperty(WagStoreAddress_ELM, browser).getText().replace(",", "");
+		StoreDetailsinOverlay = StoreDetailsinOverlay.replace(" Webpickup Test Store", ",").replace(",", "").trim();
+		StoreDetails = StoreDetails.replace("  ", " ").replace("\n", " ").trim();
+		if (!isStorealreadySelected) {
+		    if (!StoreDetailsinOverlay.equalsIgnoreCase(StoreDetails)) {
+			messagesMap.put("Selected Store", "Store Details are wrongly displaying");
+			status = WARNING;
+		    }
+		}
+	    } else if (ExpectedTargetPage != null && ExpectedTargetPage.equalsIgnoreCase("FastRefillOverlay")) {
+		if (!isElementPresentVerification(FastRefill_Overlay, browser)) {
+		    messagesMap.put("Fast Refill Overlay", "H1 title of the Overlay is not found");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate the information for the store in the
+     *          overlay from search results page:
+     * @author -Rukmani
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyStoreDetailsinStoreDetailsOverlay(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String StoreNumbSearch_TXT = "input[id='store_number']~CSS";
+	String FindAStore_BTN = "input[id='findstore']~CSS";
+	String ChangeStore_LNK = "a[title='Change location']~CSS";
+	String Next_LNK = "//div[@id='storLoc']/div[3]/a[@title='Next']~XPATH";
+	boolean StoreFound = false;
+	List<WebElement> StoreResultsDiv = null;
+	String StoreDetails = null;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Data from excel sheet
+	    String ZipCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    String ChangeLocation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeLocation");
+	    String ChangeStoreZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeStoreZipcode");
+	    String LocalDelivery = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LocalDelivery");
+	    String StorePickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StorePickup");
+	    String CurbsidePickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CurbsidePickup");
+	    String RxDriveThru = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxDriveThru");
+	    String isStoreSelected = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "isStoreSelected");
+	    String StoreSelectedMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreSelectedMsg");
+	    String Address = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Address");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    String Phone = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Phone");
+
+	    // Enter Zipcode number if it is not equal to '-'
+	    if (!ZipCode.equalsIgnoreCase("-")) {
+		if (!clearAndEnterText(StoreNumbSearch_TXT, ZipCode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+	    }
+	    // Change Store if required.
+	    if (ChangeLocation.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ChangeStore_LNK, browser)) {
+		    throw new Exception("Not able to click on Change store Link");
+		}
+		if (!clearAndEnterText(StoreNumbSearch_TXT, ChangeStoreZipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter new Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+	    }
+	    do {
+		StoreResultsDiv = browser.findElements(By.xpath("//div[contains(@class,'storLocShopList')]/div"));
+		int AvailableStores = StoreResultsDiv.size();
+		for (int row = 0; row < AvailableStores; row++) {
+		    if (StoreResultsDiv.get(row).getText().contains(StoreNumber)) {
+			StoreDetails = StoreResultsDiv.get(row).getText();
+			StoreFound = true;
+			break;
+		    }
+		}
+		// If store is not found click next button
+		if (!StoreFound) {
+		    if (isElementPresentVerification(Next_LNK, browser)) {
+			if (!isElementPresentVerifyClick(Next_LNK, browser)) {
+			    throw new Exception("Not able to click on Next Link");
+			}
+		    }
+		}
+	    } while (!StoreFound && isElementPresentVerification(Next_LNK, browser));
+	    if (!StoreFound) {
+		throw new Exception("Not able to Find given Store");
+	    }
+	    // To check if Local delivery is displayed
+	    if (LocalDelivery.equalsIgnoreCase("Yes")) {
+		if (!StoreDetails.contains("Local Delivery")) {
+		    messagesMap.put("Local Delivery", "Local Delivery is not displayed in overlay");
+		    status = WARNING;
+		}
+	    }
+	    // To check if Store Pickup is displayed
+	    if (StorePickup.equalsIgnoreCase("Yes")) {
+		if (!StoreDetails.contains("Store Pickup")) {
+		    messagesMap.put("Store Pickup", "Store Pickup is not displayed in overlay");
+		    status = WARNING;
+		}
+	    }
+	    // To check if Curbside Pickup is displayed
+	    if (CurbsidePickup.equalsIgnoreCase("Yes")) {
+		if (!StoreDetails.contains("Curbside Pickup")) {
+		    messagesMap.put("Curbside Pickup", "Curbside Pickup is not displayed in overlay");
+		    status = WARNING;
+		}
+	    }
+	    // To check if Rx Drive Thru is displayed
+	    if (RxDriveThru.equalsIgnoreCase("Yes"))
+		if (!StoreDetails.contains("Rx Drive Thru")) {
+		    messagesMap.put("Rx Drive Thru", "Rx Drive Thru is not displayed in overlay");
+		    status = WARNING;
+		}
+	    // To check if Address is displayed
+	    if (!StoreDetails.contains(Address)) {
+		messagesMap.put("Address", "Address is not displayed in overlay");
+		status = WARNING;
+	    }
+	    // To check if City is displayed
+	    if (!StoreDetails.toUpperCase().contains(City.toUpperCase())) {
+		messagesMap.put("City", "City is not displayed in overlay");
+		status = WARNING;
+	    }
+	    // To check if State is displayed
+	    if (!StoreDetails.contains(State)) {
+		messagesMap.put("State", "State is not displayed in overlay");
+		status = WARNING;
+	    }
+	    // To check if Zipcode is displayed
+	    if (!StoreDetails.contains(ZipCode)) {
+		messagesMap.put("Zip Code", "Zip is not displayed in overlay");
+		status = WARNING;
+	    }
+	    // To check if Phone is displayed
+	    if (!Phone.equals("-")) {
+		if (!StoreDetails.contains(Phone)) {
+		    messagesMap.put("Phone", "Phone is not displayed in overlay");
+		    status = WARNING;
+		}
+	    }
+	    // To verify This Store is Selected Message
+	    if (isStoreSelected.equalsIgnoreCase("Yes")) {
+		if (!StoreDetails.contains(StoreSelectedMessage)) {
+		    messagesMap.put("Store Selected Message", "Currenlty This store is selected Message is not being displayed");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate/Select the Available Product Delivery
+     *          Options and Products status in VPD Page
+     * @author -Siva Santhi Reddy P
+     * @Created -22-FEB-2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyProductDeliveryOptionsAndStatusinVPDPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String SearchedProduct_LNK = "a.SearchLinkBold~CSS";
+	String StoreAndDelivery_DIV = "//div[@class='divStoreNdelivery']~XPATH";
+	String ShipToYou_DIV = "div[class='divShipToYou']~CSS";
+	String AdddtoCart_BTN = "*[alt='Add to Cart']~CSS";
+	String ShipToYou_RADIO = "//input[@id='seesameday']~XPATH";
+	String Pickup_RADIO = "//*[@id='seesameday1']~XPATH";
+	String PickupRadioButton_LNK = "//*[@id='picupStore']/a[@id='faywl']~XPATH";
+	String LocalDelivery_RADIO = "input[id='seesameday2']~CSS";
+	String NotSoldAtStores_ELM = "//div[contains(text(),'Not sold in stores')]~XPATH";
+	String ShipToYouOptions_DIV = "//div[@class='divShipToYou']/div[2]~XPATH";
+	String FindAStore_LNK = "a[title='Find at a store']~CSS";
+	String FindAtAnotherStore_LNK = "a[title='Find at another store']~CSS";
+	String CheckProductAvailabilityMessage_ELM = "//*[contains(text(),'Check product availability at')]~XPATH";
+	String SearchResultsMessageinOverlay_ELM = "//*[contains(text(),'Stores near')]~XPATH";
+	String ProductMainImage_ELM = "a[id='viewL']~CSS";
+	String ItemPrice_ELM = "//b[@itemprop='price']~XPATH";
+	String PricePerStoreMessage_ELM = "//p[contains(text(),'Priced per store')]~XPATH";
+	String BuyInstoreOnlyMessage_ELM = "//div[contains(text(),'Buy in store only')]~XPATH";
+	String SelectedDeliveryOption = null;
+	String UnavailableImageInStoreNDeliveryDiv_IMG = "//div[contains(@class,'storepickup')]/div/img[@title='Unavailable']~XPATH";
+
+	Map<String, String> sharedProperties = null;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Get Data from excel sheet
+
+		String ClickProductLink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickProductLink");
+		String NotAvalibleDeliveryOption = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NotAvalibleDeliveryOption")
+			.toUpperCase();
+		String SelectDeliveryOption = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SelectDeliveryOption").toUpperCase();
+		String FindaStorelink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FindaStorelink");
+		String FindAtAnotherStore = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FindAtAnotherStore");
+		String AvailableDeliveryOptions = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AvailableDeliveryOptions")
+			.toUpperCase();
+		String OutofStockMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OutofStockMessage");
+		String InstoreOnlyMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InstoreOnlyMessage");
+		String AddtoCartButtonStatus = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddtoCartButtonStatus");
+		String ItemPrice = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AddtoCartButtonStatus");
+		String ExpectedTargetPage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ItemPrice");
+
+		// Click Proudct link in Search Resutls Page
+		if (ClickProductLink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SearchedProduct_LNK, browser)) {
+			throw new Exception("Not able to click on Searched Product Link");
+		    }
+		}
+		// Validating Not avaliable Options. Nees to Provide Delivery
+		// Options data separated by comma(,)
+		if (NotAvalibleDeliveryOption.contains("PICKUP")) {
+		    WebElement UnavailableImage = getElementByProperty(UnavailableImageInStoreNDeliveryDiv_IMG, browser);
+		    if (UnavailableImage == null) {
+			messagesMap.put("Delivery Option Unavailable Symbol for Pickup", "Object is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(NotSoldAtStores_ELM, browser)) {
+			messagesMap.put(NotSoldAtStores_ELM, "Object is Missing");
+			status=WARNING;
+		    }
+		}
+		if (NotAvalibleDeliveryOption.contains("SHIP")) {
+		    List<WebElement> ptagsinDeliveryOptionsDivElements = getElementByProperty(ShipToYouOptions_DIV, browser).findElements(By.tagName("div"));
+		    String NotAvailableforShipMessage = ptagsinDeliveryOptionsDivElements.get(0).getText().trim() + " " + ptagsinDeliveryOptionsDivElements.get(1).getText().trim();
+		    WebElement UnavailableImage = getElementByProperty(ShipToYou_DIV, browser).findElement(By.xpath("//img[@alt='Unavailable']"));
+		    if (UnavailableImage == null) {
+			messagesMap.put("Delivery Option Unavailable Symbol for Ship", "Object is Missing");
+			status = WARNING;
+		    }
+		    if (!NotAvailableforShipMessage.trim().equals("Ship to you Not available")) {
+			messagesMap.put("For ship Not available", "Messge is Missing");
+			status = WARNING;
+		    }
+		}
+		// Verify Avalibale Delivery options
+		if (!AvailableDeliveryOptions.equalsIgnoreCase("-")) {
+		    if (AvailableDeliveryOptions.contains("PICKUP")) {
+			if (!isElementPresentVerification(Pickup_RADIO, browser)) {
+			    messagesMap.put("Pick Up Radio Button", "Object is Missing");
+			    status = WARNING;
+			}
+		    } else {
+			if (isElementPresentVerification(Pickup_RADIO, browser)) {
+			    messagesMap.put("Pick Up Radio Button", "Object should not be there");
+			    status = WARNING;
+			}
+		    }
+		    if (AvailableDeliveryOptions.contains("SHIP")) {
+			if (!isElementPresentVerification(ShipToYou_RADIO, browser)) {
+			    messagesMap.put("Ship Radio Button", "Object is Missing");
+			    status = WARNING;
+			}
+		    } else {
+			if (isElementPresentVerification(ShipToYou_RADIO, browser)) {
+			    messagesMap.put("Ship Radio Button", "Object should not be there");
+			    status = WARNING;
+			}
+		    }
+		    if (AvailableDeliveryOptions.contains("SDD")) {
+			if (!isElementPresentVerification(LocalDelivery_RADIO, browser)) {
+			    messagesMap.put("SDD Radio Button", "Object is Missing");
+			    status = WARNING;
+			}
+		    } else {
+			if (isElementPresentVerification(LocalDelivery_RADIO, browser)) {
+			    messagesMap.put("SDD Radio Button", "Object should not be there");
+			    status = WARNING;
+			}
+		    }
+		}
+		// Commenting Out:This validation section is not needed since
+		// the Radio button
+		// functionality has been changed to Images
+		// Verfiy Default selected Option
+		// if (DefaultSelectedDeliveryOption.equalsIgnoreCase("PICKUP"))
+		// {
+		// if (!getElementByProperty(Pickup_RADIO,
+		// browser).isSelected()) {
+		// messagesMap.put("Pikcup Radio Button",
+		// "Object is not selected by default");
+		// status = WARNING;
+		// }
+		// }
+		// if (DefaultSelectedDeliveryOption.equalsIgnoreCase("SHIP")) {
+		// if (!getElementByProperty(ShipToYou_Image,
+		// browser).isSelected()) {
+		// messagesMap.put("ship Radio Button",
+		// "Object is not selected by default");
+		// status = WARNING;
+		// }
+		// }
+		// if (DefaultSelectedDeliveryOption.equalsIgnoreCase("SDD")) {
+		// if (!getElementByProperty(LocalDelivery_RADIO,
+		// browser).isSelected()) {
+		// messagesMap.put("SDD Radio Button",
+		// "Object is not selected by default");
+		// status = WARNING;
+		// }
+		// }
+
+		// Select required Delivery Option
+		if (SelectDeliveryOption.equalsIgnoreCase("PICKUP")) {
+		    if (!isElementPresentVerifyClick(Pickup_RADIO, browser)) {
+			throw new Exception("Not able to click on Pikcup Radio Button");
+		    }
+		    if (isElementPresentVerification(PickupRadioButton_LNK, browser)) {
+			getElementByProperty(PickupRadioButton_LNK, browser).click();
+		    }
+		}
+		if (SelectDeliveryOption.equalsIgnoreCase("SHIP")) {
+		    if (!isElementPresentVerifyClick(ShipToYou_RADIO, browser)) {
+			throw new Exception("Not able to click on Ship Radio Button");
+		    }
+		}
+		if (SelectDeliveryOption.equalsIgnoreCase("SDD")) {
+		    if (!isElementPresentVerifyClick(LocalDelivery_RADIO, browser)) {
+			throw new Exception("Not able to click on SDD Radio Button");
+		    }
+		}
+		// click Find a Store link if the value is 'yes'
+		if (FindaStorelink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(FindAStore_LNK, browser)) {
+			throw new Exception("Not able to click on Find a Store link");
+		    }
+		}
+		// click Find another Store link if the value is 'yes'
+		if (FindAtAnotherStore.equalsIgnoreCase("Yes")) {
+		    if (isElementPresentVerifyClick(FindAtAnotherStore_LNK, browser)) {
+			throw new Exception("Not able to click on Find at another store link");
+		    }
+		}
+		// Verify Out of Stock Message
+		if (OutofStockMessage.equalsIgnoreCase("Yes")) {
+		    WebElement UnavailableImage = getElementByProperty(ShipToYou_DIV, browser).findElement(By.xpath("//img[@alt='Unavailable']"));
+		    if (UnavailableImage == null) {
+			messagesMap.put("Delivery Option Unavailable Symbol for Ship", "Object is Missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(ShipToYou_DIV, browser).getText().contains("Temporarily out of stock")) {
+			messagesMap.put("Out of Stock Message", "Message is missing in Ship to You Section");
+			status = WARNING;
+		    }
+		}
+		// Verify Instore only message
+		if (InstoreOnlyMessage.equalsIgnoreCase("Yes")) {
+		    WebElement UnavailableImage = getElementByProperty(StoreAndDelivery_DIV, browser).findElement(By.xpath("//img[@alt='Unavailable']"));
+		    if (UnavailableImage == null) {
+			messagesMap.put("Delivery Option Unavailable Symbol for Pickup", "Object is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(BuyInstoreOnlyMessage_ELM, browser)) {
+			messagesMap.put("Instore Message only", "Message is missing");
+			status = WARNING;
+		    }
+		}
+		// validate Add to cart Button Status
+		if (AddtoCartButtonStatus.equalsIgnoreCase("Enable")) {
+		    if (!getElementByProperty(AdddtoCart_BTN, browser).isEnabled()) {
+			messagesMap.put("Add to Cart Button", "Button is not enabled");
+			status = WARNING;
+		    }
+		} else if (AddtoCartButtonStatus.equalsIgnoreCase("Disable")) {
+		    if (getElementByProperty(AdddtoCart_BTN, browser).isEnabled()) {
+			messagesMap.put("Add to Cart Button", "Button should be disabled");
+			status = WARNING;
+		    }
+		}
+		// Validate Item price(WithPrice/NoPrice)
+		if (ItemPrice.equalsIgnoreCase("WithPrice")) {
+		    if (!getElementByProperty(ItemPrice_ELM, browser).getText().contains("$")) {
+			messagesMap.put("Item Price", "Price is not getting displayed");
+			status = WARNING;
+		    }
+		} else if (ItemPrice.equalsIgnoreCase("NoPrice")) {
+		    if (!isElementPresentVerification(PricePerStoreMessage_ELM, browser)) {
+			messagesMap.put("No Price", "NoPrice is not getting displayed");
+			status = WARNING;
+		    }
+		}
+		// Valdiate Expected Target Page
+		if (ExpectedTargetPage.equalsIgnoreCase("SearchStoreOverlay")) {
+		    switchToOverlay(browser);
+		    if (!isElementPresentVerification(CheckProductAvailabilityMessage_ELM, browser)) {
+			messagesMap.put("CheckProductAvailabilityMessage", "Message is not being displayed in overlay");
+			status = WARNING;
+		    }
+		} else if (ExpectedTargetPage.equalsIgnoreCase("PreviousSearchResultsOverlay")) {
+		    switchToOverlay(browser);
+		    if (!isElementPresentVerification(SearchResultsMessageinOverlay_ELM, browser)) {
+			messagesMap.put("Previous Search Results", "Results are not getting dispalyed in the overlay");
+			status = WARNING;
+		    }
+		}
+		// Storing the Selected Delviery Option
+		if (!SelectDeliveryOption.equals("-")) {
+		    SelectedDeliveryOption = SelectDeliveryOption;
+		} else {
+		    if (isElementPresentVerification(ShipToYou_RADIO, browser)) {
+			if (getElementByProperty(ShipToYou_RADIO, browser).isSelected()) {
+			    SelectedDeliveryOption = "Ship";
+			}
+		    }
+		    if (isElementPresentVerification(Pickup_RADIO, browser)) {
+			if (getElementByProperty(Pickup_RADIO, browser).isSelected()) {
+			    SelectedDeliveryOption = "Pickup";
+			}
+		    }
+		}
+		// Storing Product Delivery Option into a shared
+		// Properties(HasMap)
+		String ProductID = getElementByProperty(ProductMainImage_ELM, browser).getAttribute("href").split("id=")[1].split("&")[0];
+		sharedProperties.put(ProductID, SelectedDeliveryOption);
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate required Product Delivery Options in the
+     *          shopping Cart
+     * @author -Siva Santhi Reddy P
+     * @Created -22-FEB-2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyProductDeliveryOptionsinShoppingCart(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String DLCartTable = "//table[@summary='Product Table']/tbody";
+	Map<String, String> getSharedProperties = null;
+	Map<String, String> messagesMap = null;
+	String SelectedDeliveryOptioninVPDPage = null;
+	String ExpectedDeliveryOption = null;
+	boolean isProductFound = false;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		// get Product from Data Sheet
+		String ProductId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Keyword");
+		String ProductDeliveryOption = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ProductDeliveryOption");
+		// Getting Shared Properties
+		SelectedDeliveryOptioninVPDPage = getSharedProperties.get(ProductId);
+
+		if (SelectedDeliveryOptioninVPDPage == null) {
+		    ExpectedDeliveryOption = ProductDeliveryOption;
+		} else {
+		    ExpectedDeliveryOption = SelectedDeliveryOptioninVPDPage;
+		}
+		List<WebElement> dlTableRows = getElementByProperty(DLCartTable, browser).findElements(By.tagName("tr"));
+		for (int row = 3; row < dlTableRows.size(); row = row + 3) {
+		    // int j = row + 1;
+		    // getting Product ID from App.
+		    String DLitemProdID = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td/div/div[2]/p/strong/a")).getAttribute("href").split("id=")[1]
+			    .split("&")[0];
+		    // if Products IDs are same, then enter into the div and
+		    // validate
+		    if (DLitemProdID.equals(ProductId)) {
+			String CartSelectedDeliveryOption = null;
+			isProductFound = true;
+			WebElement DeliveryOptionDivison = browser.findElement(By.xpath("//table[@summary='Product Table']/tbody/tr[" + row + "]/td[2]"));
+			List<WebElement> DeliveryOptionElements = DeliveryOptionDivison.findElements(By.tagName("input"));
+			if (DeliveryOptionElements.size() == 0) {
+			    if (DeliveryOptionDivison.getText().contains("Pick up in store") && !DeliveryOptionDivison.getText().contains("Pick up in store - not available")) {
+				CartSelectedDeliveryOption = "Pickup";
+			    } else {
+				CartSelectedDeliveryOption = "Ship";
+			    }
+			} else {
+			    for (int k = 0; k < DeliveryOptionElements.size(); k++) {
+				if (DeliveryOptionElements.get(k).getAttribute("value").contains("Ship")) {
+				    if (DeliveryOptionElements.get(k).isSelected()) {
+					CartSelectedDeliveryOption = "Ship";
+				    }
+				} else if (DeliveryOptionElements.get(k).getAttribute("value").contains("SDD")) {
+				    if (DeliveryOptionElements.get(k).isSelected()) {
+					CartSelectedDeliveryOption = "SDD";
+				    }
+				} else if (DeliveryOptionElements.get(k).getAttribute("value").contains("WP")) {
+				    if (DeliveryOptionElements.get(k).isSelected()) {
+					CartSelectedDeliveryOption = "Pickup";
+				    }
+				}
+			    }
+			}
+			if (!ExpectedDeliveryOption.equalsIgnoreCase(CartSelectedDeliveryOption)) {
+			    messagesMap.put("Delivery Option", "Mismatching");
+			    status = WARNING;
+			}
+			break;
+		    }
+		}
+		if (!isProductFound) {
+		    throw new Exception("Delivery Option validation is not done for the given Product");
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select or change store from VPD Page
+     * @author -Siva Santhi Reddy P
+     * @Created -25-FEB-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectorChangeStoreFromVPDPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Zipcode_TXT = "input#zip1~CSS";
+	String FindAStore_BTN = "input[title='Find a store']~CSS";
+	String ChangeStore_LNK = "a#changestorelnk~CSS";
+	String StoreResults_DIV = "//div[@id='resultDiv']/table/tbody~XPATH";
+	String Next_LNK = "a[title='Next']~CSS";
+	String WalgreensPin_IMG = "img[alt='Map pin']~CSS";
+	boolean isStoreFound = false;
+	List<WebElement> IndividualStoreResultsDiv = null;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Data from Excel sheet
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    String ChangeLocation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeLocation");
+	    String ChangeStoreZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeStoreZipcode");
+	    // Enter Zipcode number if it is not equal to '-'
+	    if (!Zipcode.equalsIgnoreCase("-")) {
+		if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+	    }
+	    // Change Store if required.
+	    if (ChangeLocation.equalsIgnoreCase("Yes")) {
+		if (getElementByProperty(ChangeStore_LNK, browser).isDisplayed()) {
+		    if (!isElementPresentVerifyClick(ChangeStore_LNK, browser)) {
+			throw new Exception("Not able to click on Change store Link");
+		    }
+		}
+		if (!clearAndEnterText(Zipcode_TXT, ChangeStoreZipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter new Zipcode");
+		    status = WARNING;
+		}
+		// Click on Find a Store Button
+		if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Find A Store Button");
+		}
+	    }
+	    do {
+		// No other way without using this, since there are no
+		// object to identify
+		// waitTillObjectDisplayed(StoreResults_DIV, browser);
+		// Finding better way to avoid Thread.sleep
+		Thread.sleep(7000);
+		// Getting Store Results Divisons
+		IndividualStoreResultsDiv = getElementByProperty(StoreResults_DIV, browser).findElements(By.tagName("tr"));
+		int noofAvailableStores = IndividualStoreResultsDiv.size();
+		for (int row = 0; row < noofAvailableStores; row++) {
+		    if (IndividualStoreResultsDiv.get(row).getText().contains(StoreNumber)) {
+			isStoreFound = true;
+			WebElement PikcupInStoreLink = IndividualStoreResultsDiv.get(row).findElement(By.tagName("img"));
+			if (PikcupInStoreLink != null) {
+			    PikcupInStoreLink.click();
+			} else {
+			    throw new Exception("Pickup Instore link is not available for given store.");
+			}
+
+			break;
+		    }
+		}
+		// If store not found click Next Link
+		if (!isStoreFound && isElementPresentVerification(Next_LNK, browser)) {
+		    if (!isElementPresentVerifyClick(Next_LNK, browser)) {
+			throw new Exception("Not able to click on Next Link");
+		    }
+
+		}
+	    } while (!isStoreFound && isElementPresentVerification(Next_LNK, browser));
+	    // If store Not found throw Exception
+	    if (!isStoreFound) {
+		throw new Exception("Not able to select the required Store");
+	    }
+	    switchToDefault(browser);
+	    // verifying Expected Page
+	    String DisplayedStore_ELM = "//*[contains(text(),'" + StoreNumber + "')]~XPATH";
+	    if (!isElementPresentVerification(DisplayedStore_ELM, browser)) {
+		messagesMap.put("Selected Store", "Selected Store is missing in VPD Page");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

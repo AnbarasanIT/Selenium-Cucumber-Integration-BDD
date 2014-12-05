@@ -1,0 +1,1010 @@
+@checkout @pharmacyCheckout @RxCashPrice
+
+Feature: Customer verifies the shopping cart, review order and order confirmation pages for cash price 
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-1
+
+Scenario: JS Preferred pick up store in profile, Add retail RX pick up in Cart and check Cash price in Cart, choose ship not available , choose pick again checkout review order , order summary
+
+Given  "CAC-RxCashPrice-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-1	 	|
+
+Given "CAC-RxCashPrice-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2	  |
+
+And "CAC-RxCashPrice-1" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-1" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-1" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-1" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -			 |
+
+Then "CAC-RxCashPrice-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-1" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	No      |
+
+Then "CAC-RxCashPrice-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-1	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-RxCashPrice-2
+
+Scenario: JS Preferred pick up store in profile, Add retail RX pick up in Cart and check pick price in Cart toggle to  Ship in Cart and check not available price in Cart, Price Ship price Displayed on review order, come back to cart Display Ship price click pick not available , 
+click SHip again Ship Price and checkout check ship price in review and order summary
+
+Given  "CAC-RxCashPrice-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         		|
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-2	 	|
+
+Given "CAC-RxCashPrice-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-2" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-2" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-2" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-2" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-2" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-2" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	Yes				|
+
+Then "CAC-RxCashPrice-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-2" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-2" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch  |
+|  Yes				|	-	     |
+
+Then "CAC-RxCashPrice-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-2	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-RxCashPrice-3
+
+Scenario: JS Preferred pick up store in profile, Add retail RX +new+tr pick up in Cart and check Cash price for RX in Cart,choose ship not available RX , choose pick again checkout review order order summary and Email
+
+Given  "CAC-RxCashPrice-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId       			|
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-3	 	|
+
+Given "CAC-RxCashPrice-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-3" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-RxCashPrice-3" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-RxCashPrice-3" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-RxCashPrice-3" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-3" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-3" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-3" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	No      |
+
+Then "CAC-RxCashPrice-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-3	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-RxCashPrice-4
+
+Scenario: JS Preferred pick up store in profile, Add retail RX +new+tr pick up in Cart and check Cash price RX in Cart toggle to  Ship in Cart and check not available price in Cart, Price Ship price RX Displayed on review order, come back to cart Display Ship price RX,
+click pick not available , click SHip again Ship Price RX and  RX and checkout check ship price RX in review , order summary and Email
+
+Given  "CAC-RxCashPrice-4" Customer starts the scenario:
+| InputFileName 	| SheetName 	| RowId      			|
+| QC-CAC	        | RXCashPrice   | CAC-RxCashPrice-4		|
+
+Given "CAC-RxCashPrice-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-4" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-RxCashPrice-4" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-RxCashPrice-4" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-RxCashPrice-4" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-4" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-4" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-4" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	Yes				|
+
+Then "CAC-RxCashPrice-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-4" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -			 |
+
+Then "CAC-RxCashPrice-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-4" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-	    |
+
+Then "CAC-RxCashPrice-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-4	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-RxCashPrice-5
+
+Scenario: JS Preferred pick up store in profile, Add retail RX pick up in Cart and check Cash price in Cart, choose ship not available , choose pick again checkout and review order order summary 
+
+Given  "CAC-RxCashPrice-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-5	 	|
+
+Given "CAC-RxCashPrice-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-5" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-5" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-5" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-5" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-5" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-5" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| - 		 |
+
+Then "CAC-RxCashPrice-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-5" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-	    |
+
+Then "CAC-RxCashPrice-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-5	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-6
+
+Scenario: JS Preferred pick up store in profile, Add retail RX pick up in Cart and check Cash price in Cart, change pick up Store new price in review , come back to cart new pick Price , 
+checkout new pick price review order order summary
+
+Given  "CAC-RxCashPrice-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-6	 	|
+
+Given "CAC-RxCashPrice-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData 	 | login     | Rxcashprice2 |
+
+And "CAC-RxCashPrice-6" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-6" Customer reviews Price section for Refill in shopping cart page:
+|ShippingType | RxCashPrice 	|
+|Pickup 	  |	Yes				|
+
+Then "CAC-RxCashPrice-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-6" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore1	 |
+
+Then "CAC-RxCashPrice-6" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-6" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-6" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-6" Customer reviews Price section for Refill in shopping cart page:
+|ShippingType | RxCashPrice 	|
+|Pickup 	  |	Yes				|
+
+Then "CAC-RxCashPrice-6" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-6" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-6" Customer reviews Price section for Refill in Review order page:
+|RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-6" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-       |
+
+Then "CAC-RxCashPrice-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-6	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-RxCashPrice-7
+
+Scenario: JS Preferred pick up store in profile, Add retail RX +new+tr pick up in Cart and check Cash price RX in Cart, change pick up Store new price RX in review , come back to cart new pick Price RX , 
+checkout new pick price RX review order order summary and Email new price
+
+Given  "CAC-RxCashPrice-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-7	 	|
+
+Given "CAC-RxCashPrice-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-7" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-7" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-RxCashPrice-7" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-RxCashPrice-7" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+
+Then "CAC-RxCashPrice-7" Customer reviews Price section for Refill in shopping cart page:
+|ShippingType | RxCashPrice 	|
+|Pickup 	  |	Yes				|
+
+Then "CAC-RxCashPrice-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-7" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxStore2	 |
+
+Then "CAC-RxCashPrice-7" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-7" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-7" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-7" Customer reviews Price section for Refill in shopping cart page:
+|ShippingType | RxCashPrice 	|
+|Pickup 	  |	Yes				|
+
+Then "CAC-RxCashPrice-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-7" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-7" Customer reviews Price section for Refill in Review order page:
+|RxCashPrice 		| PriceMatch |
+|  Yes				| - 		 |
+
+Then "CAC-RxCashPrice-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-7" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-       |
+
+Then "CAC-RxCashPrice-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-7	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-8
+
+Scenario: no store in profile JS RX refill in cart no pick price, toggle to Ship no price, toggle back to pick no price checkout, check pick price on review order , back to cart page pick Price , 
+toggle ship no price , back to pick , checkout pick price review, order conf
+
+Given  "CAC-RxCashPrice-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-8	 	|
+
+Then "CAC-RxCashPrice-8" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	   |
+|  DataBase     | Query      | UpdateUserstoredetails1 |
+
+Given "CAC-RxCashPrice-8" Customer login to the Dyn Admin:
+
+Then "CAC-RxCashPrice-8" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | CONFIGURATION  | UserProfileCache1 |
+
+Given "CAC-RxCashPrice-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-8" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-8" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-8" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	No				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	No				|
+
+Then "CAC-RxCashPrice-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-8" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-8" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-8" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-8" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	Yes				|
+
+Then "CAC-RxCashPrice-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-8" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-8" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| - 		 |
+
+Then "CAC-RxCashPrice-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-8" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-       |
+
+Then "CAC-RxCashPrice-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-8	 	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-9
+
+Scenario: no store in profile JS RX refill in cart no pick price, toggle to Ship no price, check ship price on review order ,back to cart page ship Price , toggle pick no price , back to ship , checkout ship price review, order conf
+
+Given  "CAC-RxCashPrice-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-9	 	|
+
+Then "CAC-RxCashPrice-9" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	   |
+|  DataBase     | Query      | UpdateUserstoredetails1 |
+
+Given "CAC-RxCashPrice-9" Customer login to the Dyn Admin:
+
+Then "CAC-RxCashPrice-9" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | CONFIGURATION  | UserProfileCache1 |
+
+Given "CAC-RxCashPrice-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-9" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-9" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-9" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	No				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	No				|
+
+Then "CAC-RxCashPrice-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-9" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-9" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-9" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Ship 	 		 |	Yes				|
+|Pickup 		 |	No				|
+|Ship 	 		 |	Yes				|
+
+Then "CAC-RxCashPrice-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-9" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-9" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	-       |
+
+Then "CAC-RxCashPrice-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-9	 	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-10
+
+Scenario:no store in profile JS RX+new+Tr refill in cart no pick price RX, toggle to Ship no price RX, toggle back to pick no price RX checkout,check pick price RX on review order , back to cart page pick price RX , toggle ship no price RX , back to pick , checkout pick price RX review,
+order conf and email.
+
+Given  "CAC-RxCashPrice-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-10	 	|
+
+Then "CAC-RxCashPrice-10" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	   |
+|  DataBase     | Query      | UpdateUserstoredetails1 |
+
+Given "CAC-RxCashPrice-10" Customer login to the Dyn Admin:
+
+Then "CAC-RxCashPrice-10" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | CONFIGURATION  | UserProfileCache1 |
+
+Given "CAC-RxCashPrice-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-10" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-10" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-RxCashPrice-10" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-RxCashPrice-10" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-RxCashPrice-10" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	No				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	No				|
+
+Then "CAC-RxCashPrice-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-10" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-10" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-10" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-10" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	Yes				|
+
+Then "CAC-RxCashPrice-10" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "CAC-RxCashPrice-10" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-10" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-10" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch  |
+|  Yes				|	-        |
+
+Then "CAC-RxCashPrice-10" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	   		 |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-10	 	 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-11
+
+Scenario: no store in profile JS RX+new+Tr refill in cart no pick price RX, toggle to Ship no price RX, check ship price RX on review order , back to cart page ship price RX , toggle pick no price RX , back to ship , 
+checkout ship price RX review, order conf and email.
+
+
+Given  "CAC-RxCashPrice-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-11	|
+
+Then "CAC-RxCashPrice-11" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	   |
+|  DataBase     | Query      | UpdateUserstoredetails1 |
+
+Given "CAC-RxCashPrice-11" Customer login to the Dyn Admin:
+
+Then "CAC-RxCashPrice-11" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | CONFIGURATION  | UserProfileCache1 |
+
+Given "CAC-RxCashPrice-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2   |
+
+And "CAC-RxCashPrice-11" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx4 |
+
+When "CAC-RxCashPrice-11" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CAC-RxCashPrice-11" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "CAC-RxCashPrice-11" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	No				|
+|Ship 	 		 |	No				|
+
+Then "CAC-RxCashPrice-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-11" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| No		 |
+
+Then "CAC-RxCashPrice-11" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-RxCashPrice-11" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Ship 	 		 |	Yes				|
+|Pickup 		 |	No				|
+|Ship 	 		 |	Yes				|
+|Pickup 		 |	No				|
+
+Then "CAC-RxCashPrice-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Shipping Information |
+
+Then "CAC-RxCashPrice-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-11" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-11" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch  |
+|  Yes				|	-        |
+
+Then "CAC-RxCashPrice-11" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-11	 	|
+
+##-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-12
+Scenario: JS RX refill (no insurance ) + MP Verify Cash Price message
+
+Given  "CAC-RxCashPrice-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-12	|
+
+Given "CAC-RxCashPrice-12" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       	|
+| CommonData 	 | login     | Rxcashprice2	|
+
+And "CAC-RxCashPrice-12" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	|
+| CACData       | RefillRx  | retailRx4 |
+
+Then "CAC-RxCashPrice-12" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	Yes				|
+
+When  "CAC-RxCashPrice-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | mailrx11  |
+
+Then "CAC-RxCashPrice-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CAC-RxCashPrice-12" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CAC-RxCashPrice-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "CAC-RxCashPrice-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-RxCashPrice-12" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| -  		 |
+
+Then "CAC-RxCashPrice-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-12" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	No      |
+
+Then "CAC-RxCashPrice-12" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-12	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-RxCashPrice-13
+
+Scenario: JS RX refill (no insurance ) + SPC Verify Cash Price message
+
+Given  "CAC-RxCashPrice-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-13|
+
+Given "CAC-RxCashPrice-13" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData 	 | login     | Rxcashprice2	  |
+
+And "CAC-RxCashPrice-13" Customer Clears the Shopping Cart
+
+When  "CAC-RxCashPrice-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId        |
+| CACData       | RefillRx  | retailRx85   |
+
+Then "CAC-RxCashPrice-13" Customer reviews Price section for Refill in shopping cart page:
+| ShippingType   | RxCashPrice 		|
+|Pickup 		 |	Yes				|
+|Ship 	 		 |	No				|
+|Pickup 		 |	Yes				|
+
+When "CAC-RxCashPrice-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | SpecialtyRx22  |
+
+Then "CAC-RxCashPrice-13" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|-			   |Pickup Location      |
+
+Then "CAC-RxCashPrice-13" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-RxCashPrice-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-RxCashPrice-13" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date       |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx22 | 	-			  |  Default  |   -      |    -      |   yes		 |
+
+Then "CAC-RxCashPrice-13" Customer reviews Price section for Refill in Review order page:
+| RxCashPrice 		| PriceMatch |
+|  Yes				| NO		 |
+
+Then "CAC-RxCashPrice-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CAC-RxCashPrice-13" Customer reviews Price section for Refill in Order Confirmation page:
+| RxCashPrice 		|PriceMatch |
+|  Yes				|	NO      |
+
+Then "CAC-RxCashPrice-13" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-RxCashPrice-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	 	    |
+| QC-CAC	    | RXCashPrice   | CAC-RxCashPrice-13	|
+
+#-----------------------------------------------------------------------------------------------------------

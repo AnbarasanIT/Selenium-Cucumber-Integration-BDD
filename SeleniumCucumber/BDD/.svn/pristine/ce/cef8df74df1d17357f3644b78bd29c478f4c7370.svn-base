@@ -1,0 +1,301 @@
+@checkout @ContactLensLinkFieldsVerification
+Feature: Do not display description fields in cart & checkout pages if not listed on CL Products and after verification copy in order review and confirmation for tool tip
+
+#IN-number: IN-397 
+
+#story Number: CAC-5065, CSLR-1232
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLLinkFieldsVerification-1
+Scenario: CL 2 lens toric Only, Check msg, tool tip and legent, review order Check msg , tool tip , email msg JS dotcom
+
+Given  "CL-CLLinkFieldsVerification-1" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId         			 	|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-1 |
+
+Given "CL-CLLinkFieldsVerification-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | refillRx3  |
+
+And "CL-CLLinkFieldsVerification-1" Customer Clears the Shopping Cart
+
+And "CL-CLLinkFieldsVerification-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl8   |
+
+Then "CL-CLLinkFieldsVerification-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "CL-CLLinkFieldsVerification-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl8   |
+
+Then "CL-CLLinkFieldsVerification-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLLinkFieldsVerification-1" Customer Goes to the Shopping Cart
+
+Then "CL-CLLinkFieldsVerification-1" Customer Verifies the Contact Lens fields, copy, and links in Shopping Cart page:
+| InputFileName | SheetName                | RowId             |
+| CACData       | CLLinkFieldsVerification | CL-ShoppingCart-1 |
+
+Then "CL-CLLinkFieldsVerification-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLLinkFieldsVerification-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CL-CLLinkFieldsVerification-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLLinkFieldsVerification-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLLinkFieldsVerification-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLLinkFieldsVerification-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLLinkFieldsVerification-1" Customer Verifies the Contact Lens fields, copy, and links in Review Order page:
+| InputFileName | SheetName                | RowId            |
+| CACData       | CLLinkFieldsVerification | CL-ReviewOrder-1 |
+
+Then "CL-CLLinkFieldsVerification-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLLinkFieldsVerification-1" Customer Verifies the Contact Lens fields, copy, and links in Order Confirmation page:
+| InputFileName | SheetName                | RowId                  |
+| CACData       | CLLinkFieldsVerification | CL-OrderConfirmation-1 |	
+
+Then "CL-CLLinkFieldsVerification-1" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-1 |
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLLinkFieldsVerification-2
+Scenario: CL 2 lens astigmatism and SS Check msg, tool tip and legent, review order Check msg , tool tip , email msg JS dotcom
+
+Given  "CL-CLLinkFieldsVerification-2" Customer starts the scenario:
+| InputFileName | SheetName 					| RowId     	 			     |
+| QC-CL	        | CLLinkFieldsVerification	    | CL-CLLinkFieldsVerification-2  |
+
+Given "CL-CLLinkFieldsVerification-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | refillRx3  |
+
+And "CL-CLLinkFieldsVerification-2" Customer Clears the Shopping Cart
+
+And "CL-CLLinkFieldsVerification-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | cl3      |
+
+Then "CL-CLLinkFieldsVerification-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         |  -	| -  | -        | -    | -		  | -        |
+
+And "CL-CLLinkFieldsVerification-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl3   |
+
+Then "CL-CLLinkFieldsVerification-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 2         |  -	| -  | -        | -    | -		  | -        |
+
+Then "CL-CLLinkFieldsVerification-2" Customer Goes to the Shopping Cart
+
+Then "CL-CLLinkFieldsVerification-2" Customer Verifies the Contact Lens fields, copy, and links in Shopping Cart page:
+| InputFileName | SheetName                | RowId             |
+| CACData       | CLLinkFieldsVerification | CL-ShoppingCart-2 |
+
+Then "CL-CLLinkFieldsVerification-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLLinkFieldsVerification-2" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CL-CLLinkFieldsVerification-2" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLLinkFieldsVerification-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLLinkFieldsVerification-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLLinkFieldsVerification-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLLinkFieldsVerification-2" Customer Verifies the Contact Lens fields, copy, and links in Review Order page:
+| InputFileName | SheetName                | RowId            |
+| CACData       | CLLinkFieldsVerification | CL-ReviewOrder-2 |
+
+# Customer submits the order
+Then "CL-CLLinkFieldsVerification-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLLinkFieldsVerification-2" Customer Verifies the Contact Lens fields, copy, and links in Order Confirmation page:
+| InputFileName | SheetName                | RowId                  |
+| CACData       | CLLinkFieldsVerification | CL-OrderConfirmation-2 |	
+
+Then "CL-CLLinkFieldsVerification-2" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-2 |
+
+
+#Story Number:  CAC-4415
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLLinkFieldsVerification-3
+Scenario: Check for display of 'Shop New contact Lenses' link in reorder page when no orders exist in JS Version
+
+Given  "CL-CLLinkFieldsVerification-3" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId      	  		         |
+| QC-CL	  		|CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-3  |
+
+Given "CL-CLLinkFieldsVerification-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | refillRx3      |
+
+Then "CL-CLLinkFieldsVerification-3" Customer Verifies the Links in the Contact Lens ReOrder page:
+| InputFileName | SheetName                | RowId        |
+| CACData       | CLLinkFieldsVerification | CL-ReOrder-1 |
+
+Then "CL-CLLinkFieldsVerification-3" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-3 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLLinkFieldsVerification-4
+Scenario: Check for display of 'Shop New contact Lenses' link in reorder page when orders exist in JS version
+
+Given  "CL-CLLinkFieldsVerification-4" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId      	 				 |
+| QC-CL	        |CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-4  |
+
+Given "CL-CLLinkFieldsVerification-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated12|
+
+Then "CL-CLLinkFieldsVerification-4" Customer Verifies the Links in the Contact Lens ReOrder page:
+| InputFileName | SheetName                | RowId        |
+| CACData       | CLLinkFieldsVerification | CL-ReOrder-2 |
+
+Then "CL-CLLinkFieldsVerification-4" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-4 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLLinkFieldsVerification-5
+Scenario: Check for display of 'Shop New contact Lenses' link in reorder page when no orders exist in JS Version for Employee
+
+Given  "CL-CLLinkFieldsVerification-5" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId      	  			  	 |
+| QC-CL	   		|CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-5  |
+
+Given "CL-CLLinkFieldsVerification-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | Employee2  |
+
+Then "CL-CLLinkFieldsVerification-5" Customer Verifies the Links in the Contact Lens ReOrder page:
+| InputFileName | SheetName                | RowId        |
+| CACData       | CLLinkFieldsVerification | CL-ReOrder-3 |
+
+Then "CL-CLLinkFieldsVerification-5" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-5 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLLinkFieldsVerification-6
+Scenario: Check for display of 'Shop New contact Lenses' link in reorder page when orders exist in JS version for Employee
+
+Given  "CL-CLLinkFieldsVerification-6" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId      	 				|
+| QC-CL	     	|CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-6 |
+
+Given "CL-CLLinkFieldsVerification-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData    | login     | Employee1  |
+
+Then "CL-CLLinkFieldsVerification-6" Customer Verifies the Links in the Contact Lens ReOrder page:
+| InputFileName | SheetName                | RowId        |
+| CACData       | CLLinkFieldsVerification | CL-ReOrder-4 |
+
+Then "CL-CLLinkFieldsVerification-6" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      					|
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-6 |
+
+
+#story Number: CSLR-1232
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLLinkFieldsVerification-7
+Scenario: Verify No note message related to create a new account when placing a contact lens order for another member of your family and No guest checkout section in Sign-in or Register Page in Cart, for only CL and CL+SS in Cart.
+
+Given  "CL-CLLinkFieldsVerification-7" Customer starts the scenario:
+| InputFileName | SheetName 				| RowId         		  	    |
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-7 |
+
+And "CL-CLLinkFieldsVerification-7" Customer Clears the Shopping Cart
+
+And "CL-CLLinkFieldsVerification-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLLinkFieldsVerification-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLLinkFieldsVerification-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "CL-CLLinkFieldsVerification-7" Customer verifies Contact Lenses related Note Messages and Guest Checkout button in the Signin or Register Page:
+|CLFamilyNoteMsg  | GuestCheckoutSection |
+|    No			  |			No			 |	
+
+And "CL-CLLinkFieldsVerification-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CL-CLLinkFieldsVerification-7" Customer adds Daily Living items to the cart from search.
+
+Then "CL-CLLinkFieldsVerification-7" Customer Goes to the Shopping Cart
+
+Then "CL-CLLinkFieldsVerification-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "CL-CLLinkFieldsVerification-7" Customer verifies Contact Lenses related Note Messages and Guest Checkout button in the Signin or Register Page:
+|CLFamilyNoteMsg  | GuestCheckoutSection |
+|    No			  |			No			 |	
+
+Then "CL-CLLinkFieldsVerification-7" Customer finished testing the scenario:
+| InputFileName | SheetName 				| RowId      	   		 	    |
+| QC-CL	        | CLLinkFieldsVerification	| CL-CLLinkFieldsVerification-7 |
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+	

@@ -1,0 +1,575 @@
+@CrossSite @myAccountVerification
+
+Feature:  Customer Verfies my account page functionalities
+ 
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-01
+
+Scenario: Unauthenticated User verifies tab functionalites in my account page
+
+Given "CF-MyAccount-01" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-01		 |
+
+Given "CF-MyAccount-01" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			 |
+| CommonData  	 | login     | UnauthenwithAppoint   |
+
+Then "CF-MyAccount-01" Customer clicks on an object and validates the expected results:
+| InputFileName 				   | SheetName 			| RowId           				   | ClickObjectinTab 	 |ClickObjectOverlay  |TargetOverlay |
+| AccountDashboard  			   | LinkNavigation		| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| UnauthRxServicesBanner	       |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| ViewHistory   			       |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| UploadPhoto   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| OrderPrint	   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccountRx   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| HoverCommunicationPreferences    |		Yes		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| HoverExpressPay  				   |		Yes		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| ShoppingList               	   |		Yes		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| HoverFamilyPrescription		   |		Yes		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| HoverPrescriptionHistory		   |		Yes		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation		| YourAccRefillRx 				   |		No 			 |No				  |Yes			 |
+| PharmacyHomePageLinkVerification |Unauthenticated 	| UpdatedNowinRefillRxFasterOverlay| 		No       	 |Yes		 	 	  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| UnauthAddFamilyMember			   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| YourAccount   				   |		No		     |No				  |No			 |
+| AccountDashboard  			   | LinkNavigation  	| UnauthPrintRecords			   |		No		     |No				  |No			 |
+
+Then "CF-MyAccount-01" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-01" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-01		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-02
+Scenario: Customer performs validations in Manage Messages page under Order and Activity tab
+
+Given "CF-MyAccount-02" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-02		 |
+
+Given "CF-MyAccount-02" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId               |
+| Pharmacy  	 | login     | UnauthenwithAppoint |
+
+Then "CF-MyAccount-02" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              | ClickObjectinTab  |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 |		-		     |
+| AccountDashboard  | LinkNavigation  	| MessagesLink   	 |		Yes		     |
+
+Then "CF-MyAccount-02" Customer performs validations in Manage Messages page under Order and Activity tab
+
+Then "CF-MyAccount-02" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		 | RowId      			| 
+| AccountDashboard  | LinkNavigation     | 	 MessageSubjectLine	|
+| AccountDashboard  | LinkNavigation     | 	 BackToMessages		|
+| AccountDashboard  | LinkNavigation     | 	 SentItems		  	|
+| AccountDashboard  | LinkNavigation     | 	 MessageSubjectLine	|
+| AccountDashboard  | LinkNavigation     | 	 BackToMessages		|
+| AccountDashboard  | LinkNavigation  	 |   YourAccount   		|
+| AccountDashboard  | LinkNavigation     | 	 MoreAboutThisStore |
+
+Then "CF-MyAccount-02" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-02		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-03
+Scenario: Registered user performs validations in Your account page
+
+Given "CF-MyAccount-03" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-03		 |
+
+Then "CF-MyAccount-03" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              |
+|HomepageLinks		|Homepage			|Global Register	 |
+
+Then "CF-MyAccount-03" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId       |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CSLR          | PersonalInfo | lightuser13 |
+
+Then "CF-MyAccount-03" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		|RowId         			 |
+|HomepageLinks		|Homepage			|WalgreensLogo			 |
+|HomepageLinks		|Homepage			|TAbVerifyYourAccount	 |
+
+Then "CF-MyAccount-03" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-03		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-04
+Scenario: Customer performs validations in Manage Messages page under Order and Activity tab
+
+Given "CF-MyAccount-04" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-04		 |
+
+Given "CF-MyAccount-04" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      	   |
+| CommonData     | login     | EmailSubUser    |
+
+Then "CF-MyAccount-04" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              		| ClickObjectinTab   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 		|		-		     |
+| AccountDashboard  | LinkNavigation  	| CommunicationPreferences  |		Yes		     |
+| AccountDashboard  | LinkNavigation  	| EmailRemainders           |		-		     |
+
+Then "CF-MyAccount-04" Customer validates Personal Reminders Section in Communication Preference page:
+| InputFileName 	| SheetName 			| RowId             |
+| AccountDashboard  | PersonalReminders  	| ReminderMessage1  |
+| AccountDashboard  | PersonalReminders  	| ReminderMessage2  |
+| AccountDashboard  | PersonalReminders  	| ReminderMessage3  |
+
+Then "CF-MyAccount-04" Customer validates Phone Alerts Section in Communication Preference page:
+
+Then "CF-MyAccount-04" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              		| ClickObjectinTab   |
+| AccountDashboard 	| LinkNavigation  	| ManageNumbers		 		|		-		     |
+
+Then "CF-MyAccount-04" Customer updates Personal Information from Personal Information page:
+| InputFileName       | SheetName 		     | RowId            |isManageNumbers |
+|AccountDashBoard	  |  PersonalInformation | personalinfo2    |yes			 |
+
+Then "CF-MyAccount-04" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              		| ClickObjectinTab   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 		|		-		     |
+| AccountDashboard  | LinkNavigation  	| CommunicationPreferences  |		Yes		     |
+| AccountDashboard  | LinkNavigation  	| CommunicationPreferences  |		Yes		     |
+
+Then "CF-MyAccount-04" Customer verifies the prescription ready alerts:
+
+Then "CF-MyAccount-04" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-04		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-05
+Scenario: Authenticated User edits the Card details in the express pay page
+
+Given "CF-MyAccount-05" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-05		 |
+
+Given "CF-MyAccount-05" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			 |
+| CommonData  	 | login     | newRx1			     |
+
+Then "CF-MyAccount-05" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId           				   | ClickObjectinTab 	 |
+| AccountDashboard  | LinkNavigation  	| YourAccount   				   |		No		     |
+| AccountDashboard  | LinkNavigation  	| HoverAuthExpressPay			   |		Yes		     |
+| AccountDashboard  | LinkNavigation  	| ExpressPayEdit  				   |		No		     |
+
+Then "CF-MyAccount-05" Customer Edits the Expresspay card details:
+| InputFileName 	| SheetName 		| RowId           |
+| AccountDashboard  | ExpressPayCard  	| CardDetails1    |
+| AccountDashboard  | ExpressPayCard  	| CardDetails2    |
+
+Then "CF-MyAccount-05" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId           				   | ClickObjectinTab 	 |
+| AccountDashboard  | LinkNavigation  	| YourAccount   				   |		No		     |
+| AccountDashboard  | LinkNavigation  	| HoverShoppingList 			   |		Yes		     |
+
+Then "CF-MyAccount-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-05" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-05		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-06
+Scenario: Customer verifies whether user is able to Sign Up for Email remainders and Stop Remainder Emails through Refill Remainders section in Communication Preference page
+
+Given "CF-MyAccount-06" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-06		 |
+
+Given "CF-MyAccount-06" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | authenticated3 |
+
+Then "CF-MyAccount-06" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              		| ClickObjectinTab   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 		|		-		     |
+| AccountDashboard  | LinkNavigation  	| CommunicationPreferences  |		Yes		     |
+
+Then "CF-MyAccount-06" Customer validates Rx Refill Reminders Section in Communication Preference page:
+
+Then "CF-MyAccount-06" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-06		 |
+#-----------------------------------------------------------------------------------------
+@CF-MyAccount-07
+Scenario: Customer updates Password and Billing address from Personal Information section in AccountDashboard page 
+
+Given "CF-MyAccount-07" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-07		 |
+
+Given "CF-MyAccount-07" Customer login to the walgreens.com:
+| InputFileName  	 | SheetName 	  | RowId                 |
+| AccountDashboard	 | SigninSecurity | ChangePassword        |
+
+Then "CF-MyAccount-07" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              					  |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |	
+| AccountDashboard  | LinkNavigation  	| PersonalInfoSectionChangePassword		  |	
+
+Then "CF-MyAccount-07" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | ChangePassword        |
+
+Then "CF-MyAccount-07" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              					  |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |	
+| AccountDashboard  | LinkNavigation  	| PersonalInfoSectionUpdateBillingAddress |	
+
+Then "CF-MyAccount-07" Customer Updates Billing Information from Personal Information Section in Accountdashboard Page:
+| InputFileName      | SheetName          | RowId 			  	      |
+| AccountDashboard	 | BillingInformation | EmptyBillingInformation   |
+| AccountDashboard	 | BillingInformation | UpdateBillingInformation  |
+| AccountDashboard	 | BillingInformation | UpdateBillingInformation2 |
+
+Then "CF-MyAccount-07" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-07		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-08
+Scenario: Light User verifies tab functionalites in my account page
+
+Given "CF-MyAccount-08" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-08		 |
+
+Given "CF-MyAccount-08" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | lightreg       |
+
+Then "CF-MyAccount-08" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              					  | ClickObjectinTab |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| PrescriptionRefills       			  |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserAddFamilyMemberLink  		  |		-		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserPrescriptionInsuranceInfoLink  |   Yes		     |
+|		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserExpressPayPrescriptions		  |   Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserViewHistory           		  |   -		         |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserPrintRecords           		  |   -		         |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserFamilyPrescription             |   Yes		     |
+| AccountDashboard  | LinkNavigation  	| YourAccountRx                           |   -		         |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| UploadPhoto                             |   -		         |
+| AccountDashboard  | LinkNavigation  	| YourAccountRx                           |   -		         |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserOrderPrints                    |   -		         |
+
+Then "CF-MyAccount-08" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-08		 |
+#------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-09
+Scenario: Customer verifies UI in Communication Preferences page for a Pharmacy Authenticated User
+
+Given "CF-MyAccount-09" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-09		 |
+
+Given "CF-MyAccount-09" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          	   |
+| CommonData     | login     | cfauthenticateduser |
+
+Then "CF-MyAccount-09" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              				 | ClickObjectinTab  |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 				 |		-		     |
+| AccountDashboard  | LinkNavigation  	| AuthUserCommunicationPreferences1  |		Yes		     |
+| AccountDashboard  | LinkNavigation  	| AuthUserCommunicationPreferences2  | 		-		     |
+
+Then "CF-MyAccount-09" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-09		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-10
+Scenario: Customer verifies UI in orders and activity summary module when the user has no orders
+
+Given "CF-MyAccount-10" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-10		 |
+
+Given "CF-MyAccount-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | NoOrderUser1   |
+
+Then "CF-MyAccount-10" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              					  |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 					  |	
+| AccountDashboard  | LinkNavigation  	| PersonalInfoSectionUpdateBillingAddress |	
+
+Then "CF-MyAccount-10" Customer Updates Billing Information from Personal Information Section in Accountdashboard Page:
+| InputFileName      | SheetName          | RowId 			  	      |
+| AccountDashboard	 | BillingInformation | EmptyBillingInformation   |
+| AccountDashboard	 | BillingInformation | UpdateBillingInformation  |
+| AccountDashboard	 | BillingInformation | UpdateBillingInformation2 |
+| AccountDashboard	 | BillingInformation | UpdateBillingInformation3 |
+ 
+Then "CF-MyAccount-10" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-10		 |
+#---------------------------------------------------------------------------------------------------------------------------
+#This scenario is not applicable
+@CF-MyAccount-11
+Scenario: Customer verifies Incremented Message Count after Admin sending Invite to Adult User
+
+Given "CF-MyAccount-11" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-11		 |
+
+Given "CF-MyAccount-11" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId            |
+|  CommonData   | login		 | RegressionAdult  |
+
+Then "CF-MyAccount-11" Customer finds the Messages Count from header:
+| InputFileName	   	| SheetName            | RowId 	        | Before | After |
+| AccountDashboard  | AccountMessagesCount | MessagesCount  |	Yes	 |	-	 |
+
+Then "CF-MyAccount-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-MyAccount-11" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId             |
+|  CommonData   | login		 | RegressionAdmin   |
+ 
+Then "CF-MyAccount-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName         | RowId 	        	  |
+| AccountDashboard  			   | LinkNavigation    | AddFamilyMemberLink  |
+| PharmacyHomePageLinkVerification | AddAdult          | AddAdult       	  |
+
+Then "CF-MyAccount-11" Customer adds an adult user from family prescriptions page:
+| InputFileName		 | SheetName 			   | RowId            | UserType    	  |
+| AccountDashboard   | PersonalInformation 	   | AdultUserInfo    | Admin             |
+
+Then "CF-MyAccount-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-MyAccount-11" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId            |
+|  CommonData   | login		 | RegressionAdult  |
+
+Then "CF-MyAccount-11" Customer finds the Messages Count from header:
+| InputFileName	   	| SheetName            | RowId 	        | Before | After |
+| AccountDashboard  | AccountMessagesCount | MessagesCount  |	-	 |	Yes	 |
+
+Then "CF-MyAccount-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-MyAccount-11" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId             |
+|  CommonData   | login		 | RegressionAdmin   |
+
+Then "CF-MyAccount-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | AddAdult             | FamilyPrescription     |
+
+Then "CF-MyAccount-11" Customer adds an adult user from family prescriptions page:
+| InputFileName | SheetName 			   | RowId            | UserType    	  |
+| Pharmacy      | Smokedata 			   | AdminUser        | Cancel            |
+
+Then "CF-MyAccount-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-11		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-12
+Scenario: Customer verifies Credit card details section in Account Balance page
+
+Given "CF-MyAccount-12" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-12		 |
+
+Given "CF-MyAccount-12" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          	  |
+| CommonData     | login     | NewPrescription1   |
+
+And "CF-MyAccount-12" Customer validates the sections in Pharmacy Account Balance page:
+| InputFileName 	 | SheetName 		| RowId         			 |
+| AccountDashboard   | CCValidation		| InvalidBillingInformation	 |
+| AccountDashboard   | CCValidation		| EmptyBillingInformation	 |
+
+Then "CF-MyAccount-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-12" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-12		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-13
+Scenario: Customer edits Health History Information through Account Dashboard page
+
+Given "CF-MyAccount-13" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-13		 |
+
+Given "CF-MyAccount-13" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 |
+| CommonData     | login     | PSCUser   |
+
+Then "CF-MyAccount-13" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId               | ClickObjectinTab |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  |		-		     |
+| AccountDashboard  | LinkNavigation  	| HealthHistory       |		Yes		     |
+
+Then "CF-MyAccount-13" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo11  |
+
+Then "CF-MyAccount-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-13" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-13		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-14
+Scenario: Customer verifies the personal info module and respective family member pages in Messages page
+
+Given "CF-MyAccount-14" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-14		 |
+
+Given "CF-MyAccount-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	   	  |
+| CommonData     | login     | MedhelpUser1   |
+
+Then "CF-MyAccount-14" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId               				 | ClickObjectinTab  |
+| AccountDashboard  | LinkNavigation  	| PersonalInfoYourAccountLink 		 | 		-		     |
+| AccountDashboard  | LinkNavigation  	| HoverMessages 					 | 		Yes		     |
+
+And "CF-MyAccount-14" Customer verifies respective family member page:
+
+Then "CF-MyAccount-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-MyAccount-14" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-14		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-15
+Scenario: Light user verifies Links and Tab in AccountDashboard page
+
+Given "CF-MyAccount-15" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-15		 |
+
+Given "CF-MyAccount-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId           |
+| CommonData     | login     | LightUser       |
+
+Then "CF-MyAccount-15" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId               			| ClickObjectinTab   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserOrdersStatus&History |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| MessagesLink                  |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| ShoppingList                  |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| HoverPersonalInformationLInk  |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| HoverCommunicationPreferences |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| LightUserMyWalgreensStoreLink |		Yes		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| GotoPharmacyHomePageLink      |		-		     |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| PhotoOrderHistory             |		-		     |
+| AccountDashboard  | LinkNavigation  	| YourAccountRx                 |       -            |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 			|		-		     |
+| AccountDashboard  | LinkNavigation  	| CreatePhotoGifts              |       -	         |
+| AccountDashboard  | LinkNavigation  	| YourAccountRx                 |       -	         |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 			|		-		     |
+| AccountDashboard  | LinkNavigation  	| EmailPhotos                   |       -	         |
+
+Then "CF-MyAccount-15" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-15		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-16
+Scenario: Light user verifies Account balance page for teh UI and the Transactions
+
+Given "CF-MyAccount-16" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-16		 |
+
+Given "CF-MyAccount-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          		 |
+| CommonData     | login     | PharmacyBalance       |
+
+Then "CF-MyAccount-16" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId               			| ClickObjectinTab   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	  			|		-		     |
+| AccountDashboard  | LinkNavigation  	| PharmacyAccountBalance        |		Yes		     |
+| AccountDashboard  | LinkNavigation  	| OtherTransactions             |		-		     |
+
+Then "CF-MyAccount-16" Customer verifies whether ten Transactions are displayed per Page
+
+Then "CF-MyAccount-16" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId               			| 
+| AccountDashboard  | LinkNavigation  	| ReturnAccountBalance          |		
+
+Then "CF-MyAccount-16" Customer logout from walgreens:
+| Source  |
+| Global  |		
+
+Then "CF-MyAccount-16" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-16		 |
+#---------------------------------------------------------------------------------------------------------------------------
+@CF-MyAccount-17
+Scenario: Verify that Authenticated user is not able to edit DOB and Gender in Account information page
+
+Given "CF-MyAccount-17" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-17		 |
+
+Given "CF-MyAccount-17" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       	   |
+| CommonData     | login     | authenticated2  |
+
+Then "CF-MyAccount-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                   | SheetName       | RowId                | ClickObjectinTab |
+| PharmacyHomePageLinkVerification     | LightReg        | HoverPersonalinfo    |Yes               |
+| PharmacyHomePageLinkVerification     | LightReg        | EditPersonalinfo     |No                |
+
+Then "CF-MyAccount-17" Customer updates Personal Information from Personal Information page:
+| InputFileName       | SheetName 		     | RowId             |
+|AccountDashBoard     | PersonalInformation  | personalinfo2a    |
+
+Then "CF-MyAccount-17" Customer logout from walgreens:
+| Source  |
+| Global  |		
+
+Then "CF-MyAccount-17" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-CF	        | MyAccount 		| CF-MyAccount-17		 |
+#---------------------------------------------------------------------------------------------------------------------------

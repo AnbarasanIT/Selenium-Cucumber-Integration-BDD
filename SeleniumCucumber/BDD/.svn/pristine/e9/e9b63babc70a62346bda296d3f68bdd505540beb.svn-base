@@ -1,0 +1,813 @@
+package walgreens.ecom.batch.automation.library.loginandregistration;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class LoginLibrary extends CommonLibrary {
+
+	/**
+     ************************************************************* 
+     * @Purpose - Method to Login to Walgreens dotcome applciation
+     * @author - Siva
+     * @Created -
+     * @Modified By -Madusudanan
+     * @Modified Date -02-Dec-13
+     ************************************************************* 
+     */
+    public static void login(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoginURL = "login.jsp";
+	String HeaderSignin_Text = "a[title='Sign In']~CSS";
+	String SiginPageUsername_TXT = "input[id='uname']~CSS";
+	String SiginPagePassword_TXT = "input[id='password2']~CSS";
+	// /String SigninPageSignIN_BTN = "input[name='Log In']~CSS";
+	String SigninPageSignIN_BTN = "input[alt='Sign In']~CSS";
+	String SiginPageSignOut_LNK = "a[title='Sign Out']~CSS";
+	// String RefillFromAccount_LNK = "a[href*='refillFast']~CSS"; // SIMEON
+	// - 8/26/13 - Selector was wrong, fixed below
+	String RefillFromAccount_LNK = "//div[@id='no_textbox']//a[@title='Refill from account']~XPATH"; // Fixed
+									     // here
+									     // -
+									     // Simeon
+	String RefillFromAccountBVersion_LNK="//div[@id='newHdNav']//ul/li/a[@title='Refill from account']";
+	String RefillPrescriptionFasterOverlay = "//h1[contains(text(),'Sign In to Refill Prescriptions')]~XPATH";
+	String LoginSourcePage = "Global";
+	String HiMessageInFrontEnd ="//form[@name='homeExplicitLoginForm']//p[contains(text(),'Hi')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.containsKey("SourcePage")) {
+		LoginSourcePage = dataMap.get("SourcePage").get(0);
+	    }
+	    	       
+	    if (LoginSourcePage.equalsIgnoreCase("Overlay")) {
+		switchToDefault(browser);
+		if (!(isElementPresentVerifyClick(RefillFromAccount_LNK, browser) ||isElementPresentVerifyClick(RefillFromAccountBVersion_LNK, browser))) {
+		    throw new Exception("Not able to click on Refill From Account link");
+		}
+		switchToOverlay(browser);
+		if (isElementPresentVerification(RefillPrescriptionFasterOverlay, browser)) {
+		    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+		    if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+			messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter user name in the Text Field.");
+		    }
+		    String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		    if (!clearAndEnterText(SiginPagePassword_TXT, password, browser)) {
+			messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to Enter password in the Text Field.");
+		    }
+		    if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+			getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+
+		    } else {
+			throw new Exception("Not able to verify Sign In Button on Login page.");
+		    }
+		    switchToDefault(browser);
+		    if (!isElementPresentVerification(SiginPageSignOut_LNK, browser)) {
+			throw new Exception("Not able to Verify the Sign out link after signing in.");
+		    }
+		}
+	    } else {
+		String loginUrl = EcommTestRunner.config.getString("walgreensURL") + LoginURL;
+		getUrl(browser, loginUrl);
+		//SSL Certificate Error Navigation Handler for IE
+	    if(!isElementPresentVerification(HeaderSignin_Text, browser)){
+	    	if(EcommTestRunner.currentBrowserName.equalsIgnoreCase("internetExplorer")){
+	    		browser.navigate().to("javascript:document.getElementById('overridelink').click()");
+	    	}	
+	    }	
+		if (!isElementPresentVerification(SiginPageUsername_TXT, browser)) {
+		    messagesMap.put("User Name Filed ", "Objec is missing");
+		    status = WARNING;
+		}
+		String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+		if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+		    messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Not able to Enter user name in the Text Field.");
+		}
+		String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		if (!clearAndEnterText(SiginPagePassword_TXT, password, browser)) {
+		    messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Not able to Enter password in the Text Field.");
+		}
+		if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+			getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+		} else {
+			throw new Exception("Not able to verify Sign In Button on Login page.");
+		}
+		if (!EcommTestRunner.currentBrowserName.equalsIgnoreCase("internetExplorer")&& !isElementPresentVerification(SiginPageSignOut_LNK,browser)) {
+			throw new Exception("Not able to Verify the Sign out link after signing in.");
+		}
+		if (EcommTestRunner.currentBrowserName.equalsIgnoreCase("internetExplorer")) {
+			if (!isElementPresentVerification(HiMessageInFrontEnd, browser)) {
+				throw new Exception("Not able to Assert whether signed in");
+			}
+		}
+		}
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to login in Paypal site
+     * @Input -
+     * @author - Vishnu
+     * @Created - 22 May 2012
+     * @Modified By -Thangaraj R
+     * @Modified Date 8-Mar-13
+     ************************************************************************ 
+     */
+    public static void payPalLogin(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PaypalUserName_TXT = "input[name='email']~CSS";
+	String PaypalPassword_TXT = "input[name='password']~CSS";
+	String PayPalSignIn_BTN = "input[type='submit']~CSS";
+	String PayPalLogOut_LNK = "a[href='devscr?cmd=_logout']~CSS";
+	String PaypalLogin_LNK = "//b[contains(text(),'Log In with PayPal')]~XPATH";
+	String PaypalUserName = null;
+	String PaypalPassWord = null;
+	;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    PaypalUserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    PaypalPassWord = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PassWord");
+	    // navigate to paypal URL
+	    browser.get(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PaypalURL"));
+	    // Modified for new paypal page
+	    if (!isElementPresentVerifyClick(PaypalLogin_LNK, browser)) {
+		throw new Exception("Not able to click on Log In link");
+	    }
+	    switchToWindow("Log", browser);
+	    if (!clearAndEnterText(PaypalUserName_TXT, PaypalUserName, browser)) {
+		messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PaypalPassword_TXT, PaypalPassWord, browser)) {
+		messagesMap.put("User name", "Not able to Enter Password in the Text Field.");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(PayPalSignIn_BTN, browser)) {
+		throw new Exception("Not able to click on Sign In link");
+	    }
+	    if (!isElementPresentVerification(PayPalLogOut_LNK, browser)) {
+		throw new Exception("Not able to Find Log out link");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to Logout from Walgreens (either from global or
+     *          Pharmacy section based on the input)
+     * @Input -
+     * @author - Siva
+     * @Created - 22 May 2012
+     * @Modified By - Siva
+     * @Modified Date - 20-Dec-2012
+     ************************************************************************ 
+     */
+    public static void logout(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String HeaderSignin_LNK = "a[title='Sign In']~CSS";
+	String RxWidgetSignOut_LNK = "//ul[@class='link_arrow_list']/li/a[@title='Sign Out']~XPATH";
+	String YourAccountMenu_ELM = "//a[@title='Your Account']~XPATH";
+	String SignOut_LNK = "//a[@title='Sign Out']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Source indicate that from which area we need to log out
+	    if (dataMap.get("Source").get(0).equalsIgnoreCase("RxWidget")) {
+		if (!isElementPresentVerifyClick(RxWidgetSignOut_LNK, browser)) {
+		    throw new Exception("Not able to Click Signout Link in Pharmacy widget Section");
+		}
+	    } else if (dataMap.get("Source").get(0).equalsIgnoreCase("Global")) {
+		if (!performHoverClickAction(getElementByProperty(YourAccountMenu_ELM, browser), SignOut_LNK, browser)) {
+		    throw new Exception("Not able to Click on SignOut Link");
+		}
+	    }
+	    // Throwing Exception for verification since it will affect the
+	    // remaing flow it is not signed out.
+	    if (!isElementPresentVerification(HeaderSignin_LNK, browser)) {
+		throw new Exception("Unable to find sign in link after signout");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to Walgreens dotcome applciation
+     * @author - Imran
+     * @Created -
+     * @Modified By -Ygnash
+     * @Modified Date -11-Feb-2013
+     ************************************************************* 
+     */
+    public static void cscLogin(EventFiringWebDriver browser, ScenarioBean scenario, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoginURL = "login.jsp";
+
+	// Following is to login to CSC Application
+	String SiginPageUsername_TXT = "input[id='username']~CSS";
+	String SiginPagePassword_TXT = "input[id='password'][type='password']~CSS";
+	String SigninPageSignIN_BTN = "input[name='/atg/agent/userprofiling/AgentProfileFormHandler.login']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String loginUrl = EcommTestRunner.config.getString("cscURL") + LoginURL;
+	    getUrl(browser, loginUrl);
+
+	    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+		messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		status = WARNING;
+	    }
+	    String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    if (!clearAndEnterText(SiginPagePassword_TXT, password, browser)) {
+		messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+		status = WARNING;
+	    }
+
+	    if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+		getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+		// Allow Some time for the CSC Pop up to open
+		Thread.sleep(10000);
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to login as any yahoo user
+     * @author - Chezhiyan. E
+     * @Created - 11-02-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void yahooLogin(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) throws Exception {
+	String status = PASS;
+	String YahooUserName_TXT = "input[id='username']~CSS";
+	String YahooPassword_TXT = "input[id='passwd']~CSS";
+	String YahooSignIn_BTN = "div[id=submit]>button~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String YahooURL = EcommTestRunner.config.getString("yahooMailURL");
+	    getUrl(browser, YahooURL);
+	    String yahooUserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "yahooUserName");
+	    String yahooPassword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "yahooPassword");
+	    if (isElementPresentVerification(YahooUserName_TXT, browser)) {
+		clearAndEnterText(YahooUserName_TXT, yahooUserName, browser);
+		clearAndEnterText(YahooPassword_TXT, yahooPassword, browser);
+		Thread.sleep(2000);
+		if (!isElementPresentVerifyClick(YahooSignIn_BTN, browser)) {
+		    throw new Exception("Unable to click on yahoo Sign In button");
+		}
+	    } else {
+		throw new Exception("Unable to login on yahoo");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate the invalid login
+     * @author - Thangaraj
+     * @Created -27-Mar-13
+     * @Modified By -SARAVANAN M
+     * @Modified Date -24-MAY-2013
+     ************************************************************* 
+     */
+    public static void invalidLoginErrorvalidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String InvalidErrorMsg_TXT = "//div[contains(@class,'error')]/*[contains(text(),'username or password is invalid') or contains(text(),'invalid username or password')]";
+	String HeaderSignin_Text = "a[title='Sign In']~CSS";
+	String SiginPageUsername_TXT = "input[id='uname']~CSS";
+	String SiginPagePassword_TXT = "//input[@id='pwd' or @id='password2']~XPATH";
+	String SigninPageSignIN_BTN = "input[name='Log In']~CSS";
+	String BackToCart_LNK = "a[title='Back to cart']~CSS";
+	String SSProduct_TXT = "//h2[contains(text(),'Products')]~XPATH";
+	String LockedErrorMsg_TXT = "//div[contains(text(),'This account has been locked for security reasons. Please contact')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+		messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		status = WARNING;
+		// throw new
+		// Exception("Not able to Enter user name in the Text Field.");
+	    }
+	    String invalidpassword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "IncorrectPassword");
+	    if (!clearAndEnterText(SiginPagePassword_TXT, invalidpassword, browser)) {
+		messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+		status = WARNING;
+		// throw new
+		// Exception("Not able to Enter password in the Text Field.");
+	    }
+
+	    if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+		getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+	    } else {
+		throw new Exception("Not able to verify Sign In Button on Login page.");
+	    }
+
+	    if (dataMap.get("Validation").get(0).equalsIgnoreCase("Password")) {
+		if (!isElementPresentVerification(InvalidErrorMsg_TXT, browser)) {
+		    messagesMap.put("Password", "Invalid PAssword error message not displayed");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+		    messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		    status = WARNING;
+		}
+		String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		if (!clearAndEnterText(SiginPagePassword_TXT, password, browser)) {
+		    messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+		    getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+		} else {
+		    throw new Exception("Not able to verify Sign In Button on Login page.");
+		}
+		// SIMEON - 10-9-13 - Commented out, no such button on login page
+//		if (!isElementPresentVerifyClick(BackToCart_LNK, browser)) {
+//		    throw new Exception("Unable to find Back to cart link");
+//		}
+//		if (isElementPresentVerification(SSProduct_TXT, browser)) {
+//		    messagesMap.put("Password", "Product A-SS product is  displayed");
+//		    status = WARNING;
+//		}
+		// --------------------------------------------------------------
+	    }
+
+	    if (dataMap.get("LockedMsgVerification") != null) {
+		if (dataMap.get("LockedMsgVerification").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LockedErrorMsg_TXT, browser)) {
+			messagesMap.put("Account Locked Message", "Account Locked Error Message is not displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to login through dynamic login box and validate target
+     *          Page
+     * @author - Siva
+     * @Created -22-APR-2013
+     * @Modified By -Siva
+     * @Modified Date -28-JUN-2013
+     ************************************************************* 
+     */
+    public static void loginthroughDynamicLoginSection(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String SiginPageUsername_TXT = "//input[@id='uname' or @name='username']~XPATH";
+	String SiginPagePassword_TXT = "//input[@name='password' or @id='password2']~XPATH";
+	String SigninPageSignIN_BTN = "//input[@name='Sign In' or @alt='Sign In']~XPATH";
+	String SignOut_LNK = "a[title='Sign Out']~CSS";
+	String Logout_LNK = "//a[contains(text(),'Log Out')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    String ErrorMessageObject = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ErrorMessageObject");
+	    String TargetPageObjects = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TargetPageObject");
+	    if (!clearAndEnterText(SiginPageUsername_TXT, userName, browser)) {
+		messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(SiginPagePassword_TXT, Password, browser)) {
+		messagesMap.put("Password", "Not able to Enter password in the Text Field.");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(SigninPageSignIN_BTN, browser)) {
+
+		throw new Exception("Not able to verify Sign In Button on Login page.");
+	    }
+	    if (ErrorMessageObject != null && !ErrorMessageObject.equals("-")) {
+		if (!isElementPresentVerification(ErrorMessageObject, browser)) {
+		    messagesMap.put("Error Message", "Not able to find the required error message");
+		    status = WARNING;
+		}
+	    } else {
+		if (!(isElementPresentVerification(SignOut_LNK, browser) || isElementPresentVerification(Logout_LNK, browser))) {
+		    messagesMap.put("Signout/Logout link", "Not able to find the signout/Logout link");
+		    status = WARNING;
+		}
+		if (!TargetPageObjects.equals("-")) {
+		    String[] TargetPageObject = TargetPageObjects.split("`");
+		    for (int k = 0; k < TargetPageObject.length; k++) {
+			if (!isElementPresentVerification(TargetPageObject[k], browser)) {
+			    messagesMap.put(TargetPageObject[k], "Not able to find the Target Page Object");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select eighter Forget password or forget Username
+     *          options form sign-in Page
+     * @author - Siva
+     * @Created -20-MAY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectRequiredOptionToChangeCredentials(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ForgetUserName_LNK = "a[title='Forgot your username?']~CSS";
+	String ForgetPassword_LNK = "a[title='Forgot your password?']~CSS";
+	String UserName_TXT = "input#rpusername~CSS";
+	String continue_BTN = "input[title='Continue']~CSS";
+	String PasswordResetConfirmationHeader_ELM = "//h1[contains(text(),'Password Reset Confirmation')]~XPATH";
+	String EmailAddress_TXT = "input#emailAddress~CSS";
+	String RetrieveUserNameHeader_ELM = "//h1[contains(text(),'Retrieve Username')]~XPATH";
+	String SignInPageURL = "login.jsp?";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String Email = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email");
+	    String RequestType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RequestType");
+	    String LoginPageURL = EcommTestRunner.config.getString("walgreensURL") + SignInPageURL;
+	    getUrl(browser, LoginPageURL);
+	    if (RequestType.equalsIgnoreCase("ResetPassword")) {
+		if (!isElementPresentVerifyClick(ForgetPassword_LNK, browser)) {
+		    throw new Exception("Not able to click on forget Password Link");
+		}
+		if (!clearAndEnterText(UserName_TXT, UserName, browser)) {
+		    messagesMap.put("Reset UserName Field", "Not able to Enter User Name");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(continue_BTN, browser)) {
+		    throw new Exception("Not able to click on Continue Button");
+		}
+		if (!isElementPresentVerification(PasswordResetConfirmationHeader_ELM, browser)) {
+		    messagesMap.put("Reset Password Confirmation Header", "Not able to Find the Header");
+		    status = WARNING;
+		}
+	    } else if (RequestType.equalsIgnoreCase("RetrieveUsername")) {
+		if (!isElementPresentVerifyClick(ForgetUserName_LNK, browser)) {
+		    throw new Exception("Not able to click on forget User Name Link");
+		}
+		if (!clearAndEnterText(EmailAddress_TXT, Email, browser)) {
+		    messagesMap.put("Email Address Field", "Not able to Enter Email");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(continue_BTN, browser)) {
+		    throw new Exception("Not able to click on Continue Button");
+		}
+		if (!isElementPresentVerification(RetrieveUserNameHeader_ELM, browser)) {
+		    messagesMap.put("Retrieve Username Header", "Not able to Find the Header");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to login as Photo user (Dynamic Login)
+     * @author - SARAVANAN M
+     * @Created - 29-MAY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void photoLogin(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) throws Exception {
+	String status = PASS;
+	String PhotoUserName_TXT = "input[name='username']~CSS";
+	String PhotoPassword_TXT = "input[name='password']~CSS";
+	String LogIn_BTN = "input[name='log in']~CSS";
+	String Logout_LNK = "//a[contains(text(),'Sign Out')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+
+	    if (isElementPresentVerification(PhotoUserName_TXT, browser)) {
+		clearAndEnterText(PhotoUserName_TXT, userName, browser);
+		clearAndEnterText(PhotoPassword_TXT, Password, browser);
+		if (!isElementPresentVerifyClick(LogIn_BTN, browser)) {
+		    throw new Exception("Unable to click on Log In button");
+		}
+	    } else {
+		throw new Exception("Unable to login on Photo");
+	    }
+
+	    if (!isElementPresentVerification(Logout_LNK, browser)) {
+		throw new Exception("Unable to Find Logout link");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to login into WAG production instances and check if the
+     *          store locator is working fine during the release night
+     * @author - Ram
+     * @Created - 08/05/2013
+     * @Modified By -S
+     * @Modified Date -1
+     ************************************************************* 
+     */
+    public static void siteReleaseInstanceCheck(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoginURL = "login.jsp";
+	String HeaderSignin_Text = "a[title='Sign In']~CSS";
+	String SiginPageUsername_TXT = "input[id='uname']~CSS";
+	String SiginPagePassword_TXT = "input[id='password2']~CSS";
+	String SigninPageSignIN_BTN = "input[alt='Sign In']~CSS";
+	String SiginPageSignOut_LNK = "a[title='Sign Out']~CSS";
+	String FindStoreZipcode_TXT = "input[id='locator']~CSS";
+	String FindAStore_BTN = "input[id='findstore']~CSS";
+	String StoreLocator_LNK = "a[title='Store Locator']~CSS";
+	String StoreSearchResultsContainer_ELM = "div[id='storeSearchResult']~CSS";
+	String StoreCells_ELM = "div[class*='resultContainer']";
+	String YourAccountMenu_ELM = "a[id='mainoption']~CSS";
+	String SignOut_LNK = "//a[@title='Sign Out']~XPATH";
+	String HeaderSignin_LNK = "a[title='Sign In']~CSS";
+	boolean isSignOut = false;
+	Map<String, String> messagesMap = null;
+	List<WebElement> elmStoreResults = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // GET THE REQUIRED DATA
+	    String strUsername = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String strPassword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    String strIntanceSet = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InstanceSet");
+	    String strZipCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode");
+	    String[] arrInstanceSet = strIntanceSet.split("~");
+
+	    for (int intInstCnt = 0; intInstCnt < arrInstanceSet.length; intInstCnt++) {
+		// 1. Login into the instance
+		String loginUrl = arrInstanceSet[intInstCnt] + "/" + LoginURL;
+		System.out.println("INSTANCE URL - " + arrInstanceSet[intInstCnt]);
+		browser.manage().deleteAllCookies();
+		getUrl(browser, loginUrl);
+
+		if (!clearAndEnterText(SiginPageUsername_TXT, strUsername, browser)) {
+		    messagesMap.put(arrInstanceSet[intInstCnt] + " - Username", "Not able to enter Username in the text field.");
+		    status = WARNING;
+		}
+
+		if (!clearAndEnterText(SiginPagePassword_TXT, strPassword, browser)) {
+		    messagesMap.put(arrInstanceSet[intInstCnt] + " - Password", "Not able to enter Password in the text field.");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(SigninPageSignIN_BTN, browser)) {
+		    getElementByProperty(SigninPageSignIN_BTN, browser).sendKeys(Keys.RETURN);
+
+		    if (!isElementPresentVerification(SiginPageSignOut_LNK, browser)) {
+			messagesMap.put(arrInstanceSet[intInstCnt] + " - Account Dashboard Page", "User not directed to Account Dashboard. Sign out button is not displayed.");
+			status = WARNING;
+		    }
+
+		    // 2. Search for a given Zip-code in the store locator
+
+		    if (isElementPresentVerifyClick(StoreLocator_LNK, browser)) {
+
+			if (!clearAndEnterText(FindStoreZipcode_TXT, strZipCode, browser)) {
+			    messagesMap.put(arrInstanceSet[intInstCnt] + " - Store Locator Page", "Unable to enter the zipcode in the find a store text box.");
+			    status = WARNING;
+			}
+
+			if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+			    messagesMap.put(arrInstanceSet[intInstCnt] + " - Store Locator Page", "Unable to click on find a store button.");
+			    status = WARNING;
+			}
+
+			Thread.sleep(OBJECT_WAIT_THRESHOLD);
+			if (getElementByProperty(StoreSearchResultsContainer_ELM, browser) != null) {
+			    elmStoreResults = getElementByProperty(StoreSearchResultsContainer_ELM, browser).findElements(By.cssSelector(StoreCells_ELM));
+
+			    if (elmStoreResults == null && elmStoreResults.size() <= 0) {
+				messagesMap.put(arrInstanceSet[intInstCnt] + " - Store Locator Page", "Stores for the prodvided zip code are not loaded.");
+				status = WARNING;
+			    }
+			} else {
+			    messagesMap.put(arrInstanceSet[intInstCnt] + " - Store Locator Page", "Stores for the prodvided zip code are not loaded.");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put(arrInstanceSet[intInstCnt] + " - Store Locator Page", "Unable to navigate to store locator page.");
+			status = WARNING;
+		    }
+
+		    // 3. Log out from the application
+
+		    // Check if the new header menu is displayed, if not click
+		    // on
+		    // the old signout link
+		    if (isElementPresentVerification(YourAccountMenu_ELM, browser)) {
+			if (performHoverClickAction(getElementByProperty(YourAccountMenu_ELM, browser), SignOut_LNK, browser))
+			    isSignOut = true;
+		    } else {
+			if (isElementPresentVerifyClick(SignOut_LNK, browser))
+			    isSignOut = true;
+		    }
+		    System.out.println("SIGNOUT -" +  isSignOut);
+		    if (isSignOut) {
+			if (!isElementPresentVerification(HeaderSignin_LNK, browser))
+			    browser.close();
+		    } else {
+			browser.close();
+		    }
+
+		} else {
+
+		    messagesMap.put(arrInstanceSet[intInstCnt] + "- SignIn Page", "Not able to verify Sign In Button on login page. Cannot continue further.");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to login into ISO Store Net
+     * @author - Siva Santhi Reddy
+     * @Created -24 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void logintoISOStoreNet(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoginID_TXT = "//input[@name='userid']~XPATH";
+	String Password_TXT = "//input[@name='password']~XPATH";
+	String LogIn_BTN = "//input[@type='submit']~XPATH";
+	String SnetDisplay_FRAME = "//iframe[@id='snetdisplayframe']~XPATH";
+	String Login_FRAME = "//iframe[@name='loginframe']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Data From Excel Sheet
+	    String ISOLoginURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ISOLoginURL");
+	    String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    // Load Login URL
+	    getUrl(browser, ISOLoginURL);
+	    browser.switchTo().frame(getElementByProperty(SnetDisplay_FRAME, browser));
+	    browser.switchTo().frame(getElementByProperty(Login_FRAME, browser));
+	    if (!clearAndEnterText(LoginID_TXT, UserName, browser)) {
+		messagesMap.put("Login Id", "Not able to enter User Name in Login Id Text field");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Password_TXT, Password, browser)) {
+		messagesMap.put("Password", "Not able to enter Password in Password Text field");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(LogIn_BTN, browser)) {
+		throw new Exception("Not able to click on Login Button");
+	    }
+	    if (isElementPresentVerification(LogIn_BTN, browser)) {
+		throw new Exception("Unable to Login into the Site");
+	    }
+	    switchToDefault(browser);
+	    // Load Default/home Page of ISO walgreens site after login.
+	    getUrl(browser, EcommTestRunner.config.getString("isoWalgreensURL"));
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,681 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import java.util.Calendar;
+
+public class SpecialtyLibrary extends CheckoutLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Specialty Rx Info in Cart
+     * @author - Siva Santhi Reddy
+     * @Created - 29-Aug-2012
+     * @Modified By -Siva
+     * @Modified Date -21-MAY-2013
+     ************************************************************* 
+     */
+    public static void verificationOfSpecialtyRxInfoinCart(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap)
+
+    {
+	String status = PASS;
+	String Prescriptions_DIV = "//*[contains(@class,'brdRtSld wag_rewards') or contains(@class,'sddCartTable')]~XPATH";
+	String Prescriptions_TABLE = "//table[contains(@class,'sddCartTable')]/tbody";
+	String ShipAlertMessage_ELM = "//*[contains(text(),'Please remove your Specialty Pharmacy Medication') or contains(text(),'Looking to ship the above prescription(s)?')]~XPATH";
+	String SharpscontainerText = "Sharps Container (included)";
+	String InjectionSuppliesText = "Injection Supplies (included)";
+	List<WebElement> RxDetails_DIV = null;
+	Map<String, String> messagesMap = null;
+	int StartRow = 0, RowIncrementer = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		if (!isElementPresentVerification(Prescriptions_DIV, browser)) {
+		    messagesMap.put("Specialty Rx Divison", "Not able to find the Specialty Rx Divison in the Shopping cart");
+		    status = WARNING;
+		}
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    RxDetails_DIV = getElementByProperty(Prescriptions_TABLE, browser).findElements(By.tagName("tr"));
+		    StartRow = 1;
+		    RowIncrementer = 1;
+		} else {
+		    RxDetails_DIV = getElementByProperty(Prescriptions_DIV, browser).findElements(By.xpath("//div[contains(@class,'brdRtSld wag_rewards')]/div"));
+		    StartRow = 0;
+		    RowIncrementer = 1;
+		}
+		int noofRxs = 0, Flag = 0;
+		for (int j = 1; j <= 30; j++) {
+		    String SharpsContainer = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SharpsContainer");
+		    String InjectionSupplies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InjectionSupplies");
+		    String RxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Rx" + j);
+		    if (RxNumber == null) {
+			break;
+		    }
+		    noofRxs = noofRxs + 1;
+		    for (int divcount = StartRow; divcount < RxDetails_DIV.size(); divcount = divcount + RowIncrementer) {
+			if (RxDetails_DIV.get(divcount).getText().trim().replaceAll(" ", "").contains(RxNumber)) {
+			    Flag = Flag + 1;
+			    if (!RxDetails_DIV.get(divcount).getText().contains("Specialty Pharmacy Medication")) {
+				messagesMap.put("Type: Specialty Pharmacy Medication", "Type: Specialty Pharmacy Medication is not displaying for the Specialty Rx in the cart");
+				status = WARNING;
+			    }
+			    if (SDDFlag.equalsIgnoreCase("ON")) {
+				WebElement PricecolumnElement = browser.findElement(By.xpath("//table[contains(@class,'sddCartTable')]/tbody/tr[" + (divcount + 1) + "]/td[3]"));
+				String PricecolumnText = PricecolumnElement.getText();
+				if (PricecolumnElement.getAttribute("class").contains("qtyCart")) {
+				    PricecolumnText = browser.findElement(By.xpath("//table[contains(@class,'sddCartTable')]/tbody/tr[" + (divcount + 1) + "]/td[2]")).getText();
+				}
+				if (!PricecolumnText.trim().equals("Not available")) {
+				    messagesMap.put("Price: Not Available", "Price: Not Available is not displaying for the Specialty Rx in the cart");
+				    status = WARNING;
+				}
+			    } else {
+				if (!RxDetails_DIV.get(divcount + 2).getText().equals("Not available")) {
+				    messagesMap.put("Price: Not Available", "Price: Not Available is not displaying for the Specialty Rx in the cart");
+				    status = WARNING;
+				}
+			    }
+			    if (SharpsContainer.equalsIgnoreCase("Yes")) {
+				if (!RxDetails_DIV.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container is not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (SharpsContainer.equalsIgnoreCase("No")) {
+				if (RxDetails_DIV.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container Should not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			    if (InjectionSupplies.equalsIgnoreCase("Yes")) {
+				if (!RxDetails_DIV.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection Suppliesis not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (InjectionSupplies.equalsIgnoreCase("No")) {
+				if (RxDetails_DIV.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection SuppliesShould not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			    break;
+
+			}
+		    }
+		}
+		if (noofRxs != Flag) {
+		    messagesMap.put("Sp Rx Message Validation", "Validation is not done for all the Rxs");
+		    status = WARNING;
+		}
+		if (dataMap.get("ShipAlertMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(ShipAlertMessage_ELM, browser)) {
+			messagesMap.put("Ship alert Message", "Ship alert Message is not getting displayed");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ShipAlertMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(ShipAlertMessage_ELM, browser)) {
+			messagesMap.put("Ship alert Message", "Ship alert Message should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Specialty Rx Info and delivery date selection
+     *          in Ship Method Page
+     * @author - Siva Santhi Reddy
+     * @Created - 29-Aug-2012
+     * @Modified By -Siva
+     * @Modified Date -04-MAR-2013
+     * @Modified Details: Updated this Method to Make it work for both SDD ON &
+     *           SDD OFF
+     ************************************************************* 
+     */
+    public static void verificationAndDeliverydateSelectionOfSpecialtyRxInfoinShipMethodPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap)
+
+    {
+	String status = PASS;
+	String SpecialtyRx_DIV = "//div[@id='shipMethods']/div[2]~XPATH";
+	String ShipFreeMsg_ELM = "//strong[contains(text(),'Shipping Is FREE') or contains(text(),'FREE shipping')]~XPATH";
+	String SharpscontainerText = "Sharps Container (included)";
+	String InjectionSuppliesText = "Injection Supplies (included)";
+	String SpecialtyDeliveryDate_TXT = "input#rxSpecialityDeliveryDate~CSS";
+	String DefaultAvailableDate = "a.ui-state-default~CSS";
+	String DatePickerTitle_DIV = "div.ui-datepicker-title~CSS";
+	String NextButton = "//span[contains(text(),'Next')]~XPATH";
+	String ReviewOrderpage_Header = "//*[contains(text(),'Review Order') or contains(text(),'Order review')]~XPATH";
+	String Continue_BTN = "//input[@title='Continue'or @title='Continue checkout']~XPATH";
+	String NextButtonDisabled_ELM = "//a[contains(@class,'ui-state-disabled')][@title='Next']~XPATH";
+	String RxName = null;
+	int Flag = 0;
+	boolean SelectionFound = false;
+	String DeliveryDate = null;
+	int NoofRxs = 0;
+	String DatePicketTitleDiv_Text = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    Map<String, String> sharedProperties = CommonLibrary.getScenario(stepBean.getStepScenarioId()).getSharedStepProperties();
+	    if (!isElementPresentVerification(SpecialtyRx_DIV, browser)) {
+		messagesMap.put("Special Rx Division", "Not able to identify the Special Rx Division");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(ShipFreeMsg_ELM, browser)) {
+		messagesMap.put("Ship Free Message", "Not able to identify the Ship Free Message");
+		status = WARNING;
+	    }
+	    List<WebElement> SpecialtyRxs_DIV = null;
+	    WebElement requiredSpecialtyRx_DIV = null;
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		List<WebElement> ProductDivisions = browser.findElements(By.xpath("//div[contains(@class,'prodInnerContainer')]"));
+		for (int k = 0; k < ProductDivisions.size(); k++) {
+		    if (ProductDivisions.get(k).getText().contains("FREE shipping")) {
+			requiredSpecialtyRx_DIV = ProductDivisions.get(k);
+		    }
+		}
+		SpecialtyRxs_DIV = requiredSpecialtyRx_DIV.findElements(By.className("shippingItemWrap"));
+	    } else {
+		SpecialtyRxs_DIV = getElementByProperty(SpecialtyRx_DIV, browser).findElements(By.xpath("//div[@id='shipMethods']/div[2]/div"));
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String SharpsContainer = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SharpsContainer");
+		String InjectionSupplies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InjectionSupplies");
+		for (int j = 1; j <= 30; j++) {
+		    RxName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxName_" + j);
+		    if (RxName == null) {
+			break;
+		    }
+		    NoofRxs = NoofRxs + 1;
+		    for (int divcount = 0; divcount < SpecialtyRxs_DIV.size(); divcount++) {
+			if (SpecialtyRxs_DIV.get(divcount).getText().contains(RxName)) {
+			    Flag = Flag + 1;
+			    // This validation should be done only for SDD OFF
+			    if (!SDDFlag.equalsIgnoreCase("ON")) {
+				if (!SpecialtyRxs_DIV.get(divcount).getText().contains("Specialty Pharmacy Medication")) {
+				    messagesMap.put("Type: Specialty Pharmacy Medication", "Type: Specialty Pharmacy Medication is not displaying for the Specialty Rx in the cart");
+				    status = WARNING;
+				}
+			    }
+			    if (SharpsContainer.equalsIgnoreCase("Yes")) {
+				if (!SpecialtyRxs_DIV.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container is not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (SharpsContainer.equalsIgnoreCase("No")) {
+				if (SpecialtyRxs_DIV.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container Should not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			    if (InjectionSupplies.equalsIgnoreCase("Yes")) {
+				if (!SpecialtyRxs_DIV.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection Supplies not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (InjectionSupplies.equalsIgnoreCase("No")) {
+				if (SpecialtyRxs_DIV.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection Supplies Should not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			    break;
+
+			}
+		    }
+		}
+	    }
+	    if (Flag != NoofRxs) {
+		messagesMap.put("Specialty Rx verification ", "Specialty Rx verification is not done for all the Rxs in the Ship Method page");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(SpecialtyDeliveryDate_TXT, browser)) {
+		throw new Exception("Not able to click on Select Delivery Date Field");
+	    }
+	    if (dataMap.get("DatePickerLogic").get(0).equalsIgnoreCase("Verify")) {
+		do {
+		    WebElement TableBody = browser.findElement(By.xpath("//table/tbody"));
+		    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+		    int NoofRows = TableRows.size();
+		    for (int row = 1; row <= NoofRows; row++) {
+			String DisabledElement = null;
+			for (int columnNumber = 1; columnNumber <= 7; columnNumber++) {
+			    DisabledElement = "//table/tbody/tr[" + row + "]/td[" + columnNumber + "][contains(@class,'ui-state-disabled')]~XPATH";
+			    if (!isElementPresentVerification(DisabledElement, browser)) {
+				messagesMap.put("Dates Disabled Status", "Weekend or Monday dates are not disabled");
+				status = WARNING;
+				// throw new
+				// Exception("Weekend or Monday dates are not disabled");
+			    }
+			    if (columnNumber == 2) {
+				columnNumber = columnNumber + 4;
+			    }
+			}
+		    }
+		    getElementByProperty(NextButton, browser).click();
+		} while (!isElementPresentVerification(NextButtonDisabled_ELM, browser));
+		List<WebElement> AllAvalibleDateElements = browser.findElements(By.xpath("//a[@class='ui-state-default']"));
+		int LastAvalibleDate = Integer.parseInt(AllAvalibleDateElements.get(AllAvalibleDateElements.size() - 1).getText());
+		Calendar cal = Calendar.getInstance();
+		String currentdate = cal.getTime().toString();
+		int TodaysDatealone = Integer.parseInt(currentdate.split(" ")[2]);
+		if (!(TodaysDatealone >= LastAvalibleDate)) {
+		    messagesMap.put("Last avalible day", "Last avalible day for shipping is displaying wrongly");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Last avalible day for shipping is displaying wrongly");
+		}
+		browser.navigate().refresh();
+		getElementByProperty(SpecialtyDeliveryDate_TXT, browser).click();
+	    }
+	    if (!dataMap.get("Month").get(0).equalsIgnoreCase("-") && !dataMap.get("Year").get(0).equalsIgnoreCase("-")) {
+		String Month = dataMap.get("Month").get(0);
+		String Year = dataMap.get("Year").get(0);
+		do {
+		    DatePicketTitleDiv_Text = getElementByProperty(DatePickerTitle_DIV, browser).getText();
+		    if (DatePicketTitleDiv_Text.contains(Month) && DatePicketTitleDiv_Text.contains(Year)) {
+			SelectionFound = true;
+			break;
+		    }
+		    if (!isElementPresentVerifyClick(NextButton, browser)) {
+			throw new Exception("Not able to click on Next Button");
+		    }
+		} while (!isElementPresentVerification(NextButtonDisabled_ELM, browser));
+		if (!SelectionFound) {
+		    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+		    status = WARNING;
+		    // throw new Exception("Required Month & Year not found");
+		}
+	    }
+	    if (dataMap.get("Date").get(0).equalsIgnoreCase("Default")) {
+		DeliveryDate = getElementByProperty(DefaultAvailableDate, browser).getText() + " " + getElementByProperty(DatePickerTitle_DIV, browser).getText();
+		String[] splitDeliverydate = DeliveryDate.split(" ");
+		if (Integer.parseInt(splitDeliverydate[0]) < 10) {
+		    splitDeliverydate[0] = "0" + splitDeliverydate[0];
+		}
+		DeliveryDate = splitDeliverydate[1] + " " + splitDeliverydate[0] + ", " + splitDeliverydate[2];
+		sharedProperties.put("DeliveryDate", DeliveryDate);
+		if (!isElementPresentVerifyClick(DefaultAvailableDate, browser)) {
+		    throw new Exception("Not able to select the first availabel date");
+		}
+	    } else {
+		String Date_ELM = "//a[contains(text(),'" + dataMap.get("Date").get(0) + "')]~XPATH";
+		DeliveryDate = dataMap.get("Date").get(0) + " " + getElementByProperty(DatePickerTitle_DIV, browser).getText();
+		String[] splitDeliverydate = DeliveryDate.split(" ");
+		if (Integer.parseInt(splitDeliverydate[0]) < 10) {
+		    splitDeliverydate[0] = "0" + splitDeliverydate[0];
+		}
+		DeliveryDate = splitDeliverydate[1] + " " + splitDeliverydate[0] + ", " + splitDeliverydate[2];
+		sharedProperties.put("DeliveryDate", DeliveryDate);
+		if (!isElementPresentVerifyClick(Date_ELM, browser)) {
+		    throw new Exception("Not able to click on selected Date. Either your selected date is not avalible or Disabled");
+		}
+	    }
+	    if (dataMap.get("ContinueButton").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		    throw new Exception("Not able to click on Continue Button from Shipping Method Page.");
+		}
+		if (!isElementPresentVerification(ReviewOrderpage_Header, browser)) {
+		    messagesMap.put("Review Order Page Header", "object is missing");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Not able to find the Order Review page after clicking continue button in Ship Method Page for Specialty Rx ");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Verifying Note Message about Specialty Rx in Payment Options
+     *          Page
+     * @author - Siva Santhi Reddy
+     * @Created - 03-Sep-2012
+     * @Modified By - Siva
+     * @Modified Date -03-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyingNoteMsginPaymentOptionsPage(EventFiringWebDriver browser, StepBean stepBean)
+
+    {
+	String status = PASS;
+	String NoteMessage_DIV = "//div[contains(@class,'info_msg')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerification(NoteMessage_DIV, browser)) {
+		messagesMap.put("Specialty Rx note", "Not able to verify the Specialty Rx note Message in the Payment Options page");
+		status = WARNING;
+		// throw new
+		// Exception("Not able to verify the Specialty Rx note Message in the Payment Options page");
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Specialty Rx Info in the Order Confirmation
+     *          Page
+     * @author - Siva Santhi Reddy
+     * @Created - 29-Aug-2012
+     * @Modified By -Siva
+     * @Modified Date -21-MAY-2013
+     ************************************************************* 
+     */
+    public static void verifySpecialtyRxInfoInOrderConfirmPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap)
+
+    {
+	String status = PASS;
+	String SpecialtyPaymentNoteMessage_ELM = "//p[contains(text(),' Specialty Pharmacy Medication will be processed separately.')]~XPATH";
+	String RequestDeveliveryDate_ELM = "//*[contains(text(),'Requested Delivery Date:')]~XPATH";
+	String RxOrderDetails_DIV = "//div[@class='th_652' or contains(@class,'shipMthdStrokeClr')]~XPATH";
+	String SharpscontainerText = "Sharps Container (included)";
+	String InjectionSuppliesText = "Injection Supplies (included)";
+	String RxDetails_DIV = "//div[contains(@class,'shipMthdStrokeClr')]";
+	WebElement RequiredPrimaryRxOrderDiv = null, RequiredSpecialtyRxOrderDiv = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	Map<String, String> sharedProperties = null;
+	String DeliveryDate = null;
+	WebElement ShipFreeMessage_DIV = null;
+	String ShipFreeMessage_SDD_ON = "//p[@class='shippingTextSdd']~XPATH";
+	String PaymentOptionsection_Header = "//strong[contains(text(),'Payment')]~XPATH";
+	String BillingInformation_Header = "//strong[contains(text(),'Billing Information:')]~XAPTH";
+	String OrderSummary_Header = "//*[contains(text(),'Order Summary')]~XPATH";
+	String OrderTotal_ELM = "//*[contains(text(),'Total:')]~XPATH";
+	String SpecialtyRxNoteMessage = "//div[@class='padLt10px']/p[5]~XPATH";
+	Map<String, String> messagesMap = null;
+	List<WebElement> AvaliblePrimaryDivsinOrderDiv = null;
+	List<WebElement> SpecialtyRxOrder_Divs = null;
+	List<WebElement> SpecialtyRxInfoDivs = null;
+	int StartCounter = 0, IncrementCounter = 0;
+	int SpecialtyRxDivNumber = 1;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DeliveryDate"))) {
+			    DeliveryDate = sharedProperties.get("DeliveryDate");
+			}
+		    }
+		}
+	    }
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		List<WebElement> RxDetailsDiv = browser.findElements(By.xpath("//div[contains(@class,'shipMthdStrokeClr')]"));
+		for (int k = 0; k < RxDetailsDiv.size(); k++) {
+		    if (RxDetailsDiv.get(k).getText().contains("Specialty Pharmacy Medication")) {
+			SpecialtyRxDivNumber = k + 1;
+			break;
+		    }
+		}
+		SpecialtyRxInfoDivs = getElementByProperty(RxDetails_DIV, browser).findElements(By.xpath("//div[contains(@class,'shipMthdStrokeClr')][" + SpecialtyRxDivNumber + "]/div"));
+		StartCounter = 0;
+		IncrementCounter = 1;
+	    } else {
+		AvaliblePrimaryDivsinOrderDiv = getElementByProperty(RxOrderDetails_DIV, browser).findElements(By.tagName("div"));
+		for (int i = 0; i < AvaliblePrimaryDivsinOrderDiv.size(); i++) {
+		    if (AvaliblePrimaryDivsinOrderDiv.get(i).getText().contains("Speciality")) {
+			RequiredPrimaryRxOrderDiv = AvaliblePrimaryDivsinOrderDiv.get(i);
+			break;
+		    }
+		}
+		for (int i = 0; i < AvaliblePrimaryDivsinOrderDiv.size(); i++) {
+		    if (AvaliblePrimaryDivsinOrderDiv.get(i).getText().contains("Requested Delivery Date")) {
+			ShipFreeMessage_DIV = AvaliblePrimaryDivsinOrderDiv.get(i);
+			break;
+		    }
+		}
+		SpecialtyRxOrder_Divs = RequiredPrimaryRxOrderDiv.findElements(By.tagName("div"));
+		for (int i = 0; i < SpecialtyRxOrder_Divs.size(); i++) {
+		    if (AvaliblePrimaryDivsinOrderDiv.get(i).getText().contains("Prescription:")) {
+			RequiredSpecialtyRxOrderDiv = AvaliblePrimaryDivsinOrderDiv.get(i);
+		    }
+		}
+		SpecialtyRxInfoDivs = RequiredSpecialtyRxOrderDiv.findElements(By.tagName("div"));
+		StartCounter = 1;
+		IncrementCounter = 6;
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		int noofRxs = 0, Flag = 0;
+		for (int j = 1; j <= 30; j++) {
+		    String SharpsContainer = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SharpsContainer");
+		    String InjectionSupplies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InjectionSupplies");
+		    String RxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Rx" + j);
+		    if (RxNumber == null) {
+			break;
+		    }
+		    noofRxs = noofRxs + 1;
+		    for (int divcount = StartCounter; divcount < SpecialtyRxInfoDivs.size(); divcount = divcount + IncrementCounter) {
+			if (SpecialtyRxInfoDivs.get(divcount).getText().contains(RxNumber)) {
+			    Flag = Flag + 1;
+			    if (SDDFlag.equalsIgnoreCase("ON")) {
+				String RxDetailsColumnText = SpecialtyRxInfoDivs.get(divcount)
+					.findElement(By.xpath("//div[contains(@class,'shipMthdStrokeClr')][" + SpecialtyRxDivNumber + "]/div[" + (divcount + 1) + "]/div")).getText();
+				if (!RxDetailsColumnText.contains("Specialty Pharmacy Medication")) {
+				    messagesMap.put("Type: Specialty Pharmacy Medication", "Type: Specialty Pharmacy Medication is not displaying for the Specialty Rx in Order Confirmation Page");
+				    status = WARNING;
+				}
+				String PriceColumnText = SpecialtyRxInfoDivs.get(divcount)
+					.findElement(By.xpath("//div[contains(@class,'shipMthdStrokeClr')][" + SpecialtyRxDivNumber + "]/div[" + (divcount + 1) + "]/div[3]")).getText();
+				if (!PriceColumnText.trim().contains("Not Available")) {
+				    messagesMap.put("Price:", "Price: Not Available is not displaying for the Specialty Rx in Order Confirmation page");
+				    status = WARNING;
+				}
+			    } else {
+				if (!SpecialtyRxInfoDivs.get(divcount).getText().contains("Speciality Pharmacy Medication")) {
+				    messagesMap.put("Type: Specialty Pharmacy Medication", "Type: Specialty Pharmacy Medication is not displaying for the Specialty Rx in Order Confirmation Page");
+				    status = WARNING;
+				}
+				if (!SpecialtyRxInfoDivs.get(divcount + 3).getText().equals("Not Available")) {
+				    messagesMap.put("Price:", "Price: Not Available is not displaying for the Specialty Rx in Order Confirmation page");
+				    status = WARNING;
+				}
+			    }
+			    if (SharpsContainer.equalsIgnoreCase("Yes")) {
+				if (!SpecialtyRxInfoDivs.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container is not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (SharpsContainer.equalsIgnoreCase("No")) {
+				if (SpecialtyRxInfoDivs.get(divcount).getText().contains(SharpscontainerText)) {
+				    messagesMap.put("Sharps Container", "Sharps Container Should not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			    if (InjectionSupplies.equalsIgnoreCase("Yes")) {
+				if (!SpecialtyRxInfoDivs.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection Suppliesis not getting displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    } else if (InjectionSupplies.equalsIgnoreCase("No")) {
+				if (SpecialtyRxInfoDivs.get(divcount).getText().contains(InjectionSuppliesText)) {
+				    messagesMap.put("Injection Supplies", "Injection SuppliesShould not be displayed for the " + dataMap.get("RowId").get(i) + " Rxs");
+				    status = WARNING;
+				}
+			    }
+			}
+		    }
+
+		}
+		if (noofRxs != Flag) {
+		    messagesMap.put("Sp Rx Validation ", "Validtion is not happend for all Rxs");
+		    status = WARNING;
+		}
+	    }
+	    if (DeliveryDate == null) {
+		messagesMap.put("Delivered date", "Delivered date returned as null. Please check");
+		status = WARNING;
+	    }
+	    if (!getElementByProperty(RequestDeveliveryDate_ELM, browser).getText().contains(DeliveryDate)) {
+		messagesMap.put("Delivered date", "Delivered date is incorreclty displaying in the Order Confirmationm Page");
+		status = WARNING;
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		SpecialtyRxNoteMessage = SpecialtyPaymentNoteMessage_ELM;
+		ShipFreeMessage_DIV = getElementByProperty(ShipFreeMessage_SDD_ON, browser);
+	    }
+	    if (!ShipFreeMessage_DIV.getText().contains("Shipping: FREE")) {
+		messagesMap.put("Shipping Free Message", "Not able to identify the Shipping Free Message");
+		status = WARNING;
+	    }
+	    if (dataMap.get("SpecialtyPaymentNoteMsg").get(0).equalsIgnoreCase("Yes")) {
+		String SpecialtyPaymentNoteMsg = "Specialty Pharmacy Medication will be processed separately.";
+		if (!getElementByProperty(SpecialtyRxNoteMessage, browser).getText().contains(SpecialtyPaymentNoteMsg)) {
+		    messagesMap.put("Spcialty Payment Note Message", "Not able to identify the Spcialty Payment Note Message in Payment Options Section");
+		    status = WARNING;
+		}
+
+	    } else if (dataMap.get("SpecialtyPaymentNoteMsg").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(SpecialtyPaymentNoteMessage_ELM, browser)) {
+		    messagesMap.put("Spcialty Payment Note Message", "Specilty Payment Note message should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("PaymentSection").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(PaymentOptionsection_Header, browser) || !isElementPresentVerification(BillingInformation_Header, browser)) {
+		    messagesMap.put("Payment Option Section", "Payment Option Section is not getting displayed");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("PaymentSection").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(PaymentOptionsection_Header, browser) || isElementPresentVerification(BillingInformation_Header, browser)) {
+		    messagesMap.put("Payment Option Section", "Payment Option Section Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("OrderSummaryBox").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(OrderSummary_Header, browser)) {
+		    messagesMap.put("Order Summary Box", "Not able to find the Header of Order Summary Box");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(OrderTotal_ELM, browser)) {
+		    messagesMap.put("Order Total", "Not able to find the Order Total in Order Summary Box");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("OrderSummaryBox").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(OrderSummary_Header, browser) || isElementPresentVerification(OrderTotal_ELM, browser)) {
+		    messagesMap.put("Order Summary Box", "Order Summary Box should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Specialty Rx Info in the Order Review Page
+     *          Page
+     * @author - Madusudanan.B.N
+     * @Created - 25-Nov-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    
+    
+    public static void verifySpecialtyRxInfoInOrderReviewPage(EventFiringWebDriver browser, StepBean stepBean){
+    
+		String status = PASS;
+		Map<String, String> messagesMap = null;
+		String stepScenarioId = null;
+		ScenarioBean scenarioBean = null;
+		Map<String, String> sharedProperties = null;
+		String DeliveryDate = null;
+		String RequestDeveliveryDate_ELM = "//*[contains(text(),'Requested Delivery Date:')]~XPATH";
+
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+				stepScenarioId = stepBean.getStepScenarioId();
+				if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+					scenarioBean = EcommTestRunner.registeredScenariosMap
+							.get(stepScenarioId);
+					if (scenarioBean.getSharedStepProperties() != null) {
+						sharedProperties = scenarioBean
+								.getSharedStepProperties();
+						if (StringUtils.isNotBlank(sharedProperties
+								.get("DeliveryDate"))) {
+							DeliveryDate = sharedProperties.get("DeliveryDate");
+						}
+					}
+				}
+			}
+			//Delivery Date Validation
+			if (DeliveryDate == null) {
+				messagesMap.put("Delivered date",
+						"Delivered date returned as null. Please check");
+				status = WARNING;
+			}
+			if (!getElementByProperty(RequestDeveliveryDate_ELM, browser).getText().contains(DeliveryDate)) {
+				messagesMap.put("Delivered date","Delivered date is incorrectly displayed in the Order Review Page");
+				status = WARNING;
+			}
+		} catch (Exception e) {
+			status = WARNING;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+
+	}
+}

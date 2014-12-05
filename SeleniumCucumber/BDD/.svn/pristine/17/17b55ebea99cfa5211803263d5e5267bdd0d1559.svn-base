@@ -1,0 +1,2173 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.apache.commons.lang.StringUtils;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutContactLensLibrary extends CheckoutLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to Add Contact Lense to Cart by selecting
+     *          differnet fields to cart(BC, Diameter..... and use "-" for not
+     *          required fields)
+     * @author - Imran
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -11-NOV-13
+     ************************************************************* 
+     */
+    public static void searchandAddContactLensItemsToTheCart(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CLAddToCart_BTN = "//div[@class='pre-bttn']/input[@alt='Add to Cart']~XPATH";
+	String ProductName_LNK = "//div[contains(@class,'product-name')]/a~XPATH";
+	String RemoveLeftLense_CHECKBOX = "//input[@id='lCheckBox']~XPATH";
+	String RemoveRightLense_CHECKBOX = "//input[@id='rCheckBox']~XPATH";
+	String RightLenseQTY_TEXT = "input#rQty~CSS";
+	String LeftLenseQTY_TEXT = "input#lQty~CSS";
+	String ContactLensDetailS_TABLE = "//table[@class='prescription-details']/tbody~XPATH";
+	String ShoppingCart_Heading = "//*[contains(text(),'Shopping Cart')]~XPATH";
+	String Two_Ways_OverLay_Close = "//a[@id='div2ways2shopClose']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+
+	    // Unresponsive element handler for Chrome
+	    if (isElementPresentVerification(Two_Ways_OverLay_Close, browser) && getElementByProperty(Two_Ways_OverLay_Close, browser).isDisplayed()) {
+		getElementByProperty(Two_Ways_OverLay_Close, browser).click();
+	    }
+	    for (int i = 0; i < totalRowCount; i++) {
+		try {
+		    if (!isElementPresentVerifyClick(ProductName_LNK, browser)) {
+			throw new Exception("Not able to Click on Product Link");
+		    }
+		    String side = dataMap.get("Side").get(i);
+		    if ("right".equals(side)) {
+			// performCheckBoxClick(RemoveLeftLense_CHECKBOX,
+			// browser);
+			// # SARAVANAN M - 19-AUG-2013 - Alternative to
+			// uncheck the Left Lense option
+			WebElement LeftCHK = getElementByProperty(RemoveLeftLense_CHECKBOX, browser);
+			if (LeftCHK.isSelected()) {
+			    do {
+				LeftCHK.click();
+			    } while (LeftCHK.isSelected());
+			}
+			clearAndEnterText(RightLenseQTY_TEXT, dataMap.get("Quantity").get(i), browser);
+		    } else if ("left".equals(side)) {
+			// performCheckBoxClick(RemoveRightLense_CHECKBOX,
+			// browser);
+
+			// # SARAVANAN M - 19-AUG-2013 - Alternative to
+			// uncheck the Right Lense option
+			WebElement RightCHK = getElementByProperty(RemoveRightLense_CHECKBOX, browser);
+			if (RightCHK.isSelected()) {
+			    do {
+				RightCHK.click();
+			    } while (RightCHK.isSelected());
+			}
+			clearAndEnterText(LeftLenseQTY_TEXT, dataMap.get("Quantity").get(i), browser);
+		    }
+
+		    // Setting values for every drop down box in the table
+		    // (Contact Lens)
+		    List<WebElement> listSelectBoxes = getElementByProperty(ContactLensDetailS_TABLE, browser).findElements(By.tagName("select"));
+		    for (int j = 0; j < listSelectBoxes.size(); j++) {
+			WebElement selectElement = listSelectBoxes.get(j);
+			if (selectElement.isEnabled()) {
+			    String name = selectElement.getAttribute("name");
+			    Select selectBox = new Select(selectElement);
+			    if ("right".equals(side)) {
+				if ("rPower".equals(name)) {
+				    if (!"-".equals(dataMap.get("Power").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Power").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("rBasecurve".equals(name)) {
+				    if (!"-".equals(dataMap.get("BC").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("BC").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("rDiameter".equals(name)) {
+				    if (!"-".equals(dataMap.get("Diameter").get(i))) {
+					// new code added Diameter instead
+					// DIA
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("DIA").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("rCylinder".equals(name)) {
+				    if (!"-".equals(dataMap.get("Cylinder").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Cylinder").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				}
+				// new code
+				else if ("rAddition".equals(name)) {
+				    if (!"-".equals(dataMap.get("Addition").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Addition").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} // end or new code rDiameter
+				else if ("rAxis".equals(name)) {
+				    if (!"-".equals(dataMap.get("Axis").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Axis").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("rColor".equals(name)) {
+				    if (!"-".equals(dataMap.get("Color").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Color").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("rQty".equals(name)) {
+				    if (!"-".equals(dataMap.get("Quantity").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Quantity").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				}
+			    } else {
+				if ("lPower".equals(name)) {
+				    if (!"-".equals(dataMap.get("Power").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Power").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("lBasecurve".equals(name)) {
+				    if (!"-".equals(dataMap.get("BC").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("BC").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("lDiameter".equals(name)) {
+				    if (!"-".equals(dataMap.get("Diameter").get(i))) {
+					// new code added Diameter instead
+					// DIA
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("DIA").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("lCylinder".equals(name)) {
+				    if (!"-".equals(dataMap.get("Cylinder").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Cylinder").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("lAxis".equals(name)) {
+				    if (!"-".equals(dataMap.get("Axis").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Axis").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				}
+				// new code
+				else if ("lAddition".equals(name)) {
+				    if (!"-".equals(dataMap.get("Addition").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Addition").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} // end or new code
+				else if ("lColor".equals(name)) {
+				    if (!"-".equals(dataMap.get("Color").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Color").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				} else if ("lQty".equals(name)) {
+				    if (!"-".equals(dataMap.get("Quantity").get(i))) {
+					selectBox.selectByIndex(Integer.parseInt(dataMap.get("Quantity").get(i)));
+				    } else {
+					selectBox.selectByIndex(defaultSelectIndex);
+				    }
+				}
+			    }
+			}
+		    }// end of for loop
+
+		    if (isElementPresentVerification(CLAddToCart_BTN, browser)) {
+			getElementByProperty(CLAddToCart_BTN, browser).sendKeys(Keys.RETURN);
+		    }
+		    if (!isElementPresentVerification(ShoppingCart_Heading, browser)) {
+			throw new Exception("Not able to find Shopping Cart Page Header");
+		    }
+		} catch (Exception e) {
+		    // move on to the next item
+		    status = FAIL;
+		}
+	    }// end of outer for loop
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is used to search for contact lens prescriber
+     *          based upon the information provided in the Doctor Information
+     *          form( Old Method )
+     * @author - Imran
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addContactLensDoctorInformation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String isTestSuccessful = FAIL;
+	String ShippingInformation_Heading = "//h2[contains(text(),'Shipping Information')]~XPATH";
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String StoreName_TEXT = "input#storeName~CSS";
+	String DoctorFirstName_TEXT = "input#drfirstname~CSS";
+	String DoctorLastName_TEXT = "input#drlastName~CSS";
+	String Address_TEXT = "input#address~CSS";
+	String City_TEXT = "input#city~CSS";
+	String State_SELECT = "select#state~CSS";
+	String ZIPCode_TEXT = "input#zip~CSS";
+	String PhoneAreaCode_TEXT = "input#phone~CSS";
+	String PhoneNumber_TEXT = "input#phone_text~CSS";
+	String FaxAreaCode_TEXT = "input#fax~CSS";
+	String FaxNumber_TEXT = "input#fax_text~CSS";
+	int selectPrescriber = 0;
+	try {
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		clearAndEnterText(StoreName_TEXT, dataMap.get("StoreName").get(i), browser);
+		if (!"-".equals(dataMap.get("DoctorLastName").get(i))) {
+		    clearAndEnterText(DoctorLastName_TEXT, dataMap.get("DoctorLastName").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("DoctorFirstName").get(i))) {
+		    clearAndEnterText(DoctorFirstName_TEXT, dataMap.get("DoctorFirstName").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("DoctorAddress").get(i))) {
+		    clearAndEnterText(Address_TEXT, dataMap.get("DoctorAddress").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("DoctorCity").get(i))) {
+		    clearAndEnterText(City_TEXT, dataMap.get("DoctorCity").get(i), browser);
+		}
+		// Select the State from the dropdown
+		if (!"-".equals(dataMap.get("State").get(i))) {
+		    WebElement stateListElement = getElementByProperty(State_SELECT, browser);
+		    Select selectBox = new Select(stateListElement);
+		    if (!"-".equals(dataMap.get("State").get(i))) {
+			selectBox.selectByIndex(Integer.parseInt(dataMap.get("State").get(i)));
+		    } else {
+			selectBox.selectByIndex(defaultSelectIndex);
+		    }
+		}
+		if (!"-".equals(dataMap.get("ZIPCode").get(i))) {
+		    clearAndEnterText(ZIPCode_TEXT, dataMap.get("ZIPCode").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("PhoneAreaCode").get(i))) {
+		    clearAndEnterText(PhoneAreaCode_TEXT, dataMap.get("PhoneAreaCode").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("PhoneNumber").get(i))) {
+		    clearAndEnterText(PhoneNumber_TEXT, dataMap.get("PhoneNumber").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("PhoneNumber").get(i))) {
+		    clearAndEnterText(FaxAreaCode_TEXT, dataMap.get("PhoneNumber").get(i), browser);
+		}
+		if (!"-".equals(dataMap.get("FaxNumber").get(i))) {
+		    clearAndEnterText(FaxNumber_TEXT, dataMap.get("FaxNumber").get(i), browser);
+		}
+
+		selectPrescriber = Integer.parseInt(dataMap.get("SelectPrescriber").get(i));
+
+	    }// end of outer for loop
+
+	    if (isElementPresentVerification(Continue_BTN, browser)) {
+		getElementByProperty(Continue_BTN, browser).click();
+	    }
+
+	    List<WebElement> listSelectBoxes = browser.findElements(By.name("submit"));
+	    WebElement selectBox = listSelectBoxes.get(selectPrescriber);
+	    selectBox.click();
+
+	    if (isElementPresentVerification(ShippingInformation_Heading, browser)) {
+		isTestSuccessful = PASS;
+	    }
+
+	} catch (Exception e) {
+	    isTestSuccessful = FAIL;
+	    e.printStackTrace();
+	} finally {
+
+	    stepBean.setStepStatus(isTestSuccessful);
+
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Shop Contact Lens & ReviewOrder links in CL
+     *          Re-order Page
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -5-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyLinkInReorderpage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ContactLens_ELM = "a[title='Contact Lenses']~CSS";
+	String ReOrderLens_BTN = "img[title='Reorder Lenses']~CSS";
+	String ReviewOrder_LNK = "//a[contains(text(),'Review Orders in Progress')]~XPATH";
+	String ShopContactLens_LNK = "//a[contains(text(),'Shop Contact Lenses')]~XPATH";
+	String ShopContactValue = null, ReviewOrderValue = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ShopContactValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShopContact");
+	    ReviewOrderValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ReviewOrder");
+	    if (!isElementPresentVerifyClick(ContactLens_ELM, browser)) {
+		throw new Exception("Not able to click Contact lens on Category header");
+	    }
+	    if (!isElementPresentVerifyClick(ReOrderLens_BTN, browser)) {
+		throw new Exception("Not able to click ReOrder lens button in Contact lens page");
+	    }
+	    if (ShopContactValue.equalsIgnoreCase("Yes")) {
+
+		if (!isElementPresentVerification(ShopContactLens_LNK, browser)) {
+		    messagesMap.put("Shop Contact Lens Link", "Shop Contact Lens Link is Not available for Zero Re-order page");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Shop Contact Lens Link is Not available for Zero Re-order page");
+		}
+
+	    } else if (ShopContactValue.equalsIgnoreCase("No")) {
+
+		if (isElementPresentVerification(ShopContactLens_LNK, browser)) {
+		    messagesMap.put("Shop Contact Lens Link", "Shop Contact Lens Link should not be available for Zero Re-order page");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Shop Contact Lens Link is available for Re-order page with contact lens");
+		}
+
+	    }
+	    if (ReviewOrderValue.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(ReviewOrder_LNK, browser)) {
+		    messagesMap.put("Review order Link", "Review order Link is  Not available for Zero Re-order page");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Review order Link is  Not available for Zero Re-order page");
+		}
+
+	    } else if (ReviewOrderValue.equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(ReviewOrder_LNK, browser)) {
+		    messagesMap.put("Review order Link", "Review order Link should not be displayed for Zero Re-order page");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Review order Link is  available for Re-order page with contact lens");
+		}
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is used to go to shopping cart and verify the null
+     *          fields in contact lens page when SDD is ON and OF
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -04-SEP-2013
+     ************************************************************* 
+     */
+    public static void verifyShoppingCartCLDescrFeilds(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ShoppingCart_div = "//div[contains(@class,'th_902')]~XPATH";
+	String CLItems_TABLE = "//table[contains(@class,'sddCartTable')]/tbody~XPATH";
+	List<WebElement> RequiredDivs = null;
+	int flag = 0;
+	int rowStartValue = 0, rowIncrementValue = 0;
+	String PowerValue = null, BCValue = null, CylinderValue = null, AxisValue = null, AdditionValue = null, DiameterValue = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		RequiredDivs = getElementByProperty(CLItems_TABLE, browser).findElements(By.tagName("tr"));
+		rowStartValue = 2;
+		rowIncrementValue = 3;
+	    } else {
+		RequiredDivs = getElementByProperty(ShoppingCart_div, browser).findElements(By.xpath("//div[contains(@class,'th_902')]/div"));
+		rowStartValue = 1;
+		rowIncrementValue = 1;
+	    }
+	    PowerValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Power");
+	    BCValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BC");
+	    CylinderValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Cylinder");
+	    AxisValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Axis");
+	    AdditionValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Addition");
+	    DiameterValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Diameter");
+	    for (int j = rowStartValue; j < RequiredDivs.size() - 1; j = j + rowIncrementValue) {
+		if (PowerValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (PowerValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (BCValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+
+		} else if (BCValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (CylinderValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (CylinderValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AxisValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AxisValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AdditionValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AdditionValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (DiameterValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (DiameterValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		flag = flag + 1;
+	    }
+	    if (flag == 0) {
+		messagesMap.put("Validation", "Validation not happend for all the Items");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy the null fields(Power, BC Value....) for
+     *          Contact Lenses in Review Order Page when SDD is ON and OFF
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -02-APR-2013
+     ************************************************************* 
+     */
+
+    public static void verifyReviewOrderDescrFeilds(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderReview_div = "//div[@class='th_652']~XPATH";
+	String LeftNavDiv_SDD_ON_DIV = "//div[@id='leftNavShippingInfo']~XPATH";
+	String ItemsArrive_TXT = "//strong/div~XPATH";
+	String ItemsArrive_SDD_ON_ELM = "//p[contains(@class,'itemsArriveText')]~XPATH";
+	WebElement CLorderDiv = null;
+	List<WebElement> AvailableDivs = null;
+	List<WebElement> RequiredDivs = null;
+	int rowStartValue = 0, rowIncrementValue = 0;
+	int i = 0, flag = 0;
+	int requiredDivnumber = 0;
+	String PowerValue = null, BCValue = null, CylinderValue = null, AxisValue = null, AdditionValue = null, DiameterValue = null, AfterCopyText = null, PatientInfo = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    PowerValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Power");
+	    BCValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BC");
+	    CylinderValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Cylinder");
+	    AxisValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Axis");
+	    AdditionValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Addition");
+	    DiameterValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Diameter");
+	    AfterCopyText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AfterCopyText");
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		AvailableDivs = getElementByProperty(LeftNavDiv_SDD_ON_DIV, browser).findElements(By.xpath("//div[@id='leftNavShippingInfo']/div"));
+		ItemsArrive_TXT = ItemsArrive_SDD_ON_ELM;
+		for (i = 0; i < AvailableDivs.size(); i++) {
+		    if (AvailableDivs.get(i).getText().contains("Contact Lens")) {
+			CLorderDiv = AvailableDivs.get(i + 1);
+			requiredDivnumber = i + 2;
+			break;
+		    }
+		}
+	    } else {
+		AvailableDivs = getElementByProperty(OrderReview_div, browser).findElements(By.xpath("//div[@class='th_652']/div"));
+		for (i = 0; i < AvailableDivs.size(); i++) {
+		    if (AvailableDivs.get(i).getText().contains("Lenses")) {
+			CLorderDiv = AvailableDivs.get(i);
+			break;
+		    }
+		}
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		RequiredDivs = CLorderDiv.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + requiredDivnumber + "]/div"));
+		rowStartValue = 0;
+		rowIncrementValue = 2;
+	    } else {
+		RequiredDivs = CLorderDiv.findElements(By.xpath("//div[@class='th_652']/div[" + (i + 1) + "]/div"));
+		rowStartValue = 1;
+		rowIncrementValue = 1;
+	    }
+	    for (int j = rowStartValue; j < RequiredDivs.size(); j = j + rowIncrementValue) {
+		if (PowerValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (PowerValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (BCValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (BCValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (CylinderValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (CylinderValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AxisValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AxisValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AdditionValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AdditionValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (DiameterValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (DiameterValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		// new code added
+		if (!PatientInfo.equalsIgnoreCase("-")) {
+		    if (!RequiredDivs.get(j).getText().contains(PatientInfo)) {
+			messagesMap.put("patient info ", "patient info Not present in Order review page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		// end of new code
+		flag = flag + 1;
+	    }
+	    if (flag == 0) {
+		messagesMap.put("Validation", "Validation not happend for all the Items");
+		status = WARNING;
+	    }
+	    if (AfterCopyText != null && !AfterCopyText.equals("\".\"-")) {
+		if (!getElementByProperty(ItemsArrive_TXT, browser).getText().contains(AfterCopyText)) {
+		    messagesMap.put("Contact Lense Copy", "Contact lens does not have Items arrive in 4 business days after verification. message  in order Review Page");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+
+	    stepBean.setStepStatus(status);
+
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy the null fields(Power, BC Value....) for
+     *          Contact Lenses in Order Confirmation Page when SDD is OFF and ON
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -02-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderConfirmationDescrFeilds(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderSummary_div = "//div[@class='th_652']~XPATH";
+	String ItemsArrive_TXT = "//div[6]/div/strong~XPATH";
+	String LeftNavDiv_SDD_ON_DIV = "//div[@id='leftNavShippingInfo']~XPATH";
+	String ItemsArrive_SDD_ON_ELM = "//p[contains(@class,'itemsArriveText')]~XPATH";
+	WebElement CLorderDiv = null;
+	List<WebElement> AvailableDivs = null;
+	List<WebElement> RequiredDivs = null;
+	int i = 0, flag = 0;
+	int RequiredDivision = 0;
+	int rowStartValue = 0, rowIncrementValue = 0;
+	int RequiredDivisionNumber = 0;
+	String PowerValue = null, BCValue = null, CylinderValue = null, AxisValue = null, AdditionValue = null, DiameterValue = null, AfterCopyText = null, PatientInfo = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    PowerValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Power");
+	    BCValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BC");
+	    CylinderValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Cylinder");
+	    AxisValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Axis");
+	    AdditionValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Addition");
+	    DiameterValue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Diameter");
+	    AfterCopyText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AfterCopyText");
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		ItemsArrive_TXT = ItemsArrive_SDD_ON_ELM;
+		List<WebElement> OrderCompleteLeftDivs = browser.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div"));
+		for (int count = 0; count < OrderCompleteLeftDivs.size(); count++) {
+		    if (OrderCompleteLeftDivs.get(count).getText().contains("Order #")) {
+			RequiredDivision = count + 1;
+			break;
+		    }
+		}
+		AvailableDivs = getElementByProperty(LeftNavDiv_SDD_ON_DIV, browser).findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div"));
+		for (i = 0; i < AvailableDivs.size(); i++) {
+		    if (AvailableDivs.get(i).getText().contains("Contact Lens")) {
+			CLorderDiv = AvailableDivs.get(i + 1);
+			RequiredDivisionNumber = i + 2;
+			break;
+		    }
+		}
+	    } else {
+		AvailableDivs = getElementByProperty(OrderSummary_div, browser).findElements(By.xpath("//div[@class='th_652']/div"));
+		for (i = 0; i < AvailableDivs.size(); i++) {
+		    if (AvailableDivs.get(i).getText().contains("Lenses")) {
+			CLorderDiv = AvailableDivs.get(i);
+			break;
+		    }
+		}
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		RequiredDivs = CLorderDiv.findElements(By.xpath("//div[@id='leftNavShippingInfo']/div[" + RequiredDivision + "]/div[" + RequiredDivisionNumber + "]/div"));
+		rowStartValue = 0;
+		rowIncrementValue = 2;
+
+	    } else {
+		RequiredDivs = CLorderDiv.findElements(By.xpath("//div[@class='th_652']/div[" + (i + 1) + "]/div"));
+		rowStartValue = 1;
+		rowIncrementValue = 1;
+	    }
+	    for (int j = rowStartValue; j < RequiredDivs.size() - 1; j = j + rowIncrementValue) {
+		if (PowerValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (PowerValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Power")) {
+			messagesMap.put("Power field", "Power field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (BCValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (BCValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("BC")) {
+			messagesMap.put("BC field", "BC field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (CylinderValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (CylinderValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("CYL")) {
+			messagesMap.put("CYL field", "CYL field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AxisValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AxisValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Axis")) {
+			messagesMap.put("Axis field", "Axis field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (AdditionValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (AdditionValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("Add")) {
+			messagesMap.put("Add field", "Add field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		if (DiameterValue.equalsIgnoreCase("Yes")) {
+		    if (!RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA is not present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		} else if (DiameterValue.equalsIgnoreCase("No")) {
+		    if (RequiredDivs.get(j).getText().contains("DIA")) {
+			messagesMap.put("DIA field", "DIA field should not be present in Shopping cart page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		// new code added
+		if (!PatientInfo.equalsIgnoreCase("-")) {
+		    if (!RequiredDivs.get(j).getText().contains(PatientInfo)) {
+			messagesMap.put("patient info ", "patient info Not present in Order review page for the CL- " + j + " item");
+			status = WARNING;
+		    }
+		}
+		// end of new code
+		flag = flag + 1;
+	    }
+	    if (flag == 0) {
+		messagesMap.put("Validation", "Validation not happend for all the Items");
+		status = WARNING;
+	    }
+	    if (AfterCopyText != null && !AfterCopyText.equals("\".\"-")) {
+		if (!getElementByProperty(ItemsArrive_TXT, browser).getText().contains(AfterCopyText)) {
+		    messagesMap.put("Contact Lense Copy", "Contact lens does not have Items arrive in 4 business days after verification. message  in order Review Page");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy the Error messages related to patient&
+     *          Doctor Info and Happy flow to Navigate to Doctor Search Results.
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -7-Nov-12
+     ************************************************************* 
+     */
+    public static void VerificationAndSelectioninPatientDoctorInfoPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ContactLens_img = "//img[@title='Contact Lens']~XPATH";
+	String SelectExitstinPatient_RADIO = "//input[@id='rdoNewPat']~XPATH";
+	String patientNFamilyDroDown_LST = "//select[@id='userSelectCustomerKey']~XPATH";
+	String CreateNewPatient_RADIO = "//input[@id='rdoCreateNewPat']~XPATH";
+	String PatientFirstName_TXT = "//div[@id='selectNewPat']/input[1]~XPATH";
+	String PatientLastName_TXT = "//div[@id='selectNewPat']/input[3]~XPATH";
+	String PatientDate_LST = "//select[contains(@name,'custDobDay')]~XPATH";
+	String PatientMonth_LST = "//select[contains(@name,'custDobMonth')]~XPATH";
+	String PatientYear_LST = "//select[contains(@name,'custDobYear')]~XPATH";
+	String Month_LST = "//div[@id='selectNewPat']/select[1]~XPATH";
+	String Date_LST = "//div[@id='selectNewPat']/select[2]~XPATH";
+	String Year_LST = "//div[@id='selectNewPat']/select[3]~XPATH";
+	String DobEligibility_CHK = "//div[@id='selectNewPat']/div[6]/p[2]/input[1]~XPATH";
+	String DObEligble_TXT = "//*[contains(text(),'If you are ordering contact lenses for a patient 13 years of age or younger')]~XPATH";
+	String PatientNameDetails_LST = "select#userSelectCustomerKey~CSS";
+	String PatientDetails_ELM = "div[id='select']~CSS";
+	String PatientDOBDetails_ELM = "//div[@id='displayCustDob']/p/strong";
+	String DoctorOnFile_RADIO = "//input[@id='rdoExit']~XPATH";
+	String DoctorNewFile_RADIO = "//input[@id='rdoExitPat']~XPATH";
+	String DoctorOnFileDropDown_LST = "//select[@id='userSelectedPrescriber']~XPATH";
+	String StoreName_TXT = "//p[contains(text(),'Store Name:')]~XPATH";
+	String VisionCenterName_TXT = "input[name='VisionCenName']~CSS";
+	String DoctorLastName_TXT = "input[name='DocLastName']~CSS";
+	String City_TXT = "input[name='city']~CSS";
+	String State_LST = "select[name='state']~CSS";
+	String Phone_TXT = "input[name='phone']~CSS";
+	String FaxNumber_TXT = "input[name='fax']~CSS";
+	String Continue_BTN = "input[title*='Continue']~CSS";
+	String FirstNameErrorMsg_ELM = "//p[contains(text(),'Please enter customer first name.')]~XPATH";
+	String LastNameErrorMsg_ELM = "//p[contains(text(),'Please enter customer last name.')]~XPATH";
+	String DOBErrorMsg_ELM = "//p[contains(text(),'Please select the date of birth.')]~XPATH";
+	String AgeErrorMsg_ELM = "//p[contains(text(),'You must check this box to confirm that you have permission to enter')]~XPATH";
+	String NewDateErrorMsg_ELM = "//p[contains(text(),'Please select the date of birth.')]~XPATH";
+	String NullDoctorinfoMsg_ELM = "//p[contains(text(),'There was not enough information')]~XPATH";
+	String CLHeader = null, PatientType = null, PatientSelection = null, DobEligible = null, FirstName = null, LastName = null, Date = null, Month = null, Year = null, PatientInfo = null, DoctorType = null, OnFileDoctor = null, DoctorLName = null, VisionCentreName = null, City = null, State = null, PhoneNumber = null, FaxNumber = null, ClearFeilds = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		CLHeader = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CLHeader");
+		PatientType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientType");
+		PatientSelection = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientSelection");
+		FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FirstName");
+		LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LastName");
+		Date = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Date");
+		Month = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Month");
+		Year = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Year");
+		DobEligible = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DobEligible");
+		PatientInfo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientInfo");
+		DoctorType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DoctorType");
+		OnFileDoctor = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OnFileDoctor");
+		VisionCentreName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VisionCentreName");
+		DoctorLName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DoctorLastName");
+		City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		PhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Phone");
+		FaxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FaxNumber");
+		ClearFeilds = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClearFeilds");
+		if (CLHeader.equals("yes")) {
+		    if (!isElementPresentVerification(ContactLens_img, browser)) {
+			messagesMap.put("CL Header", "Contact lens header is not present");
+			status = WARNING;
+		    }
+		}
+		if (!PatientType.equals("-")) {
+		    if (PatientType.equals("ExistingUser")) {
+			if (!isElementPresentVerifyClick(SelectExitstinPatient_RADIO, browser)) {
+			    throw new Exception("Unable to click select existing radio button");
+			}
+			new Select(getElementByProperty(patientNFamilyDroDown_LST, browser)).selectByIndex(Integer.parseInt(PatientSelection));
+		    } else if (PatientType.equals("ExistingNoDob")) {
+			if (!isElementPresentVerifyClick(SelectExitstinPatient_RADIO, browser)) {
+			    throw new Exception("Unable to click select existing radio button");
+			}
+			if (!Date.equals("-")) {
+			    new Select(getElementByProperty(PatientDate_LST, browser)).selectByVisibleText(Date);
+			}
+			if (!Month.equals("-")) {
+			    new Select(getElementByProperty(PatientMonth_LST, browser)).selectByVisibleText(Month);
+			}
+			if (!Year.equals("-")) {
+			    new Select(getElementByProperty(PatientYear_LST, browser)).selectByVisibleText(Year);
+			}
+		    }
+		    if (PatientType.equals("NewUser")) {
+			if (!isElementPresentVerifyClick(CreateNewPatient_RADIO, browser)) {
+			    throw new Exception("Unable to click create new radio button");
+			}
+			if (!ClearFeilds.equals("-")) {
+			    getElementByProperty(PatientFirstName_TXT, browser).clear();
+			    getElementByProperty(PatientLastName_TXT, browser).clear();
+			    new Select(getElementByProperty(Date_LST, browser)).selectByIndex(0);
+			    new Select(getElementByProperty(Month_LST, browser)).selectByIndex(0);
+			    new Select(getElementByProperty(Year_LST, browser)).selectByIndex(0);
+			}
+			if (!FirstName.equals("-")) {
+			    if (!clearAndEnterText(PatientFirstName_TXT, FirstName, browser)) {
+				messagesMap.put("Patient First Name", "Not able to Enter Patient First Name");
+				status = WARNING;
+			    }
+			}
+			if (!LastName.equals("-")) {
+			    if (!clearAndEnterText(PatientLastName_TXT, LastName, browser)) {
+				messagesMap.put("Patient Last Name", "Not able to Enter Patient Last Name");
+				status = WARNING;
+			    }
+			}
+			if (!Date.equals("-")) {
+			    new Select(getElementByProperty(Date_LST, browser)).selectByVisibleText(Date);
+			}
+			if (!Month.equals("-")) {
+			    new Select(getElementByProperty(Month_LST, browser)).selectByVisibleText(Month);
+			}
+			if (!Year.equals("-")) {
+			    new Select(getElementByProperty(Year_LST, browser)).selectByVisibleText(Year);
+			}
+			if (!DobEligible.equals("-")) {
+			    if (DobEligible.equals("Yes")) {
+				if (!isElementPresentVerifyClick(DobEligibility_CHK, browser)) {
+				    throw new Exception("Unable to click Eligble checkbox radio button");
+				}
+				if (!isElementPresentVerification(DObEligble_TXT, browser)) {
+				    messagesMap.put("DOB element", "DOB element is Wrong");
+				    status = WARNING;
+				}
+			    }
+			}
+		    }
+		}
+		if (!PatientInfo.equals("-")) {
+		    String PaitentInfo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientInfoMsg");
+		    String PatientName = null, PatientDOB = null, PatientDetails = null;
+		    if (!isElementPresentVerification(PatientNameDetails_LST, browser)) {
+			if (!getElementByProperty(PatientDetails_ELM, browser).getText().equalsIgnoreCase(PaitentInfo)) {
+			    messagesMap.put("patient information", "patient information is wrongly pre populated");
+			    status = WARNING;
+			}
+		    } else {
+			PatientName = new Select(getElementByProperty(PatientNameDetails_LST, browser)).getFirstSelectedOption().getText();
+			PatientDOB = getElementByProperty(PatientDOBDetails_ELM, browser).getText();
+			PatientDetails = "Patient Name:\n" + PatientName + "\n" + "Date of Birth: \n" + PatientDOB;
+			if (!PatientDetails.equalsIgnoreCase(PaitentInfo)) {
+			    messagesMap.put("patient information", "patient information is wrongly pre populated");
+			    status = WARNING;
+			}
+		    }
+		}
+		if (DoctorType.equals("OnFile")) {
+		    if (!isElementPresentVerifyClick(DoctorOnFile_RADIO, browser)) {
+			throw new Exception("Doctor on file Radio button not present");
+		    }
+		} else if (DoctorType.equals("New")) {
+		    if (!isElementPresentVerifyClick(DoctorNewFile_RADIO, browser))
+			throw new Exception("New doctor Radio button not present");
+		}
+		if (!OnFileDoctor.equals("-")) {
+		    new Select(getElementByProperty(DoctorOnFileDropDown_LST, browser)).selectByIndex(Integer.parseInt(OnFileDoctor));
+		}
+		if (!ClearFeilds.equalsIgnoreCase("-") && ClearFeilds.equals("ForDoctor")) {
+		    getElementByProperty(VisionCenterName_TXT, browser).clear();
+		    getElementByProperty(DoctorLastName_TXT, browser).clear();
+		    getElementByProperty(City_TXT, browser).clear();
+		    new Select(getElementByProperty(State_LST, browser)).selectByIndex(0);
+		    getElementByProperty(Phone_TXT, browser).clear();
+		    getElementByProperty(FaxNumber_TXT, browser).clear();
+		}
+		if (!isElementPresentVerification(StoreName_TXT, browser)) {
+		    messagesMap.put("Store Name", "Store Name is displayed Wrong");
+		    status = WARNING;
+		}
+		if (!VisionCentreName.equals("-")) {
+		    if (!clearAndEnterText(VisionCenterName_TXT, VisionCentreName, browser)) {
+			messagesMap.put("Vision Center name", "not able to enter store name");
+			status = WARNING;
+		    }
+		}
+		if (!DoctorLName.equals("-")) {
+		    if (!clearAndEnterText(DoctorLastName_TXT, DoctorLName, browser)) {
+			messagesMap.put("Doctor name", "not able to enter Doctor Last name");
+			status = WARNING;
+		    }
+		}
+		if (!City.equals("-")) {
+		    if (!clearAndEnterText(City_TXT, City, browser)) {
+			messagesMap.put("City", "not able to enter city");
+			status = WARNING;
+		    }
+		}
+		if (!State.equals("-")) {
+		    new Select(getElementByProperty(State_LST, browser)).selectByVisibleText(State);
+		}
+		if (!PhoneNumber.equals("-")) {
+		    if (!clearAndEnterText(Phone_TXT, PhoneNumber, browser)) {
+			messagesMap.put("Phone Number", "not able to enter phone number");
+			status = WARNING;
+		    }
+		}
+		if (!FaxNumber.equals("-")) {
+		    if (!clearAndEnterText(FaxNumber_TXT, FaxNumber, browser)) {
+			messagesMap.put("Fax Number", "not able to enter Fax number");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Continue").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+			throw new Exception("not able Click on continue button");
+		    }
+		}
+		if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("LastFirstNDate")) {
+		    if (!isElementPresentVerification(FirstNameErrorMsg_ELM, browser)) {
+			messagesMap.put("First Name Error message", "Not able to identify the First Name Error message");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(LastNameErrorMsg_ELM, browser)) {
+			messagesMap.put("Last Name Error message", "Not able to identify the Last Name Error message");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(DOBErrorMsg_ELM, browser)) {
+			messagesMap.put("Date of birth Error message", "Not able to identify the Date of birth Error message");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("FirstName")) {
+		    if (!isElementPresentVerification(FirstNameErrorMsg_ELM, browser)) {
+			messagesMap.put("First Name Error message", "Not able to identify the First Name Error message");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("LastName")) {
+		    if (!isElementPresentVerification(LastNameErrorMsg_ELM, browser)) {
+			messagesMap.put("Last Name Error message", "Not able to identify the Last Name Error message");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("DateOfBirth")) {
+		    if (!isElementPresentVerification(DOBErrorMsg_ELM, browser)) {
+			messagesMap.put("Date of birth Error message", "Not able to identify the Date of birth Error message");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("AgeErrorMessage")) {
+		    if (!isElementPresentVerification(AgeErrorMsg_ELM, browser)) {
+			messagesMap.put("Age Error message", "Not able to identify the Date of birth Error message");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("NoEntry")) {
+		    if (!isElementPresentVerification(NewDateErrorMsg_ELM, browser)) {
+			messagesMap.put("New Date Error message", "Not able to identify the Date Error validation message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NewDateError");
+		    if (getElementByProperty(NewDateErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("New Date Error message", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("AgeErrorValidationType").get(i).equalsIgnoreCase("AgeRestricted")) {
+		    if (!isElementPresentVerification(AgeErrorMsg_ELM, browser)) {
+			messagesMap.put("Age restricted Error", "Not able to find the Required Age restricted Error message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AgeRestrictedError");
+		    if (getElementByProperty(NewDateErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("New Date Error message", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("DoctorErrorValidationType").get(i).equalsIgnoreCase("NoEntry")) {
+		    if (!isElementPresentVerification(NullDoctorinfoMsg_ELM, browser)) {
+			messagesMap.put("Null Doctor information Error", "Not able to identify the Null Doctor information Error validation message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DoctorNullError");
+		    if (getElementByProperty(NullDoctorinfoMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("Null Doctor information Error", "Null Doctor Error message is displaying wrongly");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy the Error messages related to Doctor Search
+     *          results , Prepopulation Verification and Happy flow to Navigate
+     *          to ship Info page through different inputs.
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -07-Nov-12
+     ************************************************************* 
+     */
+    public static void selectionFromDoctorSearchResultsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String NewSearch_BTN = "a[id='btnSearch']~CSS";
+	String ContinuetoShipping_LNK = "input[alt='continue to shipping']~CSS";
+	String ShippingInfo_Header = "//*[contains(text(),'Shipping Information') or contains(text(),'Ship  address') or contains(text(),'Ship')]~XPATH";
+	String NewSearchAgain_BTN = "//input[@title='New Search']~XPATH";
+	String PatientInfo_Header = "//h1[contains(text(),'Patient and Doctor Details')]~XPATH";
+	String PhoneNumberErrorMessage = "//div[contains(@class,'error')]~XPATH";
+	String Continue_BTN = "input#continueBtn~CSS";
+	String DoctorLName_TXT = "//input[contains(@id,'dlname')]~XPATH";
+	String VisionCentreName_TXT = "//input[contains(@id,'vcenter')]~XPATH";
+	String Address_TXT = "//input[contains(@id,'address')]~XPATH";
+	String City_TXT = "//input[contains(@id,'city')]~XPATH";
+	String State_TXT = "//select[contains(@id,'state')]~XPATH";
+	String ZipCode_TXT = "//input[contains(@id,'zip')]~XPATH";
+	String PhoneNumber_TXT = "//input[contains(@id,'phone')]~XPATH";
+	String FaxNumber_TXT = "//input[contains(@id,'fax')]~XPATH";
+	String Select_BTN = "input[title='Select']~CSS";
+	String BacktoPatientAndDoctorInfo_BTN = "input[alt='Back to Patient and Doctor info']~CSS";
+	String ResultFound_ELM = "//p[contains(text(),'Make your selection')]~XPATH";
+	String ZeroResultFound_ELM = "//p[contains(text(),'We could not locate')]~XPATH";
+	String NullResultsMsg_ELM = "//div[contains(@class,'error')]~XPATH";
+	String PatientName_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String MoreSearchResultsDoctorName_DIV = "//form[@name='selectPrescriber']/div[3]/div~XPATH";
+	String SingleSearchDoctorName_DIV = "//form[@name='selectPrescriber']/div[3]~XPATH";
+	String PickupDetailsHeader = "//*[contains(text(),'Pickup details')]~XPATH";
+	String DoctorLName = null, VisionCentreName = null, Address = null, City = null, State = null, ZipCode = null, PhoneNumber = null, FaxNumber = null, MatchFound = null, ClearFeilds = null, DoctorName = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		DoctorLName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DoctorLastName");
+		VisionCentreName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VisionCentreName");
+		Address = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+		City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		ZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipCode");
+		PhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Phone");
+		FaxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FaxNumber");
+		MatchFound = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "MatchFound");
+		ClearFeilds = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClearFeilds");
+		if (!MatchFound.equalsIgnoreCase("-")) {
+		    if (MatchFound.equalsIgnoreCase("ResultFound")) {
+			String SearchResult = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SearchResult");
+			if (!getElementByProperty(ResultFound_ELM, browser).getText().contains(SearchResult)) {
+			    messagesMap.put("ResultFound", "Result found Search message displaying wrongly");
+			    status = WARNING;
+			}
+		    } else if (MatchFound.equalsIgnoreCase("ZeroResults")) {
+			String SearchResult = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SearchResult");
+			if (!getElementByProperty(ZeroResultFound_ELM, browser).getText().contains(SearchResult)) {
+			    messagesMap.put("ZeroResults", "Null Search result message displaying wrongly");
+			    status = WARNING;
+			}
+		    }
+		}
+		if (dataMap.get("ContinueToShipping").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(ContinuetoShipping_LNK, browser)) {
+			throw new Exception("Not able to click on Continue to Shipping link");
+		    }
+		}
+		if (dataMap.get("NewSearch").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NewSearch_BTN, browser)) {
+			throw new Exception("Not able to click on New Search Button");
+		    }
+		}
+		if (dataMap.get("PrePopVerify").get(i).equalsIgnoreCase("Yes")) {
+		    String PreDoctorLName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "DoctorLastName");
+		    String PreVisionCentreName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "VisionCentreName");
+		    String PreAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "Address");
+		    String PreCity = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "City");
+		    String PreState = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "State");
+		    String PrePhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "Phone");
+		    String PreFaxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("PreviousRowID").get(i), "FaxNumber");
+		    if (!PreDoctorLName.equalsIgnoreCase("-")) {
+			String PrepoluatedDoctorName = getElementByProperty(DoctorLName_TXT, browser).getAttribute("value");
+			if (!PreDoctorLName.equals(PrepoluatedDoctorName)) {
+			    messagesMap.put("Doctor Name", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreVisionCentreName.equalsIgnoreCase("-")) {
+			String PrepoluatedStoreName = getElementByProperty(VisionCentreName_TXT, browser).getAttribute("value");
+			if (!PreVisionCentreName.equals(PrepoluatedStoreName)) {
+			    messagesMap.put("Store Name", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreAddress.equalsIgnoreCase("-")) {
+			String PrepoluatedAddress = getElementByProperty(Address_TXT, browser).getAttribute("value");
+			if (!PreAddress.equals(PrepoluatedAddress)) {
+			    messagesMap.put("Address", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreCity.equalsIgnoreCase("-")) {
+			String Prepoluatedcity = getElementByProperty(City_TXT, browser).getAttribute("value");
+			if (!PreCity.equals(Prepoluatedcity)) {
+			    messagesMap.put("City", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreState.equalsIgnoreCase("-")) {
+			String PrepoluatedState = new Select(getElementByProperty(State_TXT, browser)).getFirstSelectedOption().getText();
+			if (!PreState.equals(PrepoluatedState)) {
+			    messagesMap.put("State", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PrePhoneNumber.equalsIgnoreCase("-")) {
+			String PrepoluatedPhoneNumber = getElementByProperty(PhoneNumber_TXT, browser).getAttribute("value");
+			if (!PrePhoneNumber.equals(PrepoluatedPhoneNumber)) {
+			    messagesMap.put("Phone", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreFaxNumber.equalsIgnoreCase("-")) {
+			String PrepoluatedFaxNumber = getElementByProperty(FaxNumber_TXT, browser).getAttribute("value");
+			if (!PreFaxNumber.equals(PrepoluatedFaxNumber)) {
+			    messagesMap.put("FaxNumber", "wrongly Prepoluated");
+			    status = WARNING;
+			}
+		    }
+		}
+		if (!ClearFeilds.equalsIgnoreCase("-")) {
+		    getElementByProperty(DoctorLName_TXT, browser).clear();
+		    getElementByProperty(VisionCentreName_TXT, browser).clear();
+		    getElementByProperty(Address_TXT, browser).clear();
+		    getElementByProperty(City_TXT, browser).clear();
+		    new Select(getElementByProperty(State_TXT, browser)).selectByIndex(0);
+		    getElementByProperty(ZipCode_TXT, browser).clear();
+		    getElementByProperty(PhoneNumber_TXT, browser).clear();
+		    getElementByProperty(FaxNumber_TXT, browser).clear();
+		}
+		if (!DoctorLName.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(DoctorLName_TXT, DoctorLName, browser)) {
+			messagesMap.put("Doctor Last Name", "Not able to enter Doctor Last Name");
+			status = WARNING;
+		    }
+		}
+		if (!VisionCentreName.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(VisionCentreName_TXT, VisionCentreName, browser)) {
+			messagesMap.put("Store Name", "Not able to enter Store  Name");
+			status = WARNING;
+		    }
+		}
+		if (!Address.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(Address_TXT, Address, browser)) {
+			messagesMap.put("Address", "Not able to enter Address");
+			status = WARNING;
+		    }
+		}
+		if (!City.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(City_TXT, City, browser)) {
+			messagesMap.put("City", "Not able to enter City");
+			status = WARNING;
+		    }
+		}
+		if (!State.equalsIgnoreCase("-")) {
+		    new Select(getElementByProperty(State_TXT, browser)).selectByVisibleText(State);
+		}
+		if (!ZipCode.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(ZipCode_TXT, ZipCode, browser)) {
+			messagesMap.put("Zipcode", "Not able to enter Zipcode");
+			status = WARNING;
+		    }
+		}
+		if (!PhoneNumber.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+			messagesMap.put("Phone Number", "Not able to enter Phone Number");
+			status = WARNING;
+		    }
+		}
+		if (!FaxNumber.equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(FaxNumber_TXT, FaxNumber, browser)) {
+			messagesMap.put("Fax Number", "Not able to enter Fax Number");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("ContinueShippingBTN").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+			throw new Exception("Not able to click on the Continue Button");
+		    }
+		}
+		if (dataMap.get("NewSearchAgain").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NewSearchAgain_BTN, browser)) {
+			throw new Exception("Not able to click on New Search Button after expanding New Search Button");
+		    }
+		}
+		if (dataMap.get("ErrorMsgType").get(i).equalsIgnoreCase("ContinuetoShipError")) {
+		    String PhoneNumberError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(0), "PhoneNumberErrorMsg");
+		    String DisplayingErrorMsg = getElementByProperty(PhoneNumberErrorMessage, browser).getText();
+		    if (!PhoneNumberError.equals(DisplayingErrorMsg)) {
+			messagesMap.put("Phone number Error", "Not able to find the Required Phone number Error message");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(Continue_BTN, browser)) {
+			messagesMap.put("Continue Button", "Not able to find the Continue Button");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ErrorMsgType").get(i).equalsIgnoreCase("NullResults")) {
+		    if (!isElementPresentVerification(NullResultsMsg_ELM, browser)) {
+			messagesMap.put("Null Results Match", "Not able to find the Null Results Match found Error message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NullResultsMsg");
+		    if (getElementByProperty(NullResultsMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("Null Results Match", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Select").get(i).equalsIgnoreCase("Yes")) {
+
+		    String PatientName = getElementByProperty(PatientName_TXT, browser).getText();
+		    Map<String, String> sharedProperties = CommonLibrary.getScenario(stepBean.getStepScenarioId()).getSharedStepProperties();
+		    sharedProperties.put("PatientName", PatientName);
+		    if (isElementPresentVerification(MoreSearchResultsDoctorName_DIV, browser)) {
+			DoctorName = getElementByProperty(MoreSearchResultsDoctorName_DIV, browser).getText();
+		    } else {
+			DoctorName = getElementByProperty(SingleSearchDoctorName_DIV, browser).getText();
+		    }
+		    sharedProperties.put("DoctorName", DoctorName);
+		    if (!isElementPresentVerifyClick(Select_BTN, browser)) {
+			throw new Exception("Not able to click on Select Button");
+		    }
+		}
+		if (dataMap.get("BacktoPatientInfoLnk").get(i).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(BacktoPatientAndDoctorInfo_BTN, browser)) {
+			throw new Exception("Not able to Click on Back to Patient And Docotr Info Button");
+		    }
+		}
+		if (dataMap.get("ExpectedTargetPage").get(i).equalsIgnoreCase("ShippingInfoPage")) {
+		    if (!isElementPresentVerification(ShippingInfo_Header, browser)) {
+			messagesMap.put("ExpectedTargetPage", "Not able to find the Shipping Info Page header");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ExpectedTargetPage").get(i).equalsIgnoreCase("PatientInfoPage")) {
+		    if (!isElementPresentVerification(PatientInfo_Header, browser)) {
+			messagesMap.put("ExpectedTargetPage", "Not able to find the Patient Info Page header");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ExpectedTargetPage").get(i).equalsIgnoreCase("PickUpDetails")) {
+		    if (!isElementPresentVerification(PickupDetailsHeader, browser)) {
+			messagesMap.put("ExpectedTargetPage", "Not able to find the Pickup Details header");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Patient Info and Doctor Info in Shipping
+     *          Info Page
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By - Siva
+     * @Modified Date -07-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyCLRightNavSectionInShippingInfoPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PatientInfo_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String DoctorInfo_TXT = "//p[contains(text(),'Prescriber:')]~XPATH";
+	String Change_LNK = "//a[contains(@href,'cl_customer_prescriber_info')]~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String PatientInfo = null, DoctorInfo = null, PatientName = null, DoctorName = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("PatientName"))) {
+			    PatientName = sharedProperties.get("PatientName");
+			}
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DoctorName"))) {
+			    DoctorName = sharedProperties.get("DoctorName");
+			}
+		    }
+		}
+	    }
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    DoctorInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorInfo");
+	    if (!PatientInfo.equals("-")) {
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().trim().contains(PatientInfo.trim())) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in shipping information page");
+		    status = WARNING;
+		}
+	    }
+	    if (!DoctorInfo.equals("-")) {
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().contains(DoctorInfo)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in shipping information page");
+		    status = WARNING;
+		}
+	    }
+	    if (PatientInfo.equals("-") && DoctorInfo.equals("-")) {
+		DoctorName = "Prescriber: " + DoctorName.replace("\n", " ");
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().contains(PatientName)) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in shipping information page");
+		    status = WARNING;
+		}
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().equalsIgnoreCase(DoctorName)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in shipping information page");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("ChangeLink").get(0).equals("-")) {
+		if (dataMap.get("ChangeLink").get(0).equals("Verify")) {
+		    if (!isElementPresentVerification(Change_LNK, browser)) {
+			messagesMap.put("change link", "change link is not present in shipping information page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ChangeLink").get(0).equals("Click")) {
+		    if (!isElementPresentVerifyClick(Change_LNK, browser)) {
+			throw new Exception("change link is not clickable in shipping information page");
+		    }
+		} else if (dataMap.get("ChangeLink").get(0).equals("No")) {
+		    if (isElementPresentVerification(Change_LNK, browser)) {
+			messagesMap.put("change link", "change link is not present in shipping information page");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Patient Info and Doctor Info in Shipping
+     *          Method Page
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By - Siva
+     * @Modified Date -07-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyCLRightNavSectionInShippingMethodPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String PatientInfo_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String DoctorInfo_TXT = "//p[contains(text(),'Prescriber:')]~XPATH";
+	String Change_LNK = "//a[contains(@href,'cl_customer_prescriber_info')]~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String PatientInfo = null, DoctorInfo = null, PatientName = null, DoctorName = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("PatientName"))) {
+			    PatientName = sharedProperties.get("PatientName");
+			}
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DoctorName"))) {
+			    DoctorName = sharedProperties.get("DoctorName");
+			}
+		    }
+		}
+	    }
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    DoctorInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorInfo");
+	    if (!PatientInfo.equals("-")) {
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().contains(PatientInfo)) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in shipping Method page");
+		    status = WARNING;
+		}
+	    }
+	    if (!DoctorInfo.equals("-")) {
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().contains(DoctorInfo)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in shipping Method page");
+		    status = WARNING;
+		}
+	    }
+	    if (PatientInfo.equals("-") && DoctorInfo.equals("-")) {
+		DoctorName = "Prescriber: " + DoctorName.replace("\n", " ");
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().contains(PatientName)) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in shipping Method page");
+		    status = WARNING;
+		}
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().equalsIgnoreCase(DoctorName)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in shipping Method page");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("ChangeLink").get(0).equals("-")) {
+		if (dataMap.get("ChangeLink").get(0).equals("Verify")) {
+		    if (!isElementPresentVerification(Change_LNK, browser)) {
+			messagesMap.put("change link", "change link is not present in shipping information page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ChangeLink").get(0).equals("Click")) {
+		    if (!isElementPresentVerifyClick(Change_LNK, browser)) {
+			throw new Exception("change link is not clickable in shipping method page");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Patient Info and Doctor Info in Payment
+     *          Options Page
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By - Siva
+     * @Modified Date -07-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyCLRightNavSectionInPaymentMethodPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String PatientInfo_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String DoctorInfo_TXT = "//p[contains(text(),'Prescriber:')]~XPATH";
+	String Change_LNK = "//a[contains(@href,'cl_customer_prescriber_info')]~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String PatientInfo = null, DoctorInfo = null, PatientName = null, DoctorName = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("PatientName"))) {
+			    PatientName = sharedProperties.get("PatientName");
+			}
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DoctorName"))) {
+			    DoctorName = sharedProperties.get("DoctorName");
+			}
+		    }
+		}
+	    }
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    DoctorInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorInfo");
+	    if (!PatientInfo.equals("-")) {
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().contains(PatientInfo)) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Payment Options page");
+		    status = WARNING;
+		}
+	    }
+	    if (!DoctorInfo.equals("-")) {
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().contains(DoctorInfo)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Payment Options page");
+		    status = WARNING;
+		}
+	    }
+	    if (PatientInfo.equals("-") && DoctorInfo.equals("-")) {
+		DoctorName = "Prescriber: " + DoctorName.replace("\n", " ");
+		if (!getElementByProperty(PatientInfo_TXT, browser).getText().contains(PatientName)) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Payment Options page");
+		    status = WARNING;
+		}
+		if (!getElementByProperty(DoctorInfo_TXT, browser).getText().equalsIgnoreCase(DoctorName)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Payment Options page");
+		    status = WARNING;
+		}
+
+	    }
+	    if (!dataMap.get("ChangeLink").get(0).equals("-")) {
+		if (dataMap.get("ChangeLink").get(0).equals("Verify")) {
+		    if (!isElementPresentVerification(Change_LNK, browser)) {
+			messagesMap.put("change link", "change link is not present in shipping information page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ChangeLink").get(0).equals("Click")) {
+		    if (!isElementPresentVerifyClick(Change_LNK, browser)) {
+			throw new Exception("change link is not clickable in payment method page");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Patient Info and Doctor Info in Review Order
+     *          Page for SDD ON and OFF
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By - Siva
+     * @Modified Date -04-APR-13
+     ************************************************************* 
+     */
+    public static void verifyCLRightNavSectioninReviewOrderPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String PatientInfo_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String DoctorInfo_TXT = "//p[contains(text(),'Prescriber:')]~XPATH";
+	String Change_LNK = "//a[contains(@href,'cl_customer_prescriber_info')]~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String PatientInfo = null, DoctorInfo = null, PatientName = null, DoctorName = null;
+	String PatientInfoElementText = null, DoctorInfoElementText = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("PatientName"))) {
+			    PatientName = sharedProperties.get("PatientName");
+			}
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DoctorName"))) {
+			    DoctorName = sharedProperties.get("DoctorName");
+			}
+		    }
+		}
+	    }
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		List<WebElement> RightNavBaseDivs = browser.findElements(By.xpath("//div[@id='rightNav']/div"));
+		WebElement ContactLensRightNavDiv = null;
+		for (int i = 0; i < RightNavBaseDivs.size(); i++) {
+		    if (RightNavBaseDivs.get(i).getText().contains("Prescriber")) {
+			ContactLensRightNavDiv = RightNavBaseDivs.get(i);
+			break;
+		    }
+		}
+		List<WebElement> ptagsinCLRightNavDiv = ContactLensRightNavDiv.findElements(By.tagName("p"));
+
+		for (int k = 0; k < ptagsinCLRightNavDiv.size(); k++) {
+		    if (ptagsinCLRightNavDiv.get(k).getText().contains("For")) {
+			PatientInfoElementText = ptagsinCLRightNavDiv.get(k).getText();
+		    } else if (ptagsinCLRightNavDiv.get(k).getText().contains("Prescriber")) {
+			DoctorInfoElementText = ptagsinCLRightNavDiv.get(k).getText();
+		    }
+		}
+	    } else {
+		PatientInfoElementText = getElementByProperty(PatientInfo_TXT, browser).getText();
+		DoctorInfoElementText = getElementByProperty(DoctorInfo_TXT, browser).getText();
+
+	    }
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    DoctorInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorInfo");
+	    if (!PatientInfo.equals("-")) {
+		if (!PatientInfoElementText.toUpperCase().trim().contains(PatientInfo.toUpperCase().trim())) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Review Order page");
+		    status = WARNING;
+		}
+	    }
+	    if (!DoctorInfo.equals("-")) {
+		if (!DoctorInfoElementText.toUpperCase().trim().contains(DoctorInfo.toUpperCase().trim())) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Review Order page");
+		    status = WARNING;
+		}
+	    }
+	    if (PatientInfo.equals("-") && DoctorInfo.equals("-")) {
+		DoctorName = "Prescriber: " + DoctorName.replace("\n", " ");
+		if (!PatientInfoElementText.toUpperCase().trim().contains(PatientName.toUpperCase().trim())) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Review Order  page");
+		    status = WARNING;
+		}
+		if (!DoctorInfoElementText.equalsIgnoreCase(DoctorName)) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Review Order  page");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("ChangeLink").get(0).equals("-")) {
+		if (dataMap.get("ChangeLink").get(0).equals("Verify")) {
+		    if (!isElementPresentVerification(Change_LNK, browser)) {
+			messagesMap.put("change link", "change link is not present in Review Order  page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ChangeLink").get(0).equals("Click")) {
+
+		    if (!isElementPresentVerifyClick(Change_LNK, browser)) {
+			throw new Exception("change link is not clickable in review order page");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy Patient Info and Doctor Info in
+     *          OrderConfirmation Page for SDD ON and OFF
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By - Siva
+     * @Modified Date -04-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyCLRightNavSectionOrderinConfirmationPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String PatientInfo_TXT = "//p[contains(text(),'For:')]~XPATH";
+	String DoctorInfo_TXT = "//p[contains(text(),'Prescriber:')]~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String PatientInfo = null, DoctorInfo = null, PatientName = null, DoctorName = null;
+	String PatientInfoElementText = null, DoctorInfoElementText = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("PatientName"))) {
+			    PatientName = sharedProperties.get("PatientName");
+			}
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("DoctorName"))) {
+			    DoctorName = sharedProperties.get("DoctorName");
+			}
+		    }
+		}
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		List<WebElement> RightNavBaseDivs = browser.findElements(By.xpath("//div[@id='rightNav']/div/div"));
+		WebElement ContactLensRightNavDiv = null;
+		for (int i = 0; i < RightNavBaseDivs.size(); i++) {
+		    if (RightNavBaseDivs.get(i).getText().contains("Prescriber")) {
+			ContactLensRightNavDiv = RightNavBaseDivs.get(i);
+			break;
+		    }
+		}
+		List<WebElement> ptagsinCLRightNavDiv = ContactLensRightNavDiv.findElements(By.tagName("p"));
+
+		for (int k = 0; k < ptagsinCLRightNavDiv.size(); k++) {
+		    if (ptagsinCLRightNavDiv.get(k).getText().contains("For")) {
+			PatientInfoElementText = ptagsinCLRightNavDiv.get(k).getText();
+		    } else if (ptagsinCLRightNavDiv.get(k).getText().contains("Prescriber")) {
+			DoctorInfoElementText = ptagsinCLRightNavDiv.get(k).getText();
+		    }
+		}
+	    } else {
+		PatientInfoElementText = getElementByProperty(PatientInfo_TXT, browser).getText();
+		DoctorInfoElementText = getElementByProperty(DoctorInfo_TXT, browser).getText();
+
+	    }
+	    PatientInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientInfo");
+	    DoctorInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorInfo");
+	    if (!PatientInfo.equals("-")) {
+		if (!PatientInfoElementText.toUpperCase().trim().contains(PatientInfo.toUpperCase().trim())) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Order Confirmation page");
+		    status = WARNING;
+		}
+	    }
+	    if (!DoctorInfo.equals("-")) {
+		if (!DoctorInfoElementText.toUpperCase().trim().contains(DoctorInfo.toUpperCase().trim())) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Order Confirmation page");
+		    status = WARNING;
+		}
+	    }
+	    if (PatientInfo.equals("-") && DoctorInfo.equals("-")) {
+		DoctorName = "Prescriber: " + DoctorName.replace("\n", " ");
+		if (!PatientInfoElementText.toUpperCase().trim().contains(PatientName.toUpperCase().trim())) {
+		    messagesMap.put("Patient Info Prepopulation", "Patient Info populated wrongly in Order Confirmation page");
+		    status = WARNING;
+		}
+		if (!DoctorInfoElementText.toUpperCase().trim().equalsIgnoreCase(DoctorName.toUpperCase().trim())) {
+		    messagesMap.put("Doctor Info Prepopulation", "Doctor Info populated wrongly in Order Confirmation page");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Contact lenses( Left or Right) from CL Re
+     *          order Page
+     * @author - Hasan javeed
+     * @Created - 23-Oct-12
+     * @Modified By -Siva
+     * @Modified Date -21-MAY-2013
+     ************************************************************* 
+     */
+    public static void VerificationAndSelectioninReorderPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String ContactLens_ELM = "a[title='Contact Lenses']~CSS";
+	String ReOrderLens_BTN = "img[title='Reorder Lenses']~CSS";
+	String PatientDropDown_LST = "//select[@id='userSelectCustomerKey']~XPATH";
+	String AddtoCart_BTN = "//input[@alt='Add to Cart']~XPATH";
+	String ErrorMsg_ELM = "//div[contains(@class,'error')]~XPATH";
+	String ErrorMsgCond2_ELM = "//p[contains(@class,'error')]~XPATH";
+	String PatientOrderDetails_ELM = "//div[contains(@class,'reorder')]~XPATH";
+	String AddToCartEnabled_BTN = "input[alt='Add to Cart']~CSS";
+	int i = 0;
+	boolean flag = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int j = 0; j < totalRowCount; j++) {
+		String Navigation = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "Navigation");
+		if (Navigation.equals("Yes")) {
+		    if (!isElementPresentVerifyClick(ContactLens_ELM, browser)) {
+			throw new Exception("Not able to click Contact lens on Category header");
+		    }
+		    if (!isElementPresentVerifyClick(ReOrderLens_BTN, browser)) {
+			throw new Exception("Not able to click ReOrder lens button in Contact lens page");
+		    }
+		    Thread.sleep(1000);
+		}
+		String PatientSelection = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "PatientSelection");
+		String CLitemName = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "CLitemName");
+		String CLitemType = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "CLitemType");
+		String NoOfCl = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "NoOfCl");
+		String pairSelection = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "pairSelection");
+		String AddToCart = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "AddToCart");
+		String OrderExistence = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "OrderExistence");
+		if (!PatientSelection.equals("-")) {
+		    new Select(getElementByProperty(PatientDropDown_LST, browser)).selectByIndex(Integer.parseInt(PatientSelection));
+		}
+		if (!CLitemName.equals("-")) {
+		    if (NoOfCl.equals("Single")) {
+			List<WebElement> NoofCLitems = browser.findElements(By.id("historyOrders"));
+			WebElement RequiredCLDiv = null;
+			for (i = 1; i <= NoofCLitems.size(); i++) {
+			    RequiredCLDiv = browser.findElement(By.xpath("//div[@id='historyOrders'][" + i + "]/div[1]"));
+			    String Text = RequiredCLDiv.getText();
+			    if (Text.contains(CLitemName) && Text.contains(CLitemType)) {
+				browser.findElement(By.xpath("//div[@id='historyOrders'][" + i + "]/div[1]/div[6]/p/input")).click();
+				flag = true;
+				break;
+			    } else {
+				if (browser.findElement(By.xpath("//div[@id='historyOrders'][" + i + "]/div[3]")) != null) {
+				    RequiredCLDiv = browser.findElement(By.xpath("//div[@id='historyOrders'][" + i + "]/div[3]"));
+				    Text = RequiredCLDiv.getText();
+				    if (Text.contains(CLitemName) && Text.contains(CLitemType)) {
+					browser.findElement(By.xpath("//div[@id='historyOrders'][" + i + "]/div[3]/div[6]/p/input")).click();
+					flag = true;
+					break;
+				    }
+				}
+			    }
+			    if (i == NoofCLitems.size()) {
+				if (!flag) {
+				    throw new Exception("Required CL item not found in the List");
+				}
+			    }
+			}
+		    } else if (NoOfCl.equals("Multiple")) {
+			for (int k = 1; k <= Integer.parseInt(pairSelection); k++) {
+			    browser.findElement(By.xpath("//div[@id='historyOrders'][" + k + "]/div[1]/div[6]/p/input")).click();
+			    browser.findElement(By.xpath("//div[@id='historyOrders'][" + k + "]/div[3]/div[6]/p/input")).click();
+			}
+		    }
+		    if (AddToCart.equals("Yes")) {
+			if (!isElementPresentVerifyClick(AddtoCart_BTN, browser)) {
+			    throw new Exception("Not able to click Add to cart button in Contact lens page");
+			}
+		    }
+		}
+		if (dataMap.get("FeildDisabled").get(j).equals("Yes")) {
+		    if (getElementByProperty(AddtoCart_BTN, browser).isEnabled()) {
+			messagesMap.put("Add to cart button", "Add to cart button is enabled in Contact lens page");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(PatientDropDown_LST, browser).getAttribute("disabled").equals("true")) {
+			messagesMap.put("Patient Drop down", "Patient Drop down  is enabled in Contact lens page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FeildDisabled").get(j).equals("No")) {
+		    if (!getElementByProperty(AddtoCart_BTN, browser).isEnabled()) {
+			messagesMap.put("Add to cart button", "Add to cart button is disabled in Contact lens page");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(PatientDropDown_LST, browser).isEnabled()) {
+			messagesMap.put("Patient Drop down", "Patient Drop down button is disabled in Contact lens page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FeildDisabled").get(j).equals("PatientDropdown")) {
+		    if (!getElementByProperty(PatientDropDown_LST, browser).getAttribute("disabled").equals("true")) {
+			messagesMap.put("Patient Drop down", "Patient Drop down button is enabled in Contact lens page");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("ConditionErrorType").get(j).equalsIgnoreCase("Condition1")) {
+		    if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+			messagesMap.put("Condition1 Error", "Not able to find the ConditionError message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "ConditonErrorMessage");
+		    if (getElementByProperty(ErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("Condition1 Error", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ConditionErrorType").get(j).equalsIgnoreCase("Condition2")) {
+		    if (!isElementPresentVerification(ErrorMsgCond2_ELM, browser)) {
+			messagesMap.put("Condition2 Error", "Not able to find the ConditionError message");
+			status = WARNING;
+		    }
+
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "ConditonErrorMessage");
+		    if (getElementByProperty(ErrorMsgCond2_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("Condition2 Error", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ConditionErrorType").get(j).equalsIgnoreCase("Condition3")) {
+		    if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+			messagesMap.put("Condition3 Error", "Not able to find the ConditionError message");
+			status = WARNING;
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "ConditonErrorMessage");
+		    if (getElementByProperty(ErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			messagesMap.put("Condition3 Error", "Error message displaying wrongly");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("ConditionErrorType").get(j).equalsIgnoreCase("Condition4")) {
+		    if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+			throw new Exception("Not able to find the Required ConditionError message");
+		    }
+
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "ConditonErrorMessage");
+		    if (!getElementByProperty(ErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			throw new Exception("Error message displaying wrongly");
+		    }
+		} else if (dataMap.get("ConditionErrorType").get(j).equalsIgnoreCase("Condition5")) {
+		    if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+			throw new Exception("Not able to find the Required ConditionError message");
+		    }
+		    String RequiredErrorMessage = getTestData(dataMap.get("InputFileName").get(j), dataMap.get("SheetName").get(j), dataMap.get("RowId").get(j), "ConditonErrorMessage");
+		    if (!getElementByProperty(ErrorMsg_ELM, browser).getText().equals(RequiredErrorMessage)) {
+			throw new Exception("Error message displaying wrongly");
+		    }
+		}
+		if (OrderExistence.equals("Yes")) {
+		    if ((!isElementPresentVerification(PatientOrderDetails_ELM, browser)) && (!isElementPresentVerification(AddToCartEnabled_BTN, browser))) {
+			messagesMap.put("New Patient's Order Details", "Not able to view order details of the New Patient");
+			status = WARNING;
+		    }
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verifiy CL Note Message & Guest Checkout Section in
+     *          Sign-in Register Page after Proceed to Checkout.
+     * @author - Hasan javeed
+     * @Created - 27-Oct-12
+     * @Modified By -Siva
+     * @Modified Date -7-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyCLNoteMsgsAndGuestCheckoutBTN(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CLfamilyAccountNoteMsg_ELM = "//p[contains(text(),'Please create a new account when placing a')]~XPATH";
+	String GuestCheckout_Header = "//h2[contains(text(),'Guest Checkout')]~XPATH";
+	String GuestCheckoutNoteMessage_ELM = "//form[@name='loginformguest']/p~XPATH";
+	String Continue_BTN = "//img[@title='Continue']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("CLFamilyNoteMsg").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(CLfamilyAccountNoteMsg_ELM, browser)) {
+		    messagesMap.put("Contact Lenses Family Note", "Family Note Message is displaying in the Sign-in Register page.");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("GuestCheckoutSection").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(GuestCheckout_Header, browser)) {
+		    messagesMap.put("Guest Checkout section", "section should not be displayed in Sign-in Or Register Page.");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(GuestCheckoutNoteMessage_ELM, browser)) {
+		    messagesMap.put("Note Message", "Note Message Under Guest Checkout is displaying");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(Continue_BTN, browser)) {
+		    messagesMap.put("Continue Button", "Continue Button is displaying in Sign-in Or Register Page.");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("GuestCheckoutSection").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(GuestCheckout_Header, browser)) {
+		    messagesMap.put("Guest Checkout section", "Guest Checkout section Header is not displaying in Sign-in or Register Page.");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(Continue_BTN, browser)) {
+		    messagesMap.put("Continue Button", "Continue Button is not displaying in Sign-in Or Register Page.");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+}

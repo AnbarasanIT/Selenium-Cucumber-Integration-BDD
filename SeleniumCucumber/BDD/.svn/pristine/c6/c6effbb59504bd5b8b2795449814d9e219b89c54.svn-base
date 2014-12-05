@@ -1,0 +1,187 @@
+@loyalty @loyaltyE2E
+Feature: All the scenarios in the feature are to validate the Loyalty Check Points within Shopping Cart Page
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-0
+Scenario: Initialization Scenario
+
+Given  "LTY-E2E-0" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-0  |
+
+Given "LTY-E2E-0" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "LTY-E2E-0" Customer Clears the Shopping Cart
+
+Then "LTY-E2E-0" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-0  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-1
+Scenario: Loyalty User who don't have points in his account adds Savings SS item to Cart and verifies Loyalty Savings Message on the Cart
+
+Given  "LTY-E2E-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-1  |
+
+Given "LTY-E2E-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "LTY-E2E-1" Customer Clears the Shopping Cart
+
+And "LTY-E2E-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-E2E-1" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-E2E-1" Customer Goes to the Shopping Cart
+
+And "LTY-E2E-1" Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No                        |
+
+Then "LTY-E2E-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-1  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-2
+Scenario: Loyalty User who don't have points in his account adds Bonus Points SS item to Cart and verifies Loyalty Bonus Point Message on the Cart
+
+Given  "LTY-E2E-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-2  |
+
+Given "LTY-E2E-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "LTY-E2E-2" Customer Clears the Shopping Cart
+
+And "LTY-E2E-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-E2E-2" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-E2E-2" Customer Goes to the Shopping Cart
+
+And "LTY-E2E-2" Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage 	|
+| -	                   | Yes                       |
+
+Then "LTY-E2E-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-2  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-3
+Scenario: Loyalty User who don't have points in his account adds Savings and Bonus Points SS items to Cart and verifies Loyalty Savings & Bonus Points Messages on the Cart
+
+Given  "LTY-E2E-3" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-3  |
+
+Given "LTY-E2E-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "LTY-E2E-3" Customer Clears the Shopping Cart
+
+And "LTY-E2E-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-E2E-3" Customer adds Daily Living items to the cart from search.
+
+And "LTY-E2E-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   	  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-E2E-3" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-E2E-3" Customer Goes to the Shopping Cart
+
+And "LTY-E2E-3" Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | yes                       |
+
+Then "LTY-E2E-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-3  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-4
+Scenario: Loyalty User who don't have points in his account adds CL item to Cart and verifies Loyalty Bonus Point Message on the Cart
+
+Given  "LTY-E2E-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-4  |
+
+Given "LTY-E2E-4" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "LTY-E2E-4" Customer Clears the Shopping Cart
+
+And "LTY-E2E-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-E2E-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-E2E-4" Customer Goes to the Shopping Cart
+
+And "LTY-E2E-4" Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| NO	               | Yes                       |
+
+Then "LTY-E2E-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-4  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-E2E-5
+Scenario: Loyalty User who don't have points in his account adds CL & SS item to Cart and verifies Only Loyalty Savings Message on the Cart
+
+Given  "LTY-E2E-5" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-5  |
+
+Given "LTY-E2E-5" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId          |
+| CommonData    | login		   | loyaltyuser1	  |
+
+And "LTY-E2E-5" Customer Clears the Shopping Cart
+
+And "LTY-E2E-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-E2E-5" Customer adds Daily Living items to the cart from search.
+
+And "LTY-E2E-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-E2E-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-E2E-5" Customer Goes to the Shopping Cart
+
+And "LTY-E2E-5" Customer finds Loyalty Information in the Order Summary Box on the shopping cart page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | NO                        |
+
+Then "LTY-E2E-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-LTY        | E2E       | LTY-E2E-5  |

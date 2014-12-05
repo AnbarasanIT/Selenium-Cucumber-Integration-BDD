@@ -1,0 +1,143 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.accounthome;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class AccountHomeBannerVerificationLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify whether a banner present OR not
+     *          present in the Account home page
+     * @author - Thanigaivelan G
+     * @Created - 03/04/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void bannerPresentORNotPresentVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BannerElement = null;
+	String[] BannerChildElements = null;
+
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Verify the presence of a Banner
+	    BannerElement = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BannerObject");
+
+	    // Verify the Child Elements of a banner
+	    BannerChildElements = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BannerChildObjects").split("`");
+
+	    if ("YES".equalsIgnoreCase(dataMap.get("BannerPresence").get(0))) {
+		if (isElementPresentVerification(BannerElement, browser)) {
+		    for (int i = 0; i < BannerChildElements.length; i++) {
+			if (getChildElementPropertyFromParent(getElementByProperty(BannerElement, browser), BannerChildElements[i].toString().split("~")[0].toString(), BannerChildElements[i]
+				.toString().split("~")[1].toString()) == null) {
+			    messagesMap.put("Verifying the Banner child Elements".toUpperCase(),
+				    "The Child Element " + BannerChildElements[i] + " is Not present in the Banner Element " + BannerElement + " As Expected").toUpperCase();
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    messagesMap.put("Verifying the Presence of Banner".toUpperCase(), "The Banner Element " + BannerElement + " is Not present as Expected").toUpperCase();
+		    status = FAIL;
+		}
+	    }
+
+	    // Verify the banner is not present in the Account home page
+	    else if ("NO".equalsIgnoreCase(dataMap.get("BannerPresence").get(0))) {
+		for (int i = 0; i < BannerChildElements.length; i++) {
+		    if (getChildElementPropertyFromParent(getElementByProperty(BannerElement, browser), BannerChildElements[i].toString().split("~")[0].toString(), BannerChildElements[i].toString()
+			    .split("~")[1].toString()) != null) {
+			messagesMap.put("Verifying the Banner Elements are not present".toUpperCase(),
+				"The Child Element " + BannerChildElements[i] + " is present in the Banner Element " + BannerElement + " ").toUpperCase();
+			status = FAIL;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify added Loyalty Points to User Account
+     * @author - Siva Santhi Reddy P
+     * @Created - 30 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verificationofAddedLoyaltyPoints(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewardsPoints_ELM = "//div[@class='font_points_avail_size']~XPATH";
+	String BalanceRewardsNumber_ELM = "//div[contains(@class,'avail_points_inner_box')]/div~XPATH";
+	long CurrentlyAvailablePoinst = 0, ExpectedTotalPoints = 0;
+	String EarnedLoyaltyPoints = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getSharedProperties = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    if (getSharedProperties == null) {
+		getSharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(getSharedProperties);
+	    }
+	    if (getSharedProperties != null) {
+		EarnedLoyaltyPoints = getSharedProperties.get("EarnLoyaltyPoints");
+	    }
+	    String saveintialAvailablePoints = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "saveintialAvailablePoints");
+	    String verifyAddedPoints = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "verifyAddedPoints");
+	    String InitialAvailablePoints = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InitialAvailablePoints");
+	    if (isElementPresentVerification(BalanceRewardsPoints_ELM, browser)) {
+		CurrentlyAvailablePoinst = Integer.parseInt(getElementByProperty(BalanceRewardsPoints_ELM, browser).getText().replaceAll(",", ""));
+	    } else {
+		throw new Exception("Not able to find Balance Rewards Points Element. Either Epsilon down or user type is Non-loyalty");
+	    }
+	    if (isElementPresentVerification(BalanceRewardsNumber_ELM, browser)) {
+		String BalanceRewardsNumber = getElementByProperty(BalanceRewardsNumber_ELM, browser).getText().trim();
+		TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MembershipNumber", BalanceRewardsNumber);
+	    } else {
+		throw new Exception("Not able to find the Balance Rewards Member element");
+	    }
+	    if (saveintialAvailablePoints != null && saveintialAvailablePoints.equalsIgnoreCase("Yes")) {
+		TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InitialAvailablePoints",
+			String.valueOf(CurrentlyAvailablePoinst));
+		getSharedProperties.put("InitialAvailablePoints", String.valueOf(CurrentlyAvailablePoinst));
+	    }
+	    if (verifyAddedPoints != null && verifyAddedPoints.equalsIgnoreCase("Yes")) {
+		InitialAvailablePoints = getSharedProperties.get("InitialAvailablePoints");
+		ExpectedTotalPoints = Integer.parseInt(InitialAvailablePoints) + Integer.parseInt(EarnedLoyaltyPoints);
+		if (ExpectedTotalPoints != CurrentlyAvailablePoinst) {
+		    messagesMap.put("Expected Points are not getting dislayed", "Expected: " + ExpectedTotalPoints + " but displayed points: " + CurrentlyAvailablePoinst);
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

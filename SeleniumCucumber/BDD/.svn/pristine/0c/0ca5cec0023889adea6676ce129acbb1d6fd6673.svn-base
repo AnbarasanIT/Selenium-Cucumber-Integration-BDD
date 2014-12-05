@@ -1,0 +1,116 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.text.DecimalFormat;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class ShippingRuleLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the shipping cost in th eorder review page
+     * @author - Thangaraj R
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void shippingRuleVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ShippingRule = null;
+	float ActualShippingCost = 0;
+	String SSCLShippingCost = "0";
+	String SSWeight = null;
+	String SEWeight = null;
+	float ExpectedShippingCost = 0;
+	String Surcharge1 = null;
+	String Surcharge2 = null;
+	String RxShippingCost_TXT = "//div[6]/div[2]/p[2]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ShippingRule = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), dataMap.get("ColumnId").get(0));
+	    System.err.print(ShippingRule);
+	    String[] arrShippingRule = ShippingRule.split("\\+");
+	    for (int Count = 0; Count < arrShippingRule.length; Count++) {
+		if (arrShippingRule[Count].trim().equalsIgnoreCase("Surcharge1")) {
+		    Surcharge1 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("ProductSheetName").get(0), dataMap.get("SurchargeRowId").get(0), "Surcharge1").trim().trim();
+		    ExpectedShippingCost = ExpectedShippingCost + Float.parseFloat(Surcharge1);
+		} else if (arrShippingRule[Count].trim().equalsIgnoreCase("Surcharge2")) {
+		    Surcharge2 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("ProductSheetName").get(0), dataMap.get("SurchargeRowId").get(0), "Surcharge2").trim();
+		    ExpectedShippingCost = ExpectedShippingCost + Float.parseFloat(Surcharge2);
+		} else if (arrShippingRule[Count].trim().contains(":")) {
+		    String[] arrShippingRule1 = arrShippingRule[Count].split("\\:");
+		    if (arrShippingRule1[1].equalsIgnoreCase("SS")) {
+			SSWeight = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("ProductSheetName").get(0), dataMap.get("weightRowId").get(0), "SS_Weight").trim();
+			System.err.println(SSWeight);
+			ExpectedShippingCost = ExpectedShippingCost + (Float.parseFloat(arrShippingRule1[0]) * (Float.parseFloat(SSWeight) - 20));
+		    } else if (arrShippingRule1[1].equalsIgnoreCase("SE")) {
+			SEWeight = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("ProductSheetName").get(0), dataMap.get("weightRowId").get(0), "SE_Weight").trim();
+			ExpectedShippingCost = ExpectedShippingCost + (Float.parseFloat(arrShippingRule1[0]) * (Float.parseFloat(SEWeight) - 20));
+		    }
+		} else
+		    ExpectedShippingCost = ExpectedShippingCost + (Float.parseFloat(arrShippingRule[Count].trim()));
+	    }
+	    DecimalFormat a = new DecimalFormat();
+	    a.setMaximumFractionDigits(2);
+	    ExpectedShippingCost = Float.parseFloat(a.format(ExpectedShippingCost));
+	    // Find out the actual Rx shipping cost
+	    String RxShippingCost = "0";
+	    if (dataMap.get("SheetName").get(0).contains("RX")) {
+		if (getElementByProperty(RxShippingCost_TXT, browser).getText().contains("FREE")) {
+		    RxShippingCost = "0";
+		} else {
+		    RxShippingCost = getElementByProperty(RxShippingCost_TXT, browser).getText().split("\\$")[1].trim();
+		}
+	    }
+	    // Find out the actual SSCL shipping cost
+	    if (dataMap.get("SheetName").get(0).contains("CL") || dataMap.get("SheetName").get(0).contains("SS")) {
+		int NoOfTable, NoOfTag;
+		List<WebElement> TableOrdersummary = null;
+		List<WebElement> ShippingCostcontainer = null;
+		// order summary table
+		TableOrdersummary = browser.findElements(By.xpath("//div[@id='rgtContainer']"));
+		for (NoOfTable = 0; NoOfTable < TableOrdersummary.size(); NoOfTable++) {
+		    if (TableOrdersummary.get(NoOfTable).getText().contains("Item Subtotal")) {
+			ShippingCostcontainer = TableOrdersummary.get(NoOfTable).findElements(By.tagName("p"));
+			for (NoOfTag = 0; NoOfTag < ShippingCostcontainer.size(); NoOfTag++) {
+			    // Getting the Shipping cost value
+			    if (ShippingCostcontainer.get(NoOfTag).getText().contains("Shipping:")) {
+				if (ShippingCostcontainer.get(NoOfTag + 1).getText().contains("FREE")) {
+				    SSCLShippingCost = "0";
+				} else
+				    SSCLShippingCost = ShippingCostcontainer.get(NoOfTag + 1).getText().split("\\$")[1].trim();
+				break;
+			    }
+			}
+		    }
+
+		}
+	    }
+	    ActualShippingCost = Float.parseFloat(SSCLShippingCost) + Float.parseFloat(RxShippingCost);
+	    // Compare the actual and Expected shipping cost
+	    if (!(ActualShippingCost == ExpectedShippingCost)) {
+		messagesMap.put("ShippingCost", "Actual and Expected shipping cost are not same as expected");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

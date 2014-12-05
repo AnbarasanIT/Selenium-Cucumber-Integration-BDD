@@ -1,0 +1,54 @@
+package walgreens.ecom.batch.automation.stepdefinitions.accountdashboard.accounthome;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.accountdashboard.accounthome.AccountHomeBannerVerificationLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class AccountHomeBannerVerificationSteps {
+    @Then("^\"([^\"]*)\" Customer validates the UI and Content of a banner in Account Home:$")
+    public void Customer_validates_the_UI_and_Content_of_a_banner_in_Account_Home(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates the UI and Content of a banner in Account Home:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    AccountHomeBannerVerificationLibrary.bannerPresentORNotPresentVerification(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @Then("^\"([^\"]*)\" Customer verifies added Loyalty Points from Account Home page:$")
+    public void Customer_verifies_added_Loyalty_Points_from_Account_Home_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies added Loyalty Points from Account Home page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    AccountHomeBannerVerificationLibrary.verificationofAddedLoyaltyPoints(browser,scenario, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

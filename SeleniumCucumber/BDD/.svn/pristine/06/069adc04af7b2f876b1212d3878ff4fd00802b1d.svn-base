@@ -1,0 +1,55 @@
+@csc @cscE2E
+Feature: All the scenarios in the feature are to validate the CSC
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSC-E2E-0
+Scenario: Test the login to CSC Application
+
+Given  "CSC-E2E-0" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-CSC        | E2E       | CSC-E2E-0 |
+
+Given "CSC-E2E-0" Customer login to the csc application:
+| InputFileName | SheetName  | RowId      |
+| CSCData       | login      | cscuser1	  |
+
+Then "CSC-E2E-0" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-CSC        | E2E       | CSC-E2E-0  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSC-E2E-1
+Scenario: Test the Customer Search functionality in CSC Application
+
+Given  "CSC-E2E-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-CSC        | E2E       | CSC-E2E-1  |
+
+Given "CSC-E2E-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId          |
+| CommonData    | login      | loyaltyuser1	  |
+
+And "CSC-E2E-1" Customer Clears the Shopping Cart
+
+When "CSC-E2E-1" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Given "CSC-E2E-1" Customer login to the csc application:
+| InputFileName | SheetName  | RowId      |
+| CSCData       | login      | cscuser1	  |
+
+Then "CSC-E2E-1" Customer selects the CSC Window
+
+And "CSC-E2E-1" Customer Searches for a User:
+#And "CSC-E2E-1" Customer Authenticates an user:
+
+Then "CSC-E2E-1" Customer selects the Default Window
+
+And "CSC-E2E-1" Customer Clears the Shopping Cart
+
+Then "CSC-E2E-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      |
+| QC-CSC        | E2E       | CSC-E2E-1  |
+
+

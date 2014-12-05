@@ -1,0 +1,1903 @@
+@CSC @CSCFulfillmentFlows
+Feature: Scenarios to checkout and fufill the order in CSC
+
+#-----------------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-1
+Scenario: Customer places order for DC, CH items and verifying the loyalty points redemption
+
+Given "CSCF-CSCFulfilment-1" Customer starts the scenario:
+| InputFileName | SheetName     | RowId  		       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-1 |
+
+Given "CSCF-CSCFulfilment-1" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-1" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-1" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch1 |
+
+And "CSCF-CSCFulfilment-1" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch1 |No			 |
+
+And "CSCF-CSCFulfilment-1" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId    	   |ContinueToShipping |
+| CSCData       | ProductSearch     | CHSingleSKU1 |Yes			 	   |
+
+And "CSCF-CSCFulfilment-1" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	  |ContinueToShipping |
+| CSCData       | ProductSearch     | DCProduct2  |Yes				  |
+
+Then "CSCF-CSCFulfilment-1" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-1" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-1" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |1				   |
+
+Then "CSCF-CSCFulfilment-1" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			   |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-1 |Yes				|
+
+Then "CSCF-CSCFulfilment-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC_OrderStatusquery1     |
+|  DataBase     | DCFulfillment | CSC_DC1_LoyaltyRedeemPoints  |
+
+And "CSCF-CSCFulfilment-1" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch1 |Yes			 |Return		 |
+
+Then "CSCF-CSCFulfilment-1" Customer selects the Default Window
+
+Given "CSCF-CSCFulfilment-1" Customer login to feeds instance:
+
+#Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+#| InputFileName | SheetName  | RowId   			  	 |
+#| DYNADMIN      | FEEDS		 | OrderRepositoryCache  |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	   			      |
+|  DataBase     | DCFulfillment | CSC_DC_OrderStatusquery2 			  |
+|  DataBase     | DCFulfillment | CSC_DC1_LoyaltyEarnPoints			  |
+|  DataBase     | CHFulfillment | CSC_CH1_FulfillmentOrderStatusQry2  |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1    	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo1        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-1" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-1" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+
+Then "CSCF-CSCFulfilment-1" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "CSCF-CSCFulfilment-1" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob2SubCommand4  |
+
+Then "CSCF-CSCFulfilment-1" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "CSCF-CSCFulfilment-1" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "CSCF-CSCFulfilment-1" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   |
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "CSCF-CSCFulfilment-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	                  |
+|  DataBase     | CHFulfillment | CSC_CH1_FulfillmentOrderStatusQry4  |
+|  DataBase     | CHFulfillment | CSC_CH1_FulfillmentOrderStatusQry5  |
+|  DataBase     | DCFulfillment | CSC_DC_OrderStatusquery3			  |
+
+Then "CSCF-CSCFulfilment-1" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-1" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-1" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-1	 |
+
+Then "CSCF-CSCFulfilment-1" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-1" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateReturnRedeem 	  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateReturnRedeem	  |
+| DYNADMIN      | FEEDS          | LoyaltyRedeemPoints 				  |
+
+Then "CSCF-CSCFulfilment-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	    	      |
+|  DataBase     | DCFulfillment | CSC_DC1_LoyaltyRedeemPoints |
+
+Then "CSCF-CSCFulfilment-1" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-1" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-1" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch1 |
+
+And "CSCF-CSCFulfilment-1" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch1 |Yes			 |Earn			 |
+
+Then "CSCF-CSCFulfilment-1" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-1 |
+#-----------------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-2
+Scenario: Customer places order for CH Loyalty eligible product via paypal and return the entire order in order to verify the reduction of earned points
+
+Given  "CSCF-CSCFulfilment-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-2 |
+
+Given "CSCF-CSCFulfilment-2" Customer login to the walgreens.com:
+| InputFileName | SheetName			 | RowId   		   |
+| CSCData       | CustomerSearch     | CustomerSearch3 |
+
+And "CSCF-CSCFulfilment-2" Customer Clears the Shopping Cart
+
+And "CSCF-CSCFulfilment-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName		| RowId 			   |
+| CommonData    | search    	| CHSingleSkuLTY1      |
+
+Then "CSCF-CSCFulfilment-2" Customer adds Daily Living items to the cart from search.
+
+Then "CSCF-CSCFulfilment-2" Customer Goes to the Shopping Cart
+
+#Then "CSCF-CSCFulfilment-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+#| InputFileName | SheetName 	   | RowId 			      |
+#| SDDData       | Product Details  | ProductInformation17 |
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "CSCF-CSCFulfilment-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "CSCF-CSCFulfilment-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CSCF-CSCFulfilment-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment  |
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			   |
+
+Then "CSCF-CSCFulfilment-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CSCF-CSCFulfilment-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName  		  | SheetName   	 | RowId 	         	 |
+| CheckoutOrderDetails    | OrderIds	     | CSCF-CSCFulfilment-2	 |
+
+Then "CSCF-CSCFulfilment-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CSCF-CSCFulfilment-2" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-2" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-2" Customer Searches for a User:
+| InputFileName | SheetName			 | RowId   		   |
+| CSCData       | CustomerSearch     | CustomerSearch3 |
+
+And "CSCF-CSCFulfilment-2" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch3 |No			 |
+
+Then "CSCF-CSCFulfilment-2" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 			   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultDotcomURL	|
+
+Given "CSCF-CSCFulfilment-2" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-2" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName  | RowId   			  	 |
+| DYNADMIN      | FEEDS		 | OrderRepositoryCache  |
+
+Then "CSCF-CSCFulfilment-2" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			|
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	|
+| DYNADMIN      | FEEDS          | DelayAmountupdate1	|
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	|
+| DYNADMIN      | FEEDS          | CHPeformJob3 		|
+
+Then "CSCF-CSCFulfilment-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         		 |
+|  DataBase     | CHFulfillment | CSC_CH_FulfillmentOrderStatusQry2  |
+
+Then "CSCF-CSCFulfilment-2" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "CSCF-CSCFulfilment-2" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "CSCF-CSCFulfilment-2" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob2SubCommand4  |
+
+Then "CSCF-CSCFulfilment-2" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "CSCF-CSCFulfilment-2" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "CSCF-CSCFulfilment-2" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "CSCF-CSCFulfilment-2" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "CSCF-CSCFulfilment-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	                 |
+|  DataBase     | CHFulfillment | CSC_CH_FulfillmentOrderStatusQry4  |
+|  DataBase     | CHFulfillment | CSC_CH_FulfillmentOrderStatusQry5  |
+
+Then "CSCF-CSCFulfilment-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | CHFulfillment | CSC_CH_LoyaltyEarnStatus1 |
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-2" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | LoyaltyEarnPoints	  |
+
+Then "CSCF-CSCFulfilment-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | CHFulfillment | CSC_CH_LoyaltyEarnStatus2 |
+|  DataBase     | CHFulfillment | CSC_CH_LoyaltyEarnPoints  |
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-2" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-2" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch3 |
+
+And "CSCF-CSCFulfilment-2" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch3 |Yes			 |Earn			 |
+
+Then "CSCF-CSCFulfilment-2" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-2	 |
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 			   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultDotcomURL	|
+
+Given "CSCF-CSCFulfilment-2" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-2" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId   			  		  	 |
+| DYNADMIN      | FEEDS			 | LoyaltyEarnReturnPointJob     |
+
+Then "CSCF-CSCFulfilment-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	    	   			  |
+|  DataBase     | CHFulfillment | CSC_CH_LoyaltyReturnPoints		  |
+|  DataBase     | CHFulfillment | CSC_CH_LoyaltyReturnPaymentStatus   |
+
+Then "CSCF-CSCFulfilment-2" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-2" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-2" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch3 |
+
+And "CSCF-CSCFulfilment-2" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch4 |Yes			 |Return		 |
+
+Then "CSCF-CSCFulfilment-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-2 |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-3
+Scenario: To verify whether CSC agent is able to cancel a pre order after releasing the order
+
+Given  "CSCF-CSCFulfilment-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-3 |
+
+Given "CSCF-CSCFulfilment-3" Customer login to the Yahoo.com:
+| InputFileName | SheetName         | RowId           |
+| CSCData       | CustomerSearch    | CustomerSearch6 |
+
+And "CSCF-CSCFulfilment-3" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "CSCF-CSCFulfilment-3" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-3" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-3" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch6 |
+
+And "CSCF-CSCFulfilment-3" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | PreOrder2     |Yes				|
+
+Then "CSCF-CSCFulfilment-3" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-3" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | yes 				|No 			  |
+
+Then "CSCF-CSCFulfilment-3" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |
+| CSCData       | PaymentInfo       | PaymentInfo1 |
+
+Then "CSCF-CSCFulfilment-3" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			   |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-3 |
+
+Then "CSCF-CSCFulfilment-3" Customer releases Pre-Order item order details in the Queue from CSC:
+| InputFileName | SheetName 	  | RowId                |
+| CSCData       | PreOrderRelease | PreOrderReleaseinfo2 |
+
+Then "CSCF-CSCFulfilment-3" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName    | RowId                |CancelOrder|
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-3 |Yes        |
+
+And "CSCF-CSCFulfilment-3" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName         | RowId           |
+| CSCData        | CustomerSearch    | CustomerSearch6 |
+
+Then "CSCF-CSCFulfilment-3" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    | RowId    	          |CanceledOrderCheck|OrderNumber |
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-3 |		Yes			 |	   Yes    |
+
+Then "CSCF-CSCFulfilment-3" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                   |          
+|  DataBase     | DCFulfillment  | PreOrder_ShippingAndOrderStatusInfo |
+
+Then "CSCF-CSCFulfilment-3" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-3  |
+#-----------------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-4
+Scenario: To verify whether CSC agent is able to cancel a pre order before releasing the order
+
+Given  "CSCF-CSCFulfilment-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-4 |
+
+Given "CSCF-CSCFulfilment-4" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	      |
+|	CSCData  	| CustomerSearch | CustomerSearch14   |
+
+And "CSCF-CSCFulfilment-4" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "CSCF-CSCFulfilment-4" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-4" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-4" Customer Searches for a User:
+| InputFileName | SheetName			 | RowId   		    |
+| CSCData       | CustomerSearch     | CustomerSearch14 |
+
+And "CSCF-CSCFulfilment-4" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	 |ContinueToShipping |
+| CSCData       | ProductSearch     | PreOrder1  |Yes				 |
+
+Then "CSCF-CSCFulfilment-4" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-4" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No			      |
+
+Then "CSCF-CSCFulfilment-4" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |
+| CSCData       | PaymentInfo       | PaymentInfo1 |
+
+Then "CSCF-CSCFulfilment-4" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId       			|
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-4  |
+
+Then "CSCF-CSCFulfilment-4" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		|CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-4  |Yes        |
+
+Then "CSCF-CSCFulfilment-4" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                    |          
+|  DataBase     | DCFulfillment  | PreOrderCancelStatusinOrderTable1    |
+|  DataBase     | DCFulfillment  | PreOrderCancelStatusinshipTable1     |
+
+And "CSCF-CSCFulfilment-4" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	      |
+|	CSCData  	| CustomerSearch | CustomerSearch14   |
+
+Then "CSCF-CSCFulfilment-4" Customer verifies Order Cancellation email:
+| InputFileName | SheetName 		| RowId       			|
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-4  |
+
+Then "CSCF-CSCFulfilment-4" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-4  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-5
+Scenario: To verify whether customer is returned with the balance rewards points from epsilon when agent cancel the order placed by 
+redeeming points in csc dotcom
+
+Given  "CSCF-CSCFulfilment-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-5  |
+
+Given "CSCF-CSCFulfilment-5" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-5" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-5" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch8 |
+
+And "CSCF-CSCFulfilment-5" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch8 |No			 |
+
+And "CSCF-CSCFulfilment-5" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	  |ContinueToShipping |
+| CSCData       | ProductSearch     | DCProduct2  |Yes				  |
+
+Then "CSCF-CSCFulfilment-5" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-5" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-5" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |1				   |
+
+Then "CSCF-CSCFulfilment-5" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			   |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-5 |Yes				|
+
+Then "CSCF-CSCFulfilment-5" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC3_LoyaltyRedeemPoints  |
+
+And "CSCF-CSCFulfilment-5" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch8 |Yes			 |Return		 |
+
+Then "CSCF-CSCFulfilment-5" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		|CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-5  |Yes        |
+
+Then "CSCF-CSCFulfilment-5" Customer selects the Default Window
+
+Given "CSCF-CSCFulfilment-5" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-5" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | LoyaltyRedeemPoints    |
+
+Then "CSCF-CSCFulfilment-5" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-5" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-5" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch8 |
+
+And "CSCF-CSCFulfilment-5" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch8 |Yes			 |Earn			 |
+
+Then "CSCF-CSCFulfilment-5" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-5  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-6
+Scenario: To verify whether agent is not able to cancel order which is in process status
+
+Given  "CSCF-CSCFulfilment-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-6  |
+
+Given "CSCF-CSCFulfilment-6" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-6" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-6" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch6 |
+
+Then "CSCF-CSCFulfilment-6" Customer selects the required Store:
+| InputFileName | SheetName			 | RowId   	  |
+| CSCData       | StoreDetails       | StoreInfo1 |
+
+And "CSCF-CSCFulfilment-6" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	  |ContinueToShipping |
+| CSCData       | ProductSearch     | DCProduct1  |-				  |
+
+And "CSCF-CSCFulfilment-6" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId    	   |ContinueToShipping |
+| CSCData       | ProductSearch     | CHSTCProduct |-				   |
+
+And "CSCF-CSCFulfilment-6" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	    |isPickupOnly	|
+| CSCData       | ProductSearch     | PickupOnly    |-   			|
+
+Then "CSCF-CSCFulfilment-6" Customer applies Promotions for Orders:
+| InputFileName | SheetName      | RowId                   |ErrorValidations |RmExistingCoupon	|
+| CSCData       | Promotions     | OrderLevelSTCPromotion1 |	-		     |  Yes				|
+| CSCData       | Promotions     | OrderLevelSTCPromotion2 |	Yes		     |	-		   		|
+
+Then "CSCF-CSCFulfilment-6" Customer clicks on an object and validates the expected results:
+| InputFileName     | SheetName 	    | RowId      			    |
+| CSCData           |LinkVerification   | ContinueToPickupOptions	|
+| CSCData           |LinkVerification   | Continue                	|
+
+Then "CSCF-CSCFulfilment-6" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-6" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-6" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-6" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			   |
+| CSCData       | OrderDetails      |CSCF-CSCFulfilment-6  |
+
+Then "CSCF-CSCFulfilment-6" Customer selects the Default Window
+
+Given "CSCF-CSCFulfilment-6" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-6" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-6" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-6" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-6" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		|CancelOrder|ErrorValidation |
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-6  |Yes        |	Yes			 |
+
+Then "CSCF-CSCFulfilment-6" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-6  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-7
+Scenario: To verify whether customer is returned with the balance rewards points when agent returns the items placed in the order containing 6 DC where 3items fulfilled 
+first and other 3 items fulfilled second by redeeming points in csc dotcom
+
+Given  "CSCF-CSCFulfilment-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-7   |
+
+Given "CSCF-CSCFulfilment-7" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-7" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-7" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch9 |
+
+And "CSCF-CSCFulfilment-7" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch9 |No			 |
+
+And "CSCF-CSCFulfilment-7" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	  |ContinueToShipping  |
+| CSCData       | ProductSearch     | DCProduct3  |Yes				   |
+
+Then "CSCF-CSCFulfilment-7" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-7" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-7" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |1				   |
+
+Then "CSCF-CSCFulfilment-7" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-7 |Yes			 |
+
+Then "CSCF-CSCFulfilment-7" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC4_OrderStatusquery1    |
+|  DataBase     | DCFulfillment | CSC_DC4_LoyaltyRedeemPoints  |
+
+And "CSCF-CSCFulfilment-7" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch9 |yes			 |Return		 |
+
+Then "CSCF-CSCFulfilment-7" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 			   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultDotcomURL	|
+
+Given "CSCF-CSCFulfilment-7" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-7" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC4_OrderStatusquery2  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo4        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-7" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	|
+| BatchData     | XMLDATA    | dcShippingQtyUpdate1 |
+
+Then "CSCF-CSCFulfilment-7" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo4        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-7" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	|
+| BatchData     | XMLDATA    | dcShippingQtyUpdate1 |
+
+Then "CSCF-CSCFulfilment-7" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-7" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		   | RowId 	 	  	|
+| PharmacyLinkVerification   | DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-7" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-7" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-7 |
+
+Then "CSCF-CSCFulfilment-7" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	   |CalcCreditDue |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-7   |Yes			  |
+
+Then "CSCF-CSCFulfilment-7" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-7" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateReturnRedeem 	  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateReturnRedeem	  |
+
+Then "CSCF-CSCFulfilment-7" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						  |
+| DYNADMIN      | FEEDS          | LoyaltyRedeemPoints 				  |
+
+Then "CSCF-CSCFulfilment-7" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	 	  	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-7" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-7" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		  |
+| CSCData       | CustomerSearch    | CustomerSearch9 |
+
+And "CSCF-CSCFulfilment-7" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		  |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch9 |yes			 |Earn			 |
+
+Then "CSCF-CSCFulfilment-7" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-7   |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-8
+Scenario: To verify whether customer account is reduced with the earned Loyalty balance rewards points when agent returns the items placed in the order 
+containing 6 DC where 3items fulfilled first and other 3 items fulfilled second in csc dotcom
+
+Given  "CSCF-CSCFulfilment-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-8   |
+
+Given "CSCF-CSCFulfilment-8" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-8" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-8" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch10 |
+
+And "CSCF-CSCFulfilment-8" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch10 |No			  |
+
+And "CSCF-CSCFulfilment-8" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	  |ContinueToShipping |
+| CSCData       | ProductSearch     | DCProduct3  |Yes				  |
+
+Then "CSCF-CSCFulfilment-8" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-8" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-8" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-8" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-8  |No 			 |
+
+Then "CSCF-CSCFulfilment-8" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC5_OrderStatusquery1    |
+|  DataBase     | DCFulfillment | CSC_DC3_LoyaltyEarnPoints    |
+
+Then "CSCF-CSCFulfilment-8" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-8" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 			   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultDotcomURL	|
+
+Given "CSCF-CSCFulfilment-8" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-8" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC5_OrderStatusquery2  |
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo5        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-8" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+
+Then "CSCF-CSCFulfilment-8" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	|
+| BatchData     | XMLDATA    | dcShippingQtyUpdate2 |
+
+Then "CSCF-CSCFulfilment-8" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo5        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-8" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+
+Then "CSCF-CSCFulfilment-8" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	|
+| BatchData     | XMLDATA    | dcShippingQtyUpdate2 |
+
+Then "CSCF-CSCFulfilment-8" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | LoyaltyEarnPoints	  |
+
+Then "CSCF-CSCFulfilment-8" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		   | RowId 	 	  	|
+| PharmacyLinkVerification   | DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-8" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-8" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch10 |
+
+And "CSCF-CSCFulfilment-8" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch10 |yes			  |Earn		      |
+
+Then "CSCF-CSCFulfilment-8" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-8 |
+
+Then "CSCF-CSCFulfilment-8" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	   |CalcCreditDue |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-8    |Yes			  |
+
+Then "CSCF-CSCFulfilment-8" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-8" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-8" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateReturnEarn1 |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateReturnEarn1	 |
+| DYNADMIN      | FEEDS          | LoyaltyEarnReturnPointJob     |
+
+Then "CSCF-CSCFulfilment-8" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   		|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-8" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-8" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch10 |
+
+And "CSCF-CSCFulfilment-8" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch10 |yes			  |Return		  |
+
+Then "CSCF-CSCFulfilment-8" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-8   |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-9
+Scenario: To verify whether customer account is reduced with the earned Loyalty points from epsilon when agent returns all the 
+items placed by the user which is fulfilled from same shipping group in csc
+
+Given  "CSCF-CSCFulfilment-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-9   |
+
+Given "CSCF-CSCFulfilment-9" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-9" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-9" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch11 |
+
+And "CSCF-CSCFulfilment-9" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch11 |No			  |
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | SaleRule1Product  |Yes				|
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | SaleRule2Product  |Yes				|
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | SaleRule3Product  |Yes				|
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | BOGOLEP50Product  |Yes				|
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   	    |ContinueToShipping |
+| CSCData       | ProductSearch     | BOGOLEPProduct    |Yes				|
+
+And "CSCF-CSCFulfilment-9" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   |ContinueToShipping  |
+| CSCData       | ProductSearch     | BAGBProduct  |Yes					|
+
+Then "CSCF-CSCFulfilment-9" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-9" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-9" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-9" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-9 |Yes			 |
+
+Then "CSCF-CSCFulfilment-9" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC6_OrderStatusquery1    |
+|  DataBase     | DCFulfillment | CSC_DC4_LoyaltyEarnPoints    |
+
+Then "CSCF-CSCFulfilment-9" Customer selects the Default Window
+
+Given "CSCF-CSCFulfilment-9" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-9" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC6_OrderStatusquery2  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo6        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-9" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-9" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC6_OrderStatusquery3  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     					    	  |
+| DYNADMIN      | FEEDS          | LoggingDebugTransactionBatchJobInfo1   |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     					    	  |
+| DYNADMIN      | FEEDS          | LoggingInfoTransactionBatchJobInfo1	  |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | LoyaltyEarnPoints	  |
+
+Then "CSCF-CSCFulfilment-9" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		   | RowId 	   		|
+| PharmacyLinkVerification   | DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-9" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-9" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch11 |
+
+And "CSCF-CSCFulfilment-9" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch11 |yes			  |Earn		      |
+
+Then "CSCF-CSCFulfilment-9" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-9  |
+
+Then "CSCF-CSCFulfilment-9" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-9" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateReturnEarn1 |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateReturnEarn1	 |
+
+Then "CSCF-CSCFulfilment-9" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoyaltyEarnReturnPointJob     |
+
+Then "CSCF-CSCFulfilment-9" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	  	 	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-9" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-9" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch11 |
+
+And "CSCF-CSCFulfilment-9" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch11 |yes			  |Return		  |
+
+Then "CSCF-CSCFulfilment-9" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-9   |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-10
+Scenario: To verify whether customer is reduced with the earned Loyalty balance rewards points from epsilon when agent perform 
+copy order function in csc
+
+Given  "CSCF-CSCFulfilment-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-10  |
+
+Given "CSCF-CSCFulfilment-10" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-10" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch12 |
+
+And "CSCF-CSCFulfilment-10" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch12 |No			  |
+
+And "CSCF-CSCFulfilment-10" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   |ContinueToShipping  |
+| CSCData       | ProductSearch     | DCProduct3   |Yes					|
+
+Then "CSCF-CSCFulfilment-10" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-10" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-10" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-10 |No			     |
+
+Then "CSCF-CSCFulfilment-10" Customer does the copy order and updates the product quantity:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-10 |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-10" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-10" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-10 |No			     |
+
+Then "CSCF-CSCFulfilment-10" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC7_OrderStatusquery1    |
+|  DataBase     | DCFulfillment | CSC_DC5_LoyaltyEarnPoints    |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-10" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 			   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultDotcomURL	|
+
+Given "CSCF-CSCFulfilment-10" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-10" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC7_OrderStatusquery2  |
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo7        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-10" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 	      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | processOrderXmls1	  |
+
+Then "CSCF-CSCFulfilment-10" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC7_OrderStatusquery3  |
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+| DYNADMIN      | FEEDS          | LoyaltyEarnPoints	  |
+
+Then "CSCF-CSCFulfilment-10" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		   | RowId 	  	 	|
+| PharmacyLinkVerification   | DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-10" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-10" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch12 |
+
+And "CSCF-CSCFulfilment-10" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch12 |yes			  |Earn		      |
+
+Then "CSCF-CSCFulfilment-10" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-10 |
+
+Then "CSCF-CSCFulfilment-10" Customer selects the Default Window
+
+Then "CSCF-CSCFulfilment-10" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateReturnEarn1 |
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateReturnEarn1	 |
+
+Then "CSCF-CSCFulfilment-10" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			 		 |
+| DYNADMIN      | FEEDS          | LoyaltyEarnReturnPointJob     |
+
+Then "CSCF-CSCFulfilment-10" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-10" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-10" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch12 |
+
+And "CSCF-CSCFulfilment-10" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch12 |yes			  |Return		  |
+
+Then "CSCF-CSCFulfilment-10" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-10  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-11
+Scenario: To verify whether process return link is not displayed for Pick up in store fulfilled orders
+
+Given  "CSCF-CSCFulfilment-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-11  |
+
+Given "CSCF-CSCFulfilment-11" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-11" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-11" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch12 |
+
+Then "CSCF-CSCFulfilment-11" Customer selects the required Store:
+| InputFileName | SheetName			 | RowId   	  |
+| CSCData       | StoreDetails       | StoreInfo1 |
+
+And "CSCF-CSCFulfilment-11" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	    |isPickupOnly	|
+| CSCData       | ProductSearch     | PickupOnly2   |Yes			|
+
+Then "CSCF-CSCFulfilment-11" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-11" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-11 |No			     |
+
+Then "CSCF-CSCFulfilment-11" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   					  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup_RespStatusUpdate  	  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup_RespStatusRECVUpdate  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup_RespStatusINPUpdate   |
+| DataBase      | DCFulfillment | CSC_DC_Pickup_RespStatusCOMPUpdate  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup_RespStatusSOLDUpdate  |
+
+Then "CSCF-CSCFulfilment-11" Customer returns the order in CSC:
+| InputFileName   | SheetName   		 | RowId 	         	 |PickUpOnly |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-11 |Yes		 |
+
+Then "CSCF-CSCFulfilment-11" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-11  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-12
+Scenario: To verify whether CSC agent is able to cancel Pick up order which has different order status
+
+Given  "CSCF-CSCFulfilment-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-12  |
+
+Given "CSCF-CSCFulfilment-12" Customer login to the Yahoo.com:
+| InputFileName | SheetName         | RowId            |
+| CSCData       | CustomerSearch    | CustomerSearch13 |
+
+And "CSCF-CSCFulfilment-12" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "CSCF-CSCFulfilment-12" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-12" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-12" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-12" Customer selects the required Store:
+| InputFileName | SheetName			 | RowId   	  |
+| CSCData       | StoreDetails       | StoreInfo1 |
+
+And "CSCF-CSCFulfilment-12" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	    |isPickupOnly	|
+| CSCData       | ProductSearch     | PickupOnly2   |Yes			|
+
+Then "CSCF-CSCFulfilment-12" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-12" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-12 |No			     |
+
+Then "CSCF-CSCFulfilment-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   					   |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusRECVUpdate  |
+
+Then "CSCF-CSCFulfilment-12" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		 |CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-12  |Yes        |
+
+Then "CSCF-CSCFulfilment-12" Customer selects the Default Window
+
+And "CSCF-CSCFulfilment-12" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName         | RowId            |
+| CSCData        | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-12" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    | RowId    	           |CanceledOrderCheck	|OrderNumber  |isPickUpCancel |
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-12 |Yes					|Yes	      |Yes			  |
+
+Then "CSCF-CSCFulfilment-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 		   	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-12" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-12" Customer does the copy order and updates the product quantity:
+| InputFileName   | SheetName   		 | RowId 	         	 |isPickupOnly	|ChangeStore |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-12 |Yes	    	|Yes		 |
+
+Then "CSCF-CSCFulfilment-12" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-12" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-12 |No			     |
+
+Then "CSCF-CSCFulfilment-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   					   |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusRECVUpdate  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusINPUpdate   |
+
+Then "CSCF-CSCFulfilment-12" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		 |CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-12  |Yes        |
+
+Then "CSCF-CSCFulfilment-12" Customer selects the Default Window
+
+And "CSCF-CSCFulfilment-12" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName         | RowId            |
+| CSCData        | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-12" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    | RowId    	           |CanceledOrderCheck	|OrderNumber  |isPickUpCancel |
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-12 |Yes					|Yes	      |Yes			  |
+
+Then "CSCF-CSCFulfilment-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	 	  	|
+| PharmacyLinkVerification   |DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-12" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-12" Customer does the copy order and updates the product quantity:
+| InputFileName   | SheetName   		 | RowId 	         	 |isPickupOnly	|ChangeStore |
+| CSCData  		  | OrderReturnDetails	 | CSCF-CSCFulfilment-12 |Yes	    	|Yes		 |
+
+Then "CSCF-CSCFulfilment-12" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-12" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-12 |No			     |
+
+Then "CSCF-CSCFulfilment-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   					   |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusRECVUpdate  |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusINPUpdate   |
+| DataBase      | DCFulfillment | CSC_DC_Pickup2_RespStatusCOMPUpdate  |
+
+Then "CSCF-CSCFulfilment-12" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		 |CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-12  |Yes        |
+
+Then "CSCF-CSCFulfilment-12" Customer selects the Default Window
+
+And "CSCF-CSCFulfilment-12" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName         | RowId            |
+| CSCData        | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-12" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    | RowId    	           |CanceledOrderCheck	|OrderNumber  |isPickUpCancel |
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-12 |Yes					|Yes	      |Yes			  |
+
+Then "CSCF-CSCFulfilment-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   				|
+| DataBase      | Query			| CompleteCancelOrderShipState  |
+
+Then "CSCF-CSCFulfilment-12" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-12  |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-13
+Scenario: TO verify the order search functionality using different fulfilment methods and web pick up order status
+
+Given  "CSCF-CSCFulfilment-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-13 |
+
+Given "CSCF-CSCFulfilment-13" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-13" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-13" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName    | RowId        		 |
+| CSCData       | OrderDetails | Ordertype1			 |
+| CSCData       | OrderDetails | Ordertype2			 |
+| CSCData       | OrderDetails | Ordertype3			 |
+| CSCData       | OrderDetails | Ordertype4			 |
+| CSCData       | OrderDetails | Ordertype5			 |
+| CSCData       | OrderDetails | Ordertype6			 |
+| CSCData       | OrderDetails | Ordertype7			 |
+| CSCData       | OrderDetails | Ordertype8 		 |
+| CSCData       | OrderDetails | Ordertype9			 |
+| CSCData       | OrderDetails | Ordertype10		 |
+| CSCData       | OrderDetails | Ordertype11		 |
+| CSCData       | OrderDetails | Ordertype12		 |
+| CSCData       | OrderDetails | Ordertype13		 |
+| CSCData       | OrderDetails | Ordertype14		 |
+| CSCData       | OrderDetails | PatientInfosearch	 |
+| CSCData       | OrderDetails | CLPatientInfosearch |
+
+Then "CSCF-CSCFulfilment-13" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-13 |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-14
+Scenario: TO verify whether the agent is able to cancel the order which is in held order state
+
+Given  "CSCF-CSCFulfilment-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-14 |
+
+Given "CSCF-CSCFulfilment-14" Customer login to the Yahoo.com:
+| InputFileName | SheetName         | RowId            |
+| CSCData       | CustomerSearch    | CustomerSearch13 |
+
+And "CSCF-CSCFulfilment-14" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "CSCF-CSCFulfilment-14" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-14" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-14" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-14" Customer selects the required Store:
+| InputFileName | SheetName			 | RowId   	  |
+| CSCData       | StoreDetails       | StoreInfo1 |
+
+And "CSCF-CSCFulfilment-14" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	     |
+| CSCData       | ProductSearch     | CHSingleSKU1   |
+| CSCData       | ProductSearch     | ItemLevelDC    |
+| CSCData       | ProductSearch     | ItemLevelWP    |
+
+Then "CSCF-CSCFulfilment-14" Customer applies Promotions for Orders:
+| InputFileName | SheetName      | RowId                   |ErrorValidations |RmExistingCoupon	|
+| CSCData       | Promotions     | STCItemLevelPromotion1  |	-		     |	Yes		   		|
+| CSCData       | Promotions     | OrderLevelSTCPromotion1 |	Yes		     |  -				|
+| CSCData       | Promotions     | STCItemLevelPromotion2  |	-		     |	Yes		   		|
+
+Then "CSCF-CSCFulfilment-14" Customer clicks on an object and validates the expected results:
+| InputFileName     | SheetName 	    | RowId      			    |
+| CSCData           |LinkVerification   | ContinueToPickupOptions	|
+| CSCData           |LinkVerification   | Continue                	|
+
+Then "CSCF-CSCFulfilment-14" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-14" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-14" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-14" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-14 |No			     |
+
+Then "CSCF-CSCFulfilment-14" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		 |CancelOrder|
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-14  |Yes        |
+
+Then "CSCF-CSCFulfilment-14" Customer selects the Default Window
+
+And "CSCF-CSCFulfilment-14" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName         | RowId            |
+| CSCData        | CustomerSearch    | CustomerSearch13 |
+
+Then "CSCF-CSCFulfilment-14" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    | RowId    	           |CanceledOrderCheck	|OrderNumber  |
+| CSCData       | OrderDetails | CSCF-CSCFulfilment-14 |Yes					|Yes	      |
+
+Then "CSCF-CSCFulfilment-14" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   				 |
+| DataBase      | Query			| CompleteCancelOrderShipState1  |
+| DataBase      | Query			| CompleteCancelOrderStatus1	 |
+
+Then "CSCF-CSCFulfilment-14" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		        |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-14 |
+#-----------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-15
+Scenario: To verify whether CSC agent is able to cancel Pick up item placed through Dotcom with WP flag on by clicking on cancel with no email button.
+
+Given  "CSCF-CSCFulfilment-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	       |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-15 |
+
+Given "CSCF-CSCFulfilment-15" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-15" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-15" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch15 |
+
+And "CSCF-CSCFulfilment-15" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |
+| CSCData       | CustomerSearch    | CustomerSearch15 |No			  |
+
+And "CSCF-CSCFulfilment-15" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	   		    |ContinueToShipping |
+| CSCData       | ProductSearch     | LoyaltyPointsProduct  |Yes				|
+
+Then "CSCF-CSCFulfilment-15" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-15" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | Yes 				|No				  |
+
+Then "CSCF-CSCFulfilment-15" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |RedeemPointsOption |
+| CSCData       | PaymentInfo       | PaymentInfo1 |-				   |
+
+Then "CSCF-CSCFulfilment-15" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			     |SelectCustomer  |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-15  |Yes			  |
+
+Then "CSCF-CSCFulfilment-15" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	           |
+|  DataBase     | DCFulfillment | CSC_DC8_OrderStatusquery1    |
+|  DataBase     | DCFulfillment | CSC_DC8_LoyaltyEarnPoints    |
+
+Then "CSCF-CSCFulfilment-15" Customer selects the Default Window
+
+Given "CSCF-CSCFulfilment-15" Customer login to feeds instance:
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingDebugupdate1 	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | LoggingInfoupdate1	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayMonthupdate1	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "CSCF-CSCFulfilment-15" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC8_OrderStatusquery2  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1 	  |
+| DYNADMIN      | FEEDS          | CSCOrderIDInfo8        |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "CSCF-CSCFulfilment-15" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 					      |
+| DYNADMIN      | FEEDS          | LoggingDebugupdateProcessOrderXmls 	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 					      |
+| DYNADMIN      | FEEDS          | LoggingInfoupdateProcessOrderXmls	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	 					      |
+| DYNADMIN      | FEEDS          | processOrderXmls1					  |
+
+Then "CSCF-CSCFulfilment-15" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | RowId      	   			 |
+| DataBase      | DCFulfillment | CSC_DC8_OrderStatusquery3  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     					    	  |
+| DYNADMIN      | FEEDS          | LoggingDebugTransactionBatchJobInfo1   |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     					    	  |
+| DYNADMIN      | FEEDS          | LoggingInfoTransactionBatchJobInfo1	  |
+
+Then "CSCF-CSCFulfilment-15" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     					    	  |
+| DYNADMIN      | FEEDS          | LoyaltyEarnPoints					  |
+
+Then "CSCF-CSCFulfilment-15" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		   | RowId 	   		|
+| PharmacyLinkVerification   | DestinationPageURL  | DefaultCSCURL	|
+
+Then "CSCF-CSCFulfilment-15" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-15" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch15 |
+
+And "CSCF-CSCFulfilment-15" Customer gets the current BR points and compare:
+| InputFileName | SheetName 		| RowId   		   |ComparePoints |PointsDiffType |
+| CSCData       | CustomerSearch    | CustomerSearch15 |yes			  |Earn		      |
+
+Then "CSCF-CSCFulfilment-15" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-15  |
+#-----------------------------------------------------------------------------------------------------------
+@CSCF-CSCFulfilment-16
+Scenario: To verify whether whether inactive items OOS pickup and deactivate items are getting removed from when tried performing copy to courtsey order for
+STC CL and WP order
+
+Given  "CSCF-CSCFulfilment-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      	         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-16  |
+
+Given "CSCF-CSCFulfilment-16" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSCF-CSCFulfilment-16" Customer selects the CSC Window
+
+Then "CSCF-CSCFulfilment-16" Customer selects the required Store:
+| InputFileName | SheetName			 | RowId   	  |
+| CSCData       | StoreDetails       | StoreInfo1 |
+
+Then "CSCF-CSCFulfilment-16" Customer Searches for a User:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | CustomerSearch    | CustomerSearch12 |
+
+And "CSCF-CSCFulfilment-16" Customer adds the product to cart from Add product by ID page:
+| InputFileName | SheetName 		| RowId   	    |
+| CSCData       | ProductSearch     | CLProduct1    |
+| CSCData       | ProductSearch     | CLProduct2    |
+| CSCData       | ProductSearch     | DCProduct1    |
+| CSCData       | ProductSearch     | DCProduct4    |
+| CSCData       | ProductSearch     | DCProduct5    |
+| CSCData       | ProductSearch     | DCProduct6    |
+
+Then "CSCF-CSCFulfilment-16" Customer verifies pickup details,enters required information and clicks on continue:
+| InputFileName | SheetName 	| RowId   	    |
+| CSCData       | PickupInfo    | PickupInfo1   |
+
+Then "CSCF-CSCFulfilment-16" Customer selects the shipping address:
+| InputFileName | SheetName 		| RowId   		   |
+| CSCData       | ShippingAddress   | ShippingAddress2 |
+
+Then "CSCF-CSCFulfilment-16" Customer selects the shipping method:
+| ShippingMethod |ContinueToBilling |SelectPrescriber |
+| standard       | No 				|Yes			  |
+
+And "CSCF-CSCFulfilment-16" Customer selects patient and prescriber information:
+| InputFileName | SheetName 			| RowId   			   |
+| CSCData       | PatientDoctorInfo     | PatientDoctorInfo2   |
+
+Then "CSCF-CSCFulfilment-16" Customer adds the payment information:
+| InputFileName | SheetName 		| RowId   	   |
+| CSCData       | PaymentInfo       | PaymentInfo1 |
+
+Then "CSCF-CSCFulfilment-16" Customer submits the order and get the order number:
+| InputFileName | SheetName 		| RowId   			    |
+| CSCData       | OrderDetails      | CSCF-CSCFulfilment-16 |
+
+Then "CSCF-CSCFulfilment-16" Customer runs the Required Query from the DB:
+| InputFileName | SheetName   | 	RowId      	   		  |
+| DataBase      | 	Query     | InactivteinCatalog1Info1  |
+| DataBase      | 	Query     | InactivteinCatalog2Info1  |
+| DataBase      | 	Query     | DeactivateinCatalog1Info1 |
+| DataBase      | 	Query     | DeactivateinCatalog2Info1 |
+| DataBase      | 	Query     | ProductOOSinfo1           |
+
+Given "CSCF-CSCFulfilment-16" Customer login to the Dyn Admin:
+
+Then "CSCF-CSCFulfilment-16" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	            |
+| DYNADMIN      | CONFIGURATION  | InventoryCacheClearInfo1 |
+| DYNADMIN      | CONFIGURATION  | CatalogCacheClearInfo1   |
+
+Then "CSCF-CSCFulfilment-16" Customer Searches for an Order in CSC and selects the Order:
+| InputFileName | SheetName     | RowId         		 |
+| CSCData       | OrderDetails  | CSCF-CSCFulfilment-16  |
+
+Then "CSCF-CSCFulfilment-16" Customer finished testing the scenario:
+| InputFileName | SheetName     | RowId  		         |
+| QC-CSCF	    | CSCFulfilment | CSCF-CSCFulfilment-16  |
+#-----------------------------------------------------------------------------------------------------------

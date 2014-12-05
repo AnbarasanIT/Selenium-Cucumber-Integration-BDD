@@ -1,0 +1,361 @@
+package walgreens.ecom.batch.automation.library.remotesystems.db.walgreens;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class DBLibrary extends CommonLibrary {
+
+    public static Map<String, Connection> dbConnectionsMap = null;
+
+    public static Connection getConnection(Map<String, List<String>> dataMap) {
+	Connection connection = null;
+	String connectionName = null;
+	String connectionUserName = null;
+	String connectionPassword = null;
+	try {
+	    // Get the data from Excel for the Connections type
+	    connectionName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ConnectionName");
+	    connectionUserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ConnectionUserName");
+	    connectionPassword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ConnectionPassword");
+
+	    if (dbConnectionsMap == null) {
+		dbConnectionsMap = new HashMap<String, Connection>();
+
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+
+		// Get the required Connection Values from Property file and
+		// establishe the connection
+		String connectionURL = EcommTestRunner.config.getString(connectionName);
+		String userName = EcommTestRunner.config.getString(connectionUserName);
+		String password = EcommTestRunner.config.getString(connectionPassword);
+		connection = DriverManager.getConnection(connectionURL, userName, password);
+		dbConnectionsMap.put(connectionName, connection);
+	    } else {
+		if (dbConnectionsMap.get(connectionName) == null) {
+		    // Get the required Connection Values from Property file and
+		    // establishe the connection
+		    String connectionURL = EcommTestRunner.config.getString(connectionName);
+		    String userName = EcommTestRunner.config.getString(connectionUserName);
+		    String password = EcommTestRunner.config.getString(connectionPassword);
+		    connection = DriverManager.getConnection(connectionURL, userName, password);
+		    dbConnectionsMap.put(connectionName, connection);
+		} else {
+		    connection = dbConnectionsMap.get(connectionName);
+		}
+	    }
+
+	    // Get the record set
+	    connection.setAutoCommit(true);
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+	return connection;
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Get a value from DB
+     * @author - Siva Santhi Reddy
+     * @Created - Nov 30 2012
+     * @Modified By - SARAVANAN M
+     * @Modified Date - 02-FEB-2014
+     * @param -
+     * @return - Returns Required Header value in the Query Results
+     * @Modified Details: Updated this Step to run only in Staging and added
+     *           additional code to modify the query if needed
+     ************************************************************* 
+     */
+    public static void runDBQuery(StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) throws Exception, SQLException, ClassNotFoundException {
+	String status = PASS;
+	String SQLQuery = null, QueryType = null, VerifyColoumn = null, VerifyValue = null;
+	String strRecordSetValue = "", RetrieveFieldValues = null;
+	String Modifyquery = null, RetrieveFileName = null, RetrieveSheetName = null, RetrieveRowID = null, RetrieveColumnID = null, RetrieveClauseValue = null;
+	String ReplaceQuery = null, QueryName = null;
+	boolean isRecordFound = false;
+	Map<String, String> messagesMap = null;
+	Map<String, String> setDBvlaues = null;
+	Map<String, String> getSharedProperties = null;
+	Connection connection = null;
+	Statement statement = null;
+	ResultSet resultSet = null;
+	try {
+
+	    if (EcommTestRunner.runEnvironment.equalsIgnoreCase("staging")) {
+		connection = getConnection(dataMap);
+
+		if (messagesMap == null) {
+		    messagesMap = new HashMap<String, String>();
+		    stepBean.setStepStatusMessages(messagesMap);
+		}
+		if (setDBvlaues == null) {
+		    setDBvlaues = new HashMap<String, String>();
+		    scenarioBean.setscenarioDBvalues(setDBvlaues);
+		}
+		getSharedProperties = scenarioBean.getSharedStepProperties();
+		int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+		for (int i = 0; i < totalRowCount; i++) {
+		    // Get the data from Excel for the Connections type
+		    SQLQuery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Query");
+		    QueryType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryType");
+		    RetrieveFieldValues = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveFieldValues");
+		    ReplaceQuery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ReplaceQuery");
+		    QueryName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryName");
+		    Modifyquery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Modifyquery");
+		    RetrieveFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveFileName");
+		    RetrieveSheetName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveSheetName");
+		    RetrieveRowID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveRowID");
+		    RetrieveColumnID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveColumnID");
+		    RetrieveClauseValue = getTestData(RetrieveFileName, RetrieveSheetName, RetrieveRowID, RetrieveColumnID);
+		    // Added Logic to Provide addtional benfit to Modify the
+		    // query.--SIVA
+		    if (ReplaceQuery != null && ReplaceQuery.equals("Yes")) {
+			SQLQuery = getSharedProperties.get(QueryName);
+		    }
+		    if (Modifyquery != null && Modifyquery.equalsIgnoreCase("Yes")) {
+			// Always Provide 5 "X" symbols in the query if you want
+			// the modify the query
+			SQLQuery = SQLQuery.replace("XXXXX", RetrieveClauseValue);
+		    } else if (Modifyquery != null && Modifyquery.equalsIgnoreCase("PostServayEmail")) {
+			SQLQuery = SQLQuery.replace("XXXXX", RetrieveClauseValue);
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, -7);
+			String dateSplit[] = cal.getTime().toString().split(" ");
+			String requiredDate = dateSplit[2] + "-" + dateSplit[1].toUpperCase() + "-" + dateSplit[5].substring(2, 4);
+			SQLQuery = SQLQuery.replace("POSTER_EMAIL_DATE", requiredDate);
+		    }
+
+		    statement = connection.createStatement();
+		    resultSet = statement.executeQuery(SQLQuery);
+		    if (QueryType.equalsIgnoreCase("Select")) {
+			// assuming at max we will verify 10 header values for
+			// one SQL Query
+			while (resultSet.next()) {
+			    isRecordFound = true;
+			    if (RetrieveFieldValues != null && !RetrieveFieldValues.equals("-")) {
+				String[] RetrieveFields = RetrieveFieldValues.split(",");
+				int NoofRetrieveFields = RetrieveFields.length;
+				for (int k = 0; k < NoofRetrieveFields; k++) {
+				    String RetrieveValue = resultSet.getString(RetrieveFields[k]);
+				    setDBvlaues.put(RetrieveFields[k], RetrieveValue);
+				    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryResult" + (k + 1),
+					    RetrieveValue);
+				}
+			    }
+			    for (int j = 1; j < 10; j++) {
+				VerifyColoumn = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyColoumn" + j);
+				VerifyValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyValue" + j);
+				if (VerifyColoumn.equalsIgnoreCase("end") && j > 1) {
+				    break;
+				}
+				if (!VerifyColoumn.equalsIgnoreCase("end")) {
+				    strRecordSetValue = resultSet.getString(VerifyColoumn);
+				    //Added for verifying the either/or values for same column - SARAVANAN M
+				    if(VerifyValue.contains("~")){
+
+					String EitherValue=VerifyValue.split("~")[0].trim();
+					String OrValue=VerifyValue.split("~")[1].trim();
+					if (!(strRecordSetValue.equalsIgnoreCase(EitherValue) || strRecordSetValue.equalsIgnoreCase(OrValue))) {
+					    throw new Exception("Expected " + EitherValue + "[OR]"+OrValue+" for " + VerifyColoumn + " column but it is displaying " + strRecordSetValue);
+					}
+				    }else{
+					if (!strRecordSetValue.equalsIgnoreCase(VerifyValue)) {
+					    throw new Exception("Expected " + VerifyValue + " for " + VerifyColoumn + " column but it is displaying " + strRecordSetValue);
+					}
+				    }
+				}
+			    }
+			}
+			// Return error if there's no record found
+			// Printing/Throwing out Row ID for debugging purposes
+			if (!isRecordFound) {
+			    throw new Exception("Not able to find the required record with given SQL query on row:" + dataMap.get("RowId").get(i));
+			}
+		    }
+		}
+	    } else {
+		System.out.println("Run Mode is Production. We cant access DB Values in Production");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    if (connection != null) { // Close all the connections
+		resultSet.close();
+		statement.close();
+	    }
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    public static void disconnectConnections() {
+	Connection connection = null;
+	String connectionName = null;
+	try {
+	    if (dbConnectionsMap != null) {
+		Iterator<Entry<String, Connection>> it = dbConnectionsMap.entrySet().iterator();
+		while (it.hasNext()) {
+		    connectionName = it.next().getKey();
+		    connection = dbConnectionsMap.get(connectionName);
+		    connection.close();
+		    dbConnectionsMap.put(connectionName, null);
+		    System.out.println("Connection Closed: " + connectionName);
+		}
+	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Verify mutliple rows result for one query
+     * @author - Siva Santhi Reddy
+     * @Created - SEP 6 2013
+     * @Modified By -Siva
+     * @Modified Date -SEP 13 2013
+     * @param -
+     * @return -
+     * @Modified Details:
+     ************************************************************* 
+     */
+    public static void validateMutliplerowsResultinDB(StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) throws Exception, SQLException, ClassNotFoundException {
+	String status = PASS;
+	String SQLQuery = null, QueryType = null, VerifyColoumn = null, VerifyValue = null;
+	String strRecordSetValue = "", RetrieveFieldValues = null;
+	String Modifyquery = null, RetrieveFileName = null, RetrieveSheetName = null, RetrieveRowID = null, RetrieveColumnID = null, RetrieveClauseValue = null, NoofRows = null;
+	String ReplaceQuery = null, QueryName = null, ValuesDisplayinRows = null;
+	boolean isRecordFound = false;
+	int resultrow = 0;
+	Map<String, String> messagesMap = null;
+	Map<String, String> setDBvlaues = null;
+	Map<String, String> getSharedProperties = null;
+	Connection connection = null;
+	Statement statement = null;
+	ResultSet resultSet = null;
+	try {
+
+	    connection = getConnection(dataMap);
+
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (setDBvlaues == null) {
+		setDBvlaues = new HashMap<String, String>();
+		scenarioBean.setscenarioDBvalues(setDBvlaues);
+	    }
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Get the data from Excel for the Connections type
+		SQLQuery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Query");
+		QueryType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryType");
+		ReplaceQuery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ReplaceQuery");
+		QueryName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryName");
+		Modifyquery = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Modifyquery");
+		RetrieveFieldValues = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveFieldValues");
+		NoofRows = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoofRows");
+		ValuesDisplayinRows = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ValuesDisplayinRows");
+		if (ReplaceQuery != null && ReplaceQuery.equals("Yes")) {
+		    SQLQuery = getSharedProperties.get(QueryName);
+		}
+		if (Modifyquery != null && Modifyquery.equalsIgnoreCase("Yes")) {
+		    RetrieveFileName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveFileName");
+		    RetrieveSheetName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveSheetName");
+		    RetrieveRowID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveRowID");
+		    RetrieveColumnID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RetrieveColumnID");
+		    RetrieveClauseValue = getTestData(RetrieveFileName, RetrieveSheetName, RetrieveRowID, RetrieveColumnID);
+		    // Always Provide 5 "X" symbols in the query if you want
+		    // the modify the query
+		    SQLQuery = SQLQuery.replace("XXXXX", RetrieveClauseValue);
+		}
+		// Create Statement
+		statement = connection.createStatement();
+		for (int j = 1; j < 10; j++) {
+		    // reset resultrow to '0' at start of the loop
+		    resultrow = 0;
+		    // execute the query.
+		    resultSet = statement.executeQuery(SQLQuery.trim());
+		    VerifyColoumn = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyColoumn" + j);
+		    VerifyValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "VerifyValue" + j);
+		    // if Verify Coloumn is 'end' then come out of the loop.
+		    if (VerifyColoumn.equalsIgnoreCase("end") && j > 1) {
+			break;
+		    }
+		    String[] verifyrowValues = VerifyValue.split(",");
+		    int noOfVerifyValuesFoundinRows = 0, resultNumber = 1;
+		    while (resultSet.next()) {
+			isRecordFound = true;
+			resultrow++;
+			strRecordSetValue = resultSet.getString(VerifyColoumn);
+			if (RetrieveFieldValues != null && !RetrieveFieldValues.equals("-")) {
+			    String[] RetrieveFields = RetrieveFieldValues.split(",");
+			    int NoofRetrieveFields = RetrieveFields.length;
+			    for (int k = 0; k < NoofRetrieveFields; k++) {
+				String RetrieveValue = resultSet.getString(RetrieveFields[k]);
+				setDBvlaues.put(RetrieveFields[k], RetrieveValue);
+				TestDataDBManager.putTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "QueryResult" + resultNumber,
+					RetrieveValue);
+				resultNumber = resultNumber + 1;
+			    }
+			}
+			if (ValuesDisplayinRows != null && ValuesDisplayinRows.equalsIgnoreCase("Random")) {
+			    for (int count = 0; count < verifyrowValues.length; count++) {
+				if (strRecordSetValue.equalsIgnoreCase(verifyrowValues[count])) {
+				    noOfVerifyValuesFoundinRows = noOfVerifyValuesFoundinRows + 1;
+				    break;
+				}
+			    }
+			} else {
+			    if (!VerifyColoumn.equalsIgnoreCase("end")) {
+				if (!strRecordSetValue.equalsIgnoreCase(verifyrowValues[resultrow - 1])) {
+				    throw new Exception("Expected " + VerifyValue + " for " + VerifyColoumn + " column but it is displaying " + strRecordSetValue);
+				}
+			    }
+			}
+		    }
+		    if (ValuesDisplayinRows != null && ValuesDisplayinRows.equalsIgnoreCase("Random")) {
+			if (noOfVerifyValuesFoundinRows != verifyrowValues.length) {
+			    throw new Exception("Column Values are not dispalying as Expected in the Rows for the Column " + VerifyColoumn);
+			}
+		    }
+		    if (resultrow != Integer.parseInt(NoofRows)) {
+			messagesMap.put("No of rows Results is mismatching", "Expected " + NoofRows + " but displayed rows are" + resultrow);
+			status = WARNING;
+		    }
+		}
+		if (!isRecordFound) {
+		    throw new Exception("No reocrds were found for the given query.");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    if (connection != null) { // Close all the connections
+		resultSet.close();
+		statement.close();
+	    }
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

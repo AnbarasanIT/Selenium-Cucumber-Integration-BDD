@@ -1,0 +1,39 @@
+@PrintRxRecordSort
+Feature: All the scenarios in the feature are related to validation and sorting of the new columns of Prescription Records table
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+@RX-PrintRxRecords-1
+Scenario: Verify the columns of the Prescription Records table for authenticated user
+
+Given  "RX-PrintRxRecords-1" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                |
+| QC-RX 	     | PrintRxRecords		 | 	RX-PrintRxRecords-1 |
+
+Given "RX-PrintRxRecords-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       | 
+| CommonData 	 | login     | PrintRxuser |
+
+Then "RX-PrintRxRecords-1" Customer clicks on an object and validates the expected results:
+| InputFileName 		   | SheetName      | RowId    |
+| PharmacyLinkVerification |Authenticated   | Pharmacy |
+
+And "RX-PrintRxRecords-1" Customer verifies Prescription Records in Print Prescription Records Page:
+| InputFileName  | SheetName                | RowId            		|
+| Pharmacy  	 | PrintPrescriptionRecord  | OtherPrescriptionInfo |
+
+And "RX-PrintRxRecords-1" Customer validates the display and sorting of the new columns of Prescription Records table:
+|NoofTimesToClickTableHeader| ColumnToValidate | OrderType  |
+|0			    			| Date	       	   | Descending |
+|1			    			| Date             | Ascending  |
+|1			    			| Prescription     | Ascending  |
+|1			    			| Prescription     | Descending |
+|1			    			| Prescriber       | Ascending  |
+|1			    			| Prescriber       | Descending |
+|1		       				| InsuranceDtls    | Ascending  |
+|1			    			| InsuranceDtls    | Descending |
+#|1	            			| Price		       | Ascending  |
+#|1		        			| Price	       	   | Descending |
+
+Then "RX-PrintRxRecords-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	   	 | RowId                |
+| QC-RX 	 	 | PrintRxRecords	 | 	RX-PrintRxRecords-1 |
+#-------------------------------------------------------------------------------------------------------------------------------------------------------

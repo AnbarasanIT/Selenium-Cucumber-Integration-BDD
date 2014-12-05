@@ -1,0 +1,93 @@
+@pharmacy @SpecialtyRxPagesVerifications
+Feature: Verify the links in the left navigation pane on the Specialty Pharmacy pages
+
+#----------------------------------------------------------------------------------------------------
+@RX-SRxPagesLeftNavVerification-1
+Scenario: Verify the display and navigation of Refill from Account button in SRx landing page & its FAQs page for an RX unauthenticated user
+
+Given "RX-SRxPagesLeftNavVerification-1" Customer starts the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-1	|
+
+And "RX-SRxPagesLeftNavVerification-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   				  |
+| CommonData  	| login 	| UnauthenticateduserSRx  |
+
+And "RX-SRxPagesLeftNavVerification-1" Customer clicks on an object and validates the expected results:
+| InputFileName 	 		| SheetName 			   | RowId 				    |ClickObjectOverlay  |TargetOverlay  |
+| PharmacyLinkVerification  | Anonymous  			   | SpecialtyPharmacy		|no   			     |No			 |
+| PharmacyHomePageLinkVerification  | UnAuthenticated		   | RefillPrescriptions   |no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyLinkVerification  | Anonymous				   | SpecialtyPharmacy	|no   			     |no			 |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	|no   			     |no			 |
+| PharmacyHomePageLinkVerification  | UnAuthenticated		   | RefillPrescriptions   |no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+
+Then "RX-SRxPagesLeftNavVerification-1" Customer finished testing the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-1	|
+#----------------------------------------------------------------------------------------------------
+@RX-SRxPagesLeftNavVerification-2
+Scenario: Verify the display and navigation of Refill from Account button in SRx landing page & its FAQs page for an RX authenticated user
+
+Given "RX-SRxPagesLeftNavVerification-2" Customer starts the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-2	|
+
+And "RX-SRxPagesLeftNavVerification-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    					|
+| CommonData  	| login 	| AuthenticateduserSRx 		|
+
+And "RX-SRxPagesLeftNavVerification-2" Customer clicks on an object and validates the expected results:
+| InputFileName 	 		| SheetName 			   | RowId 				    |
+| PharmacyLinkVerification  | Anonymous				   | SpecialtyPharmacy		|
+| PharmacyLinkVerification  | Authenticated			   | SRxRefillFromAccount   |
+| PharmacyLinkVerification  | Anonymous				   | SpecialtyPharmacy		|
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	|
+| PharmacyLinkVerification  | Authenticated			   | SRxRefillFromAccount   |
+
+Then "RX-SRxPagesLeftNavVerification-2" Customer finished testing the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-2	|
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-SRxPagesLeftNavVerification-3
+Scenario: Verify the display and navigation of Slot B links in SRx landing page
+
+Given "RX-SRxPagesLeftNavVerification-3" Customer starts the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-3	|
+
+And "RX-SRxPagesLeftNavVerification-3" Customer clicks on an object and validates the expected results:
+| InputFileName 	 		| SheetName 			   | RowId 				    	|
+| PharmacyLinkVerification  | Anonymous 			   | SpecialtyPharmacy		    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandAccess 	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandSpecialty   |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandSpecialty   |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandFertility   |
+
+Then "RX-SRxPagesLeftNavVerification-3" Customer finished testing the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-3	|
+#----------------------------------------------------------------------------------------------------
+@RX-SRxPagesLeftNavVerification-4
+Scenario: Verify the display and navigation of Slot B links in SRx FAQs page
+
+Given "RX-SRxPagesLeftNavVerification-4" Customer starts the scenario:
+| InputFileName| SheetName       		        | RowId          			    	|
+| QC-RX        | SRxPagesLeftNavVerification    | RX-SRxPagesLeftNavVerification-4	|
+
+And "RX-SRxPagesLeftNavVerification-4" Customer clicks on an object and validates the expected results:
+| InputFileName 	 		| SheetName 			   | RowId 				    	|
+| PharmacyLinkVerification  | Anonymous				   | SpecialtyPharmacy		    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandSpecialty   |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandAccess	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRxHomeLeftHandFAQs	    |
+| PharmacyLinkVerification  | LeftNavLinkVerification  | SRXHomeLeftHandFertility   |
+
+Then "RX-SRxPagesLeftNavVerification-4" Customer finished testing the scenario:
+| InputFileName | SheetName    			       | RowId      						|
+| QC-RX         | SRxPagesLeftNavVerification  | RX-SRxPagesLeftNavVerification-4 	|
+#----------------------------------------------------------------------------------------------------

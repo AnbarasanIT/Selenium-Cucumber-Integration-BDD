@@ -1,0 +1,1457 @@
+@CrossSite @AccountHomePageLoyaltyValidations
+
+Feature: This feature file is about to validate Loyalty related functionalities in Account Dashboard Pages.
+ 
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-01
+Scenario: Loyalty User validates the Available options in the Balance Rewards Section from Your account Home page.
+
+Given "CF-DASHBOARDLTY-01" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-01  |
+
+Given "CF-DASHBOARDLTY-01" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData  	 | login     | loyaltyuser1 |
+
+Then "CF-DASHBOARDLTY-01" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | RowId 	        	        |
+|	AccountDashboard | LinkNavigation   | YourAccountLinkToLtyOptions   |
+
+Then "CF-DASHBOARDLTY-01" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-01" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-01  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-02
+Scenario: Non-loyalty Rx Register user is able to do new Loyalty Registration through Join Now button in Account Home Page.
+
+Given "CF-DASHBOARDLTY-02" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-02  |
+
+Given "CF-DASHBOARDLTY-02" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma10 |
+
+Then "CF-DASHBOARDLTY-02" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | LearnMoreaboutBalanceRewardsLink	|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | ActivateNowButtonAccountPage     |
+| 	  CSLR      | LinkNavigation | CancelLinkBalanceRewardsPage     |
+| 	  CSLR      | LinkNavigation | JoinNowButtonInLoyaltySection    |
+
+Then "CF-DASHBOARDLTY-02" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-02" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | Random | Random    | Random  | Random   |  -         | 
+
+Then "CF-DASHBOARDLTY-02" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-02" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-02" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-02  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-03
+Scenario: Non-loyalty Light Register user is able to Activate Loyalty Account through Activate Now button in Account Home Page.
+
+Given "CF-DASHBOARDLTY-03" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-03  |
+
+And "CF-DASHBOARDLTY-03" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-03" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+Then "CF-DASHBOARDLTY-03" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | JoinNowButtonInLoyaltySection	|
+| 	  CSLR      | LinkNavigation | CancelLinkBalanceRewardsPage     |
+| 	  CSLR      | LinkNavigation | ActivateNowButtonAccountPage     |
+
+Then "CF-DASHBOARDLTY-03" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	              |
+| 	CommonData  | ObjectValidation | ActivateRadioButton2 |
+
+Then "CF-DASHBOARDLTY-03" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser | 
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |   -		 |
+
+Then "CF-DASHBOARDLTY-03" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-03" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  Activate     | 
+
+Then "CF-DASHBOARDLTY-03" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-03" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-03  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-04
+Scenario: Loyalty User validates the functionality of Balance Rewards tab, Order Status & history, Request Missing Points, different columns for Date, RFN/Order Number
+Transaction Details,Total Paid,Points and functionality of Order number link, available points and progress bar and a note message when he has zero points
+
+Given "CF-DASHBOARDLTY-04" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-04  |
+
+Given "CF-DASHBOARDLTY-04" Customer login to the walgreens.com:
+| InputFileName  | SheetName | 			RowId          |
+| CommonData  	 | login     | LoyaltyTransactionUser1 |
+
+Then "CF-DASHBOARDLTY-04" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          		  |TargetOverlay |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      |		-		 |
+|	AccountDashboard | LinkNavigation   | GotoOrderStatusAndHistoryLink   |		-		 |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      |		-		 |
+|	AccountDashboard | LinkNavigation   | RequestMissingPointLink	      |		Yes		 |
+| 	AccountDashboard | LinkNavigation   | RequestMisingOverlayClose       |     -		 |
+| 	AccountDashboard | LinkNavigation   | BalanceRewardsTabtoViewHeaders  |     -		 |
+| 	AccountDashboard | LinkNavigation   | OrderNumberLink				  |     -		 |
+	
+Then "CF-DASHBOARDLTY-04" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-04" Customer login to the walgreens.com:
+| InputFileName  | SheetName | 			RowId              |
+| CommonData  	 | login     | ZeroLoyaltyTransactionUser1 |
+
+Then "CF-DASHBOARDLTY-04" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          		 		 |TargetOverlay  |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      		 |		-		 |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTabtoViewNoOrdsMessage   |		-		 |
+
+Then "CF-DASHBOARDLTY-04" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-04" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-04  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-05
+Scenario: Non-loyalty Light Register user is able to Register Loyalty Account through Join Now button in Account Home Page.
+
+Given "CF-DASHBOARDLTY-05" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-05  |
+
+And "CF-DASHBOARDLTY-05" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-05" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+Then "CF-DASHBOARDLTY-05" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | JoinNowButtonInLoyaltySection	|
+
+Then "CF-DASHBOARDLTY-05" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                   |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton2 |
+
+Then "CF-DASHBOARDLTY-05" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser | 
+|		 -                    |		 -	             | 60015   |  Random	 | Random    | Random  | Random   |   -		 |
+
+Then "CF-DASHBOARDLTY-05" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New          | 
+
+Then "CF-DASHBOARDLTY-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-05" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-05  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-06
+Scenario: Non-loyalty Rx Register user is able to do new Loyalty Registration through Join Now button with Prepopulated data in Account Home Page.
+
+Given "CF-DASHBOARDLTY-06" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-06  |
+
+Given "CF-DASHBOARDLTY-06" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma10 |
+
+Then "CF-DASHBOARDLTY-06" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | JoinNowButtonInLoyaltySection    |
+
+Then "CF-DASHBOARDLTY-06" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-06" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year |  GuestUser | 
+| -                           | -           		 | -	   | -	    | 	-       |	 -    |		 -   |  -         | 
+
+Then "CF-DASHBOARDLTY-06" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-06" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-06" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-06  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-07
+Scenario: Non-loyalty Rx Register user is able to Activate Loyalty Account through Activate Now button with Prepopulated data in Account Home Page.
+
+Given  "CF-DASHBOARDLTY-07" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-07  |
+
+Then "CF-DASHBOARDLTY-07" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		|
+| 	  CSLR      | LinkNavigation | RegisterLink		    |
+| 	  CSLR      | LinkNavigation | SignupForRxAccess    |
+
+Then "CF-DASHBOARDLTY-07" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	        |
+|  Registration  | RxRegistration | ActivationData1 |
+
+Then "CF-DASHBOARDLTY-07" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |
+| 	  CSLR      | LinkNavigation | AcceptButton						   |
+| 	  CSLR      | LinkNavigation | YourAccountLink  				   |
+| 	  CSLR      | LinkNavigation | ActivateNowinAccountHomePage		   |
+
+Then "CF-DASHBOARDLTY-07" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CF-DASHBOARDLTY-07" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|			-           	  |		 -	             | 	- 	   | -			 | -		 |   -     |   -      |      -	   |
+
+Then "CF-DASHBOARDLTY-07" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-07" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CF-DASHBOARDLTY-07" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-07  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-08
+Scenario: Lite Registered user is able to do new Loyalty Registration through Join Now button from What's new Model
+
+Given "CF-DASHBOARDLTY-08" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-08  |
+
+And "CF-DASHBOARDLTY-08" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-08" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+Then "CF-DASHBOARDLTY-08" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  			|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    |		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      			|      -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | JoinNowLinkInOveraly        |    Yes   	      	  |		-	      |
+
+
+Then "CF-DASHBOARDLTY-08" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-08" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone    | DOB-Month | DOB-Day  | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | Random   | Random    |	 Random  |	Random  |  -         | 
+
+Then "CF-DASHBOARDLTY-08" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-08" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-08" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-08  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-09
+Scenario: Lite Registered user is able to Activate Loyalty Account through Activate Now button from What's new Model
+
+Given "CF-DASHBOARDLTY-09" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-09  |
+
+And "CF-DASHBOARDLTY-09" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-09" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+Then "CF-DASHBOARDLTY-09" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  			|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    |		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      			|      -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | ActiveNowLInkInOverlay      |    Yes   	      	  |		-	      |
+
+
+Then "CF-DASHBOARDLTY-09" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                |
+| 	CommonData  | ObjectValidation | ActivateRadioButton    |
+
+Then "CF-DASHBOARDLTY-09" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser | 
+| 6128058080                  | ActivateNow          | 68686   | -			 | MAR       | 12      | 1971     |   -		 |
+
+Then "CF-DASHBOARDLTY-09" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-09" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  Activate     | 
+
+Then "CF-DASHBOARDLTY-09" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-09" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-09  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-10
+Scenario: Rx Registered user is able to do new Loyalty Registration through Join Now button with the PrePopulated data from What's new Model
+
+Given "CF-DASHBOARDLTY-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-10  |
+
+Given "CF-DASHBOARDLTY-10" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma10 |
+
+Then "CF-DASHBOARDLTY-10" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  			|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    |		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      			|      -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | JoinNowLinkInOveraly        |    Yes   	      	  |		-	      |
+
+Then "CF-DASHBOARDLTY-10" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-10" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone    | DOB-Month | DOB-Day  | DOB-Year |  GuestUser | 
+| -                           | -           		 | 	  -    | 	-     | 	-     |	 -       |		-   |  -         | 
+
+Then "CF-DASHBOARDLTY-10" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-10  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-11
+Scenario: Rx Registered user is able to do new Loyalty Registration through Join Now button by entering data in Balance Rewards Page from What's new Model
+
+Given "CF-DASHBOARDLTY-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF	        | DASHBOARDLTY	| CF-DASHBOARDLTY-11  |
+
+Given "CF-DASHBOARDLTY-11" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma11 |
+
+Then "CF-DASHBOARDLTY-11" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  			|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    |		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      			|      -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | JoinNowLinkInOveraly        |    Yes   	      	  |		-	      |
+
+Then "CF-DASHBOARDLTY-11" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-11" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone    | DOB-Month | DOB-Day  | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | Random   | Random    |	 Random  |	Random  |  -         | 
+
+Then "CF-DASHBOARDLTY-11" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-11  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-12
+Scenario: Non-loyalty Rx Register user is able to Activate Loyalty Account through Activate Now button with Prepopulated data in Account Home Page.
+
+Given  "CF-DASHBOARDLTY-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-12  |
+
+Given "CF-DASHBOARDLTY-12" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma12 |
+
+Then "CF-DASHBOARDLTY-12" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  				|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    	|		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      				|       -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | ActiveNowLInkInOverlay      	|     Yes   	   	  |		-	      |
+
+Then "CF-DASHBOARDLTY-12" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CF-DASHBOARDLTY-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|			-           	  |		 -	             | 	- 	   | -			 | -		 |   -     |   -      |      -	   |
+
+Then "CF-DASHBOARDLTY-12" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-12" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CF-DASHBOARDLTY-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-12  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-13
+Scenario: Non-loyalty Rx Register user is able to Activate Loyalty Account through Activate Now button by entering data in Balance Rewards Page from What's new Model
+
+Given  "CF-DASHBOARDLTY-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-13  |
+
+Given "CF-DASHBOARDLTY-13" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma12 |
+
+Then "CF-DASHBOARDLTY-13" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  				|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    	|		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      				|       -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | ActiveNowLInkInOverlay      	|     Yes   	   	  |		-	      |
+
+Then "CF-DASHBOARDLTY-13" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CF-DASHBOARDLTY-13" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|		7120121065532    	  |		 -	             | 	61101  | -			 |  APR	     |   04    |  1920    |      -	   |
+
+Then "CF-DASHBOARDLTY-13" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-13" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CF-DASHBOARDLTY-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-13  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-14
+Scenario: Customer validates the functionality of What's New link,close and X links in whats New Overlay from account home page.
+
+Given  "CF-DASHBOARDLTY-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-14  |
+
+Given "CF-DASHBOARDLTY-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		    |
+| CommonData  	 | login     | NonLoyaltyLightUser1 |
+
+Then "CF-DASHBOARDLTY-14" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  				|ClickObjectOverlay   | TargetOverlay |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      				|       -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | CancelLinkinWhatNewOveraly    	|     Yes   	   	  |		-	      |
+| 	  CSLR           | LinkNavigation | YourAccountLink  		    	|		-			  |	     -		  |
+| AccountDashboard   | LinkNavigation | WhatsNewLink      				|       -		      |		Yes	      |
+| AccountDashboard   | LinkNavigation | OverlayCloseinWhatNewOveraly    |       -		      |		-	      |
+
+Then "CF-DASHBOARDLTY-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-14  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-15
+Scenario: Customer validates the functionality of go to Balance Rewards Personal Settings in the Personal Information Page
+
+Given  "CF-DASHBOARDLTY-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-15  |
+
+Given "CF-DASHBOARDLTY-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData  	 | login     | loyaltyuser1 |
+
+Then "CF-DASHBOARDLTY-15" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  	| ClickObjectinTab   |
+| AccountDashboard  | LinkNavigation  	| HoverPersonalInformationLInk 	  	|		Yes		     |
+| AccountDashboard  | LinkNavigation  	| BalanceRewardsPersonalInformation	|		-		     |
+
+Then "CF-DASHBOARDLTY-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-15  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-16
+Scenario: Customer validates Transaction Details section from Balance Rewards page
+
+Given  "CF-DASHBOARDLTY-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-16  |
+
+Given "CF-DASHBOARDLTY-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       			   |
+| CommonData  	 | login     | LoyaltyTransactionUser1 |
+
+Then "CF-DASHBOARDLTY-16" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          		  |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      |
+
+Then "CF-DASHBOARDLTY-16" Customer validates Transaction Details section from Balance Rewards page:
+|VerifyDefaultFilterOptions | DisplayofPagination | DateColumnSort | FilterBy | NoResultMessage |ValidateFilterResults |
+|			Yes			    |  			Yes		  |		Yes		   | steps	  |     No		    |			-		   |
+
+Then "CF-DASHBOARDLTY-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      |
+| CommonData  	 | login     | NoStepUser |
+
+Then "CF-DASHBOARDLTY-16" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          		  |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      |
+
+Then "CF-DASHBOARDLTY-16" Customer validates Transaction Details section from Balance Rewards page:
+|VerifyDefaultFilterOptions | DisplayofPagination | DateColumnSort | FilterBy | NoResultMessage |ValidateFilterResults |
+|			-			    |  			-		  |		-		   | steps	  |     Yes		    |			-		   |
+
+Then "CF-DASHBOARDLTY-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-16  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-17
+Scenario: Non-Loyalty lite Reg customer is able to do New Loyalty Registration from what's New Modal from Grayed Out Balance Rewards Tab
+
+Given  "CF-DASHBOARDLTY-17" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-17  |
+
+And "CF-DASHBOARDLTY-17" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+Then "CF-DASHBOARDLTY-17" Customer clicks on an object and validates the expected results:
+| InputFileName 	 | SheetName      | RowId 							|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR      	 | LinkNavigation | YourAccountLink  				|		-			  |		-		  |
+| AccountDashboard   | LinkNavigation | BalanceRewardsGrayedOutTab  	|		-			  |		Yes		  |
+| AccountDashboard   | LinkNavigation | CancelLinkinWhatNewOveraly  	|		Yes  		  |		-		  |
+| 	  CSLR      	 | LinkNavigation | YourAccountLink  				|		-			  |		-		  |
+| AccountDashboard   | LinkNavigation | BalanceRewardsGrayedOutTab  	|		-			  |		Yes		  |
+| AccountDashboard   | LinkNavigation | JoinNowLinkInOveraly        	|    Yes   	      	  |		-	      |
+
+Then "CF-DASHBOARDLTY-17" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	                     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CF-DASHBOARDLTY-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone    | DOB-Month | DOB-Day  | DOB-Year |  GuestUser | 
+| -                           | -           		 | 60015   | Random   | Random    |	 Random  |	Random  |  -         | 
+
+Then "CF-DASHBOARDLTY-17" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New	      | 
+
+Then "CF-DASHBOARDLTY-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-17  |
+
+#-----------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-18
+Scenario: Non-loyalty Rx Register user is able to Activate Loyalty Account through Activate Now Link with Prepopulated data through What's New Overaly from 
+Grayedout Balance Rewards Tab 
+
+Given  "CF-DASHBOARDLTY-18" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-18  |
+
+Given "CF-DASHBOARDLTY-18" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma12 |
+
+Then "CF-DASHBOARDLTY-18" Customer clicks on an object and validates the expected results:
+| InputFileName 	 | SheetName      | RowId 							|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR      	 | LinkNavigation | YourAccountLink  				|		-			  |		-		  |
+| AccountDashboard   | LinkNavigation | BalanceRewardsGrayedOutTab  	|		-			  |		Yes		  |
+| AccountDashboard   | LinkNavigation | ActiveNowLInkInOverlay      	|     Yes   	   	  |		-	      |
+
+Then "CF-DASHBOARDLTY-18" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CF-DASHBOARDLTY-18" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|			-           	  |		 -	             | 	- 	   | -			 | -		 |   -     |   -      |      -	   |
+
+Then "CF-DASHBOARDLTY-18" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-18" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CF-DASHBOARDLTY-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-18  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-19
+Scenario: Non-loyalty Rx Register user is able to Activate Loyalty Account through Activate Now Link by entering data through What's New Overaly from 
+Grayedout Balance Rewards Tab
+
+Given  "CF-DASHBOARDLTY-19" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-19  |
+
+Given "CF-DASHBOARDLTY-19" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId      |
+| Registration  | RxRegistration | RxPharma12 |
+
+Then "CF-DASHBOARDLTY-19" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  				|ClickObjectOverlay   | TargetOverlay |
+| 	  CSLR      	 | LinkNavigation | YourAccountLink  				|		-			  |		-		  |
+| AccountDashboard   | LinkNavigation | BalanceRewardsGrayedOutTab  	|		-			  |		Yes		  |
+| AccountDashboard   | LinkNavigation | ActiveNowLInkInOverlay      	|     Yes   	   	  |		-	      |
+
+Then "CF-DASHBOARDLTY-19" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CF-DASHBOARDLTY-19" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|		7430917810       	  |		 -	             | 	61101  | -			 |  APR	     |   04    |  1920    |      -	   |
+
+Then "CF-DASHBOARDLTY-19" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CF-DASHBOARDLTY-19" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CF-DASHBOARDLTY-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-19  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-20
+Scenario: Loyalty Customer validates the fileds in Request missing Points overlay for both Store view and Online Order view.
+
+Given  "CF-DASHBOARDLTY-20" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-20  |
+
+Given "CF-DASHBOARDLTY-20" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       			   |
+| CommonData  	 | login     | SmokeTestRxUser1        |
+
+Then "CF-DASHBOARDLTY-20" Customer validates the available fields or adds points from Request Missing Points Overlay:
+| InputFileName    | 	SheetName 			| RowId       			      					|
+| AccountDashboard | RequestMissingPoints   | StoreReceiptEmptyValidation 					|
+| AccountDashboard | RequestMissingPoints   | OnlineEmptyValidation 						|
+| AccountDashboard | RequestMissingPoints   | RFNNumberEmptyValidation 						|
+| AccountDashboard | RequestMissingPoints   | OrderNumberEmptyValidation 					|
+| AccountDashboard | RequestMissingPoints   | StoreOrderTotalEmptyValidation 				|
+| AccountDashboard | RequestMissingPoints   | OnlineOrderTotalEmptyValidation 				|
+| AccountDashboard | RequestMissingPoints   | StoreOrderRFNInvalidCharacterValidation 		|
+| AccountDashboard | RequestMissingPoints   | OnlineOrderNumberInvalidCharacterValidation	|
+| AccountDashboard | RequestMissingPoints   | StoreOrderRFNTotalInvalidCharacterValidation  |
+| AccountDashboard | RequestMissingPoints   | OnlineOrderTotalInvalidCharacterValidation 	|
+| AccountDashboard | RequestMissingPoints   | StoreOrderInvalidMatchValidation 			    |
+| AccountDashboard | RequestMissingPoints   | OnlineOrderInvalidMatchValidation 			|
+
+Then "CF-DASHBOARDLTY-20" Customer clicks on an object and validates the expected results:
+| InputFileName      | SheetName      | RowId 			  				|
+| AccountDashboard	 | LinkNavigation | RequestMissingPointsCloseButton |
+
+Then "CF-DASHBOARDLTY-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-20" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-20  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-21
+Scenario: Loyalty Customer validates updated Email Address in Balance Rewards Settings Page when he click yes Button on Update to Balance Rewards Settings overlay,
+ while updating Email Address from the Personal Information Page
+
+Given  "CF-DASHBOARDLTY-21" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-21  |
+
+Given "CF-DASHBOARDLTY-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		  |
+| CommonData  	 | login     | Lessptloyaltyuser1 |
+
+Then "CF-DASHBOARDLTY-21" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation1 |
+
+Then "CF-DASHBOARDLTY-21" Customer validates the updated information from Balance Rewards Settings Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation1 |
+
+Then "CF-DASHBOARDLTY-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-21  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-22
+Scenario: Loyalty Customer validates Email Address in Balance Rewards Settings Page is not updated when he click No Button on Update to Balance Rewards Settings overlay,
+ while updating Email Address from the Personal Information Page
+
+Given  "CF-DASHBOARDLTY-22" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-22  |
+
+Given "CF-DASHBOARDLTY-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		  |
+| CommonData  	 | login     | Lessptloyaltyuser1 |
+
+Then "CF-DASHBOARDLTY-22" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation2 |
+
+Then "CF-DASHBOARDLTY-22" Customer validates the updated information from Balance Rewards Settings Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation2 |
+
+Then "CF-DASHBOARDLTY-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-22  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-23
+Scenario: Loyalty Customer validates the functionality of 'redemptions' filter by Option for Transactions from Balance Rewards Balance Rewards Page 
+
+Given  "CF-DASHBOARDLTY-23" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-23  |
+
+Given "CF-DASHBOARDLTY-23" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		 	   |
+| CommonData  	 | login     | LoyaltyTransactionUser1 |
+
+Then "CF-DASHBOARDLTY-23" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          		  |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		      |
+
+Then "CF-DASHBOARDLTY-23" Customer validates Transaction Details section from Balance Rewards page:
+|VerifyDefaultFilterOptions | DisplayofPagination | DateColumnSort | FilterBy 	  | NoResultMessage |ValidateFilterResults |
+|			-			    |  			-		  |		-		   | redemptions  |     -		    |		Yes			   |
+
+Then "CF-DASHBOARDLTY-23" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-23" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-23  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-24
+Scenario: Loyalty Customer validates the functionality of Request missing Points link and Cancel link in the overlay from Your Account Home Page and Balance Rewards
+Page.
+
+Given  "CF-DASHBOARDLTY-24" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-24  |
+
+Given "CF-DASHBOARDLTY-24" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       			   |
+| CommonData  	 | login     | SmokeTestRxUser1        |
+
+Then "CF-DASHBOARDLTY-24" Customer clicks on an object and validates the expected results:
+| InputFileName	     | SheetName        | 		RowId 	          						     |ClickObjectOverlay |TargetOverlay  |
+|	AccountDashboard | LinkNavigation   | BalanceRewardsTab  		     					 |		-		 	 |		-		 |
+|	AccountDashboard | LinkNavigation   | RequestMissingPointLink	     				     |		-			 |	  Yes		 |
+|	AccountDashboard | LinkNavigation   | CancelLinkinRequestNewPointsOverlayinBRPage		 |		Yes			 |	  -		     |
+|	AccountDashboard | LinkNavigation   | YourAccountLink									 |		-			 |	  -		     |
+|	AccountDashboard | LinkNavigation   | RequestMissingPointLink1	     				     |		-		 	 |	  Yes		 |
+|	AccountDashboard | LinkNavigation   | CancelLinkinRequestNewPointsOverlayinAccountPage   |		Yes		 	 |		-		 |
+
+Then "CF-DASHBOARDLTY-24" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-24" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-24  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-25
+Scenario: Light Registered Customer validates no display of Note message under email address field in Edit Sign-in & Security Page. 
+
+Given  "CF-DASHBOARDLTY-25" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-25  |
+
+Given "CF-DASHBOARDLTY-25" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId    |
+| CommonData  	 | login     | lightreg |
+
+Then "CF-DASHBOARDLTY-25" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation3 |
+
+Then "CF-DASHBOARDLTY-25" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-25" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-25  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-26
+Scenario: Loyalty User validates DOB Error validation(less than 13yrs & invalid data) from Balance Rewards Settings Page 
+
+Given  "CF-DASHBOARDLTY-26" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-26  |
+
+Given "CF-DASHBOARDLTY-26" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 	|
+| CommonData  	 | login     | loyaltyuser1 |
+
+Then "CF-DASHBOARDLTY-26" Customer updates Balance Rewards Personal Information from Balance Rewards Settings page:
+| InputFileName      | SheetName      	   | RowId 			  		|
+| AccountDashboard	 | PersonalInformation | BRlessthan13yrDOB1 	|
+| AccountDashboard	 | PersonalInformation | BRlessthanInvalidrDOB1 |
+
+Then "CF-DASHBOARDLTY-26" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-26" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-26  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-27
+Scenario: Non MedHelp User is able to Create MedHelp Account from Get Started Button in Pharmacy & Health Module from My account Page and Medhelp User is able to 
+navigate to Medhelp dashboard page when he clicks Get Started button from Account Home Page
+
+Given  "CF-DASHBOARDLTY-27" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-27  |
+
+And "CF-DASHBOARDLTY-27" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CF-DASHBOARDLTY-27" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+Then "CF-DASHBOARDLTY-27" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							 |
+| 	  CSLR      | LinkNavigation | YourAccountLink  				 |
+| 	  CSLR      | LinkNavigation | GetStartedButtoninPharmacySection |
+
+Then "CF-DASHBOARDLTY-27" Customer selects Avatar Image, Screen Name and creates MedHelp Account:
+| InputFileName | SheetName      | RowId 	     			|
+| 	  CSLR      | MedHelpData    | MedHelpAccountCreation1  |
+
+Then "CF-DASHBOARDLTY-27" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 						  |
+| 	  CSLR      | LinkNavigation | YourAccountLink  			  |
+| 	  CSLR      | LinkNavigation | GetStartedButtonforMedHelpUser |
+| 	  CSLR      | LinkNavigation | YourAccountLink  			  |
+
+Then "CF-DASHBOARDLTY-27" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-27" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-27  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#Chrome
+@CF-DASHBOARDLTY-28
+Scenario: Medhelp User is able to navigate to Medhelp Dashboard Page from Health Informatioin link under Pharmacy & Health Tab.
+
+Given  "CF-DASHBOARDLTY-28" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-28  |
+
+Given "CF-DASHBOARDLTY-28" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 	    |
+| CommonData  	 | login     | AuthMedhelpUser1 |
+
+Then "CF-DASHBOARDLTY-28" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName      | RowId 								 |ClickObjectinTab |
+| AccountDashboard	| LinkNavigation | YourHealthDashBoardLinkforMedhelpUser |		Yes	  	   |
+
+Then "CF-DASHBOARDLTY-28" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 		    |
+| 	  CSLR      | LinkNavigation | YourAccountLink  |
+
+Then "CF-DASHBOARDLTY-28" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-28" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-28  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#Chrome
+@CF-DASHBOARDLTY-29
+Scenario: Rx authenticated user is able to Change Rx Preferences from Communication Preferences Page and validates the same in DB.
+
+Given  "CF-DASHBOARDLTY-29" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-29  |
+
+Given "CF-DASHBOARDLTY-29" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			   |
+| CommonData  	 | login     | RxPreferenceAuthUser1   |
+
+Then "CF-DASHBOARDLTY-29" Customer updates Your Pharmacy Preferences from Communication Preference page:
+| RxStatusMail  |UserType |RxPreferences |
+|  	Yes			|-		  |Yes			 |
+
+Then "CF-DASHBOARDLTY-29" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  |
+|  DataBase     | Query      | RxPreferencesYesQuery1 |
+
+Then "CF-DASHBOARDLTY-29" Customer updates Your Pharmacy Preferences from Communication Preference page:
+| RxStatusMail  |UserType |RxPreferences |
+|  	No			|-		  |No			 |
+
+Then "CF-DASHBOARDLTY-29" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  |
+|  DataBase     | Query      | RxPreferencesNoQuery1  |
+
+Then "CF-DASHBOARDLTY-29" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-29" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-29  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#Chrome
+@CF-DASHBOARDLTY-30
+Scenario: Mail Service User is able to Naviagate to Mail Service Landing Page by clicking Mail Service Pharmacy Link under Pharmacy & Health tab from Account 
+Home Page.
+
+Given  "CF-DASHBOARDLTY-30" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-30  |
+
+Given "CF-DASHBOARDLTY-30" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			    |
+| CommonData  	 | login     | MailServicePharmacyuser1 |
+
+Then "CF-DASHBOARDLTY-30" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName      | RowId 		            |ClickObjectinTab |
+| AccountDashboard	| LinkNavigation | MailServicePharamcyLink  |	 Yes		  |
+
+Then "CF-DASHBOARDLTY-30" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-30" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-30  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-31
+
+Scenario: Customer is able to Edit Health History from Manage Health History Page by selecting drug using Alphabates.
+#will not work in production due to No drugs will be available for 'K'
+Given  "CF-DASHBOARDLTY-31" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-31  |
+
+Given "CF-DASHBOARDLTY-31" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			 |
+| CommonData  	 | login     | RxPreferenceAuthUser1 |
+
+Then "CF-DASHBOARDLTY-31" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	   |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo6  |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo7  |	
+
+Then "CF-DASHBOARDLTY-31" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-31" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-31  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-32
+Scenario: Customer is able to Edit Health History from Manage Health History Page by Searching the Drug
+
+Given  "CF-DASHBOARDLTY-32" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-32  |
+
+Given "CF-DASHBOARDLTY-32" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 |
+| CommonData  	 | login     | RefillRx4 |
+
+Then "CF-DASHBOARDLTY-32" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo8   |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo9   |
+
+Then "CF-DASHBOARDLTY-32" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-32" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 |
+| CommonData  	 | login     | RefillRx4 |
+
+Then "CF-DASHBOARDLTY-32" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo10  |	
+
+Then "CF-DASHBOARDLTY-32" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-32" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-32  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-33
+Scenario: Light Registered User is able to Update his Health Centre Email Preferences in dotcom and validates the updated/refleted values in DB.
+
+Given  "CF-DASHBOARDLTY-33" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-33  |
+
+Given "CF-DASHBOARDLTY-33" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			|
+| CommonData  	 | login     | LightRegMedhelpUser1 |
+
+Then "CF-DASHBOARDLTY-33" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |   As they happen    |		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-33" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	    |
+|  DataBase     | Query      | EmailHealthPrefWatchListYes  |
+
+Then "CF-DASHBOARDLTY-33" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	No		  |  		 -   		|		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-33" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	    |
+|  DataBase     | Query      | EmailHealthPrefWatchListNo   |
+
+Then "CF-DASHBOARDLTY-33" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |  As they happen  	|		No			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-33" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	    |
+|  DataBase     | Query      | EmailHealthPrefAskExpertNo   |
+
+Then "CF-DASHBOARDLTY-33" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |  As they happen  	|		Yes			   |		No		      |
+
+Then "CF-DASHBOARDLTY-33" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	        |
+|  DataBase     | Query      | EmailHealthPrefHealthTrackerNo   |
+
+Then "CF-DASHBOARDLTY-33" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-33" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-33  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-34
+Scenario: Unauthenticated User is able to Update his Health Centre Email Preferences in dotcom and validates the updated/refleted values in DB.
+
+Given  "CF-DASHBOARDLTY-34" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-34  |
+
+Given "CF-DASHBOARDLTY-34" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			|
+| CommonData  	 | login     | UnAuthMedhelpUser1   |
+
+Then "CF-DASHBOARDLTY-34" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |   As they happen    |		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-34" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefWatchListYes1  |
+
+Then "CF-DASHBOARDLTY-34" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	No		  |  		 -   		|		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-34" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefWatchListNo1   |
+
+Then "CF-DASHBOARDLTY-34" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |  As they happen  	|		No			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-34" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefAskExpertNo1   |
+
+Then "CF-DASHBOARDLTY-34" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |  As they happen  	|		Yes			   |		No		      |
+
+Then "CF-DASHBOARDLTY-34" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	         |
+|  DataBase     | Query      | EmailHealthPrefHealthTrackerNo1   |
+
+Then "CF-DASHBOARDLTY-34" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-34" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-34  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-35
+Scenario: Authenticated User is able to Update his Health Centre Email Preferences in dotcom and validates the updated/refleted values in DB.
+
+Given  "CF-DASHBOARDLTY-35" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-35  |
+
+Given "CF-DASHBOARDLTY-35" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			|
+| CommonData  	 | login     | AuthMedhelpUser1     |
+
+Then "CF-DASHBOARDLTY-35" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |   As they happen    |		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-35" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefWatchListYes2  |
+
+Then "CF-DASHBOARDLTY-35" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	No		  |  		 -   		|		Yes			   |		Yes		      |
+
+Then "CF-DASHBOARDLTY-35" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefWatchListNo2   |
+
+Then "CF-DASHBOARDLTY-35" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-35" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			|
+| CommonData  	 | login     | AuthMedhelpUser1     |
+
+Then "CF-DASHBOARDLTY-35" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | TackerUpdateReminders |ExpertRelatedUpdates |
+| 	 	Yes		  |  As they happen  	|		Yes			    |		No		      |
+
+Then "CF-DASHBOARDLTY-35" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefAskExpertNo2   |
+
+Then "CF-DASHBOARDLTY-35" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |  As they happen  	|		Yes			   |		No		      |
+
+Then "CF-DASHBOARDLTY-35" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	         |
+|  DataBase     | Query      | EmailHealthPrefHealthTrackerNo2   |
+
+Then "CF-DASHBOARDLTY-35" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-DASHBOARDLTY-35" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-35  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-36
+Scenario: Authenticated User is able to Update his Health Centre Email Preferences in dotcom and validates the updated/refleted values in Med Help DB.
+
+Given  "CF-DASHBOARDLTY-36" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-36  |
+
+Given "CF-DASHBOARDLTY-36" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			|
+| CommonData  	 | login     | AuthMedhelpUser2     |
+
+Then "CF-DASHBOARDLTY-36" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	Yes		  |   As they happen    |		Yes			   |		-		      |
+
+Then "CF-DASHBOARDLTY-36" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	     |
+|  DataBase     | Query      | EmailHealthPrefWatchListYes3  |
+
+Then "CF-DASHBOARDLTY-36" Customer validates Health Center Email Preferences status from MedHelp DB:
+| InputFileName		 | SheetName  | RowId      	   	     |
+|  AccountDashboard  | MedHelpDB  | WatchListFrequency1  |
+
+Then "CF-DASHBOARDLTY-36" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	No		  |  		 -   		|		-			   |		-		      |
+
+Then "CF-DASHBOARDLTY-36" Customer validates Health Center Email Preferences status from MedHelp DB:
+| InputFileName		 | SheetName  | RowId      	   	        |
+|  AccountDashboard  | MedHelpDB  | WatchListNotification1  |
+
+Then "CF-DASHBOARDLTY-36" Customer updates Health Center Email Preferences from Communication Preference page:
+| WatchListUpdate | WatchListUpdateType | ExpertRelatedUpdates |TackerUpdateReminders |
+| 	 	-		  |  	 -      		|		No			   |		-		      |
+
+Then "CF-DASHBOARDLTY-36" Customer validates Health Center Email Preferences status from MedHelp DB:
+| InputFileName		 | SheetName  | RowId      	   	   |
+|  AccountDashboard  | MedHelpDB  | PostNotification1  |
+
+Then "CF-DASHBOARDLTY-36" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-36  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-37
+Scenario: Loyalty User is able to validate Rx Loyalty Order Details from Balance Rewards Activity Details page and functionality of Back to to Balance Rewards Page.
+
+Given  "CF-DASHBOARDLTY-37" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-37  |
+
+Given "CF-DASHBOARDLTY-37" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			    |
+| CommonData  	 | login     | RxLoyaltyTrasactionUser1 |
+
+Then "CF-DASHBOARDLTY-37" Customer validates display of Loyalty Order Details from Balance Rewards Activity Details page:
+| InputFileName     | SheetName 		| RowId   	 	  |
+| AccountDashboard  | BROrderDetails    | RxLoyaltyOrder2 |
+
+Then "CF-DASHBOARDLTY-37" Customer logout from walgreens:
+| Source  |
+| Global  |
+  
+Then "CF-DASHBOARDLTY-37" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-37  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-38
+Scenario: Authenticated User verifies whether new added medications by selecting drug alphabetically and check in health condition section is updated after a log out and login .
+
+Given  "CF-DASHBOARDLTY-38" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-38  |
+
+Given "CF-DASHBOARDLTY-38" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	           |
+| CommonData  	 | login     | AuthenticatedUser1  |
+
+Then "CF-DASHBOARDLTY-38" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo12  |
+
+Then "CF-DASHBOARDLTY-38" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-38" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 		   |
+| CommonData  	 | login     | AuthenticatedUser1  |
+
+Then "CF-DASHBOARDLTY-38" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo13  |	
+
+Then "CF-DASHBOARDLTY-38" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-38  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CF-DASHBOARDLTY-39
+Scenario: Authenticated User verifies whether new added medications by selecting drug by entering drug name and check in health condition section is updated after a log out and login .
+
+Given  "CF-DASHBOARDLTY-39" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-39  |
+
+Given "CF-DASHBOARDLTY-39" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	     |
+| CommonData  	 | login     | AuthenticatedUser1     |
+
+Then "CF-DASHBOARDLTY-39" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo14  |
+
+Then "CF-DASHBOARDLTY-39" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "CF-DASHBOARDLTY-39" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   	 			     |
+| CommonData  	 | login     | AuthenticatedUser1     |
+
+Then "CF-DASHBOARDLTY-39" Customer adds Health History or Health Insurance Information:
+| InputFileName 	| SheetName      			| RowId 	    |
+| AccountDashboard	| HealthHistoryAndInsurance | Healthinfo15  |	
+
+Then "CF-DASHBOARDLTY-39" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF	        | DASHBOARDLTY	|CF-DASHBOARDLTY-39  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+

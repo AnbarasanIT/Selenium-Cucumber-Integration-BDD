@@ -1,0 +1,36 @@
+@pharmacy @RefillPillImage
+Feature:  verify the presence of pill image before the prescription name
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-PillImage-1
+Scenario: verify the presence of pill image before the prescription name
+
+Given "RX-PillImage-1" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId      	 |
+| QC-RX   		 | PillImage    | RX-PillImage-1 |
+
+Given "RX-PillImage-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData  	| login   	| pillimage1 |
+
+Then "RX-PillImage-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId     |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillRx1 |
+#| PharmacyHomePageLinkVerification         | Authenticated        | OverlayClose |
+
+Then "RX-PillImage-1" Customer selects a family member:
+| FamilyMemberOption    | 2  |
+
+Then "RX-PillImage-1" Customer validates the presence of pill image and clicks on the image:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | Rx    |
+
+#Then "RX-PillImage-1" Customer logout from walgreens:
+#|Source|
+#|Global|
+
+Then "RX-PillImage-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	| RowId     	 |
+| QC-RX   		 | PillImage    | RX-PillImage-1 |
+
+#-----------------------------------------------------------------------------------------------------------

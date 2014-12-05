@@ -1,0 +1,680 @@
+@dailyliving @ProductInfoVerifications
+Feature:This feature file is about to validate Product details from Browse and Search pages
+#----------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-1
+Scenario: Verify the avaiable information in See when this item arrives overlay for DC and CH products. 
+
+Given  "DL-PRODUCTINFOVALIDATIONS-1" Customer starts the scenario:
+| InputFileName | SheetName  		     | 		RowId       		     |
+| QC-DL         | PRODUCTINFOVALIDATIONS | DL-PRODUCTINFOVALIDATIONS-1   |
+
+And "DL-PRODUCTINFOVALIDATIONS-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName |  RowId  |
+| CommonData    | search    |  DC1    |
+
+And "DL-PRODUCTINFOVALIDATIONS-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+
+Then "DL-PRODUCTINFOVALIDATIONS-1" Customer validates available information from See when this item arrives overlay:
+|ProdutType |
+| 	DC	    |
+
+And "DL-PRODUCTINFOVALIDATIONS-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName |  RowId  |
+| CommonData    | search    |  CH1    |
+
+And "DL-PRODUCTINFOVALIDATIONS-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+
+Then "DL-PRODUCTINFOVALIDATIONS-1" Customer validates available information from See when this item arrives overlay:
+|ProdutType |
+| 	CH	    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-1" Customer finished testing the scenario:
+| InputFileName | SheetName  		     | 		RowId       		     |
+| QC-DL         | PRODUCTINFOVALIDATIONS | DL-PRODUCTINFOVALIDATIONS-1   |
+#--------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-2
+Scenario: Verify the display and functionality of loyalty overlay after clicking on with card for a product on quicklook.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-2" Customer starts the scenario:
+| InputFileName | SheetName  		     | 		RowId       		     |
+| QC-DL         | PRODUCTINFOVALIDATIONS | DL-PRODUCTINFOVALIDATIONS-2   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   	   |
+| CommonData    | search    | WithCardProduct  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay   |TargetOverlay |
+| SelfService   | LinkVerification 	| QuicklookOverlay  | -                   |  Yes     	 |
+| SelfService   | LinkVerification  |	LoyaltyLogo     |		Yes		      |		Yes	     |
+| SelfService   | LinkVerification  |	LearMoreLink    |		Yes		      |		-	     |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | search    | WithCardProduct  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay   |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                   |  Yes     	 |
+| SelfService   | LinkVerification  |	LoyaltyLogo     |		Yes		      |		Yes	     |
+| 	SelfService | LinkVerification  |	JoinNowButton	|		Yes		      |		-	     |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   	   |
+| CommonData    | search    | WithCardProduct  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId                 |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay      | -                 |  Yes     	   |
+| SelfService   | LinkVerification  |	LoyaltyLogo         |		Yes		    |		Yes	   |
+| SelfService   |LinkVerification  	| ActivateButton        | Yes				| -  		   |
+| SelfService   |LinkVerification 	| Register              | -                 |  -     	   |
+| SelfService   |LinkVerification 	| SignUpForBasicAccess  | -                 |  -     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-2" Customer finished testing the scenario:
+| InputFileName | SheetName  		     | 		RowId       		     |
+| QC-DL         | PRODUCTINFOVALIDATIONS | DL-PRODUCTINFOVALIDATIONS-2   |
+#--------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-3
+Scenario: Cutomer validates RULE2 SALERULE3, RULE3 SALERULE3,RULE2 SALERULE1 BOGO 50 OFF, RULE1 SALERULE2 BOGO FREE,RULE1 SALERULE3, RULE2 SALERULE3 BAGA FREE,RULE2 SALERULE3 BAGB DISCOUNT in TIER-2 page
+
+Given  "DL-PRODUCTINFOVALIDATIONS-3" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-3  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId        | ClickObjectinTab |
+| SelfService   |LinkVerification 	| BeautyForMen | Yes			  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  	 	|
+| SelfService   | SALERULEPRODUCTS   | BOGOLEP50LTYPRODUCT1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId         | ClickObjectinTab |
+| SelfService   |LinkVerification 	|Vitamins-Herbs | Yes			   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	        	|
+| SelfService   | SALERULEPRODUCTS   | BOGOLEPFREELTYPRODUCT1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId       			 | ClickObjectinTab |
+| SelfService   |LinkVerification 	| PersonalCare-SunCare   | Yes			    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  	 	 |
+| SelfService   | SALERULEPRODUCTS   | RULE3SALE3LTYPRODUCT1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId       				 | ClickObjectinTab |
+| SelfService   |LinkVerification 	| PersonalCare-Incontinence  | Yes			    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  	 	 |
+| SelfService   | SALERULEPRODUCTS   | RULE2SALE3LTYPRODUCT1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId       		| ClickObjectinTab  |
+| SelfService   |LinkVerification 	| Vitamins-FishOil  | Yes			    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		 	 |
+| SelfService   | SALERULEPRODUCTS   | R2S3BAGB_DISCLTYPRODUCT1  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId        | ClickObjectinTab |
+| SelfService   |LinkVerification 	| BeautyForMen | Yes			  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		 	|
+| SelfService   | SALERULEPRODUCTS   | R2S3BAGAFREELTYPRODUCT1  |
+
+Given "DL-PRODUCTINFOVALIDATIONS-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		      |
+| CommonData  	 | login     | NonLoyaltyLightUser1	  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId      		   | ClickObjectinTab |
+| SelfService   |LinkVerification 	| PersonalCare-Shaving | Yes			  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  	 	 |
+| SelfService   | SALERULEPRODUCTS   | RULE1SALE3LTYPRODUCT1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-3" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-3  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-4
+Scenario: Verify BOGO Message and Pricing in the family Products Page for RULE2 SALERULE3, RULE3 SALERULE3
+
+Given  "DL-PRODUCTINFOVALIDATIONS-4" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-4  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R2SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR2SR3data1   |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     |ClickObjectOverlay | TargetOverlay |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   |		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	LearMoreLink  |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R2SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	JoinNowButton 		|		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 	RowId    	       |
+| CommonData    | search    | R2SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	ActivateButton      |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 	RowId    	       |
+| CommonData    | search    | R3SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR3SR3data1   |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     |ClickObjectOverlay | TargetOverlay |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   |		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	LearMoreLink  |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R3SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	JoinNowButton 		|		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R3SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-4" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	ActivateButton      |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-4" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-4  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-5
+Scenario: Verify BOGO Message and Pricing in the family Products Page for RULE1 SALERULE3
+
+Given  "DL-PRODUCTINFOVALIDATIONS-5" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-5  |
+
+Given "DL-PRODUCTINFOVALIDATIONS-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId           |
+| CommonData  	 | login     | nonloyaltyuser1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-5" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR1SR3data1   |
+
+And "DL-PRODUCTINFOVALIDATIONS-5" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     |ClickObjectOverlay | TargetOverlay |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   |		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	LearMoreLink  |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-5" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	JoinNowButtonNonLty	|		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 	RowId    	       |
+| CommonData    | search    | R1SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-5" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |ClickObjectOverlay   | TargetOverlay |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|		-		      |		-		  |
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |		-		 	  |		-		  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   		|		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |ActivateButtonNonLty  |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-5" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-5  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-6
+Scenario: Verify the display and functionality of loyalty overlay after clicking on with card for a product in search results page.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-6" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-6  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   	   |
+| CommonData    | search    | WithCardProduct  |
+
+And "DL-PRODUCTINFOVALIDATIONS-6" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     |ClickObjectOverlay | TargetOverlay |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo   |		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	LearMoreLink  |		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | search    | WithCardProduct  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 	     | RowId            |ClickObjectOverlay   |TargetOverlay  |
+| 	SelfService  | LinkVerification  |	LoyaltyLogo     |		-		      |		Yes	      |
+| 	SelfService  | LinkVerification  |	JoinNowButton	|		Yes		      |		-	      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   	   |
+| CommonData    | search    | WithCardProduct  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId                 |ClickObjectOverlay |TargetOverlay |
+| 	SelfService | LinkVerification  |	LoyaltyLogo         |		Yes		    |		Yes	   |
+| SelfService   |LinkVerification  	| ActivateButton        | Yes				| -  		   |
+| SelfService   |LinkVerification 	| Register              | -                 |  -     	   |
+| SelfService   |LinkVerification 	| SignUpForBasicAccess  | -                 |  -     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-6" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-6  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-7
+Scenario: Verify the display of loyalty pricing and points offers for RULE2 SALERULE3 product in Quicklook overlay for the guest user.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-7" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-7  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R2SR3LoyaltyProduct1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-7" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-7" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR2SR3data2   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-7" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-7  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-8
+Scenario: Verify the display of loyalty pricing and points offers for RULE3 SALERULE3 product in Quicklook overlay for the guest user.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-8" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-8  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R3SR3LoyaltyProduct1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-8" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR3SR3data2   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-8" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-8  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-9
+Scenario: Verify the display of loyalty pricing and points offers for RULE1 SALERULE3 product in Quicklook overlay for the guest user.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-9" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-9  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR3LoyaltyProduct1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-9" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-9" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR1SR3data2   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-9" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-9  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-10
+Scenario: Customer validates the RULE2 SALERULE1 BOGO 50 OFF product in TIER 3 and VPD page
+
+Given  "DL-PRODUCTINFOVALIDATIONS-10" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-10  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-10" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId       		 | ClickObjectinTab |
+| SelfService   |LinkVerification 	| MedicineChildCare  | Yes			    |
+| SelfService   |LinkVerification 	| OralCare			 | -			    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-10" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  	 	|
+| SelfService   | SALERULEPRODUCTS   | BOGOLEP50LTYPRODUCT2 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		    |
+| CommonData    | search    | SaleRule1Product1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-10" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId  				  |
+| SelfService   |LinkVerification 	| BOGOLEPVPDPage 		  |
+| SelfService   |LinkVerification 	| BOGOLEPVPDSocialArea    |
+
+Then "DL-PRODUCTINFOVALIDATIONS-10" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-10  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-11
+Scenario: Loyalty User validates BOGO Message in Family Products Page for RULE1SALERULE3, RULE2SALERULE3, RULE3SALERULE3 Products
+
+Given  "DL-PRODUCTINFOVALIDATIONS-11" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					  |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-11 |
+
+Given "DL-PRODUCTINFOVALIDATIONS-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData  	 | login     | loyaltyuser1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-11" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR1SR3data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R2SR3LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-11" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR2SR3data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R3SR2LoyaltyProduct1 |
+
+And "DL-PRODUCTINFOVALIDATIONS-11" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	CSLR         | LinkNavigation    |GeneralProductNameLink|
+| 	SelfService  | LinkVerification  |SelectQualifyingItem  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR3SR2data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-11" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-11  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-12
+Scenario: Cutomer validates RULE2 SALERULE3, RULE3 SALERULE3,RULE2 SALERULE1 BOGO 50 OFF, RULE1 SALERULE2 BOGO FREE, RULE2 SALERULE3 BAGA FREE,RULE2 SALERULE3 BAGB DISCOUNT in Loyalty points page
+
+Given "DL-PRODUCTINFOVALIDATIONS-12" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-12  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the Loyalty points page:
+|SortBy      |
+|Ascending   |
+|Descending  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		 	|
+| SelfService   | SALERULEPRODUCTS   | LPBOGOLEPFREELTYPRODUCT  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		  |
+| SelfService   | SALERULEPRODUCTS   | LPBOGOLEP50LTYPRODUCT  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		 	  |
+| SelfService   | SALERULEPRODUCTS   | LPR2S3BAGB_DISCLTYPRODUCT  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		 	  |
+| SelfService   | SALERULEPRODUCTS   | LPR2S3BAGAFREELTYPRODUCT   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		    |
+| SelfService   | SALERULEPRODUCTS   | LPRULE3SALE3LTYPRODUCT   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer verifies the sale rule in any tier:
+| InputFileName | SheetName			 | RowId    	  		    |
+| SelfService   | SALERULEPRODUCTS   | LPRULE2SALE3LTYPRODUCT   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      			|
+| PharmacyLinkVerification   |DestinationPageURL  | LoyaltyPointsPage 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRODUCTINFOVALIDATIONS-12" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-12  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-13
+Scenario: Verify the display of loyalty pricing and points offers for RULE1 SALERULE1 BOGOLEP 50,RULE1 SALERULE2 BOGOLEPFREE product in Quicklook overlay for the guest user.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-13" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-13  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR1LoyaltyProduct1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer validates Price details of the Product:
+| InputFileName  | 	SheetName 		 | 		RowId      	    |
+| 	SelfService  | SALERULREPRICING  |	LoyaltyR1SR1data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    | R1SR2LoyaltyProduct1 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer validates Price details of the Product:
+| InputFileName   | 	SheetName 	  | 		RowId       |
+| 	SelfService   | SALERULREPRICING  |	LoyaltyR1SR2data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	 |
+| CommonData    | search    | R2SR3BAGAFREE      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer validates Price details of the Product:
+| InputFileName   | 	SheetName 	  | 		RowId       |
+| 	SelfService   | SALERULREPRICING  |	LoyaltyR2SR3data3   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	         |
+| CommonData    | search    | R3SR1BAGB_BDISCOUNTED     |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer validates Price details of the Product:
+| InputFileName   | 	SheetName 	  | 		RowId       |
+| 	SelfService   | SALERULREPRICING  |	LoyaltyR3SR1data1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-13" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-13  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-14
+Scenario: Verify that the drug search and global drug search result in displaying the same search results page.
+
+Given  "DL-PRODUCTINFOVALIDATIONS-14" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-14  |
+
+And "DL-PRODUCTINFOVALIDATIONS-14" Customer clicks on an object and validates the expected results:
+| InputFileName  			 |SheetName  | RowId      	    	|
+| PharmacyLinkVerification   |Anonymous  | PharmacyAndHealth 	|
+| PharmacyLinkVerification   |Anonymous  | DrugInformation	 	|
+
+Then "DL-PRODUCTINFOVALIDATIONS-14" Customer validates the SearchResults page for DrugSearch:
+| InputFileName | SheetName           		| RowId              |  
+| Pharmacy      | CheckDrugInteractions     | AnonymousUser      |
+
+Then "DL-PRODUCTINFOVALIDATIONS-14" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-14  |
+#----------------------------------------------------------------------------------------------------
+@DL-PRODUCTINFOVALIDATIONS-15
+Scenario: Customer enters the Zipcode in Quick look overlay and verify the link navigation for Sold in store product 
+
+Given  "DL-PRODUCTINFOVALIDATIONS-15" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-15  |
+
+Then "DL-PRODUCTINFOVALIDATIONS-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    	   |
+| CommonData    | search    |  sdd_instore_only1   |
+
+Then "DL-PRODUCTINFOVALIDATIONS-15" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId             |ClickObjectOverlay |TargetOverlay |
+| SelfService   |LinkVerification 	| QuicklookOverlay  | -                 |  Yes     	   |
+
+And "DL-PRODUCTINFOVALIDATIONS-15" Customer validates StoreSearch In QuickLookOverlay:
+| ZipCode |
+| 60015 |
+
+Then "DL-PRODUCTINFOVALIDATIONS-15" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId    					   |
+| QC-DL         | PRODUCTINFOVALIDATIONS   | DL-PRODUCTINFOVALIDATIONS-15  |
+#----------------------------------------------------------------------------------------------------
+
+

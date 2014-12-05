@@ -1,0 +1,333 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.order_activity;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class OrderStatusHistoryValidationsLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to Order properties and days verification from
+     *          the Order status and history page for different type of orders
+     * @author - SARAVANAN M
+     * @Created - 22-MAY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void orderStatusAndHistoryValidations(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+
+	Map<String, String> messagesMap = null;
+	String OrderAndActivity_TAB = "//a[contains(text(),'Activity')]~XPATH";
+	// String OrderStatus_LNK = "a#order_status~CSS";
+	String OrderStatus_LNK = "//a[@id='order_status']~XPATH";
+	String OrderStatusHeader_H = "//h2[contains(text(),'Manage Your Order Status & History')]~XPATH";
+	String TypeFilter_LST = "select#type~CSS";
+	String DaysFilter_LST = "//select[@id='days']~XPATH";
+	String Type = null;
+	String Days = null;
+	int dateLimit = 0;
+	String OrderText = null;
+	int NoOfRows = 0;
+	String NextPage_LNK = "a[title='Next']~CSS";
+	Date ApplicationDate = null;
+	Calendar cal = Calendar.getInstance();
+	String OrderDate = null;
+	String CalEditField = null;
+	String statusOvlyVerify = null;
+	String NoOrdersText_LBL = "//p[contains(text(),'No orders.Use filters to see older orders')]~XPATH";
+	String OrderDateCol_ELM = "//th[1]/a[@title='Order Date']~XPATH";
+	String OrderTypeCol_ELM = "//th[2] [contains(text(),'Order/Rx Number')]~XPATH";
+	String OrderProductCol_ELM = "//th[3] [contains(text(),'Order/Rx Description')]~XPATH";
+	String OrderStatusCol_ELM = "//th[4] [contains(text(),'Status')]~XPATH";
+	String OrderTotalCol_ELM = "//th[5] [contains(text(),'Total')]~XPATH";
+	String OrderStatusOverlay_LNK = "img[title='Status']~CSS";
+	String StatusNames_ELM = "//div[@id='accordion']";
+	String OverlayClose_LNK = "a#back~CSS";
+	String OrderTableColumns[] = { OrderDateCol_ELM, OrderTypeCol_ELM, OrderProductCol_ELM, OrderStatusCol_ELM, OrderTotalCol_ELM };
+	int dateVerificationFlag = 0;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Clicking on the Order Status Link from the Order Status and
+	    // History drop down menu
+	    performHoverClickAction(getElementByProperty(OrderAndActivity_TAB, browser), OrderStatus_LNK, browser);
+
+	    // Waiting for the presence of Order Status page header - Will bear
+	    // the page loading time
+	    do {
+	    } while (!isElementPresentVerification(OrderStatusHeader_H, browser));
+
+	    if (!isElementPresentVerification(OrderStatusHeader_H, browser)) {
+		throw new Exception("Unable to navigate to Order Status and History page");
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		statusOvlyVerify = dataMap.get("statusOvlyVerify").get(i);
+		Type = dataMap.get("Type").get(i).trim();
+		Days = dataMap.get("Days").get(i).trim();
+
+		// Setting the Date limit in order to verify the days conditions
+		dateLimit = Integer.parseInt(Days.split(" ")[0].trim());
+		if (Days.contains("Days")) {
+		    CalEditField = "DATE";
+		} else if (Days.contains("Month")) {
+		    CalEditField = "MONTH";
+		} else if (Days.contains("Year")) {
+		    CalEditField = "YEAR";
+		}
+		// Assigning the order text w.r.t the Product type
+		if (Type.equalsIgnoreCase("Contact Lens")) {
+		    OrderText = "Contact Lens Order";
+		} else if (Type.equalsIgnoreCase("Prescriptions (Rx)")) {
+		    OrderText = "Rx Order";
+		} else if (Type.equalsIgnoreCase("Web Pickup") || Type.equalsIgnoreCase("Products")) {
+		    OrderText = "Product Order";
+		}
+		// Selecting the filters for products and days
+		// #SARAVANAN M - 07/June/2013 - To ensure the presence of Type
+		// filter ater the page loading
+		if (!Type.equals("-")) {
+		    if (isElementPresentVerification(TypeFilter_LST, browser)) {
+			new Select(getElementByProperty(TypeFilter_LST, browser)).selectByVisibleText(Type);
+		    }
+		}
+		// #SARAVANAN M - 07/June/2013 - To ensure the presence of Days
+		// filter ater the page loading
+		if (!Days.equals("-")) {
+		    if (isElementPresentVerification(DaysFilter_LST, browser)) {
+			new Select(getElementByProperty(DaysFilter_LST, browser)).selectByVisibleText(Days);
+		    }
+		}
+
+		if (isElementPresentVerification(NoOrdersText_LBL, browser)) {
+		    throw new Exception("There are no orders found for this user.Please place some order for this category/verify for some other user");
+		}
+		// Verifying the order status table headers
+		NoOfRows = ((getElementByProperty("//table/tbody", browser)).findElements(By.tagName("tr"))).size();
+		for (int j = 0; j < OrderTableColumns.length; j++) {
+		    if (!isElementPresentVerification(OrderTableColumns[j], browser)) {
+			messagesMap.put(OrderTableColumns[j], "Object not found");
+			status = WARNING;
+		    }
+		}
+		// Verifying the Status Icon overlay for the presence of
+		// different Statuses
+		if (statusOvlyVerify.equalsIgnoreCase("Yes")) {
+		    getElementByProperty(OrderStatusOverlay_LNK, browser).click();
+		    switchToOverlay(browser);
+		    int noOfLinks = getElementByProperty(StatusNames_ELM, browser).findElements(By.tagName("a")).size();
+		    for (int ovlyCount = 1; ovlyCount < noOfLinks; ovlyCount++) {
+			if (!isElementPresentVerifyClick(StatusNames_ELM + "/a[" + ovlyCount + "]", browser)) {
+			    messagesMap.put("Order Status Overlay(Status Icon)", "Unable to click on the status link '"
+				    + getElementByProperty(StatusNames_ELM + "/a[" + ovlyCount + "]", browser).getText() + "'");
+			    status = WARNING;
+			}
+
+			if (ovlyCount == (noOfLinks - 1)) {
+			    getElementByProperty(StatusNames_ELM + "/a[" + ovlyCount + "]", browser).click();
+			}
+		    }
+		    getElementByProperty(OverlayClose_LNK, browser).click();
+		    switchToDefault(browser);
+		}
+		// Verifying the Days and Content of the Order status table
+		do {
+		    for (int row = 2; row <= NoOfRows; row++) {
+			if (isElementPresentVerification("//table/tbody/tr[" + row + "]", browser)) {
+
+			    if (!isElementPresentVerification("//table/tbody/tr[" + row + "]/td[2] [contains(text(),'" + OrderText + "')]", browser)) {
+				messagesMap.put("Order Type", "Order Type is not mentioned Correctly");
+				status = WARNING;
+			    }
+
+			    if ((getElementByProperty("//table/tbody/tr[" + row + "]/td[3]", browser).getText().equals(null))) {
+				messagesMap.put("Order Description", "Ordered Product is not displayed");
+				status = WARNING;
+			    }
+
+			    OrderDate = getElementByProperty("//table/tbody/tr[" + row + "]/td[1]", browser).getText().trim();
+			    // Date Verification-Start
+			    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy");
+			    Date CurrDate = new Date();
+			    cal.setTime(CurrDate); // settin current date to
+			    // Calendar
+			    if (CalEditField.equalsIgnoreCase("Date")) {
+				cal.add(Calendar.DATE, -dateLimit); // Adding or
+				// subtracting
+			    } else if (CalEditField.equalsIgnoreCase("Month")) {
+				cal.add(Calendar.MONTH, -dateLimit);
+			    } else if (CalEditField.equalsIgnoreCase("Year")) {
+				cal.add(Calendar.YEAR, -dateLimit);
+			    }
+			    Date TargetDate = cal.getTime(); // Getting
+							     // Subtracted
+			    // Value
+			    ApplicationDate = format.parse(OrderDate);
+			    // Incrementing the flag for invalid display of
+			    // orders beyond the days selected
+			    if (!(ApplicationDate.before(CurrDate) && ApplicationDate.after(TargetDate))) {
+				dateVerificationFlag = dateVerificationFlag + 1;
+			    }
+			    // Date Verification - End
+			}
+		    }
+		} while (isElementPresentVerifyClick(NextPage_LNK, browser));
+		// Verifying the flag to say the days condition satisfication
+		if (dateVerificationFlag > 0) {
+		    messagesMap.put("Date Verification", "Date is not in the given limit");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is verify the required Order details from Order
+     *          status and Order history
+     * @author - Siva Santhi Reddy P
+     * @Created - 27-AUG-2013
+     * @Modified By -Siva
+     * @Modified Date -12-SEP-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderDetailsFromOrderStatusAndHistory(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderStatusAndActivity_URL = "youraccount/orderstatus/orderstatus.jsp?";
+	String ManageOrderStatusAndHistory_ELM = "//h2[contains(text(),'Manage Your Order Status & History')]~XPATH";
+	String OrderNumber_LNK = "";
+	String OnlineOrderDetailsHeader_ELM = "//h2[contains(text(),'Online Store Order Details')]~XPATH";
+	String BMLPaymentOption_ELM = "//td[contains(text(),'BML')]~XPATH";
+	String CreditCardpaymentOption_ELM = "//*[contains(text(),'Visa') or contains(text(),'VISA')]~XPATH";
+	String ItemTax = null, ItemTotal = null, emailpaymentMethod = null, clItemTax = null, clItemTotal = null, paymentMethod = null;
+	int OrderTotalItemNumber = 0;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getSharedPropertiesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get shared values from the HashMap.
+	    getSharedPropertiesMap = scenarioBean.getSharedStepProperties();
+	    String finalOrderStatuPaeURL = EcommTestRunner.config.getString("walgreensURL") + OrderStatusAndActivity_URL;
+	    getUrl(browser, finalOrderStatuPaeURL);
+	    if (!isElementPresentVerification(ManageOrderStatusAndHistory_ELM, browser)) {
+		messagesMap.put("Manage Order Status And History Header", "Page is not loaded in given time");
+		status = WARNING;
+	    }
+	    String OrderID = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1");
+	    String NoofFulfillments = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoofFulfillments");
+	    String isCLFulfillmentExits = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "isCLFulfillmentExits");
+	    OrderNumber_LNK = "//a[contains(@href,'" + OrderID + "')]~XPATH";
+	    if (!isElementPresentVerifyClick(OrderNumber_LNK, browser)) {
+		throw new Exception("Not able to click on Order Number link");
+	    }
+	    if (!isElementPresentVerification(OnlineOrderDetailsHeader_ELM, browser)) {
+		messagesMap.put("Online Order Details header", "Object is missing");
+		status = WARNING;
+	    }
+	    List<WebElement> subOrderDetailsDivs = browser.findElements(By.xpath("//div[@class='overflowHidden']/div"));
+	    int indexNumber = 0;
+	    // assigning default values to the array.
+	    String productIndexArray[] = { "0", "1", "2" };
+	    for (int i = 0; i < subOrderDetailsDivs.size(); i++) {
+		if (subOrderDetailsDivs.get(i).getText().contains("Tax:")) {
+		    productIndexArray[indexNumber] = String.valueOf(i);
+		    indexNumber = indexNumber + 1;
+		}
+	    }
+	    List<WebElement> fulfillmentIDtags = browser.findElements(By.xpath("//strong[contains(text(),'Fulfillment ID #')]"));
+	    if (isCLFulfillmentExits != null && isCLFulfillmentExits.equalsIgnoreCase("Yes")) {
+		List<WebElement> ptagsinOrderTotalSection = subOrderDetailsDivs.get(Integer.parseInt(productIndexArray[OrderTotalItemNumber])).findElements(By.tagName("p"));
+		clItemTax = ptagsinOrderTotalSection.get(4).getText().trim();
+		clItemTotal = ptagsinOrderTotalSection.get(ptagsinOrderTotalSection.size() - 1).getText().trim();
+		OrderTotalItemNumber = OrderTotalItemNumber + 1;
+		String emailCLValues = getSharedPropertiesMap.get(OrderID);
+		String emailclItemTax = emailCLValues.split(",")[0].trim();
+		String emailclTotal = emailCLValues.split(",")[1].trim();
+		if (!emailclItemTax.equals(clItemTax)) {
+		    messagesMap.put("clItemTax", "Price is mismatching with Email. Email value is:" + emailclItemTax + " & Order history Details value is:" + clItemTax);
+		    status = WARNING;
+		}
+		if (!emailclTotal.equals(clItemTotal)) {
+		    messagesMap.put("clItemTotal", "Price is mismatching with Email. Email value is:" + emailclTotal + " & Order history Details value is:" + clItemTotal);
+		    status = WARNING;
+		}
+	    }
+	    for (int counter = OrderTotalItemNumber; counter < fulfillmentIDtags.size(); counter++) {
+		String FulfillmentID = fulfillmentIDtags.get(counter).getText().split("#")[1].trim();
+		List<WebElement> ptagsinOrderTotalSection = subOrderDetailsDivs.get(Integer.parseInt(productIndexArray[counter])).findElements(By.tagName("p"));
+		ItemTax = ptagsinOrderTotalSection.get(4).getText().trim();
+		ItemTotal = ptagsinOrderTotalSection.get(ptagsinOrderTotalSection.size() - 1).getText().trim();
+		OrderTotalItemNumber = OrderTotalItemNumber + 1;
+		String emailItemValues = getSharedPropertiesMap.get(FulfillmentID);
+		String emailItemTax = emailItemValues.split(",")[0].trim();
+		String emailItemTotal = emailItemValues.split(",")[1].trim();
+		if (!emailItemTax.equals(ItemTax)) {
+		    messagesMap.put("Item Tax for the Fulfillment ID:" + FulfillmentID, "Price is mismatching with Email. Email value is:" + emailItemTax + " & Order history Details value is:"
+			    + ItemTax);
+		    status = WARNING;
+		}
+		if (!emailItemTotal.equals(ItemTotal)) {
+		    messagesMap.put("Item Total for the Fulfillment ID:" + FulfillmentID, "Price is mismatching with Email. Email value is:" + emailItemTotal + " & Order history Details value is:"
+			    + ItemTotal);
+		    status = WARNING;
+		}
+	    }
+	    if (Integer.parseInt(NoofFulfillments)!=fulfillmentIDtags.size()) {
+		messagesMap.put("No of Fuilfillemnts", "Expected " + NoofFulfillments +" but displaying as "+fulfillmentIDtags.size());
+		status = WARNING;
+	    }
+	    int sizeofFulfillmentCompleteItems = browser.findElements(By.xpath("//p[contains(text(),'Shipped on')]")).size();
+
+	    if (sizeofFulfillmentCompleteItems != Integer.parseInt(NoofFulfillments)) {
+		messagesMap.put("Status: Shipped On Message", "Not found for one/more itmes in the Status Section");
+		status = WARNING;
+	    }
+
+	    if (isElementPresentVerification(BMLPaymentOption_ELM, browser)) {
+		paymentMethod = "BML";
+	    } else if (isElementPresentVerification(CreditCardpaymentOption_ELM, browser)) {
+		paymentMethod = "CREDITCARD";
+	    }
+	    // Get value from Hash Map.
+	    emailpaymentMethod = getSharedPropertiesMap.get("paymentMethod");
+	    if (!emailpaymentMethod.equalsIgnoreCase(paymentMethod)) {
+		messagesMap.put("Payment method", "Payment method is mismatching. Email value is:" + emailpaymentMethod + " & Order history Details value is:" + paymentMethod);
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

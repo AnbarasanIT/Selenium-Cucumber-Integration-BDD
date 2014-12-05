@@ -1,0 +1,1290 @@
+@loyalty @EndtoEndRegistrationValidations
+Feature: All the scenarios in the feature are related to Loyalty/WAG Registration.
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-1
+Scenario: To verify whether user able to create an walgreens account without loyalty and to verify display of light confirmation page
+
+Given  "CSLR-ENDTOENDREG-1" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-1 |
+
+Then "CSLR-ENDTOENDREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | RegisterLink					 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "CSLR-ENDTOENDREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   	  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId               |  
+| -			                  | CreateNew            | 123     | 9710744599   | -         | -       | -        | Yes      | CSLR          | PersonalInfo | invaliduserdetails1 |  
+
+Then "CSLR-ENDTOENDREG-1" Customer validates fields in Walgreens and Loylaty Account creation page:
+| InputFileName | SheetName      | RowId 	      |
+|    CSLR		|   GenaralInfo  |  invalidata1   |
+
+Then "CSLR-ENDTOENDREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId               |  
+|    1234567                  | ActivateNow          | 123     |  -     | -         | -       | -        | Yes      | CSLR          | PersonalInfo | invaliduserdetails1 |  
+
+Then "CSLR-ENDTOENDREG-1" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    					 |BalanceRewardsorPhone | Phone   | Zipcode          |
+| CommonData    | loyaltyinfo | BalanceAndZipcodeFieldError1 | Lessthan10digit      |  -      |  Lessthan5digit  |
+
+Then "CSLR-ENDTOENDREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode |ZipcodeExt | Phone  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId               |  
+|    123456789023             | ActivateNow          | 60015   |  321      |  -     | -         | -       | -        | Yes      | CSLR          | PersonalInfo | invaliduserdetails1 |  
+
+Then "CSLR-ENDTOENDREG-1" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |ZipcodeExtn 	|
+| CommonData    | loyaltyinfo | Invalid13digitError  | Invalid13digit       |  -      |   -     |Lessthan4digit |
+
+Then "CSLR-ENDTOENDREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				     |TargetOverlay |TargetNewWindow |
+| 	  CSLR      | LinkNavigation | SignInLinkinAccountCreationPage	 |     -	    |  		- 		 |
+| 	  CSLR      | LinkNavigation | OnlinePrivacyPolicyLink			 |    -	   		|   	Yes	 	 |
+| 	  CSLR      | LinkNavigation | CancelLinkinAccountCreationPage	 |    -	   		|   	- 		 |
+| 	  CSLR      | LinkNavigation | CreateMembershipRadio			 |    -	    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | LearnMoreLink					 |    Yes    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | Overlayclose						 |    -	    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | TermsAndconditions				 |    Yes    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | Overlayclose						 |    -	    	|  		- 		 |
+
+Then "CSLR-ENDTOENDREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CSLR          | PersonalInfo | lightuser1 |
+
+Then "CSLR-ENDTOENDREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				       |
+| 	  CSLR      | LinkNavigation | DownloadApp  					   |
+| 	  CSLR      | LinkNavigation | ShopforProdcutsOnline  			   |  
+| 	  CSLR      | LinkNavigation | RefillPrescriptions  			   |  
+| 	  CSLR      | LinkNavigation | CreateaShoppingList  			   |  
+| 	  CSLR      | LinkNavigation | CheckOrderStatusAndHistory  		   |  
+| 	  CSLR      | LinkNavigation | OrderPhotoPrints  				   |  
+| 	  CSLR      | LinkNavigation | ViewYourAccount 					   |
+| 	  CSLR      | LinkNavigation | TransferRxlink_unauthenticated  	   |  
+| 	  CSLR      | LinkNavigation | SetupAutoRefills  				   |  
+| 	  CSLR      | LinkNavigation | JoinNowButtoninAccountCreationPage  |
+  
+Then "CSLR-ENDTOENDREG-1" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	     			     |
+| 	CommonData  | ObjectValidation | NewMembershipRadioButton    |
+
+Then "CSLR-ENDTOENDREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		 				 |
+| 	  CSLR      | LinkNavigation | ActivateNowLinkinAccountCreationPage  |
+
+Then "CSLR-ENDTOENDREG-1" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName   | SheetName        | RowId 	     	   |
+| 	  CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CSLR-ENDTOENDREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				       |
+#| 	  CSLR      | LinkNavigation | ShopYourStoreOnline 				   |  
+| 	  CSLR      | LinkNavigation | ViewWeeklyAdd  					   |  
+| 	  CSLR      | LinkNavigation | ShareAndStorePrints  			   |
+| 	  CSLR      | LinkNavigation | ContinueShopping 				   |
+| 	  CSLR      | LinkNavigation | CreateCustomizedPhotoBooks 	       |
+
+
+Then "CSLR-ENDTOENDREG-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery1     |
+|  DataBase     | Query      | WasAccountTableSelectQuery1 |
+|  DataBase     | Query      | MemberTableSelectQuery1     |
+|  DataBase     | Query      | DpsUserTableSelectQuery1    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery1  |
+
+Then "CSLR-ENDTOENDREG-1" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-2
+Scenario: To verify whether confirmation page is displayed when user registered through Join Now button from Loyalty Landing Page.
+
+Given  "CSLR-ENDTOENDREG-2" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-2 |
+
+Then "CSLR-ENDTOENDREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | GlobalLoyaltyBanner_Anonymous |
+| 	  CSLR      | LinkNavigation | JoinNowButton_Anonymous		 |
+| 	  CSLR      | LinkNavigation | RegisterButton				 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+#Then "CSLR-ENDTOENDREG-2" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	     |
+#| 	  CommonData  | ObjectValidation | MaybeLaterRadioButton |
+
+Then "CSLR-ENDTOENDREG-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   	  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId            |saveUserNameAndPasswordInDataSheet | 
+| -			                  | CreateNew 	         | 78456   | 9710744599   | JAN       | 01      | 1943     | Yes      | CSLR          | PersonalInfo | SingleMatchUser1 |     Yes						    |
+
+Then "CSLR-ENDTOENDREG-2" Customer Makes a Selection from Single Page Match:
+|IsThisYOu |
+| No       |
+
+Then "CSLR-ENDTOENDREG-2" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType | WagSuccessMsg |
+|  New			|   Yes			|
+
+Then "CSLR-ENDTOENDREG-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery1     |
+|  DataBase     | Query      | WasAccountTableSelectQuery1 |
+|  DataBase     | Query      | MemberTableSelectQuery1     |
+|  DataBase     | Query      | DpsUserTableSelectQuery1    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery1  |
+
+Then "CSLR-ENDTOENDREG-2" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-3
+Scenario: To verify whether user able to attaches the loyalty account from express refill order confirmation page
+
+Given  "CSLR-ENDTOENDREG-3" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-3 |
+
+Then "CSLR-ENDTOENDREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | UseExpressRefill       |
+
+Then "CSLR-ENDTOENDREG-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName	  | SheetName      | RowId 	      |
+| Pharmacy        | ExpressRefill  | Production   |
+
+Then "CSLR-ENDTOENDREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName 				   | SheetName  | RowId      |
+| PharmacyHomePageLinkVerification | AddAdult   | SubmitRx   |
+
+Then "CSLR-ENDTOENDREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | JoinNowButtonExpressOrderPage |
+| 	  CSLR      | LinkNavigation | RegisterButton    			 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "CSLR-ENDTOENDREG-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName   | SheetName        | 			RowId 	     	     	|
+| 	  CommonData  | ObjectValidation | MaybeLaterRadioButtonValidation2 |
+
+Then "CSLR-ENDTOENDREG-3" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId             |saveUserNameAndPasswordInDataSheet | 
+| 		7120121064828         | 	ActivateNow      | 78456   | -		 | OCT       | 10      | 1974     | Yes      | CSLR          | PersonalInfo | ActivateUserInfo1 |     Yes						    |
+
+Then "CSLR-ENDTOENDREG-3" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CSLR-ENDTOENDREG-3" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  Activate     | 
+
+Then "CSLR-ENDTOENDREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			    	   |
+| 	  CSLR      | LinkNavigation | ContinueButtoninAccountCreationPage |
+| 	  CSLR      | LinkNavigation | DownloadAppWithURL				   |
+| 	  CSLR      | LinkNavigation | ShopforProdcutsOnline  			   |  
+| 	  CSLR      | LinkNavigation | RefillPrescriptions  			   |  
+| 	  CSLR      | LinkNavigation | CreateaShoppingList  			   |  
+| 	  CSLR      | LinkNavigation | CheckOrderStatusAndHistory  		   |  
+| 	  CSLR      | LinkNavigation | OrderPhotoPrints  				   |  
+| 	  CSLR      | LinkNavigation | ViewYourAccount 					   |
+| 	  CSLR      | LinkNavigation | TransferRxlink_unauthenticated  	   |  
+| 	  CSLR      | LinkNavigation | SetupAutoRefills  				   |  
+#| 	  CSLR      | LinkNavigation | ShopYourStoreOnline 				   |  
+| 	  CSLR      | LinkNavigation | ViewWeeklyAdd  					   |  
+| 	  CSLR      | LinkNavigation | ShareAndStorePrints  			   |
+| 	  CSLR      | LinkNavigation | ContinueShopping 				   |
+| 	  CSLR      | LinkNavigation | CreateCustomizedPhotoBooks 	       |
+
+Then "CSLR-ENDTOENDREG-3" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	    |
+|  DataBase     | Query      | LookupTableSelectQuery10     |
+#|  DataBase     | Query      | WasAccountTableSelectQuery10 |
+#|  DataBase     | Query      | MemberTableSelectQuery10     |
+#|  DataBase     | Query      | DpsUserTableSelectQuery10    |
+#|  DataBase     | Query      | DpsContactInfoSelectQuery10  |
+
+Then "CSLR-ENDTOENDREG-3" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-4
+Scenario: To verify the Confirmation page for Rx Registration through Register button via register link at the header
+
+Given  "CSLR-ENDTOENDREG-4" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-4 |
+
+# Added a step as per Lincoln requirement - Kusuma kumari, Sassr
+
+Then "CSLR-ENDTOENDREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		|ClickObjectinTab|
+| 	  CSLR      | LinkNavigation | GlobalShoppingList	|Yes			 |
+| 	  CSLR      | LinkNavigation | SLRegisterButton	    |No				 |
+| 	  CSLR      | LinkNavigation | SignupForRxAccess    |No				 |
+
+Then "CSLR-ENDTOENDREG-4" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | invaliddata1  |
+
+Then "CSLR-ENDTOENDREG-4" Customer validates fields in Walgreens and Loylaty Account creation page:
+| InputFileName | SheetName      | RowId 	      |
+|    CSLR		|   GenaralInfo  |  invalidata2   |
+
+Then "CSLR-ENDTOENDREG-4" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    					 |BalanceRewardsorPhone | Phone   		| Zipcode          |
+| CommonData    | loyaltyinfo | BalanceAndZipcodeFieldError1 | Lessthan10digit      |  Only10digit  |  Lessthan5digit  |
+
+Then "CSLR-ENDTOENDREG-4" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | invaliddata2  |
+
+Then "CSLR-ENDTOENDREG-4" Customer verifies the error validation in Loyalty account creation Page:
+| InputFileName | SheetName   | RowId    			 |BalanceRewardsorPhone | Phone   | Zipcode |ZipcodeExtn 	|
+| CommonData    | loyaltyinfo | Invalid13digitError  | Invalid13digit       |  -      |   -     |Lessthan4digit |
+
+Then "CSLR-ENDTOENDREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				    	 |TargetOverlay |TargetNewWindow |
+| 	  CSLR      | LinkNavigation | LearnMoreLink						 |    Yes    	|  		- 		 |		
+| 	  CSLR      | LinkNavigation | Overlayclose							 |    -	    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | TermsAndconditions				 	 |    Yes    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | Overlayclose						 	 |    -	    	|  		- 		 |
+| 	  CSLR      | LinkNavigation | SignInLinkinAccountCreationPage	 	 |     -	    |  		- 		 |
+| 	  CSLR      | LinkNavigation | RegisterButton					 	 |    -	   		|  		- 		 |
+| 	  CSLR      | LinkNavigation | SignupForRxAccess    			 	 |	  _			|  		- 		 |
+| 	  CSLR      | LinkNavigation | OnlinePrivacyPolicyLinkinRxAccountPage|    -	   		|  		Yes		 |
+
+Then "CSLR-ENDTOENDREG-4" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | validdata1    |
+
+Then "CSLR-ENDTOENDREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |
+| 	  CSLR      | LinkNavigation | AcceptButton						   |
+| 	  CSLR      | LinkNavigation | DownloadApp  					   |
+| 	  CSLR      | LinkNavigation | ShopforProdcutsOnline  			   |  
+| 	  CSLR      | LinkNavigation | RefillPrescriptionsUnAuth		   | 
+| 	  CSLR      | LinkNavigation | SetupRefillReminders				   | 
+| 	  CSLR      | LinkNavigation | CreateaShoppingList  			   |  
+| 	  CSLR      | LinkNavigation | CheckOrderStatusAndHistory  		   |  
+| 	  CSLR      | LinkNavigation | OrderPhotoPrints  				   |  
+| 	  CSLR      | LinkNavigation | ViewYourAccount 					   |
+| 	  CSLR      | LinkNavigation | TransferRxlink_Rxuser        	   |  
+| 	  CSLR      | LinkNavigation | SetupAutoRefills_RxUnauth		   |  
+#| 	  CSLR      | LinkNavigation | ShopYourStoreOnline 				   |  
+| 	  CSLR      | LinkNavigation | ViewWeeklyAdd  					   |  
+| 	  CSLR      | LinkNavigation | ShareAndStorePrints  			   |
+| 	  CSLR      | LinkNavigation | ContinueShopping 				   |
+| 	  CSLR      | LinkNavigation | CreateCustomizedPhotoBooks 	       |
+
+
+Then "CSLR-ENDTOENDREG-4" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+#|  DataBase     | Query      | LookupTableSelectQuery4     |
+|  DataBase     | Query      | WasAccountTableSelectQuery4 |
+|  DataBase     | Query      | MemberTableSelectQuery4     |
+|  DataBase     | Query      | DpsUserTableSelectQuery4    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery4  |
+
+Then "CSLR-ENDTOENDREG-4" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-4 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-5
+Scenario: To verify the Confirmation modal for Rx Registration and Create Loyalty through Pharmacy Chat from Rx Home Page
+
+Given  "CSLR-ENDTOENDREG-5" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-5 |
+
+Then "CSLR-ENDTOENDREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		|
+| 	  CSLR      | LinkNavigation | PharmacyChatLink	    |
+| 	  CSLR      | LinkNavigation | RegisterNowLink      |
+
+Then "CSLR-ENDTOENDREG-5" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | validdata2    |
+
+Then "CSLR-ENDTOENDREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |TargetOverlay |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |   -		  |
+| 	  CSLR      | LinkNavigation | AcceptButtonWithLtyReg			   |   Yes		  |
+
+Then "CSLR-ENDTOENDREG-5" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery5     |
+|  DataBase     | Query      | WasAccountTableSelectQuery5 |
+|  DataBase     | Query      | MemberTableSelectQuery5     |
+|  DataBase     | Query      | DpsUserTableSelectQuery5    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery5  |
+
+Then "CSLR-ENDTOENDREG-5" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-6
+Scenario: To verify the Confirmation modal for Rx Registration and Create Loyalty through Refill Prescriptions
+
+Given  "CSLR-ENDTOENDREG-6" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-6 |
+
+Then "CSLR-ENDTOENDREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		|
+| 	  CSLR      | LinkNavigation | ManageYourRxs	    |
+| 	  CSLR      | LinkNavigation | RegisterNowLink      |
+
+Then "CSLR-ENDTOENDREG-6" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | validdata3    |
+
+Then "CSLR-ENDTOENDREG-6" Customer finds no match found error message in the Application:
+| nomatcherrorMsg  |Submit |  NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+|      Yes		   |  -	   |			-				 |					-		   |
+
+Then "CSLR-ENDTOENDREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	    			 	 |
+| 	  CSLR      | LinkNavigation | continueButton  			     |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 | 
+| 	  CSLR      | LinkNavigation | AcceptButtoninHippaPage    	 |
+
+Then "CSLR-ENDTOENDREG-6" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode1    | Yes 				| 	MATCHED  |
+
+Given "CSLR-ENDTOENDREG-6" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSLR-ENDTOENDREG-6" Customer selects the CSC Window
+
+And "CSLR-ENDTOENDREG-6" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode1    |
+
+Then "CSLR-ENDTOENDREG-6" Customer selects the Default Window
+
+Then "CSLR-ENDTOENDREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| TargetOverlay  |
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|   -			 |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				|  		-	     |
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify	  	|   Yes			 |
+
+Then "CSLR-ENDTOENDREG-6" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+#|  DataBase     | Query      | LookupTableSelectQuery6     |
+|  DataBase     | Query      | WasAccountTableSelectQuery6 |
+|  DataBase     | Query      | MemberTableSelectQuery6     |
+|  DataBase     | Query      | DpsUserTableSelectQuery6    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery6  |
+
+Then "CSLR-ENDTOENDREG-6" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-6 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-7
+Scenario: To verify whether a new user is able to create AARP membership and creates Loyalty account
+
+Given  "CSLR-ENDTOENDREG-7" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-7 |
+
+Then "CSLR-ENDTOENDREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 			  	   |
+| 	  CSLR      | LinkNavigation | AARPLink 		  	   |
+| 	  CSLR      | LinkNavigation | JoinNowButtonAnonymous  |
+| 	  CSLR      | LinkNavigation | RegisterButtonAARPPage  |
+
+Then "CSLR-ENDTOENDREG-7" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day  | DOB-Year | AARPNumber    |GuestUser  | InputFileName | SheetName    | RowId      |saveUserNameAndPasswordInDataSheet |
+|		-			          |		 -	             | 60015   | Random  | Random 	 |   Random | Random   |  3000000026   | Yes       | 	CSLR   	   | PersonalInfo | lightuser2 |         Yes					   |
+
+Then "CSLR-ENDTOENDREG-7" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |AARPMessageType |
+| 	Guest	  |  New	      | 	Success	   |
+
+Then "CSLR-ENDTOENDREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				       |
+| 	  CSLR      | LinkNavigation | DownloadApp  					   |
+| 	  CSLR      | LinkNavigation | ShopforProdcutsOnline  			   |  
+| 	  CSLR      | LinkNavigation | RefillPrescriptions  			   |  
+| 	  CSLR      | LinkNavigation | CreateaShoppingList  			   |  
+| 	  CSLR      | LinkNavigation | CheckOrderStatusAndHistory  		   |  
+| 	  CSLR      | LinkNavigation | OrderPhotoPrints  				   |  
+| 	  CSLR      | LinkNavigation | ViewYourAccount 					   |
+| 	  CSLR      | LinkNavigation | TransferRxlink_unauthenticated  	   |  
+| 	  CSLR      | LinkNavigation | SetupAutoRefills  				   |  
+#| 	  CSLR      | LinkNavigation | ShopYourStoreOnline 				   |  
+| 	  CSLR      | LinkNavigation | ViewWeeklyAdd  					   |  
+| 	  CSLR      | LinkNavigation | ShareAndStorePrints  			   |
+| 	  CSLR      | LinkNavigation | ContinueShopping 				   |
+| 	  CSLR      | LinkNavigation | CreateCustomizedPhotoBooks 	       |
+
+Then "CSLR-ENDTOENDREG-7" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+#|  DataBase     | Query      | LookupTableSelectQuery7     |
+#|  DataBase     | Query      | WasAccountTableSelectQuery7 |
+#|  DataBase     | Query      | MemberTableSelectQuery7     |
+#|  DataBase     | Query      | DpsUserTableSelectQuery7    |
+#|  DataBase     | Query      | DpsContactInfoSelectQuery7  |
+
+Then "CSLR-ENDTOENDREG-7" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-7 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-8
+Scenario: To verify whether a existing user is able to create AARP membership and attachesLoyalty account
+
+Given  "CSLR-ENDTOENDREG-8" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-8 |
+
+Then "CSLR-ENDTOENDREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "CSLR-ENDTOENDREG-8" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId         |saveUserNameAndPasswordInDataSheet|
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | Activateuser1 |			Yes					   |
+
+Then "CSLR-ENDTOENDREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 			   |
+| 	  CSLR      | LinkNavigation | AARPLink 		   |
+| 	  CSLR      | LinkNavigation | LinkMembershipLink  |
+
+Then "CSLR-ENDTOENDREG-8" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | AARPNumber |GuestUser |
+|		7120121064891         |		 -	             | 94523   | -			 | DEC   	 |   12    | 1945     |  1234567   |     -	  |
+ 
+Then "CSLR-ENDTOENDREG-8" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CSLR-ENDTOENDREG-8" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |AARPMessageType |
+| -  		  |  Activate     | Inconvenience  |
+
+Then "CSLR-ENDTOENDREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			    	   |
+| 	  CSLR      | LinkNavigation | DownloadApp	     				   |
+| 	  CSLR      | LinkNavigation | ShopforProdcutsOnline  			   |  
+| 	  CSLR      | LinkNavigation | RefillPrescriptions  			   |  
+| 	  CSLR      | LinkNavigation | CreateaShoppingList  			   |  
+| 	  CSLR      | LinkNavigation | CheckOrderStatusAndHistory  		   |  
+| 	  CSLR      | LinkNavigation | OrderPhotoPrints  				   |  
+| 	  CSLR      | LinkNavigation | ViewYourAccount 					   |
+| 	  CSLR      | LinkNavigation | TransferRxlink_unauthenticated  	   |  
+| 	  CSLR      | LinkNavigation | SetupAutoRefills  				   |  
+#| 	  CSLR      | LinkNavigation | ShopYourStoreOnline 				   |  
+| 	  CSLR      | LinkNavigation | ViewWeeklyAdd  					   |  
+| 	  CSLR      | LinkNavigation | ShareAndStorePrints  			   |
+| 	  CSLR      | LinkNavigation | ContinueShopping 				   |
+| 	  CSLR      | LinkNavigation | CreateCustomizedPhotoBooks 	       |
+
+Then "CSLR-ENDTOENDREG-8" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery9     |
+|  DataBase     | Query      | WasAccountTableSelectQuery9 |
+|  DataBase     | Query      | MemberTableSelectQuery9     |
+|  DataBase     | Query      | DpsUserTableSelectQuery9    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery9  |
+
+Then "CSLR-ENDTOENDREG-8" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-8 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-9
+Scenario: To verify the display of confirmation page where AARP is successful
+
+Given  "CSLR-ENDTOENDREG-9" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-9 |
+
+And "CSLR-ENDTOENDREG-9" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 		| SaveUserNameFlag |
+| Registration  | RxRegistration | RxNewMembership1 | Yes			   |
+
+Then "CSLR-ENDTOENDREG-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-ENDTOENDREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 			   		|
+| 	  CSLR      | LinkNavigation | AARPLink 		        |
+| 	  CSLR      | LinkNavigation | JoinNowButtonAnonymous   |
+
+Then "CSLR-ENDTOENDREG-9" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 	SheetName 	    | RowId            |
+| -		             | Yes    | - 	     | Registration  | 	RxRegistration	| RxNewMembership1 |
+
+Then "CSLR-ENDTOENDREG-9" Customer validates the Prepopulated profile information in the Balance Rewards or AARP or WAG Account Creation Page:
+| InputFileName | 	SheetName 				| RowId        		  |
+|   CSLR        | 	PrepopvalidationData 	| BalanceRewardsData1 |
+
+Then "CSLR-ENDTOENDREG-9" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | AARPNumber    |GuestUser |
+|		-			          |		 -	             | -       | -			 | -		 |   -     |   -      |  3000000004   |     -	 |
+
+Then "CSLR-ENDTOENDREG-9" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |AARPMessageType |
+| -  		  |  	-   	  | Success		   |
+
+Then "CSLR-ENDTOENDREG-9" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery2     |
+|  DataBase     | Query      | WasAccountTableSelectQuery2 |
+|  DataBase     | Query      | MemberTableSelectQuery2     |
+|  DataBase     | Query      | DpsUserTableSelectQuery2    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery2  |
+
+
+Then "CSLR-ENDTOENDREG-9" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-9 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-12
+Scenario: To verify the display of confirmation page for creating loyalty via loyalty intent registration page
+
+Given  "CSLR-ENDTOENDREG-12" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-12 |
+
+Then "CSLR-ENDTOENDREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | RegisterLink					 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "CSLR-ENDTOENDREG-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |saveUserNameAndPasswordInDataSheet|
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | 		CSLR     | PersonalInfo | lightuser1 | 			Yes					    |
+
+Then "CSLR-ENDTOENDREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 							|
+| 	  CSLR      | LinkNavigation | YourAccountLink  				|
+| 	  CSLR      | LinkNavigation | JoinNowButtoninAccountHomePage   |
+
+Then "CSLR-ENDTOENDREG-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone      | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+| -                           | -         		     | 60015   | 8471234567 | NOV       | 11      | 1986     |       -    |
+
+Then "CSLR-ENDTOENDREG-12" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	New 	  |
+
+Then "CSLR-ENDTOENDREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 								  |
+| 	  CSLR      | LinkNavigation | GetStartedButtoninAccountCreationPage  |
+| 	  CSLR      | LinkNavigation | MoveInfoButtoninAccountCreationPage 	  |
+
+
+#Then "CSLR-ENDTOENDREG-12" Customer runs the Required Query from the DB:
+#| InputFileName | SheetName  | RowId      	   	 	  	   |
+#|  DataBase     | Query      | LookupTableSelectQuery3     |
+#|  DataBase     | Query      | WasAccountTableSelectQuery3 |
+#|  DataBase     | Query      | MemberTableSelectQuery3     |
+#|  DataBase     | Query      | DpsUserTableSelectQuery3    |
+#|  DataBase     | Query      | DpsContactInfoSelectQuery3  |
+
+
+Then "CSLR-ENDTOENDREG-12" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-12 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-13
+Scenario: To verify display of confirmation page when user attaches loyalty via account home page
+
+Given  "CSLR-ENDTOENDREG-13" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-13 |
+
+Then "CSLR-ENDTOENDREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		|
+| 	  CSLR      | LinkNavigation | RegisterLink		    |
+| 	  CSLR      | LinkNavigation | SignupForRxAccess    |
+
+Then "CSLR-ENDTOENDREG-13" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	        |
+|  Registration  | RxRegistration | ActivationData1 |
+
+Then "CSLR-ENDTOENDREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |
+| 	  CSLR      | LinkNavigation | AcceptButton						   |
+| 	  CSLR      | LinkNavigation | YourAccountLink  				   |
+| 	  CSLR      | LinkNavigation | ActivateNowinAccountHomePage		   |
+
+Then "CSLR-ENDTOENDREG-13" Customer validates the Prepopulated profile information in the Balance Rewards or AARP or WAG Account Creation Page:
+| InputFileName | 	SheetName 				| RowId        		  |
+|   CSLR        | 	PrepopvalidationData 	| BalanceRewardsData2 |
+
+Then "CSLR-ENDTOENDREG-13" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |  GuestUser |
+|	7120121064935             |		 -	             | 60015   | -			 | -		 |   -     |   -      |      -	   |
+
+Then "CSLR-ENDTOENDREG-13" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CSLR-ENDTOENDREG-13" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  	Activate  |
+
+Then "CSLR-ENDTOENDREG-13" Customer validates the information from Manage Your Personal Information Page:
+| BillingAddress | Zipcode | Phone |
+|	-			 |   Yes   |  Yes  |
+
+Then "CSLR-ENDTOENDREG-13" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	   |
+|  DataBase     | Query      | LookupTableSelectQuery8     |
+|  DataBase     | Query      | WasAccountTableSelectQuery8 |
+|  DataBase     | Query      | MemberTableSelectQuery8     |
+|  DataBase     | Query      | DpsUserTableSelectQuery8    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery8  |
+
+
+Then "CSLR-ENDTOENDREG-13" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-13 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-14
+Scenario: To verify the Confirmation Modal of Rx Registration and Create Loyalty for Logged in Light user through Refill prescriptions
+
+Given  "CSLR-ENDTOENDREG-14" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-14 |
+
+Then "CSLR-ENDTOENDREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 |
+| 	  CSLR      | LinkNavigation | RegisterLink		   			 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "CSLR-ENDTOENDREG-14" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |saveUserNameAndPasswordInDataSheet|
+|		-                     | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | 		CSLR     | PersonalInfo | lightuser3 | 				Yes				    |
+
+Then "CSLR-ENDTOENDREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		  |
+| 	  CSLR      | LinkNavigation | ManageYourRxsLiteReg	  |
+| 	  CSLR      | LinkNavigation | CompleteRegButton 	  |
+
+Then "CSLR-ENDTOENDREG-14" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration | SingleMatchData1 |
+
+Then "CSLR-ENDTOENDREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		  			  |
+| 	  CSLR      | LinkNavigation | ContinueButtonToSingleMatchPage	  |
+| 	  CSLR      | LinkNavigation | AlmostDoneReviewYourInfoHeader     |
+| 	  CSLR      | LinkNavigation | YesLinkThisInfoRadio	  			  |
+| 	  CSLR      | LinkNavigation | SubmitButtoninSingleMatchPage	  |
+| 	  CSLR      | LinkNavigation | AcceptButtonForRxReg	  			  |
+
+
+Then "CSLR-ENDTOENDREG-14" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode1    | Yes 				| 	MATCHED  |
+
+Given "CSLR-ENDTOENDREG-14" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSLR-ENDTOENDREG-14" Customer selects the CSC Window
+
+And "CSLR-ENDTOENDREG-14" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode1    |
+
+Then "CSLR-ENDTOENDREG-14" Customer selects the Default Window
+
+Then "CSLR-ENDTOENDREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| TargetOverlay  |
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|   -			 |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				|  		-	     |
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify	  	|   Yes			 |
+
+
+
+
+Then "CSLR-ENDTOENDREG-14" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-14 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-15
+Scenario: To verify the Confirmation Modal of Rx Registration and Attach Loyalty for Logged in Light user through Pharmacy Chat Page
+
+Given  "CSLR-ENDTOENDREG-15" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-15 |
+
+Then "CSLR-ENDTOENDREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 |
+| 	  CSLR      | LinkNavigation | RegisterLink		   			 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "CSLR-ENDTOENDREG-15" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId             |saveUserNameAndPasswordInDataSheet|
+|		-                     | MaybeLater           | -       | -	   | -     	   | -       | -        |Yes       | 	CSLR       | PersonalInfo | ActivateUserInfo2 | 				Yes				    |
+
+Then "CSLR-ENDTOENDREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		      |
+| 	  CSLR      | LinkNavigation | PharmacyChatLinkLightReg	  |
+| 	  CSLR      | LinkNavigation | CompleteRegButton 	      |
+
+Then "CSLR-ENDTOENDREG-15" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	ActivationData2	 |
+
+Then "CSLR-ENDTOENDREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		          | TargetOverlay  |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	  |		-		   |
+| 	  CSLR      | LinkNavigation | AcceptButtonToRxChatOverlay    |     Yes		   |
+
+Then "CSLR-ENDTOENDREG-15" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	   	 	  	    |
+|  DataBase     | Query      | LookupTableSelectQuery12     |
+|  DataBase     | Query      | WasAccountTableSelectQuery12 |
+|  DataBase     | Query      | MemberTableSelectQuery12     |
+|  DataBase     | Query      | DpsUserTableSelectQuery12    |
+|  DataBase     | Query      | DpsContactInfoSelectQuery12  |
+
+
+Then "CSLR-ENDTOENDREG-15" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-15 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-16
+Scenario: To verify whether Your health dashboard page is displayed if the user clicks the continue button in confirmation page of Light + maybe later for 
+Your health dsahboard link in health information page
+
+Given  "CSLR-ENDTOENDREG-16" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-16 |
+
+Then "CSLR-ENDTOENDREG-16" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 	   |
+| 	  CSLR      | LinkNavigation | HealthInformationLink			   |
+| 	  CSLR      | LinkNavigation | YourHealthDashBoardLinkAnonymous    |
+| 	  CSLR      | LinkNavigation | RegisterBTNtoLightRegPage	       |
+
+Then "CSLR-ENDTOENDREG-16" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     |
+|		-                     | MaybeLater           | -       | -	   | -     	   | -       | -        |Yes       | 	CSLR       | PersonalInfo | lightreg4 |
+
+Then "CSLR-ENDTOENDREG-16" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 	   |
+| 	  CSLR      | LinkNavigation | SelectYourAvatarAndScreeNameHeader  |
+| 	  CSLR      | LinkNavigation | ContinueButtonToAvatarPage	       |
+
+Then "CSLR-ENDTOENDREG-16" Customer selects Avatar Image, Screen Name and creates MedHelp Account:
+| InputFileName | SheetName      | RowId 	     			|
+| 	  CSLR      | MedHelpData    | MedHelpAccountCreation1  |
+
+Then "CSLR-ENDTOENDREG-16" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-16 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-17
+Scenario: To verify whether user can able to post a comment when user register for Walgreens and create Loyalty(with single match) via Diet and
+exercise health center and Navigates to Medhelp site
+
+Given  "CSLR-ENDTOENDREG-17" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-17 |
+
+Then "CSLR-ENDTOENDREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			      |
+| 	  CSLR      | LinkNavigation | HealthInformationLink	      |
+| 	  CSLR      | LinkNavigation | DietAndFitnessGetStartedLink	  |
+| 	  CSLR      | LinkNavigation | WeightLossDietcommunity        |
+| 	  CSLR      | LinkNavigation | FirstPostLink			      |
+
+Then "CSLR-ENDTOENDREG-17" Customer posts the comment in MedHelp Post A Question Page:
+|Targetpage   |
+| SigninPage  |
+
+Then "CSLR-ENDTOENDREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			   |
+| 	  CSLR      | LinkNavigation | RegisterBTNtoLightRegPage   |
+
+Then "CSLR-ENDTOENDREG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode |   Phone 	 | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     	   |
+|		-                     |    CreateNew         | 78456   |  9710744599 | JAN       | 01      | 1943     |Yes       | 	CSLR         | PersonalInfo | SingleMatchUser2 |
+
+Then "CSLR-ENDTOENDREG-17" Customer Makes a Selection from Single Page Match:
+|IsThisYOu |
+| No       |
+
+Then "CSLR-ENDTOENDREG-17" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New	      | 
+
+Then "CSLR-ENDTOENDREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 	   |
+| 	  CSLR      | LinkNavigation | SelectYourAvatarAndScreeNameHeader  |
+| 	  CSLR      | LinkNavigation | ContinueButtonToAvatarPage	       |
+
+Then "CSLR-ENDTOENDREG-17" Customer selects Avatar Image, Screen Name and creates MedHelp Account:
+| InputFileName | SheetName      | RowId 	     			|
+| 	  CSLR      | MedHelpData    | MedHelpAccountCreation2  |
+
+Then "CSLR-ENDTOENDREG-17" Customer posts the comment in MedHelp Post A Question Page:
+|Targetpage   |
+| -           |
+
+Then "CSLR-ENDTOENDREG-17" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-17 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-18
+Scenario: To verify whether create a tracker form is displayed while user creates walgreens account and attaches(with no match) loyalty via start tracking link  
+under weight tracker section. 
+
+Given  "CSLR-ENDTOENDREG-18" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-18 |
+
+Then "CSLR-ENDTOENDREG-18" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			   |
+| 	  CSLR      | LinkNavigation | HealthInformationLink	   |
+| 	  CSLR      | LinkNavigation | ToolsAndTrackersLink   	   |
+| 	  CSLR      | LinkNavigation | WeightTrackerLink		   |
+| 	  CSLR      | LinkNavigation | RegisterButtonToLiteReg	   |
+
+Then "CSLR-ENDTOENDREG-18" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode |   Phone 	 | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     |
+|		1234567890            |    ActivateNow       | 85345   |  		-	 | JUN       | 06      | 1990     | Yes      | 	CSLR         | PersonalInfo | lightreg8 |
+
+Then "CSLR-ENDTOENDREG-18" Customer finds no match found error message in the Application:
+|  nomatcherrorMsg  | Submit  |  NoMatchFoundOverlayMessage | ValidationFailureOverlayMsg |
+|	  Yes			|  -      |				-				|				-			  |		
+
+Then "CSLR-ENDTOENDREG-18" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     				 	   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninNoMatchErrorpage      |
+| 	  CSLR      | LinkNavigation | SelectYourAvatarAndScreeNameHeader  |
+| 	  CSLR      | LinkNavigation | ContinueButtonToAvatarPage	       |
+
+Then "CSLR-ENDTOENDREG-18" Customer selects Avatar Image, Screen Name and creates MedHelp Account:
+| InputFileName | SheetName      | RowId 	     			|
+| 	  CSLR      | MedHelpData    | MedHelpAccountCreation3  |
+
+Then "CSLR-ENDTOENDREG-18" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-18 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-19
+Scenario: To verify whether avatar page is displayed and health trackers and tools page is displayed while user user logs in for the first time via 
+Your health dashboard link at the top of health information page 
+
+Given  "CSLR-ENDTOENDREG-19" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-19 |
+
+And "CSLR-ENDTOENDREG-19" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CSLR-ENDTOENDREG-19" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     |saveUserNameAndPasswordInDataSheet |
+|		-                     | MaybeLater           | -       | -	   | -     	   | -       | -        |Yes       | 	CSLR       | PersonalInfo | lightreg5 |				Yes					  |
+
+Then "CSLR-ENDTOENDREG-19" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "CSLR-ENDTOENDREG-19" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			   		   |
+| 	  CSLR      | LinkNavigation | HealthInformationLink	   		   |
+| 	  CSLR      | LinkNavigation | YourHealthDashBoardLinkAnonymous    |
+
+Then "CSLR-ENDTOENDREG-19" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName  | 	SheetName    | RowId     |
+| -                  | Yes    | -        |  CSLR          |		PersonalInfo | lightreg5 |
+
+Then "CSLR-ENDTOENDREG-19" Customer selects Avatar Image, Screen Name and creates MedHelp Account:
+| InputFileName | SheetName      | RowId 	     			|
+| 	  CSLR      | MedHelpData    | MedHelpAccountCreation1  |
+
+Then "CSLR-ENDTOENDREG-19" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     		  				   |
+| 	  CSLR      | LinkNavigation | AddATrackerButton	 				   |
+| 	  CSLR      | LinkNavigation | BMICalGetStartedLink	   				   |
+| 	  CSLR      | LinkNavigation | BMRCalGetStartedLink	   				   |
+| 	  CSLR      | LinkNavigation | OvulationCalculatorGetStartedLink	   |
+| 	  CSLR      | LinkNavigation | NutritionSearchGetStartedLink	  	   |
+| 	  CSLR      | LinkNavigation | BabyGrowthCalculatorGetStartedLink	   |
+| 	  CSLR      | LinkNavigation | CaloriesBurnedCalculatorGetStartedLink  |
+| 	  CSLR      | LinkNavigation | DiabetesRiskAssesmentGetStartedLink	   |
+
+Then "CSLR-ENDTOENDREG-19" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-19 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-20
+Scenario: To verify whether the Rx registration page is displayed with loyalty supressed when an anonymous user clicks on the Member sign in to view your 
+current savings link in PSC page
+
+Given  "CSLR-ENDTOENDREG-20" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-20 |
+
+And "CSLR-ENDTOENDREG-20" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	  			  |
+| 	CSLR  		 | LinkNavigation  | PharmacyTab    			  |
+| 	CSLR  		 | LinkNavigation  | PrescriptionSavingsClubLink  |
+| 	CSLR  		 | LinkNavigation  | SigninorCreateWagAcountLink  |
+| 	CSLR  		 | LinkNavigation  | RegisterBTNtoRxRegPage		  |
+
+Then "CSLR-ENDTOENDREG-20" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | PSCRxRegPageSub1    |
+| 	CommonData  | ObjectValidation | PSCRxRegPageSub2    |
+
+Then "CSLR-ENDTOENDREG-20" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-20 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-21
+Scenario: To verify whether Confirmation page is displayed when user creates Walgreens and Loyalty account via Your Account Link from header
+
+Given  "CSLR-ENDTOENDREG-21" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-21 |
+
+And "CSLR-ENDTOENDREG-21" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	  			  |
+| 	CSLR  		 | LinkNavigation  | YourAccountLinkAnonymous	  |
+| 	CSLR  		 | LinkNavigation  | RegisterButton				  |
+| 	CSLR  		 | LinkNavigation  | SignUpForBasisAccessButton   |
+
+
+Then "CSLR-ENDTOENDREG-21" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone    | DOB-Month | DOB-Day  | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     |
+|		-                     | CreateNew            | 60015   | Random   | Random    | Random   | Random   |Yes       | 	CSLR       | PersonalInfo | lightreg6 |
+
+Then "CSLR-ENDTOENDREG-21" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New	      | 
+
+Then "CSLR-ENDTOENDREG-21" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-21 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-22
+Scenario: To verify whether confirmation modal is displayed when logged in light user is attaching Loyalty account via Activate now from landing page
+
+Given  "CSLR-ENDTOENDREG-22" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-22 |
+
+And "CSLR-ENDTOENDREG-22" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CSLR-ENDTOENDREG-22" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId             |
+|		-                     | MaybeLater           | -       | -	   | -     	   | -       | -        |Yes       | 	CSLR       | PersonalInfo | ActivateUserInfo3 |
+
+And "CSLR-ENDTOENDREG-22" Customer attaches loyalty through balance rewards in home page:
+| InputFileName | SheetName   | RowId    	  |
+| CommonData    | loyaltyinfo | ActivateUser2 |
+
+Then "CSLR-ENDTOENDREG-22" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName | SheetName        | RowId 	             |
+| 	CommonData  | ObjectValidation | ActivateRadioButton |
+
+Then "CSLR-ENDTOENDREG-22" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser|
+|		7120121065435         | ActivateNow          | 54908   | -	   | JUL   	   | 07      |  1923    |	-      |
+
+Then "CSLR-ENDTOENDREG-22" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CSLR-ENDTOENDREG-22" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |
+|  Activation	|
+
+Then "CSLR-ENDTOENDREG-22" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-22 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#Commented steps are NOT APPLICABLE DUE TO incoming IN CSLR-3473 for RAMBLER
+@CSLR-ENDTOENDREG-23
+Scenario: To verify whether confirmation modal is displayed when a logged in Rx user attaches with discrepency his Loyalty account via Rx pharmacy chat button in pharmacy home page
+
+Given  "CSLR-ENDTOENDREG-23" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-23 |
+
+And "CSLR-ENDTOENDREG-23" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      	     |
+| HomepageLinks  | Homepage  		| Global Register    |
+| 	CSLR  		 | LinkNavigation   | SignupForRxAccess  |
+
+Then "CSLR-ENDTOENDREG-23" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	ActivationData3	 |
+
+And "CSLR-ENDTOENDREG-23" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButton		  		      	 |
+| 	CSLR  		 | LinkNavigation  | PharmacyChatinRxPage			     |
+#| 	CSLR  		 | LinkNavigation  | ActivateyourMembershipOnlineLInk	 |
+
+#Then "CSLR-ENDTOENDREG-23" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+#| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser|
+#|		7430917810            | 		-            | 61101   | -	   | APR   	   | 04      |  1920    |	-      |
+
+#Then "CSLR-ENDTOENDREG-23" Customer finds the info in We Found Page and clicks Submit:
+#|DiscrepencyOverly |Update  | NotNow |
+#|    Yes		   | Yes    |    -   |
+
+#And "CSLR-ENDTOENDREG-23" Customer clicks on an object and validates the expected results:
+#| InputFileName  | SheetName       | RowId      	    		     	    | ClickObjectOverlay | TargetOverlay |
+#| 	CSLR  		 | LinkNavigation  | BalanceRewardsLogoinRxChatconfirmModal |       Yes		 	 |     Yes		 |
+
+#Then "CSLR-ENDTOENDREG-23" Customer runs the Required Query from the DB:
+#| InputFileName | SheetName  | RowId      	   	 	  	    |
+#|  DataBase     | Query      | LookupTableSelectQuery13     |
+#|  DataBase     | Query      | WasAccountTableSelectQuery13 |
+#|  DataBase     | Query      | MemberTableSelectQuery13     |
+#|  DataBase     | Query      | DpsUserTableSelectQuery13    |
+#|  DataBase     | Query      | DpsContactInfoSelectQuery13  |
+
+Then "CSLR-ENDTOENDREG-23" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-23 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-24
+Scenario: To verify whether the Confirmation modal is displayed when a new user create Walgreens and loyalty account via Refill from account from home page
+
+Given  "CSLR-ENDTOENDREG-24" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-24 |
+
+And "CSLR-ENDTOENDREG-24" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      	    		  |ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation   | RefillFromAccountAnonymous  |			-		  |      Yes	  |
+| 	CSLR  		 | LinkNavigation   | NewtoOnlinePharmacy 		  |			Yes		  |    	  -		  |
+
+Then "CSLR-ENDTOENDREG-24" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	RxRefillReg1	 |
+
+And "CSLR-ENDTOENDREG-24" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButtoninHippaPage	      	 |
+
+Then "CSLR-ENDTOENDREG-24" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode2    | Yes 				| 	MATCHED  |
+
+And "CSLR-ENDTOENDREG-24" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		   	 |ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | PharmacyTabToLoyaltyOverlay  	 |			-	     |      Yes	     |
+
+Given "CSLR-ENDTOENDREG-24" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSLR-ENDTOENDREG-24" Customer selects the CSC Window
+
+And "CSLR-ENDTOENDREG-24" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode2    |
+
+Then "CSLR-ENDTOENDREG-24" Customer selects the Default Window
+
+Then "CSLR-ENDTOENDREG-24" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| TargetOverlay  |
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|    -			 |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				|  		-	     |
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	|  		-	     |
+
+Then "CSLR-ENDTOENDREG-24" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-24 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-25
+Scenario: To verify whether the Confirmation modal is displayed over Rx home page when a Non loyalty light user sign in via header and creates Rx and loyalty account from Infusion services page
+
+Given  "CSLR-ENDTOENDREG-25" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-25 |
+
+And "CSLR-ENDTOENDREG-25" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CSLR-ENDTOENDREG-25" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     |
+|		-                     | MaybeLater           | -       | -	   | -     	   | -       | -        |Yes       | 	CSLR       | PersonalInfo | lightreg7 |
+
+And "CSLR-ENDTOENDREG-25" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	      	 		|ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | InfusionServicesLink 	 		|		-	        | 		-		|
+| 	CSLR  		 | LinkNavigation  | RefillFromAccountLightReg 	 	|		-	        | 		Yes		|
+| 	CSLR  		 | LinkNavigation  | UpdateNowButtonInRefillOverlay |		Yes	        | 		-		|
+
+Then "CSLR-ENDTOENDREG-25" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	             	 |
+|  Registration  | RxRegistration |	RxRefillCompleteRxReg1	 |
+
+And "CSLR-ENDTOENDREG-25" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButtoninHippaPage	      	 |
+
+Then "CSLR-ENDTOENDREG-25" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode3    | Yes 				| 	MATCHED  |
+
+And "CSLR-ENDTOENDREG-25" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		   	 	|ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | PharmacyTabToLoyaltyOverlayUnauth  |			-	    |      Yes	    |
+
+Given "CSLR-ENDTOENDREG-25" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CSLR-ENDTOENDREG-25" Customer selects the CSC Window
+
+And "CSLR-ENDTOENDREG-25" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode3    |
+
+Then "CSLR-ENDTOENDREG-25" Customer selects the Default Window
+
+Then "CSLR-ENDTOENDREG-25" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| TargetOverlay  |
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|    -			 |
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				|  		-	     |
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	|  		-	     |
+
+Then "CSLR-ENDTOENDREG-25" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-25 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-26
+Scenario: To verify whether the Fast Refill overlay is displayed for the Rx auth non loyalty user via PSC  through Sign in / Register overlay 
+
+Given  "CSLR-ENDTOENDREG-26" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-26 |
+
+And "CSLR-ENDTOENDREG-26" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	      	 		|   
+| 	CSLR  		 | LinkNavigation  | PharmacyTab         	 		|	 
+| 	CSLR  		 | LinkNavigation  | PrescriptionSavingsClubLink 	|		
+
+Given "CSLR-ENDTOENDREG-26" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId           | SourcePage |
+| CommonData    | 	login 		| nonloyaltyuser1 | Overlay    |
+
+And "CSLR-ENDTOENDREG-26" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	      	   | 
+| 	CSLR  		 | LinkNavigation  | ManagePrescriptionsHeader |
+
+Then "CSLR-ENDTOENDREG-26" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-26 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-27
+Scenario: To verify whether user is able to reset password via Forgot your password link from Sign in / register page 
+
+Given  "CSLR-ENDTOENDREG-27" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-27 |
+
+Given "CSLR-ENDTOENDREG-27" Customer login to the Yahoo.com:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | ChangePassword1 	|	
+
+And "CSLR-ENDTOENDREG-27" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Then "CSLR-ENDTOENDREG-27" Customer selects required option to retrieve or change login credentials:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | ChangePassword1 	|	
+
+And "CSLR-ENDTOENDREG-27" Customer goes to the Inbox for the email client:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | ChangePassword1 	|	
+
+Then "CSLR-ENDTOENDREG-27" Customer retrieves Username or changes Password from the required email:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | ChangePassword1 	|	
+
+Then "CSLR-ENDTOENDREG-27" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-27 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-ENDTOENDREG-28
+Scenario: To verify whether user is able to retrieve username via Forgot your username link from Sign in / register page 
+
+Given  "CSLR-ENDTOENDREG-28" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-28 |
+
+Given "CSLR-ENDTOENDREG-28" Customer login to the Yahoo.com:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | RetrieveUserName1 	|	
+
+And "CSLR-ENDTOENDREG-28" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Then "CSLR-ENDTOENDREG-28" Customer selects required option to retrieve or change login credentials:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | RetrieveUserName1 	|	
+
+And "CSLR-ENDTOENDREG-28" Customer goes to the Inbox for the email client:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | RetrieveUserName1 	|	
+
+Then "CSLR-ENDTOENDREG-28" Customer retrieves Username or changes Password from the required email:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | RetrieveUserName1 	|	
+
+Then "CSLR-ENDTOENDREG-28" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		 |
+| QC-CSLR       | ENDTOENDREG  | CSLR-ENDTOENDREG-28 |
+

@@ -1,0 +1,268 @@
+package walgreens.ecom.batch.automation.library.pharmacy.pharmacychat;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class PharmacyChatLibrary extends CommonLibrary {
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to Click the chat now link in the CTA chat box.
+     * @Input -
+     * @author - Jagan
+     * @Created - 17 Dec 2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+    public static void ChatNowLinkNavigation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ChatNowinCTAChatbox_LNK="//a[contains(text(),'Chat now')]~XPATH";
+	String ChatLoginPage_H1="//h1[contains(text(),'Pharmacy Chat')]~XPATH";
+	String LoyaltyRegistrationPage_H1="//h1[contains(text(),'Pharmacy Chat')]~XPATH";
+	String PharmacyRegistrationPage_H1="//h1[contains(text(),'Pharmacy Chat')]~XPATH";
+	String CompleteRegistration_BTN="img[title='Complete Registration']~CSS";
+	String CTAChatbox_DIV="=div[id='chatOption']~CSS";
+	String BalanceRewards_IMG = "img[title='Balance Rewards']~CSS";
+	String CloseProceedToPharmacyChat_LNK = "a[id='back']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) 
+	    {
+	    	messagesMap = new HashMap<String, String>();
+	    	stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ClickChatNow=dataMap.get("ClickChatNow").get(0);
+	    String CTAChatboxDisplay=dataMap.get("CTAChatboxDisplay").get(0);
+	    String TargetPage=dataMap.get("TargetPage").get(0);
+		    if(ClickChatNow.equalsIgnoreCase("yes"))
+		    {	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		    System.err.println("1");
+		    //getElementByProperty(ChatNowinCTAChatbox_LNK, browser).click();
+		    getElementByProperty(ChatNowinCTAChatbox_LNK, browser).sendKeys(Keys.RETURN);
+			   /* if(!isElementPresentVerifyClick(ChatNowinCTAChatbox_LNK, browser))
+			    {	
+				
+			    	status=WARNING;
+			    	messagesMap.put("CTA chat box", "Not able to click on Chat Now in CTA box");
+			    }*/
+		    }
+		    if(TargetPage.equalsIgnoreCase("ChatPopUpWindow"))
+				    {
+		    	 String WinHandleBefore=browser.getWindowHandle();
+					for (String NewWinHandle : browser.getWindowHandles()) {
+//					    if (browser.getTitle().contains("Walgreens Pharmacy Chat")) 
+//					    {
+						    browser.switchTo().window(NewWinHandle);
+//						    break;
+//					    }
+					}
+					if (browser.getWindowHandles().size()<=0) {
+					    messagesMap.put("Chat popup window", "Chat popup window is not found");
+					    status = FAIL;
+					    // throw new
+					    // Exception("Chat popup window is not found");
+					}
+					else
+					{
+//					    browser.close();
+					    browser.switchTo().window(WinHandleBefore);
+					}
+			   		   
+		    }else if(TargetPage.equalsIgnoreCase("LoyaltyOverlay"))
+		    {
+			switchToOverlay(browser);
+			if (!isElementPresentVerification(BalanceRewards_IMG, browser)) 
+		    	{
+		    		status=WARNING;
+		    		throw new Exception("Balance rewards Verification object is not present in loyalty overlay");
+		    	}
+			
+			 if(!isElementPresentVerifyClick(CloseProceedToPharmacyChat_LNK, browser))
+			 {
+			     status=WARNING;
+			     messagesMap.put("CTA chat box", "Not able to click on close and proceed to pharmacy chat link in overlay");
+			 }
+			 else
+			 {
+			     switchToDefault(browser);
+			 }
+		    }
+		    else if(TargetPage.equalsIgnoreCase("ChatLoginPage"))
+		    {
+		    	if (!isElementPresentVerification(ChatLoginPage_H1, browser)) 
+		    	{
+		    		status=WARNING;
+		    		throw new Exception("The link is not navigating to the expected target page");
+		    	}
+		    	
+		    }else if(TargetPage.equalsIgnoreCase("LoyaltyRegistrationPage"))
+		    {
+		    	if (!isElementPresentVerification(LoyaltyRegistrationPage_H1, browser)) 
+		    	{
+		    		status=WARNING;
+		    		throw new Exception("The link is not navigating to the expected target page");
+		    	}
+		    	
+		    }else if(TargetPage.equalsIgnoreCase("PharmacyRegistrationPage"))
+		    {
+		    	if (!isElementPresentVerification(PharmacyRegistrationPage_H1, browser)) 
+		    	{
+		    		status=WARNING;
+		    		throw new Exception("The element is not present in the page");
+		    	}
+		    	if (!isElementPresentVerifyClick(CompleteRegistration_BTN, browser))
+		    	{
+		    		status=WARNING;
+		    		throw new Exception("The link is not navigating to the expected target page");
+		    	}
+		    }
+	    if(CTAChatboxDisplay.equals("No"))
+	    {
+	    	 if(!isElementPresentVerification(CTAChatbox_DIV, browser)){
+			    	messagesMap.put("CTA chat box", "CTA chat box is not present as expected");
+			    }
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    public static void VerifyChatWndDisplay(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String WndHandle = browser.getWindowHandle();
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+	    }
+	    if (!browser.getTitle().contains("Walgreens Pharmacy Chat")) {
+		messagesMap.put("Chat popup window", "Chat popup window is not found");
+		status = FAIL;
+		// throw new
+		// Exception("Chat popup window is not found");
+	    }
+	    // browser.close();
+	    browser.switchTo().window(WndHandle);
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to check the display of CTA chat box.
+     * @Input -
+     * @author - Jagan
+     * @Created - 17 Dec 2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+    public static void ChatboxVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CTAChatbox_DIV = "=div[id='chatOption']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DisplayOption = dataMap.get("DisplayOption").get(0);
+	    if (DisplayOption.equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(CTAChatbox_DIV, browser)) {
+		    messagesMap.put("CTA chat box", "CTA chat box is displayed");
+		}
+	    } else if (DisplayOption.equalsIgnoreCase("No")) {
+		if (!isElementPresentVerification(CTAChatbox_DIV, browser)) {
+		    messagesMap.put("CTA chat box", "CTA chat box is not present as expected");
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to check the display of CTA chat box.
+     * @Input -
+     * @author - Jagan
+     * @Created - 17 Dec 2012
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************************ 
+     */
+    public static void CreateLoyaltyMembership(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String JoinBalanceRewards_BTN = "img[title='Join Balance Rewards']~CSS";
+	String NewMemberCheckBox_CHK = "input[id='new_check']~CSS";
+	String ActivateNowCheckBox_CHK = "input[id='new_check']~CSS";
+	String RewardsNumber_TXT = "input[id='rewards']~CSS";
+	String Submit_BTN = "input[title='Submit']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(JoinBalanceRewards_BTN, browser)) {
+		messagesMap.put("Join Balance Rewards", "Join Balance Rewards button is not present as expected");
+		status = WARNING;
+	    }
+	    String CreationType = dataMap.get("CreationType").get(0);
+
+	    if (CreationType.equalsIgnoreCase("NewMembership")) {
+		if (!isElementPresentVerifyClick(NewMemberCheckBox_CHK, browser)) {
+		    messagesMap.put("New Member CheckBox", " New Member CheckBox is not present as expected");
+		    status = WARNING;
+		}
+	    } else if (CreationType.equalsIgnoreCase("ActivateNow")) {
+		if (!dataMap.get("RewardsNumber").get(0).equalsIgnoreCase("-")) {
+		    if (!clearAndEnterText(RewardsNumber_TXT, dataMap.get("RewardsNumber").get(0), browser)) {
+			messagesMap.put("Rewards Number", "Not able to enter Rewards Number");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerifyClick(ActivateNowCheckBox_CHK, browser)) {
+		    messagesMap.put("Activate Now CheckBox", "Acitvate Now CheckBox is not present as expected");
+		    status = WARNING;
+		}
+	    }
+	    isElementPresentVerifyClick(Submit_BTN, browser);
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

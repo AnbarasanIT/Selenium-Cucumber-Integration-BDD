@@ -1,0 +1,1358 @@
+@dailyliving @TDDFulfilment
+Feature:To validate TDD Fulfilment scenarios.
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-01
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for DCCHCL Combo order having Multiple quantity each and in turn shipped in Multiple shipment.
+
+Given "DL-TDDFULFILMENT-01" Customer starts the scenario: 
+| InputFileName | SheetName  		     | 		RowId       		     |
+|	QC-DL		| TDDFULFILMENT			 |      DL-TDDFULFILMENT-01      |
+
+Given "DL-TDDFULFILMENT-01" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-01" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-01" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId             |
+| CommonData    | login     | Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-01" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | DC1           |
+
+Then "DL-TDDFULFILMENT-01" Customer adds Daily Living items to the cart from search.
+
+And "DL-TDDFULFILMENT-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "DL-TDDFULFILMENT-01" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+And "DL-TDDFULFILMENT-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		         |
+| CommonData    | search    | loyaltybonuspoints2    |
+
+Then "DL-TDDFULFILMENT-01" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-01" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-01" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation21 |
+
+Then "DL-TDDFULFILMENT-01" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-01" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL4Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-TDDFULFILMENT-01" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |   -	 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  -			|  Yes 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "DL-TDDFULFILMENT-01" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName | StreetAddress | City  | State | ZipCode  |ZipExtn | EmailAddress   | PhoneNumber  |OffersbyEmail |
+|  shippingaddress    | -                   | -                |	 -      |    -     | 		-      |   -   |  -    |   -      |   -    |	- 			| 847122345127 |  No	      |
+
+Then "DL-TDDFULFILMENT-01" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | overnight		         |     expedited			|
+
+Then "DL-TDDFULFILMENT-01" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | -				   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			  |
+
+Then "DL-TDDFULFILMENT-01" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-01" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName            | RowId     		     |
+| CheckoutOrderDetails  | OrderIds 	           |DL-TDDFULFILMENT-01  |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| 		RowId            			|
+| DataBase      | DCFulfillment     | dc_dcspp_updateOrderStatusQuery2  |
+| DataBase      | CLFulfillment     | CL_TDD_QUERY7   		 			|
+| DataBase      | DCFulfillment     | DC_BML_InitialStatusInfo1 		|
+| DataBase      | CHFulfillment     | CH_BML_InitialStatusInfo1 		|
+
+Given "DL-TDDFULFILMENT-01" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "DL-TDDFULFILMENT-01" Customer selects the CSC Window
+
+And "DL-TDDFULFILMENT-01" Customer either accpets or rejects the Contact Lens Order from CSC:
+| InputFileName        | SheetName 		| RowId   		        |OrderNumber    |
+| CheckoutOrderDetails | OrderIds       |DL-TDDFULFILMENT-01    |no  			|
+
+Then "DL-TDDFULFILMENT-01" Customer selects the Default Window
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| 		RowId               	    |
+| DataBase      | CLFulfillment     | 		CL_TDD_QUERY8   		    |
+| DataBase      | DCFulfillment     | dc_dcspp_updateOrderStatusQuery2  |
+
+Given "DL-TDDFULFILMENT-01" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| 		RowId               	    |
+| DataBase      | CLFulfillment     | 		CL_TDD_QUERY9   		    |
+| DataBase      | DCFulfillment     | 	DC_BML_ShippmentStatusInfo1	    |
+| DataBase      | CHFulfillment     | 	CH_BML_ShippmentStatusInfo1 	|
+
+### DC fulfillment Process -- STARTED
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId        |          
+| DataBase      | DCFulfillment  | 	DC_BML_AttributesInfo1   |
+
+Then "DL-TDDFULFILMENT-01" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	   		     |
+| BatchData     | XMLDATA    | dcmutlipleshipmentVendorId1 	     |
+| BatchData     | XMLDATA    | dcmutlipleshipmentOrderID1        |
+| BatchData     | XMLDATA    | dcmutlipleshipmentFulFilmentID1   |
+| BatchData     | XMLDATA    | dcmutlipleshipmentCommerceID1     |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcOutboundFile2 |
+
+Then "DL-TDDFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-01" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	  |
+|  DataBase     | MutlipleRowsQuery | DC_BML_OrderCompleteInfo1   |
+
+### DC fulfillment Process -- ENDED
+
+### CH fulfillment Process -- STARTED
+Then "DL-TDDFULFILMENT-01" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+|InputFileName | SheetName      | 		RowId      	       |
+|  DataBase     | CHFulfillment | CH_BML_VendorStatusInfo1 |
+
+Then "DL-TDDFULFILMENT-01" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-TDDFULFILMENT-01" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob2SubCommand4  |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-TDDFULFILMENT-01" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-TDDFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	         |          
+|  DataBase     | CHFulfillment  | CH_BML_OrderCompleteStatusInfo1   |
+### CH fulfillment Process -- ENDED
+### CL fulfillment Process -- STARTED
+Then "DL-TDDFULFILMENT-01" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-01" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CLFulfillerJob1	 |
+
+And "DL-TDDFULFILMENT-01" Customer finds the CL order XML file:
+| InputFileName  | SheetName    | RowId  			|
+| BatchData	     | CLOrderXML   | CLOrderXMLFile4   |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY10   |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  		  	      |
+| BatchData     | Fulfillment  | CLInboundBatchOrderFile  |
+
+Then "DL-TDDFULFILMENT-01" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     		 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData1	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData2	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData3	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data1 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data2 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data3 	 |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	        |
+| BatchData     | Fulfillment  | CLOutboundACKFile  |
+
+Then "DL-TDDFULFILMENT-01" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-01" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			     |
+| DYNADMIN      | FEEDS			 | CLVendorAckPerformJob	 |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId          |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY11 |
+
+Then "DL-TDDFULFILMENT-01" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     			 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetBatchID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetOrderID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetFulfillID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetUPC 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetciId 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutBatchID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutOrderID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutFulfillID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutUPC 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutciId 		 |
+
+Then "DL-TDDFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	      			    |
+| BatchData     | Fulfillment  | CLOutboundOrderStatusFile_TDD  |
+
+Then "DL-TDDFULFILMENT-01" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-01" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						     |
+| DYNADMIN      | FEEDS			 | CLVendorOrderStatusManagerPerformJob	 |
+
+Then "DL-TDDFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY12   |
+
+### CL fulfillment Process -- ENDED
+
+And "DL-TDDFULFILMENT-01" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	|	 RowId     	      |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-01" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-01   |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-01_a |
+
+ Then "DL-TDDFULFILMENT-01" Customer finished testing the scenario:
+| InputFileName | SheetName  		     | 		RowId       		     |
+|	QC-DL		| TDDFULFILMENT			 |      DL-TDDFULFILMENT-01      |
+
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-02
+Scenario: Fulfillement related attributes verification for CH Alone Order having multiple quantities in turn shipped as partial shipment.DC - Qty - 6,
+should have ds_sku_id, item should be partial and item level Promotion should be applied
+
+Given "DL-TDDFULFILMENT-02" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-02  |
+
+Given "DL-TDDFULFILMENT-02" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-02" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-02" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+And "DL-TDDFULFILMENT-02" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-02" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "DL-TDDFULFILMENT-02" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-02" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-02" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation13 |
+
+Then "DL-TDDFULFILMENT-02" Customer Applies Coupon in Shopping Cart and checks copy in checkout pages
+| InputFileName | SheetName | RowId	     			 |
+| CACData       |CouponCode | ShoppingCartCouponCode1|
+
+Then "DL-TDDFULFILMENT-02" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-02" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City  | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| shippingaddress     | -                   | -                | 	-      | 	-     | 		-      | 	-  |  -    |   -     |  -     |		- 		 |	 - 			|  -           |
+
+Then "DL-TDDFULFILMENT-02" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-02" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-TDDFULFILMENT-02" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-02" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-02   | 
+
+Then "DL-TDDFULFILMENT-02" Customer Applies Coupon in Shopping Cart and checks copy in checkout pages
+| InputFileName | SheetName | RowId	     			         |
+| CACData       |CouponCode | OrderConfirmationCouponMessage1|
+
+Then "DL-TDDFULFILMENT-02" Customer saves the Order Summary details from the Order Confirmation page:
+| InputFileName	 |		 SheetName  	 | RowId     		   |
+| SelfService    | OrderSummaryDetails   |CHPartialOrderInfo1  | 
+
+Then "DL-TDDFULFILMENT-02" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | CHFulfillment | ch_dcspp_OrderStatusquery1 |
+
+Given "DL-TDDFULFILMENT-02" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-02" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob1 |
+
+Then "DL-TDDFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	          |
+|  DataBase     | CHFulfillment | ch_dcspp_OrderStatusquery2  |
+
+Then "DL-TDDFULFILMENT-02" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+
+Then "DL-TDDFULFILMENT-02" Customer runs the Required Query from the DB:
+|InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | CHFulfillment | ch_dcspp_OrderStatusquery3 |
+
+Then "DL-TDDFULFILMENT-02" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-TDDFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-TDDFULFILMENT-02" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand4  |
+
+Then "DL-TDDFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		           |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-TDDFULFILMENT-02" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-TDDFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-TDDFULFILMENT-02" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "DL-TDDFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | CHFulfillment | ch_dcspp_OrderStatusquery4 |
+|  DataBase     | CHFulfillment | ch_ordertotal_info1        |
+
+And "DL-TDDFULFILMENT-02" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-02" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-02   |
+
+Then "DL-TDDFULFILMENT-02" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-02  |
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-03
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for DC Alone Order having multiple quantities in turn 
+shipped as partial shipment
+
+Given "DL-TDDFULFILMENT-03" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-03  |
+
+Given "DL-TDDFULFILMENT-03" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-03" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-03" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+And "DL-TDDFULFILMENT-03" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | DC1    |
+
+Then "DL-TDDFULFILMENT-03" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-03" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-03" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation14 |
+
+Then "DL-TDDFULFILMENT-03" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-03" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City  | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| shippingaddress     | -                   | -                | 	-      | 	-     | 		-      | 	-  |  -    |   -     |  -     |		- 		 |	 - 			|  -           |
+
+Then "DL-TDDFULFILMENT-03" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-03" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-TDDFULFILMENT-03" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-03" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-03   | 
+
+Then "DL-TDDFULFILMENT-03" Customer saves the Order Summary details from the Order Confirmation page:
+| InputFileName	 |		 SheetName  	 | RowId     		   |
+| SelfService    | OrderSummaryDetails   |DCPartialOrderInfo1  | 
+
+Then "DL-TDDFULFILMENT-03" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | DCFulfillment | dc_dcspp_OrderStatusquery1 |
+
+Given "DL-TDDFULFILMENT-03" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-TDDFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | DCFulfillment | dc_dcspp_OrderStatusquery2 |
+
+Then "DL-TDDFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusPartial1    |
+| DYNADMIN      | FEEDS          | OrderIDInfo1           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-TDDFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         |
+|  DataBase     | DCFulfillment | dc_dcspp_OrderStatusquery2 |
+
+Then "DL-TDDFULFILMENT-03" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+
+Then "DL-TDDFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         	  |
+|  DataBase     | DCFulfillment | dc_dcspp_OrderStatusattrubutes1 |
+
+Then "DL-TDDFULFILMENT-03" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	   		 |
+| BatchData     | XMLDATA    | dcpartialvendorIDupdate1 	 |
+| BatchData     | XMLDATA    | dcpartialOrderIDupdate1 		 |
+| BatchData     | XMLDATA    | dcpartialFulfillmentIDupdate1 |
+| BatchData     | XMLDATA    | dcpartialCommerceIDupdate1 	 |
+| BatchData     | XMLDATA    | dcpartialFulfillmentqtyupdate1|
+| BatchData     | XMLDATA    | dcpartialcancelqtyupdate1 	 |
+
+Then "DL-TDDFULFILMENT-03" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	              |
+| BatchData     | DCFulfillment  | dcOutboundPartialFile1 |
+
+Then "DL-TDDFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-03" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	  		   |
+|  DataBase     | MutlipleRowsQuery | dc_ShippingState_Partial_query1  		   |
+|  DataBase     | MutlipleRowsQuery | dc_orderAndPaymentState_Partial_query1   |
+
+Then "DL-TDDFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	    |          
+|  DataBase     | DCFulfillment  | DcOrderTotalQuery2   |
+
+And "DL-TDDFULFILMENT-03" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-03" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-03   |
+
+Then "DL-TDDFULFILMENT-03" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-03  |
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-04
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for CH Alone Order having Single quantity in turn shipped in Single shipment
+
+Given "DL-TDDFULFILMENT-04" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-04  |
+
+Given "DL-TDDFULFILMENT-04" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-04" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-04" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+And "DL-TDDFULFILMENT-04" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-04" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | CH1	|
+
+Then "DL-TDDFULFILMENT-04" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-04" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-04" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-04" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City  | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| shippingaddress     | -                   | -                | 	-      | 	-     | 		-      | 	-  |  -    |   -     |  -     |		- 		 |	 - 			|  -           |
+
+Then "DL-TDDFULFILMENT-04" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-04" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-TDDFULFILMENT-04" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-04" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-04   | 
+
+Then "DL-TDDFULFILMENT-04" Customer saves the Order Summary details from the Order Confirmation page:
+| InputFileName	 |		 SheetName  	 | RowId     		   |
+| SelfService    | OrderSummaryDetails   |CHSingleqtyOrderInfo1| 
+
+Then "DL-TDDFULFILMENT-04" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	              |
+|  DataBase     | CHFulfillment | ch_singlequantity_initial_info1 |
+
+Given "DL-TDDFULFILMENT-04" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob1 |
+
+Then "DL-TDDFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	         		  |
+|  DataBase     | CHFulfillment | ch_singlequantity_processing_info1  |
+
+Then "DL-TDDFULFILMENT-04" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+
+Then "DL-TDDFULFILMENT-04" Customer runs the Required Query from the DB:
+|InputFileName | SheetName      | 		RowId      	             |
+|  DataBase     | CHFulfillment | ch_singlequantity_vendor_info1 |
+
+Then "DL-TDDFULFILMENT-04" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-TDDFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-TDDFULFILMENT-04" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob2SubCommand4  |
+
+Then "DL-TDDFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-TDDFULFILMENT-04" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-TDDFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-TDDFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "DL-TDDFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	               |
+|  DataBase     | CHFulfillment | ch_singlequantity_complete_info1 |
+|  DataBase     | CHFulfillment | ch_ordertotal_info2              |
+
+And "DL-TDDFULFILMENT-04" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-04" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-04   |
+
+Then "DL-TDDFULFILMENT-04" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-04  |
+
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-05
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for PreOrder Alone Order having Single quantity in turn shipped in Single shipment
+
+Given "DL-TDDFULFILMENT-05" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-05  |
+
+Given "DL-TDDFULFILMENT-05" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-05" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-05" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+And "DL-TDDFULFILMENT-05" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-05" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 	RowId  	    |
+| CommonData    | search    | PreOrderWic1  |
+
+Then "DL-TDDFULFILMENT-05" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-05" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-05" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-05" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City  | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| shippingaddress     | -                   | -                | 	-      | 	-     | 		-      | 	-  |  -    |   -     |  -     |		- 		 |	 - 			|  -           |
+
+Then "DL-TDDFULFILMENT-05" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-05" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | -                     | Yes                | CACData               | CustomerBilling      | BML2           | -			  |
+
+Then "DL-TDDFULFILMENT-05" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-05" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-05   | 
+
+Then "DL-TDDFULFILMENT-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        	   |
+|  DataBase     | DCFulfillment | preOrder_pendingMerchant_status1 |
+
+Given "DL-TDDFULFILMENT-05" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "DL-TDDFULFILMENT-05" Customer selects the CSC Window
+
+Then "DL-TDDFULFILMENT-05" Customer releases Pre-Order item order details in the Queue from CSC:
+| InputFileName | 	SheetName 	   | 		RowId         |
+| CSCData       | PreOrderRelease  | PreOrderReleaseinfo3 |
+
+Then "DL-TDDFULFILMENT-05" Customer selects the Default Window
+
+Then "DL-TDDFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	            |
+|  DataBase     | DCFulfillment | preOrder_Orderrleased_status1 |
+
+Given "DL-TDDFULFILMENT-05" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-TDDFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	             |
+|  DataBase     | DCFulfillment | preOrder_pendingShipment_info1 |
+
+Then "DL-TDDFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1       |
+| DYNADMIN      | FEEDS          | OrderIDInfo2           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-TDDFULFILMENT-05" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	      	    |
+| BatchData     | DCFulfillment  | dcInboundFile2  		|
+| BatchData     | DCFulfillment  | dcOutboundPutFile2   |
+
+Then "DL-TDDFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-05" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	   |
+|  DataBase     | 	DCFulfillment   | preorder_nopendingaction_info1   |
+
+And "DL-TDDFULFILMENT-05" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-05" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-05   |
+
+Then "DL-TDDFULFILMENT-05" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-05  |
+
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-06
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for PSC Alone Order having Single quantity in turn shipped in Single shipment
+
+Given "DL-TDDFULFILMENT-06" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-06  |
+
+Given "DL-TDDFULFILMENT-06" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| CommonData 	 | login     | Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-06" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-06" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName  | RowId      	 		  |
+| PharmacyLinkVerification  | Anonymous  | PrescriptionSavingsClub|
+
+Then "DL-TDDFULFILMENT-06" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "DL-TDDFULFILMENT-06" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| 	Individual   | Pharmacy	  |
+
+Then "DL-TDDFULFILMENT-06" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            				|
+
+Then "DL-TDDFULFILMENT-06" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+|Shipping Information |
+
+Then "DL-TDDFULFILMENT-06" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress       | PhoneNumber  |OffersbyEmail|
+| homeaddress	      | -                   | -                | -      	| -  	   | -  		    | - 	 	| -     | -   	  |   -    |-					| -			   |  -		     |
+
+Then "DL-TDDFULFILMENT-06" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -			      |          Standard        |       -	 	            |
+
+Then "DL-TDDFULFILMENT-06" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-TDDFULFILMENT-06" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "DL-TDDFULFILMENT-06" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-06   | 
+
+Then "DL-TDDFULFILMENT-06" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "DL-TDDFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	          |
+|  DataBase     | DCFulfillment | psc_orderinitial_stateinfo1 |
+
+Given "DL-TDDFULFILMENT-06" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-TDDFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	             |
+|  DataBase     | DCFulfillment | psc_orderprocessing_stateinfo1 |
+
+Then "DL-TDDFULFILMENT-06" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 		RowId     	      |
+| DYNADMIN      | FEEDS          | pscloggingdebugupdate1 |
+| DYNADMIN      | FEEDS          | psclogginginfoupdate1  |
+
+Then "DL-TDDFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	  |
+| DYNADMIN      | FEEDS          | PSCPerformJob1 |
+
+Then "DL-TDDFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	      |
+|  DataBase     | DCFulfillment | psc_ordercomplete_info1 |
+
+Then "DL-TDDFULFILMENT-06" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-06  |
+
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-07
+Scenario: Fulfillement related attributes verification for DC Alone Order having single quantity in turn deferred and in turn sent for Cancellation
+
+Given "DL-TDDFULFILMENT-07" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-07  |
+
+Given "DL-TDDFULFILMENT-07" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser1 |
+
+And "DL-TDDFULFILMENT-07" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-07" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+And "DL-TDDFULFILMENT-07" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-07" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | DC2    |
+
+Then "DL-TDDFULFILMENT-07" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-07" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-07" Customer Applies Coupon in Shopping Cart and checks copy in checkout pages
+| InputFileName | SheetName | RowId	     			 |
+| CACData       |CouponCode | ShoppingCartCouponCode2|
+
+Then "DL-TDDFULFILMENT-07" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-07" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City  | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| shippingaddress     | -                   | -                | 	-      | 	-     | 		-      | 	-  |  -    |   -     |  -     |		- 		 |	 - 			|  -           |
+
+Then "DL-TDDFULFILMENT-07" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-07" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "DL-TDDFULFILMENT-07" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-07" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-07   | 
+
+Then "DL-TDDFULFILMENT-07" Customer Applies Coupon in Shopping Cart and checks copy in checkout pages
+| InputFileName | SheetName | RowId	     			         |
+| CACData       |CouponCode | OrderConfirmationCouponMessage1|
+
+Then "DL-TDDFULFILMENT-07" Customer saves the Order Summary details from the Order Confirmation page:
+| InputFileName	 |		 SheetName  	 | RowId     		   |
+| SelfService    | OrderSummaryDetails   |DCPartialOrderInfo1  | 
+
+Then "DL-TDDFULFILMENT-07" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-07" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	            |
+|  DataBase     | DCFulfillment | dc_cancel_initialStatus_info1 |
+
+Given "DL-TDDFULFILMENT-07" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-07" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-TDDFULFILMENT-07" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	               |
+|  DataBase     | DCFulfillment | dc_cancel_porcessingStatus_info1 |
+
+Then "DL-TDDFULFILMENT-07" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusCancel1     |
+| DYNADMIN      | FEEDS          | OrderIDInfo3           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-TDDFULFILMENT-07" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	               |
+|  DataBase     | DCFulfillment | dc_cancel_porcessingStatus_info1 |
+
+Then "DL-TDDFULFILMENT-07" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	        |
+| BatchData     | DCFulfillment  | dcInboundFile1   |
+| BatchData     | DCFulfillment  | dcOutboundFile1  |
+
+Then "DL-TDDFULFILMENT-07" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-07" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	             |
+|  DataBase     | DCFulfillment | dc_cancel_completeStatus_info1 |
+
+And "DL-TDDFULFILMENT-07" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser1   |
+
+Then "DL-TDDFULFILMENT-07" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-07   |
+
+Then "DL-TDDFULFILMENT-07" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-07  |
+
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-08
+Scenario: Verify whether the appropriate shipment confirmation emailsDB attributes and order history page for DC and PreOrder having Multiple quantity each and in turn shipped in Multiple shipment
+
+Given "DL-TDDFULFILMENT-08" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-08  |
+
+Given "DL-TDDFULFILMENT-08" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	      |
+| 	CommonData 	| login 	   |Fullfillmentuser2 |
+
+And "DL-TDDFULFILMENT-08" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-TDDFULFILMENT-08" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser2   |
+
+And "DL-TDDFULFILMENT-08" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-08" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | DC1    |
+
+Then "DL-TDDFULFILMENT-08" Customer adds Daily Living items to the cart from search.
+
+And "DL-TDDFULFILMENT-08" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 	RowId  	    |
+| CommonData    | search    | PreOrderWic1  |
+
+Then "DL-TDDFULFILMENT-08" Customer adds Daily Living items to the cart from search.
+
+Then "DL-TDDFULFILMENT-08" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-08" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation15 |
+| SDDData       | Product Details  | ProductInformation16 |
+
+Then "DL-TDDFULFILMENT-08" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-08" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | 	Test   | 	Test  | test Street    | Deerfield | 16    | 60015   |  -     |		- 		 |8471234567    |  -           |
+
+Then "DL-TDDFULFILMENT-08" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | 	standard	         |     -	     			|
+
+Then "DL-TDDFULFILMENT-08" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | Addr_Paypal  |
+
+Then "DL-TDDFULFILMENT-08" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-08" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-08   | 
+
+Then "DL-TDDFULFILMENT-08" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-TDDFULFILMENT-08" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                  |          
+|  DataBase     | DCFulfillment  | dc_dcspp_updateOrderStatusQuery1   |
+
+Then "DL-TDDFULFILMENT-08" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 		RowId      	                            |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_ShippingPaymentinitialStatus_1  |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_OrderinitialStatus_info1        |
+
+Given "DL-TDDFULFILMENT-08" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "DL-TDDFULFILMENT-08" Customer selects the CSC Window
+
+Then "DL-TDDFULFILMENT-08" Customer releases Pre-Order item order details in the Queue from CSC:
+| InputFileName | SheetName 	  | RowId                |
+| CSCData       | PreOrderRelease | PreOrderReleaseinfo1 |
+
+Then "DL-TDDFULFILMENT-08" Customer selects the Default Window
+
+Then "DL-TDDFULFILMENT-08" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 		RowId      	                      |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_orderreleaseStatus_1      |
+
+Given "DL-TDDFULFILMENT-08" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-08" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob2 |
+
+Then "DL-TDDFULFILMENT-08" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 		RowId      	                      |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_pendingShipMentStatus_1   |
+
+Then "DL-TDDFULFILMENT-08" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusCancel1     |
+| DYNADMIN      | FEEDS          | OrderIDInfo5           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-TDDFULFILMENT-08" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	        |
+| BatchData     | DCFulfillment  | dcInboundFile1   |
+| BatchData     | DCFulfillment  | dcOutboundFile1  |
+
+Then "DL-TDDFULFILMENT-08" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-08" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 		RowId      	               		  |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_DcFailedStatus_1   		  |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_OrderandPaymentStatus_1   |
+
+Then "DL-TDDFULFILMENT-08" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1       |
+| DYNADMIN      | FEEDS          | OrderIDInfo5           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-TDDFULFILMENT-08" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	        |
+| BatchData     | DCFulfillment  | dcInboundFile1   |
+| BatchData     | DCFulfillment  | dcOutboundFile1  |
+
+Then "DL-TDDFULFILMENT-08" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-TDDFULFILMENT-08" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 		RowId      	               		     |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_OrderStatus_final1   	     |
+|  DataBase     | MutlipleRowsQuery | dcAndPreOrder_ShippingandPaymentStatus_1   |
+
+Then "DL-TDDFULFILMENT-08" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	            |          
+|  DataBase     | DCFulfillment  | DcPreorderOrderTotalQuery1   |
+
+And "DL-TDDFULFILMENT-08" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser2   |
+
+Then "DL-TDDFULFILMENT-08" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName   | RowId     		     |
+| CheckoutOrderDetails  | OrderIds    |DL-TDDFULFILMENT-08   |
+
+Then "DL-TDDFULFILMENT-08" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-08  |
+#----------------------------------------------------------------------------------
+@DL-TDDFULFILMENT-09
+Scenario: Verifies Fulfillement related attributes for CL Alone Order having Single quantity  in turn shipped in Single shipment with BML as Payment method
+
+Given "DL-TDDFULFILMENT-09" Customer starts the scenario: 
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-09  |
+
+Given "DL-TDDFULFILMENT-09" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | LightUserTDD   |
+
+And "DL-TDDFULFILMENT-09" Customer Clears the Shopping Cart
+
+And "DL-TDDFULFILMENT-09" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProducts1   |
+
+Then "DL-TDDFULFILMENT-09" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "DL-TDDFULFILMENT-09" Customer Goes to the Shopping Cart
+
+Then "DL-TDDFULFILMENT-09" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage       |
+| Shipping Information	   |
+
+Then "DL-TDDFULFILMENT-09" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		        |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info2      | 	Yes 	| - 						|   - 							 |
+
+Then "DL-TDDFULFILMENT-09" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |tddtestuser@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-TDDFULFILMENT-09" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -       		         |     standard  			|
+
+Then "DL-TDDFULFILMENT-09" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | -				   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "DL-TDDFULFILMENT-09" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-TDDFULFILMENT-09" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName            | RowId     		     |
+| CheckoutOrderDetails  | OrderIds 	           |DL-TDDFULFILMENT-09  |
+
+Then "DL-TDDFULFILMENT-09" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_TDD_QUERY1   |
+
+Given "DL-TDDFULFILMENT-09" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "DL-TDDFULFILMENT-09" Customer selects the CSC Window
+
+And "DL-TDDFULFILMENT-09" Customer either accpets or rejects the Contact Lens Order from CSC:
+| InputFileName        | SheetName 		| RowId   		        |OrderNumber    |
+| CheckoutOrderDetails | OrderIds       |DL-TDDFULFILMENT-09    |no  			|
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_TDD_QUERY2    |
+
+Then "DL-TDDFULFILMENT-09" Customer selects the Default Window
+
+Given "DL-TDDFULFILMENT-09" Customer login to feeds instance:
+
+Then "DL-TDDFULFILMENT-09" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CHPefromJob1		 |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY3   |
+
+Then "DL-TDDFULFILMENT-09" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-09" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CLFulfillerJob1	 |
+
+And "DL-TDDFULFILMENT-09" Customer finds the CL order XML file:
+| InputFileName  | SheetName    | RowId  			|
+| BatchData	     | CLOrderXML   | CLOrderXMLFile3   |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY4   |
+
+Then "DL-TDDFULFILMENT-09" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  		  	      |
+| BatchData     | Fulfillment  | CLInboundBatchOrderFile  |
+
+Then "DL-TDDFULFILMENT-09" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     		 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData1	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData2	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData3	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data1 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data2 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data3 	 |
+
+Then "DL-TDDFULFILMENT-09" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	        |
+| BatchData     | Fulfillment  | CLOutboundACKFile  |
+
+Then "DL-TDDFULFILMENT-09" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-09" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			     |
+| DYNADMIN      | FEEDS			 | CLVendorAckPerformJob	 |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId          |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY5  |
+
+Then "DL-TDDFULFILMENT-09" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     			 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetBatchID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetOrderID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetFulfillID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetUPC 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetciId 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutBatchID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutOrderID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutFulfillID	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutUPC 		 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutciId 		 |
+
+Then "DL-TDDFULFILMENT-09" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	      			    |
+| BatchData     | Fulfillment  | CLOutboundOrderStatusFile_TDD  |
+
+Then "DL-TDDFULFILMENT-09" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "DL-TDDFULFILMENT-09" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						     |
+| DYNADMIN      | FEEDS			 | CLVendorOrderStatusManagerPerformJob	 |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_TDD_QUERY6    |
+
+Then "DL-TDDFULFILMENT-09" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId          |
+| DataBase      | Query     	| PayGroupState  |
+| DataBase      | Query     	| BoxInfoTable   |
+
+Then "DL-TDDFULFILMENT-09" Customer finished testing the scenario:
+| InputFileName | SheetName  	  | 	RowId       	   |
+|	QC-DL		| TDDFULFILMENT	  |   DL-TDDFULFILMENT-09  |

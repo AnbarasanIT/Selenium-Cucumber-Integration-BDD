@@ -1,0 +1,53 @@
+@performance @performancePharmacy
+
+Feature: Verify if customer is able to perform various pharmacy related functionalities including EXPRESS REFILL/REFILL/TRANSFER/NEW RX checkout, etc
+
+#Test Cases Covered
+#******************
+# <--- Please put the test case id's from ALM --->
+
+#-----------------------------------------------------------------------------------------------------------
+@PERF-PHARMACY-1
+Scenario:Pharmacy user places a refill prescription checkout with pickup-store option
+
+Given  "PERF-PHARMACY-1" Customer starts the scenario:
+| InputFileName  | SheetName 	| RowId            |
+| QC-PERF        | PHARMACY   	| PERF-PHARMACY-1  |
+
+Given "PERF-PHARMACY-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName 	 | RowId            |
+|  CommonData    | login		 | PerfTestRXUser1  |
+
+And "PERF-PHARMACY-1" Customer Clears the Shopping Cart
+
+When  "PERF-PHARMACY-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     	   |
+| CACData       | RefillRx  | PerfRX1          |
+
+Then "PERF-PHARMACY-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "PERF-PHARMACY-1" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId          |
+| CACData       | RXpickup  | PerfRxStore1	 |
+
+Then "PERF-PHARMACY-1" Customer selects rx pick up date and time and click on continue
+
+Then "PERF-PHARMACY-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "PERF-PHARMACY-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId          |
+| CheckoutOrderDetails  | OrderIDs	   |PERF-PHARMACY-1 |
+
+Then "PERF-PHARMACY-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "PERF-PHARMACY-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	| RowId            |
+| QC-PERF        | PHARMACY   	| PERF-PHARMACY-1  |
+
+#-----------------------------------------------------------------------------------------------------------

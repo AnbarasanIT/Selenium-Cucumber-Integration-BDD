@@ -1,0 +1,77 @@
+package walgreens.ecom.batch.automation.library.marketing.emailUnsubscription;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class EO12199Unsubscription extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify cancel email subscription.
+     * @author - Chezhiyan
+     * @Created - 13-Feb-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void CancelEmailSubscription(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CancelSubscriptionURL = null;
+	String UnsubscribeURL = null;
+	String EMailForm_ELM = "form[name='emailForm']~CSS";
+	String GenericCheckbox_CHK = "input[type='checkbox']";
+	String SaveChanges_BTN = "input[alt='Unsubscribe']~CSS";
+	String CancelSuccessMsg_ELM = "//p[contains(text(),'successfully cancelled your email subscriptions')]~XPATH";
+	int NoOfChkBoxes = 0;
+	int CancelSubscriptionIterator = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String[] arrOptions = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "URLValues").split(":");
+	    CancelSubscriptionURL = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CancelSubscriptionURL");
+	    for (CancelSubscriptionIterator = 0; CancelSubscriptionIterator < arrOptions.length; CancelSubscriptionIterator++) {
+		UnsubscribeURL = EcommTestRunner.config.getString("walgreensURL") + CancelSubscriptionURL.replace("option=?", "option=" + arrOptions[CancelSubscriptionIterator]);
+		getUrl(browser, UnsubscribeURL);
+		if (arrOptions[CancelSubscriptionIterator].equalsIgnoreCase("ALL")) {
+		    NoOfChkBoxes = 8;
+		} else {
+		    NoOfChkBoxes = 2;
+		}
+		//System.out.println("################ NO OF CHECKBOX :"+getElementByProperty(EMailForm_ELM, browser).findElements(By.cssSelector(GenericCheckbox_CHK)).size());
+		if (getElementByProperty(EMailForm_ELM, browser).findElements(By.cssSelector(GenericCheckbox_CHK)).size() != NoOfChkBoxes) {
+		    messagesMap.put("The no. of checkboxes do not match", "The no. of checkboxes for the URL with option: " + arrOptions[CancelSubscriptionIterator]
+			    + " does not match the expected no. of chekkboxes: " + NoOfChkBoxes);
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+		    throw new Exception("Unable to click on Save changes Unsubscribe page");
+		}
+
+		if (!isElementPresentVerification(CancelSuccessMsg_ELM, browser)) {
+		    messagesMap.put("Success message verification on cancelling", "Success message is not disaplyed after saving.");
+		    status = WARNING;
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

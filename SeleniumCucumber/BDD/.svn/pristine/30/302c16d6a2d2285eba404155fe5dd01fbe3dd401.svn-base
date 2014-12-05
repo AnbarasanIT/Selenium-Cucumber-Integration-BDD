@@ -1,0 +1,98 @@
+@pharmacy @RXManageRxWidget
+Feature: All the scenarios in the feature are for demo purpose only
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-MANAGERX-1
+Scenario: Verify Links in Manage your prescription Widget from Pharmacy Home Page for an authenticated user
+
+Given  "RX-MANAGERX-1" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-1 |
+
+Given "RX-MANAGERX-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData  	| login   	| autenticated4	 |
+
+And "RX-MANAGERX-1" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId              | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| RefillRx,anonymous | ManageRx			     |
+| RxLinkVerification | ManageRx		| ExpressRx	 | ExpressRefillsPage | ExpressRx				 |
+| RxLinkVerification | ManageRx		| AutoRefill | ManageRx			  | AutoRefillsAuth			 |
+| RxLinkVerification | ManageRx		| TransferRx | TransferRxPage	  | TransferRx		         |
+| RxLinkVerification | ManageRx		| NewRx		 | NewRxPage		  | NewRx		             |
+| RxLinkVerification | ManageRx		| ManageRx	 | ManageRx 		  | ManageRx			     |
+
+Then "RX-MANAGERX-1" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-MANAGERX-2
+Scenario: Verify Links in Manage your prescription Widget from Pharmacy Home Page for an anonymous user
+
+Given  "RX-MANAGERX-2" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-2 |
+
+And "RX-MANAGERX-2" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId 	 | ExpectedTargetPage | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| RefillRx	 | SignInPage		  | RefillRx     		     |
+| RxLinkVerification | ManageRx		| ExpressRx	 | ExpressRefillsPage | ExpressRx				 |
+| RxLinkVerification | ManageRx		| AutoRefill | SignInPage		  | AutoRefill 			     |
+| RxLinkVerification | ManageRx		| TransferRx | SignInPage    	  | TransferRx		         |
+| RxLinkVerification | ManageRx		| NewRx		 | SignInPage		  | NewRx		             |
+| RxLinkVerification | ManageRx		| ManageRx	 | SignInPage		  | RefillRx			     |
+
+Then "RX-MANAGERX-2" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-MANAGERX-3
+Scenario: Verify Links in Manage your prescription Widget from Pharmacy Home Page for a non-authenticated user
+
+Given  "RX-MANAGERX-3" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-3 |
+
+Given "RX-MANAGERX-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	  |
+| CommonData  	| login   	| UnathenticatedUser1 |
+
+And "RX-MANAGERX-3" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId 	 | ExpectedTargetPage | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| RefillRx	 | CompleteRegn		  | RefillRx  		 	     |
+| RxLinkVerification | ManageRx		| ExpressRx	 | ExpressRefillsPage | ExpressRx				 |
+| RxLinkVerification | ManageRx		| AutoRefill | CompleteRegn		  | AutoRefill     		     |
+| RxLinkVerification | ManageRx		| TransferRx | TransferRxPage 	  | TransferRx		 	     |
+| RxLinkVerification | ManageRx		| NewRx		 | NewRxPage		  | NewRx	       			 |
+| RxLinkVerification | ManageRx		| ManageRx	 | CompleteRegn 	  | RefillRx			     |
+
+Then "RX-MANAGERX-3" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-MANAGERX-4
+Scenario: Verify Links in Manage your prescription Widget from Pharmacy Home Page for a light user
+
+Given  "RX-MANAGERX-4" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-4 |
+
+Given "RX-MANAGERX-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData  	| login   	| lightreg1  	 |
+
+And "RX-MANAGERX-4" Customer validates the links in Manage your prescription Widget from Pharmacy Home Page:
+| InputFileName		 | SheetName	| RowId 	 | ExpectedTargetPage | ExpectedTargetPageHeader |
+| RxLinkVerification | ManageRx		| RefillRx	 | CompleteRegn		  | RefillRx     		     |
+| RxLinkVerification | ManageRx		| ExpressRx	 | ExpressRefillsPage | ExpressRx				 |
+| RxLinkVerification | ManageRx		| AutoRefill | CompleteRegn		  | AutoRefill   	 		 |
+| RxLinkVerification | ManageRx		| TransferRx | CompleteRegn	  	  | TransferRx		         |
+| RxLinkVerification | ManageRx		| NewRx		 | CompleteRegn		  | NewRx		   			 |
+| RxLinkVerification | ManageRx		| ManageRx	 | CompleteRegn 	  | RefillRx			 	 |
+
+Then "RX-MANAGERX-4" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | MANAGERX  | RX-MANAGERX-4 |

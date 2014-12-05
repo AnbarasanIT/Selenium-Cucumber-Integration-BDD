@@ -1,0 +1,61 @@
+@pharmacy @vpdPageValidations
+Feature: Store locator related functionalities
+
+# Contains all VPD related flows of QTP Migrated Scenarios
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-VpdPage-1
+Scenario: Anonymous user searches for Size variation product and adds to Shopping List
+
+Given  "MARKETING-VpdPage-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId         	 |
+| QC-MARKETING	| VpdPage 	| MARKETING-VpdPage-1|
+
+Given "MARKETING-VpdPage-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | localuser1   |
+
+And "MARKETING-VpdPage-1" Customer Clears the Shopping List
+
+And "MARKETING-VpdPage-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName   | RowId    	  |
+| CommonData    | search      | SizeProduct2  |
+
+Then "MARKETING-VpdPage-1" Customer clicks on an object and validates the expected results:
+| InputFileName                | SheetName   | RowId    	|
+| MarketingLinkVerification    | VpdPage     | SizeOptions  |
+
+And "MARKETING-VpdPage-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName   | RowId    	  |
+| CommonData    | search      | SizeProduct2  |
+
+Then "MARKETING-VpdPage-1" Customer Adds Color or Size variation Product to Cart or Shopping List:
+| InputFileName  | SheetName   | RowId    	       |
+| Marketing   	 |VpdPage      |MARKETING-VpdPage-1| 
+
+Then "MARKETING-VpdPage-1" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId				 |
+| QC-MARKETING	| VpdPage 	   | MARKETING-VpdPage-1 |
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-VpdPage-2
+Scenario: Anonymous user searches for Size variation product and adds to Shopping List
+
+Given "MARKETING-VpdPage-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId         	 |
+| QC-MARKETING	| VpdPage 	| MARKETING-VpdPage-2|
+
+And "MARKETING-VpdPage-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName   | RowId 	  		|
+| CommonData    | search      | ColorProduct   |
+
+Then "MARKETING-VpdPage-2" Customer clicks on an object and validates the expected results:
+| InputFileName                | SheetName   | RowId    	 |
+| MarketingLinkVerification    | VpdPage     | ColorOptions  |
+
+Then "MARKETING-VpdPage-2" Customer performs validations in VPD Page:
+| InputFileName    | SheetName   | RowId    	 		|
+| Marketing        | VpdPage     | MARKETING-VpdPage-2  |
+
+Then "MARKETING-VpdPage-2" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId				 |
+| QC-MARKETING	| VpdPage 	   | MARKETING-VpdPage-2 |
+#-----------------------------------------------------------------------------------------------------------

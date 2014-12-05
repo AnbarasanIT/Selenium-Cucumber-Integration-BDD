@@ -1,0 +1,545 @@
+package walgreens.ecom.batch.automation.library.dwar;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class DWARCommonLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Login to walk with walgreens site
+     * @author - Siva
+     * @Created - 27-Dec-2012
+     * @Modified By -Rajesh
+     * @Modified Date -3-MAY-2013
+     ************************************************************* 
+     */
+    public static void dWARlogin(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String DWARLandingPage_URL = "steps/stepslanding.jsp";
+	String Username_TXT = "input#logInUsername~CSS";
+	String Password_TXT = "input[alt='Password']~CSS";
+	String SignIN_BTN = "input[title='Sign in']~CSS";
+	String GlobalSignOut_LNK = "a[title='Sign Out']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String loginUrl = EcommTestRunner.config.getString("walgreensURL") + DWARLandingPage_URL;
+	    getUrl(browser, loginUrl);
+
+	    if (!isElementPresentVerification(SignIN_BTN, browser)) {
+		throw new Exception("Not able to find Sign in Button");
+	    }
+	    String userName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    if (!clearAndEnterText(Username_TXT, userName, browser)) {
+		messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		status = WARNING;
+	    }
+
+	    String password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+	    // getElementByProperty(Username_TXT, browser).sendKeys(Keys.TAB);
+
+	    // if (!clearAndEnterText(Password_TXT, password, browser)) {
+	    // messagesMap.put("Password",
+	    // "Not able to Enter password in the Text Field.");
+	    // status = WARNING;
+	    // }
+	    getElementByProperty(Password_TXT, browser).sendKeys(password);
+	    if (!isElementPresentVerifyClick(SignIN_BTN, browser)) {
+		throw new Exception("Not able to click on Sigin button in Login section");
+	    }
+	    if (!isElementPresentVerification(GlobalSignOut_LNK, browser)) {
+		throw new Exception("Not able to Verify the Sign out link after signing in.");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the UI of Goals and Progress Tab.
+     * @author - Siva
+     * @Created - 2-Jan-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyUIofGoalsandProgressTab(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String Walk_ICON = "//img[contains(@src,'walk/Icon_Walk_Checked') or @alt='Walk']~XPATH";
+	String Run_ICON = "//img[contains(@src,'walk/Icon_Run_Checked') or @alt='Run']~XPATH";
+	String Weight_IMG = "//img[contains(@src,'walk/Icon_Weight_Checked') or @alt='Weight']~XPATH";
+	String Frequency_ICON = "//img[contains(@src,'walk/Icon_Frequency_Checked') or @alt='Frequency']~XPATH";
+	String GoalsAndFrequency_TAB = "//span[contains(text(),'Progress')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(GoalsAndFrequency_TAB, browser)) {
+		messagesMap.put("Goals And Frequency Tab", "WNot able to click on Goals And Frequency Tab");
+		status = WARNING;
+	    }
+	    // verifying walk icon
+	    if (!isElementPresentVerification(Walk_ICON, browser)) {
+		messagesMap.put("Walk Icon", "Walk Icon is missing");
+		status = WARNING;
+	    }
+	    // verifying run icon
+	    if (!isElementPresentVerification(Run_ICON, browser)) {
+		messagesMap.put("Run Icon", "Run Icon is missing");
+		status = WARNING;
+	    }
+	    // verifying weight icon
+	    if (!isElementPresentVerification(Weight_IMG, browser)) {
+		messagesMap.put("Wieght Icon", "Wieght Icon is missing");
+		status = WARNING;
+	    }
+	    // verifying frequency icon
+	    if (!isElementPresentVerification(Frequency_ICON, browser)) {
+		messagesMap.put("Frequency Icon", "Frequency Icon is missing");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the UI of Progress bar page.
+     * @author - Saravanan M
+     * @throws InterruptedException 
+     * @Created - 16-Jan-2013
+     * @Modified By -Rajesh
+     * @Modified Date -03-JUNE-2013
+     ************************************************************* 
+     */
+    public static void verifyUIofProgressbar(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) throws InterruptedException {
+	String status = PASS;
+	String Walk_ICON = "img[title='Walk']~CSS";
+	String Run_ICON = "img[title='Run']~CSS";
+	String Weight_IMG = "img[title='Weight']~CSS";
+	String Frequency_ICON = "img[title='Frequency']~CSS";
+	String GoalsAndFrequency_TAB = "//span[contains(text(),'Progress')]~XPATH";
+	String Today_BTN = "a#todayBtn~CSS";
+	String Last7Days_BTN = "a#last7daysBtn~CSS";
+	String Last30Days_BTN = "//a[contains(text(),'30 Days')]~XPATH";
+	String Lifetime_BTN = "a#lifeTimeBtn~CSS";
+	String LifetimeActivities_TXT = "//span[contains(text(),'activities')]~XPATH";
+	String LifetimeMiles_TXT = "//p[contains(text(),'miles')]~XPATH";
+	String LifetimeSteps_TXT = "//p[contains(text(),'steps')]~XPATH";
+	String Goals_BTN = "a#goalsBtn~CSS";
+	String WalkGoalName_TXT = "//div[1]/div[1]/div[2]/span[@class='desc']~XPATH";
+	String RunGoalName_TXT = "//div[2]/div[2]/div[2]/div/span[@class='desc']~XPATH";
+	String FrequencyGoalName_TXT = "//div[2]/div[3]/div[2]/div/span[@class='desc']~XPATH";
+	String WeightGoalName_TXT = "//div[2]/div[4]/div[2]/div/span[@class='desc']~XPATH";
+	String EditWalkGoal_LNK = "a#wewalk~CSS";
+	String EditRunGoal_LNK = "a#werun~CSS";
+	String EditFrequencyGoal_LNK = "a#frequencygoal~CSS";
+	String EditWeightGoal_LNK = "a#weightgoal~CSS";
+	String WalkGoalProgressBar_IMG = "div#progressbar_walk~CSS";
+	String RunGoalProgressBar_IMG = "div#progressbar_run~CSS";
+	String FrequencyGoalProgressBar_IMG = "div#progressbar_active~CSS";
+	String WeightGoalProgressBar_IMG = "div#progressbar_lose~CSS";
+	String WalkGoalProgressBarValue_IMG = "div[class*='walk_lbl']~CSS";
+	String RunGoalProgressBarValue_IMG = "div[class*='run_lbl']~CSS";
+	String FrequencyGoalProgressBarValue_IMG = "div[class*='active_lbl']~CSS";
+	String WeightGoalProgressBarValue_IMG = "div[class*='lose_lbl']~CSS";
+	String WalkShare_LNK = "//div[2]/div[1]/div[@class='share']~XPATH";
+	String RunShare_LNK = "//div[2]/div[2]/div[@class='share']~XPATH";
+	String FrequencyShare_LNK = "//div[2]/div[3]/div[@class='share']~XPATH";
+	String WeightShare_LNK = "//div[2]/div[4]/div[@class='share']~XPATH";
+	String WalkPercent_TXT = "//div[2]/div[1]/div[contains(@class,'goal_percent')]~XPATH";
+	String RunPercent_TXT = "//div[2]/div[2]/div[contains(@class,'goal_percent')]~XPATH";
+	String FrequencyPercent_TXT = "//div[2]/div[3]/div[contains(@class,'goal_percent')]~XPATH";
+	String WeightPercent_TXT = "//div[2]/div[4]/div[contains(@class,'goal_percent')]~XPATH";
+	String AddWalkGoal_LNK = "a#walkgoal~CSS";
+	String AddRunGoal_LNK = "a#werun~CSS";
+	String AddFrequencyGoal_LNK = "a#frequencygoal~CSS";
+	String AddWeightGoal_LNK = "a#weightgoal~CSS";
+	String DisabledWalkIcon_IMG = "img[title='Walk'][class*='disabled']~CSS";
+	String DisabledRunIcon_IMG = "img[title='Run'][class*='disabled']~CSS";
+	String DisabledFrequencyIcon_IMG = "img[title='Frequency'][class*='disabled']~CSS";
+	String DisabledWeightIcon_IMG = "img[title='Weight'][class*='disabled']~CSS";
+	String ExpiryMessage_TXT = "//div[ABC]/*/*/span[contains(text(),'expires')]~XPATH";
+	Map<String, String> messagesMap = null;
+         Thread.sleep(1000);
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(GoalsAndFrequency_TAB, browser)) {
+		messagesMap.put("Goals And Frequency Tab", "Not able to click on Goals And Frequency Tab");
+		status = WARNING;
+	    }
+	    String WalkGoalElements[] = { WalkGoalName_TXT, EditWalkGoal_LNK, WalkGoalProgressBar_IMG, WalkGoalProgressBarValue_IMG, WalkShare_LNK, WalkPercent_TXT };
+	    String RunGoalElements[] = { RunGoalName_TXT, EditRunGoal_LNK, RunGoalProgressBar_IMG, RunGoalProgressBarValue_IMG, RunShare_LNK, RunPercent_TXT };
+	    String FrequencyGoalElements[] = { FrequencyGoalName_TXT, EditFrequencyGoal_LNK, FrequencyGoalProgressBar_IMG, FrequencyGoalProgressBarValue_IMG, FrequencyShare_LNK, FrequencyPercent_TXT };
+	    String WeightGoalElements[] = { WeightGoalName_TXT, EditWeightGoal_LNK, WeightGoalProgressBar_IMG, WeightGoalProgressBarValue_IMG, WeightShare_LNK, WeightPercent_TXT };
+	    String ElementsToVerify[] = { Walk_ICON, Run_ICON, Weight_IMG, Frequency_ICON, Today_BTN, Last7Days_BTN, Last30Days_BTN, Goals_BTN };
+	    // Verify Walk, Run , Frequency, Weight Icons.....
+	    for (int loopInc = 0; loopInc < ElementsToVerify.length; loopInc++) {
+		if (!isElementPresentVerification(ElementsToVerify[loopInc], browser)) {
+		    messagesMap.put(ElementsToVerify[loopInc], ElementsToVerify[loopInc] + " is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying UI of Walk Goal progress
+	    if (!isElementPresentVerification(DisabledWalkIcon_IMG, browser)) {
+		for (int loopInc = 0; loopInc < WalkGoalElements.length; loopInc++) {
+		    if (!isElementPresentVerification(WalkGoalElements[loopInc], browser)) {
+			messagesMap.put(WalkGoalElements[loopInc], WalkGoalElements[loopInc] + " is missing");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		if (!isElementPresentVerification(AddWalkGoal_LNK, browser)) {
+		    messagesMap.put("Add a Walk Goal link", "Add a Walk Goal link is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying UI of Run Goal progress
+	    if (!isElementPresentVerification(DisabledRunIcon_IMG, browser)) {
+		for (int loopInc = 0; loopInc < RunGoalElements.length; loopInc++) {
+		    if (!isElementPresentVerification(RunGoalElements[loopInc], browser)) {
+			messagesMap.put(RunGoalElements[loopInc], RunGoalElements[loopInc] + " is missing");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		if (!isElementPresentVerification(AddRunGoal_LNK, browser)) {
+		    messagesMap.put("Add a Run Goal link", "Add a Run Goal link is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying UI of Frequency Goal progress
+	    if (!isElementPresentVerification(DisabledFrequencyIcon_IMG, browser)) {
+		for (int loopInc = 0; loopInc < FrequencyGoalElements.length; loopInc++) {
+		    if (!isElementPresentVerification(FrequencyGoalElements[loopInc], browser)) {
+			messagesMap.put(FrequencyGoalElements[loopInc], FrequencyGoalElements[loopInc] + " is missing");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		if (!isElementPresentVerification(AddFrequencyGoal_LNK, browser)) {
+		    messagesMap.put("Add a Frequency Goal link", "Add a Frequency Goal link is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying UI of Weight Goal progress
+	    if (!isElementPresentVerification(DisabledWeightIcon_IMG, browser)) {
+		for (int loopInc = 0; loopInc < WeightGoalElements.length; loopInc++) {
+		    if (!isElementPresentVerification(WeightGoalElements[loopInc], browser)) {
+			messagesMap.put(WeightGoalElements[loopInc], WeightGoalElements[loopInc] + " is missing");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		if (!isElementPresentVerification(AddWeightGoal_LNK, browser)) {
+		    messagesMap.put("Add a Weight Goal link", "Add a Weight Goal link is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying UI of Lifetime in Progress tab - Rajesh
+	    if (isElementPresentVerifyClick(Lifetime_BTN, browser)) {
+		if (!(isElementPresentVerification(LifetimeActivities_TXT, browser) && isElementPresentVerification(LifetimeMiles_TXT, browser) && isElementPresentVerification(LifetimeSteps_TXT,
+			browser))) {
+		    messagesMap.put("Life time tiles ", "Life time tiles page is not as expected");
+		    status = WARNING;
+		}
+	    } else {
+		messagesMap.put("Life time button ", "Life time button is missing");
+		status = WARNING;
+
+	    }
+	    // verifying goal expiring message - Rajesh
+	    if (dataMap.get("GoalAboutToExpire").get(0).equalsIgnoreCase("Yes")) {
+		String divID = "";
+		String ExpireGoalsArr[] = null;
+		String ExpireGoals = dataMap.get("GoalAboutToExpire").get(0);
+		if (ExpireGoals.contains(":")) {
+		    ExpireGoalsArr = ExpireGoals.split(":");
+		}
+		for (int k = 0; k < ExpireGoalsArr.length; k++) {
+		    if (ExpireGoalsArr[k].equalsIgnoreCase("Walk")) {
+			divID = "1";
+		    } else if (ExpireGoalsArr[k].equalsIgnoreCase("Run")) {
+			divID = "2";
+		    } else if (ExpireGoalsArr[k].equalsIgnoreCase("Frequency")) {
+			divID = "3";
+		    } else if (ExpireGoalsArr[k].equalsIgnoreCase("Weight")) {
+			divID = "4";
+		    }
+		    if (!isElementPresentVerification(ExpiryMessage_TXT.replace("ABC", divID), browser)) {
+			messagesMap.put("Goal Expiry Message", "Message not found");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if(!isElementPresentVerifyClick(Goals_BTN, browser)){
+		messagesMap.put("Goal Button", "Unable to click goal button");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the UI of Weigh In Tab.
+     * @author - Saravanan M
+     * @Created - 17-Jan-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyUIofWeighinTab(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String WeighIn_TAB = "a>span[class='weigh_in']~CSS";
+	String Date_TXT = "input#WeighinDate~CSS";
+	String Date_ICON = "//a[@title='Choose date']~XPATH";
+	String Weight_TXT = "input#weightMeasurement~CSS";
+	String Time_LST = "select[name*='timeofday']~CSS";
+	String More_LNK = "a#WeightMore~CSS";
+	String Less_LNK = "a#Weightless~CSS";
+	String EmotionDefault_IMG = "img#emotionWeight_0~CSS";
+	String Emotion1_IMG = "img#emotionWeight_1~CSS";
+	String Emotion2_IMG = "img#emotionWeight_2~CSS";
+	String Emotion3_IMG = "img#emotionWeight_3~CSS";
+	String Emotion4_IMG = "img#emotionWeight_4~CSS";
+	String Emotion5_IMG = "img#emotionWeight_5~CSS";
+	String Note_TXT = "textarea#logTextAreaWeigh~CSS";
+	String Weist_TXT = "input#weightMeasurement1~CSS";
+	String Chest_TXT = "input#weightMeasurement2~CSS";
+	String Thigh_TXT = "input#weightMeasurement4~CSS";
+	String Neck_TXT = "input#weightMeasurement3~CSS";
+	String Calves_TXT = "input#weightMeasurement5~CSS";
+	String Arms_TXT = "input#weightMeasurement6~CSS";
+	String Log_BTN = "input#weighInLogMore~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Clicking on Weigh In tab
+	    if (!isElementPresentVerifyClick(WeighIn_TAB, browser)) {
+		messagesMap.put("Weigh In Tab", "Not able to click on Weigh In Tab");
+		status = WARNING;
+	    }
+	    // Clicking on More Link
+	    if (!isElementPresentVerifyClick(More_LNK, browser)) {
+		messagesMap.put("More Link", "Not able to click on More Link");
+		status = WARNING;
+	    }
+	    // Verifying the other UI of the Weigh in Tab
+	    String WeighinTabElements[] = { Date_TXT, Date_ICON, Weight_TXT, Time_LST, EmotionDefault_IMG, Emotion1_IMG, Emotion2_IMG, Emotion3_IMG, Emotion4_IMG, Emotion5_IMG, Note_TXT, Weist_TXT,
+		    Chest_TXT, Thigh_TXT, Neck_TXT, Calves_TXT, Arms_TXT, Log_BTN };
+	    for (int loopInc = 0; loopInc < WeighinTabElements.length; loopInc++) {
+		if (!isElementPresentVerification(WeighinTabElements[loopInc], browser)) {
+		    messagesMap.put(WeighinTabElements[loopInc], WeighinTabElements[loopInc] + " is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Clicking on Less Link
+	    if (!isElementPresentVerifyClick(Less_LNK, browser)) {
+		messagesMap.put("Less Link", "Not able to click on Less Link");
+		status = WARNING;
+	    }
+	    // Verifying whether the More link is present there after clicking
+	    // on the Less link
+	    if (!isElementPresentVerification(More_LNK, browser)) {
+		messagesMap.put("More Link", "Not able to Locate More Link");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the UI of Log Activity Tab.
+     * @author - Saravanan M
+     * @Created - 18-Jan-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyUIofLogActivityTab(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String LogActivity_TAB = "//a/span[contains(text(),'Log Activity')]~XPATH";
+	String Date_TXT = "input#logActivityDate~CSS";
+	String Date_ICON = "//a[@title='Choose date']~XPATH";
+	String OtherActivityNameDisabled_TXT = "input#activityName[class*='greyColor']~CSS";
+	String OtherActivityNameEnabled_TXT = "input#activityName~CSS";
+	String More_LNK = "a#logMore~CSS";
+	String Less_LNK = "a#logless~CSS";
+	String ActivityWalk_RDO = "input#walkRadio~CSS";
+	String ActivityRun_RDO = "input#runRadio~CSS";
+	String ActivityOther_RDO = "input#otherRadio~CSS";
+	String Distance_TXT = "input#distance~CSS";
+	String DistanceMeasure_LST = "select#logRadioSelect~CSS";
+	String DurationHrs_TXT = "input#durationHrs~CSS";
+	String DurationMins_TXT = "input#durationMins~CSS";
+	String DurationSecs_TXT = "input#durationSecs~CSS";
+	String MapIT_LNK = "a[title*='Map']~CSS";
+	String EmotionDefault_IMG = "img#emotion_0~CSS";
+	String Emotion1_IMG = "img#emotion_1~CSS";
+	String Emotion2_IMG = "img#emotion_2~CSS";
+	String Emotion3_IMG = "img#emotion_3~CSS";
+	String Emotion4_IMG = "img#emotion_4~CSS";
+	String Emotion5_IMG = "img#emotion_5~CSS";
+	String Note_TXT = "textarea#logTextArea~CSS";
+	String IntensitySlider_ELM = "div#slider~CSS";
+	String IntensityHandler_LNK = "a[class*='ui-slider-handle']~CSS";
+	String SyncATrackingDevice_LNK = "//div[@id='logActivityTab']/div[2]/a[@title='Sync a tracking device']~XPATH";
+	String OtherActivityInfo_IMG = "img#activityInfo~CSS";
+	String OtherActivityInfoToolTip_ELM = "div#activityTooltip~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Clicking on Weigh In tab
+	    if (!isElementPresentVerifyClick(LogActivity_TAB, browser)) {
+		messagesMap.put("Log Activity Tab", "Not able to click on Log Activity Tab");
+		status = WARNING;
+	    }
+	    // Clicking on More Link
+	    if (!isElementPresentVerifyClick(More_LNK, browser)) {
+		messagesMap.put("More Link", "Not able to click on More Link");
+		status = WARNING;
+	    }
+	    // Verifying the other UI of the Weigh in Tab
+	    String LogActivityTabElements[] = { Date_TXT, Date_ICON, OtherActivityNameDisabled_TXT, Distance_TXT, DistanceMeasure_LST, DurationHrs_TXT, DurationMins_TXT, DurationSecs_TXT,
+		    EmotionDefault_IMG, Emotion1_IMG, Emotion2_IMG, Emotion3_IMG, Emotion4_IMG, Emotion5_IMG, Note_TXT, SyncATrackingDevice_LNK, ActivityWalk_RDO, ActivityRun_RDO, ActivityOther_RDO,
+		    MapIT_LNK, IntensitySlider_ELM, IntensityHandler_LNK };
+
+	    for (int loopInc = 0; loopInc < LogActivityTabElements.length; loopInc++) {
+		if (!isElementPresentVerification(LogActivityTabElements[loopInc], browser)) {
+		    messagesMap.put(LogActivityTabElements[loopInc], LogActivityTabElements[loopInc] + " is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying Enabled Other Activity Name Field
+	    getElementByProperty(ActivityOther_RDO, browser).click();
+	    if (!isElementPresentVerification(OtherActivityNameEnabled_TXT, browser)) {
+		messagesMap.put("Enabled Other Activity Name", "Other Activity Name is not enabled");
+		status = WARNING;
+	    }
+	    // Verifying Other Activity Info Icon and Tool tip
+	    if (isElementPresentVerifyClick(OtherActivityInfo_IMG, browser)) {
+		if (!isElementPresentVerification(OtherActivityInfoToolTip_ELM, browser)) {
+		    messagesMap.put("Other Activity Info Tool tip", "Other Activity Info Tool tip is not present");
+		    status = WARNING;
+		}
+	    } else {
+		messagesMap.put("Other Activity Info Icon", "Other Activity Info Icon is not present");
+		status = WARNING;
+	    }
+	    // Clicking on Less Link
+	    if (!isElementPresentVerifyClick(Less_LNK, browser)) {
+		messagesMap.put("Less Link", "Not able to click on Less Link");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(More_LNK, browser)) {
+		messagesMap.put("Less Link", "Link is not working");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Customers verifies the tenth of the pounds in weigh
+     *          in,Activity Log and Progress bar:
+     * @author - Rajesh Kumar D
+     * @Created - 29-May-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyTenthWeighIn(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LogEntriesTable_TBL = "//table[@id='logEnteriesTable']/tbody~XPATH";
+	String AllLogEntries_LNK = "//a[contains(text(),'View all log entries')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String Weight = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Weight");
+	    System.out.println("Weight="+Weight);
+	    if (!isElementPresentVerifyClick(AllLogEntries_LNK, browser)) {
+		throw new Exception("Unable to click on the All Log Entries Link");
+	    }
+	    List<WebElement> tablehandler = getElementByProperty(LogEntriesTable_TBL, browser).findElements(By.tagName("tr"));
+	    int NoOfTableRows = tablehandler.size();
+	    System.out.println("NoOfTableRows="+NoOfTableRows);
+	    int RowIncrementer = 4;
+	    for (int row = 1; row <= NoOfTableRows; row += RowIncrementer) {
+//		WebElement AllLogEntriesTable = getElementByProperty("//table/tbody/tr[" + row + "]/td[3]", browser);
+		if (getElementByProperty("//table/tbody/tr[" + row + "]/td[3]", browser) != null) {
+		    String ActivityType = getElementByProperty("//table/tbody/tr[" + row + "]/td[3]", browser).getText();
+		    if (ActivityType.equalsIgnoreCase("Weigh-in")) {
+			if (!(getElementByProperty("//table/tbody/tr[" + row + "]/td[4]", browser).getText().contains(Weight))) {
+			    messagesMap.put("Tenth value", "Logged Weigh in Activity is not found in the All Log Entries Table");
+			    status = WARNING;
+			}else{
+			    break;
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

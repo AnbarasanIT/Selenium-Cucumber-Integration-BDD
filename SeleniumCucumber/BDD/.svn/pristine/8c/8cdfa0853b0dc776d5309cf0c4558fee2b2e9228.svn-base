@@ -1,0 +1,312 @@
+@loyalty @CreditCardNewFourteenDigitCheckout
+
+Feature: Customer is able to Place Order With 14 digit credit card
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CCFOURTEEN-1
+Scenario: Logged in user in LOY AARP, add SS+CL items to cart,checkout,provide 14 digit credit card number,place an order.
+
+Given  "LTY-CCFOURTEEN-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-1  |
+
+Given "LTY-CCFOURTEEN-1" Customer login to the walgreens.com:
+| InputFileName |  SheetName  | RowId     |
+| LoyaltyLogin  | CCFOURTEEN  | AARPUser1 |
+
+And "LTY-CCFOURTEEN-1" Customer Clears the Shopping Cart
+
+And "LTY-CCFOURTEEN-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-CCFOURTEEN-1" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CCFOURTEEN-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CCFOURTEEN-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CCFOURTEEN-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-CCFOURTEEN-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-CCFOURTEEN-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-CCFOURTEEN-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-CCFOURTEEN-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-CCFOURTEEN-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc2     |
+
+Then "LTY-CCFOURTEEN-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "LTY-CCFOURTEEN-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-CCFOURTEEN-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-1  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@LTY-CCFOURTEEN-2
+Scenario: Non Member Email Loyalty Items on sale , BOGO on sale ( Not satisfied) , BOGOLEP on sale (not Satisfied) ,BAGB ( not satisfied) ,
+blue arrow should not be displayed and regular price only Displayed ( SS and CL only Cart ) in Dotcom 14 Digit CC  2 DG Display
+
+Given  "LTY-CCFOURTEEN-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-2  |
+
+Given "LTY-CCFOURTEEN-2" Customer login to the walgreens.com:
+| InputFileName |  SheetName  | RowId           |
+| CommonData    |  Login      | NonLoyaltyUser  |
+
+And "LTY-CCFOURTEEN-2" Customer Clears the Shopping Cart
+
+And "LTY-CCFOURTEEN-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | BOGO1 	|
+
+Then "LTY-CCFOURTEEN-2" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CCFOURTEEN-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 |
+| CommonData    | search    | BOGOLEP1	 |
+
+Then "LTY-CCFOURTEEN-2" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CCFOURTEEN-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 |
+| CommonData    | search    | BAGB1 	 |
+
+Then "LTY-CCFOURTEEN-2" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CCFOURTEEN-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CCFOURTEEN-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CCFOURTEEN-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-CCFOURTEEN-2" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-CCFOURTEEN-2" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-CCFOURTEEN-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-CCFOURTEEN-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-CCFOURTEEN-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc2     |
+
+Then "LTY-CCFOURTEEN-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "LTY-CCFOURTEEN-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-CCFOURTEEN-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-2  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CCFOURTEEN-3
+Scenario: SS Emp User with Emp and Loyalty savings no points no line check out Display 14 digit CC
+
+
+Given  "LTY-CCFOURTEEN-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-3  |
+
+Given "LTY-CCFOURTEEN-3" Customer login to the walgreens.com:
+| InputFileName |  SheetName  | RowId     |
+| LoyaltyLogin  | CCFOURTEEN | EMPUser1  |
+
+And "LTY-CCFOURTEEN-3" Customer Clears the Shopping Cart
+
+And "LTY-CCFOURTEEN-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-CCFOURTEEN-3" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-CCFOURTEEN-3" Customer Goes to the Shopping Cart
+
+Then "LTY-CCFOURTEEN-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-CCFOURTEEN-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-CCFOURTEEN-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       -                  |
+
+Then "LTY-CCFOURTEEN-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc2     |
+
+Then "LTY-CCFOURTEEN-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "LTY-CCFOURTEEN-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-CCFOURTEEN-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-3  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CCFOURTEEN-4
+Scenario: SS and CL Emp User with Emp and Loyalty savings and loy points no line Checkout 14 digit CC
+
+Given  "LTY-CCFOURTEEN-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-4  |
+
+Given "LTY-CCFOURTEEN-4" Customer login to the walgreens.com:
+| InputFileName |  SheetName  | RowId     |
+| LoyaltyLogin  | CCFOURTEEN  | EMPUser1  |
+
+And "LTY-CCFOURTEEN-4" Customer Clears the Shopping Cart
+
+And "LTY-CCFOURTEEN-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-CCFOURTEEN-4" Customer adds Daily Living items to the cart from search.
+
+And "LTY-CCFOURTEEN-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CCFOURTEEN-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CCFOURTEEN-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-CCFOURTEEN-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info2 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-CCFOURTEEN-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-CCFOURTEEN-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-CCFOURTEEN-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc2     |
+
+Then "LTY-CCFOURTEEN-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "LTY-CCFOURTEEN-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-CCFOURTEEN-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-4  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-CCFOURTEEN-5
+Scenario: CL Emp User with Emp and Loyalty points no loy savings checkout 14 digit CC
+
+Given  "LTY-CCFOURTEEN-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-5  |
+
+Given "LTY-CCFOURTEEN-5" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId     |
+| LoyaltyLogin  | CCFOURTEEN | EMPUser1  |
+
+And "LTY-CCFOURTEEN-5" Customer Clears the Shopping Cart
+
+And "LTY-CCFOURTEEN-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-CCFOURTEEN-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-CCFOURTEEN-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-CCFOURTEEN-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info2 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-CCFOURTEEN-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-CCFOURTEEN-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+Then "LTY-CCFOURTEEN-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc2     |
+
+Then "LTY-CCFOURTEEN-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "LTY-CCFOURTEEN-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-CCFOURTEEN-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		|
+| QC-LTY        | CCFOURTEEN    | LTY-CCFOURTEEN-5  |

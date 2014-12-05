@@ -1,0 +1,673 @@
+@accountSettings @AccountResetValidations
+Feature:  Customer retrieves the user name / resets the password
+#----------------------------------------------------------------------------------
+@CORE-AccountReset-1
+Scenario: To verify whether user is able to reset password via Forgot your password link from Sign in / register page 
+
+Given  "CORE-AccountReset-1" Customer starts the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-1 |
+
+Given "CORE-AccountReset-1" Customer login to the Yahoo.com:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | AuthChangePassword1 |	
+
+And "CORE-AccountReset-1" Customer deletes all the emails from the Inbox.
+
+Then "CORE-AccountReset-1" Customer selects required option to retrieve or change login credentials:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | AuthChangePassword1 |	
+
+And "CORE-AccountReset-1" Customer goes to the Inbox for the email client:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | AuthChangePassword1 |	
+
+Then "CORE-AccountReset-1" Customer retrieves Username or changes Password from the required email:
+| InputFileName  |   SheetName        | RowId      	    	|   
+| 	CommonData	 | RetrieveLoginData  | AuthChangePassword1 |	
+
+Then "CORE-AccountReset-1" Customer finished testing the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-1 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-AccountReset-2
+Scenario: To verify whether user is able to retrieve username via Forgot your username link from Sign in / register page 
+
+Given  "CORE-AccountReset-2" Customer starts the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-2 |
+
+Given "CORE-AccountReset-2" Customer login to the Yahoo.com:
+| InputFileName  |   SheetName        | RowId      	    		|   
+| 	CommonData	 | RetrieveLoginData  | AuthRetrieveUserName1 	|	
+
+And "CORE-AccountReset-2" Customer deletes all the emails from the Inbox.
+
+Then "CORE-AccountReset-2" Customer selects required option to retrieve or change login credentials:
+| InputFileName  |   SheetName        | RowId      	    		|   
+| 	CommonData	 | RetrieveLoginData  | AuthRetrieveUserName1 	|	
+
+And "CORE-AccountReset-2" Customer goes to the Inbox for the email client:
+| InputFileName  |   SheetName        | RowId      	    		|   
+| 	CommonData	 | RetrieveLoginData  | AuthRetrieveUserName1 	|	
+
+Then "CORE-AccountReset-2" Customer retrieves Username or changes Password from the required email:
+| InputFileName  |   SheetName        | RowId      	    		|   
+| 	CommonData	 | RetrieveLoginData  | AuthRetrieveUserName1 	|	
+
+Then "CORE-AccountReset-2" Customer finished testing the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-2 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-AccountReset-3
+Scenario: To verify whether user is able shown the account locked message for the locked account
+
+Given  "CORE-AccountReset-3" Customer starts the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-3 |
+
+Then "CORE-AccountReset-3" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Given "CORE-AccountReset-3" Customer validates the invalid login:
+| InputFileName  | SheetName   | RowId      	|LockedMsgVerification  |Validation |
+| CommonData  	 | login       | LockedUser1	|Yes					|-			|
+
+Then "CORE-AccountReset-3" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | mobileuser	|
+
+Then "CORE-AccountReset-3" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| mobilePharmacy	 |
+| PharmacyHomePageLinkVerification  | Anonymous  	| mobileNewRx		 |
+
+Then "CORE-AccountReset-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      					|
+| CommonData  	 | login       | AppointmentAuthenticatedUser	|
+
+Then "CORE-AccountReset-3" Customer finished testing the scenario:
+| InputFileName | SheetName      | RowId      		   |
+| QC-CORE       | AccountReset   | CORE-AccountReset-3 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-CartValidation-1
+Scenario: Customer verifies cart merge functionality
+
+Given  "CORE-CartValidation-1" Customer starts the scenario:
+| InputFileName | SheetName        | RowId      		   |
+| QC-CORE       | CartValidation   | CORE-CartValidation-1 |
+
+And "CORE-CartValidation-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  		  |
+| CommonData    | search    | DCProduct1      |
+
+Then "CORE-CartValidation-1" Customer adds Daily Living items to the cart from search.
+
+Then "CORE-CartValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Then "CORE-CartValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | login       | NewPrescription1	|
+
+Then "CORE-CartValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Then "CORE-CartValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | login       | NewPrescription1	|
+
+And "CORE-CartValidation-1" Customer Clears the Shopping Cart
+
+Then "CORE-CartValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName        | RowId      		   |
+| QC-CORE       | CartValidation   | CORE-CartValidation-1 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-CartLoginValidation-1
+Scenario: Customer verifies the login functionality for different type of users
+
+Given  "CORE-CartLoginValidation-1" Customer starts the scenario:
+| InputFileName | SheetName    		    | RowId      				   |
+| QC-CORE       | CartLoginValidation   | CORE-CartLoginValidation-1   |
+
+Then "CORE-CartLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 	| RowId              | 
+| HomepageLinks		| Homepage  	| ShoppingList		 | 
+
+Then "CORE-CartLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | NewPrescription1	|
+
+Then "CORE-CartLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Then "CORE-CartLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser1	|
+
+Then "CORE-CartLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Then "CORE-CartLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId    		  	|
+| CommonData  	 | CoreLogin   | NoEmailFormatLite	|
+
+Then "CORE-CartLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName 					| SheetName 	| RowId              |
+| PharmacyHomePageLinkVerification  | Anonymous  	| GlobalSignin		 |
+
+Then "CORE-CartLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName  	 | RowId    		|
+| CommonData  	 | CoreLogin     | NoEmailFormatRx	|
+
+Then "CORE-CartLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-CartLoginValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName     	    | RowId      		 		  |
+| QC-CORE       | CartLoginValidation   | CORE-CartLoginValidation-1  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-RxLinksLoginValidation-1
+Scenario: Customer verifies the login functionality for lite user via Pharmacy links
+
+Given  "CORE-RxLinksLoginValidation-1" Customer starts the scenario:
+| InputFileName | SheetName    		   	   | RowId      				     |
+| QC-CORE       | RxLinksLoginValidation   | CORE-RxLinksLoginValidation-1   |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId             	 |
+| HomepageLinks  | CoreRxAnonymous 	| ManagePrescriptions	 |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| Autorefills	 |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| TransferRx	 |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId  |
+| HomepageLinks  | CoreRxAnonymous 	| NewRx	 |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      |
+| HomepageLinks  | CoreRxAnonymous 	| RxHistory	 |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId				  |
+| HomepageLinks  | CoreRxAnonymous 	| PrintRxRecords	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| ImmunizationServices	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| AppointmentScheduler	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| CheckDrugInteractions	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId		  |
+| HomepageLinks  | CoreRxAnonymous 	| DrugInfo	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| StoreLocator	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId	  |
+| HomepageLinks  | CoreRxAnonymous 	| PSC	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId		  |
+| HomepageLinks  | CoreRxAnonymous 	| RefillNow	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| MailServiceRx	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CoreLightUser2	|
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| MedicareInfo	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| SpecialtyRx	  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName     	    	| RowId      		 		 	 |
+| QC-CORE       | RxLinksLoginValidation    | CORE-RxLinksLoginValidation-1  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CORE-RxLinksLoginValidation-2
+Scenario: Customer verifies the login functionality for unauthenticated user via Pharmacy links
+
+Given  "CORE-RxLinksLoginValidation-2" Customer starts the scenario:
+| InputFileName | SheetName    		   	   | RowId      				     |
+| QC-CORE       | RxLinksLoginValidation   | CORE-RxLinksLoginValidation-2   |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId             	 |
+| HomepageLinks  | CoreRxAnonymous 	| ManagePrescriptions	 |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreUnauthUser1	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| Autorefills	 |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser1	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| TransferRx	 |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser2	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId  |
+| HomepageLinks  | CoreRxAnonymous 	| NewRx	 |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser3	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      |
+| HomepageLinks  | CoreRxAnonymous 	| RxHistory	 |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser1	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId				  |
+| HomepageLinks  | CoreRxAnonymous 	| PrintRxRecords	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser1	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| ImmunizationServices	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| AppointmentScheduler	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| CheckDrugInteractions	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId		  |
+| HomepageLinks  | CoreRxAnonymous 	| DrugInfo	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| StoreLocator	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId	  |
+| HomepageLinks  | CoreRxAnonymous 	| PSC	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId		  |
+| HomepageLinks  | CoreRxAnonymous 	| RefillNow	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser1	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| MedicareInfo	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId				  |
+| HomepageLinks  | CoreRxAnonymous 	| LogoutPageLogin	  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreUnauthUser4	|
+
+Then "CORE-RxLinksLoginValidation-2" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-2" Customer finished testing the scenario:
+| InputFileName | SheetName     	    	| RowId      		 		 	 |
+| QC-CORE       | RxLinksLoginValidation    | CORE-RxLinksLoginValidation-2  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+#Last 5 steps needs to be commented while running it for production since that data is available only for staging
+@CORE-RxLinksLoginValidation-3
+Scenario: Customer verifies the login functionality for Rx authenticated user via Pharmacy links
+
+Given  "CORE-RxLinksLoginValidation-3" Customer starts the scenario:
+| InputFileName | SheetName    		   	   | RowId      				     |
+| QC-CORE       | RxLinksLoginValidation   | CORE-RxLinksLoginValidation-3   |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId             	 |
+| HomepageLinks  | CoreRxAnonymous 	| ManagePrescriptions	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	      |
+| HomepageLinks  | CoreAuthObjValidation   | RefillRx     |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| Autorefills	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	 	     |
+| HomepageLinks  | CoreAuthObjValidation   | Autorefills     |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId          |
+| HomepageLinks  | CoreRxAnonymous 	| TransferRx	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	 	     |
+| HomepageLinks  | CoreAuthObjValidation   | TransferRx      |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId  |
+| HomepageLinks  | CoreRxAnonymous 	| NewRx	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	    |
+| HomepageLinks  | CoreAuthObjValidation   | NewRx      |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId 	 |
+| HomepageLinks  | CoreRxAnonymous 	| RxHistory	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	    |
+| HomepageLinks  | CoreAuthObjValidation   | RxHistory  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId 			 |
+| HomepageLinks  | CoreRxAnonymous 	| PrintRxRecords	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId   		   	|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	  		  |
+| HomepageLinks  | CoreAuthObjValidation   | PrintRxRecords   |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId 		 |
+| HomepageLinks  | CoreRxAnonymous 	| ExpressRefill	 |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| ImmunizationServices	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| AppointmentScheduler	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId					  |
+| HomepageLinks  | CoreRxAnonymous 	| CheckDrugInteractions	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId		  |
+| HomepageLinks  | CoreRxAnonymous 	| DrugInfo	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| StoreLocator	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId	  |
+| HomepageLinks  | CoreRxAnonymous 	| PSC	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| MedicareInfo	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |
+| HomepageLinks  | CoreRxAnonymous 	| PharmacyTab	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId      		|SourcePage     |
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|Overlay		|
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId				  |
+| HomepageLinks  | CoreRxAnonymous 	| LogoutPageLogin	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName	| RowId				  |
+| HomepageLinks  | Homepage 	| RefillFastClose	  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |ClickObjectinTab|
+| HomepageLinks  | Homepage		 	| ShoppingList	  |Yes			   |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      		|
+| CommonData  	 | CoreLogin   | CoreRxAuthUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName      		   | RowId 	 		  |ClickObjectinTab|
+| HomepageLinks  | CoreAuthObjValidation   | ShoppingList     |Yes			   |
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId			  |ClickObjectinTab|
+| HomepageLinks  | Homepage		 	| ShoppingList	  |Yes			   |
+
+Then "CORE-RxLinksLoginValidation-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName  | SheetName   | RowId      			|
+| CommonData  	 | CoreLogin   | CoreRxQuickRegUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CORE-RxLinksLoginValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId	  |
+| HomepageLinks  | CoreRxAnonymous 	| Photo	  |
+
+Given "CORE-RxLinksLoginValidation-3" Customer login to Photo page:
+| InputFileName  | SheetName   | RowId      	|
+| CommonData  	 | CoreLogin   | CorePhotoUser1	|
+
+Then "CORE-RxLinksLoginValidation-3" Customer finished testing the scenario:
+| InputFileName | SheetName     	    	| RowId      		 		 	 |
+| QC-CORE       | RxLinksLoginValidation    | CORE-RxLinksLoginValidation-3  |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

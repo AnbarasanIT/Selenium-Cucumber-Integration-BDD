@@ -1,0 +1,1003 @@
+@pharmacy @RefillHub
+Feature: All the scenarios in the feature are related Refill Hub check out and UI validation
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-1
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-RefillHub-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-1 		|
+
+Given "RX-RefillHub-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      | 
+| CommonData 	 | login     | RefillRx5  |
+
+And "RX-RefillHub-1" Customer Clears the Shopping Cart
+
+When  "RX-RefillHub-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId    	    |
+| CACData       | RefillRx  | RefillMainRx1 |
+
+Then "RX-RefillHub-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-1" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId        |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-1" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-RefillHub-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-1   |
+
+Then "RX-RefillHub-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-1" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-1    |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-2
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-RefillHub-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-2 		|
+
+Given "RX-RefillHub-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      | 
+| CommonData 	 | login     | MailPlanUser2  |
+
+And "RX-RefillHub-2" Customer Clears the Shopping Cart
+
+When  "RX-RefillHub-2" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId        |
+| CACData       | RefillRx  | MemberRefill |
+
+Then "RX-RefillHub-2" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-2" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId        |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-2" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-RefillHub-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-2   |
+
+Then "RX-RefillHub-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-2" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-2    |
+
+#---------------------------------------------------------------------------------------------------------
+
+@RX-RefillHub-3
+Scenario: Customer check out the  refill rx from prescription details page by pick up at store ( Returning to Manage prescriptions from overlay)
+
+Given  "RX-RefillHub-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-3 		|
+
+Given "RX-RefillHub-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      | 
+| CommonData 	 | login     | RefillRx5  |
+
+And "RX-RefillHub-3" Customer Clears the Shopping Cart
+
+#Select Return to manage prescriptions
+When  "RX-RefillHub-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |ReturntoRefill |
+| CACData       | RefillRx  | RxAutoOFF |Yes			|
+
+When  "RX-RefillHub-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | RxAutoOFF |
+
+Then "RX-RefillHub-3" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-3" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      		 |
+| CACData       | RXpickup  | rxchangestore      |
+
+Then "RX-RefillHub-3" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-RefillHub-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-3   |
+
+Then "RX-RefillHub-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-3" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-3    |
+#---------------------------------------------------------------------------------------------------------
+
+@RX-RefillHub-4
+Scenario: Customer check out the  refill rx from prescription details page by pick up at store ( Returning to Manage prescriptions from overlay)
+
+Given  "RX-RefillHub-4" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-4 		|
+
+Given "RX-RefillHub-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      | 
+| CommonData 	 | login     | RefillRx5  |
+
+And "RX-RefillHub-4" Customer Clears the Shopping Cart
+
+#Select Return to manage prescriptions
+When  "RX-RefillHub-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |ReturntoRefill |
+| CACData       | RefillRx  | RxAutoOFF |Yes			|
+
+When  "RX-RefillHub-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | RxAutoOFF |
+
+Then "RX-RefillHub-4" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-4" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      		 |
+| CACData       | RXpickup  | rxchangestore		 |
+
+Then "RX-RefillHub-4" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-RefillHub-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName         | SheetName    | RowId           |
+#| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-4   |
+
+Then "RX-RefillHub-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-4" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-4    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-5
+Scenario: Customer check out the  refill rx from member prescriptions( Check dates format and No prescriptions overlay)
+
+Given  "RX-RefillHub-5" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-5 		|
+
+Given "RX-RefillHub-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         | 
+| CommonData 	 | login     | MailPlanUser2     |
+
+And "RX-RefillHub-5" Customer Clears the Shopping Cart
+
+And "RX-RefillHub-5" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Authenticated       | RefillPres_New           |
+
+When  "RX-RefillHub-5" Customer verifies date format of refills and No Prescriptions selected overlay:
+| InputFileName | SheetName | RowId          |
+| CACData       | RefillRx  | HistoryRefill1 |
+
+Then  "RX-RefillHub-5" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  				 |
+| Pharmacy      | HOHCheckoutData   | RetailSHOHFamily2		 |
+
+Then "RX-RefillHub-5" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-5" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-5" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-RefillHub-5" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-5   |
+
+Then "RX-RefillHub-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-5" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-5    |
+#---------------------------------------------------------------------------------------------------------
+
+@RX-RefillHub-6
+Scenario: Customer verifies return to prescriptions functionality for family member. Auto refill OFF( Check dates format and No prescriptions overlay)
+
+Given  "RX-RefillHub-6" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-6 		|
+
+Given "RX-RefillHub-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         | 
+| CommonData 	 | login     | MailPlanUser2     |
+
+And "RX-RefillHub-6" Customer Clears the Shopping Cart
+
+And "RX-RefillHub-6" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Authenticated       | RefillPres_New           |
+
+Then "RX-RefillHub-6" Customer selects a family member:
+| FamilyMemberOption    |2  |
+
+When  "RX-RefillHub-6" Customer verifies date format of refills and No Prescriptions selected overlay:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx1 |
+
+When  "RX-RefillHub-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     	 |ReturntoRefill |
+| CACData       | RefillRx  | HistoryRefill2 |Yes			 |
+
+Then "RX-RefillHub-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-6" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-6    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-7
+Scenario: Customer check out the  refill rx from member prescriptions_ RX should be AUTO REFILL ON( Check dates format and No prescriptions overlay)
+
+Given  "RX-RefillHub-7" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-7 		|
+
+Given "RX-RefillHub-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             | 
+| CommonData 	 | login     | MailPlanUser2     |
+
+And "RX-RefillHub-7" Customer Clears the Shopping Cart
+
+And "RX-RefillHub-7" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Authenticated       | RefillPres_New           |
+
+When  "RX-RefillHub-7" Customer verifies date format of refills and No Prescriptions selected overlay:
+| InputFileName | SheetName | RowId    		  |
+| CACData       | RefillRx  | RxAutoON_Member |
+
+Then  "RX-RefillHub-7" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  				 |
+| Pharmacy      | HOHCheckoutData   | RetailSHOHFamily2	 |
+
+Then "RX-RefillHub-7" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-7" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-7" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "RX-RefillHub-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName         | SheetName    | RowId           |
+| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-7   |
+
+Then "RX-RefillHub-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-7" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-7    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-8
+Scenario: Customer check out the  refill rx Admin prescriptions and  member prescriptions( Check dates format and No prescriptions overlay)
+
+Given  "RX-RefillHub-8" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-8 		|
+
+Given "RX-RefillHub-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         | 
+| CommonData 	 | login     | MailPlanUser2     |
+
+And "RX-RefillHub-8" Customer Clears the Shopping Cart
+
+And "RX-RefillHub-8" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Authenticated       | RefillPres_New           |
+
+When  "RX-RefillHub-8" Customer verifies date format of refills and No Prescriptions selected overlay:
+| InputFileName | SheetName | RowId    		  |
+| CACData       | RefillRx  | RxAutoOFF 	  |
+
+Then  "RX-RefillHub-8" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  				 |
+| Pharmacy      | HOHCheckoutData   | retailRx29			 |
+| Pharmacy      | HOHCheckoutData   | RetailSHOHFamily2		 |
+
+Then "RX-RefillHub-8" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-8" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId      |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-8" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-RefillHub-8" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName         | SheetName    | RowId           |
+#| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-8   |
+
+Then "RX-RefillHub-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-8" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-8    |
+
+#---------------------------------------------------------------------------------------------------------
+
+@RX-RefillHub-9
+Scenario: Customer check out the  refill rx Admin + Checks Prescription details page + verfies hide prescriptions functionality( Check dates format and No prescriptions overlay)
+
+Given  "RX-RefillHub-9" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-9 		|
+
+Given "RX-RefillHub-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         | 
+| CommonData 	 | login     | RefillRx5     |
+
+And "RX-RefillHub-9" Customer Clears the Shopping Cart
+
+And "RX-RefillHub-9" Customer clicks on an object and validates the expected results:
+| InputFileName  					| SheetName 		  | RowId      	    		 |
+| PharmacyHomePageLinkVerification  | Authenticated       | RefillPres_New           |
+
+Given "RX-RefillHub-9" Customer verfies prescrptions details and hide prescriptions functionality:
+| InputFileName  | SheetName 	 | RowId         	  | 
+| Pharmacy	 	 | RefillHub     | Checkprescription  |
+
+When  "RX-RefillHub-9" Customer verifies date format of refills and No Prescriptions selected overlay:
+| InputFileName | SheetName | RowId    		  |
+| CACData       | RefillRx  | RxAutoOFF  	  |
+
+Then  "RX-RefillHub-9" Customer adds prescriptions to cart by type:
+| InputFileName | SheetName 		| RowId  				 |
+| Pharmacy      | HOHCheckoutData   | retailRx29			 |
+
+Then "RX-RefillHub-9" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "RX-RefillHub-9" Customer changes rx store or selects new store in pickup options page:
+| InputFileName | SheetName | RowId        |
+| CACData       | RXpickup  | rxchangestore|
+
+Then "RX-RefillHub-9" Customer selects rx pick up date and time and click on continue
+
+Then "RX-RefillHub-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+#Then "RX-RefillHub-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName         | SheetName    | RowId           |
+#| CheckoutOrderDetails  | OrderIds     |RX-RefillHub-9   |
+
+Then "RX-RefillHub-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-9" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHub  | RX-RefillHub-9    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-10
+Scenario: Customer verifies the smart search functionality in the refill hub page
+
+Given  "RX-RefillHub-10" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-10 		|
+
+Given "RX-RefillHub-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         | 
+| CommonData 	 | login     | BuyoutUser    |
+
+Then "RX-RefillHub-10" Customer validates the smart search functionality in the refill hub page:
+| RefillHubTab  | SearchTerm |
+| Buyout		| TRIA		 |
+| Buyout		| 9644602	 |
+| Buyout		| PINTO		 |
+| Buyout		| ErrorMsg	 |
+| History		| ASP		 |
+| History		| 01285		 |
+| History		| RAN		 |
+| History		| ErrorMsg	 |
+
+Then "RX-RefillHub-10" Customer selects a family member:
+| FamilyMemberOption    |1|
+
+Then "RX-RefillHub-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			 | SheetName		| RowId	  		     |
+| PharmacyLinkVerification   | Authenticated 	| SearchBox  		 |
+
+Then "RX-RefillHub-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-10" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-10    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-11
+Scenario: Customer validates the MS-SRX add to cart restriction functionality in the one tab view refill hub page
+
+Given  "RX-RefillHub-11" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-11 		|
+
+Given "RX-RefillHub-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | Singleclickfamily1    |
+
+Then "RX-RefillHub-11" Customer validates the New Refillhub functionalities:
+| Functionality				|FamilyMember |
+| MS-SRX Restriction		|-			  | 
+
+Then "RX-RefillHub-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-11" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-11    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-12
+Scenario: Customer validates the Show history functionality in the one tab view refill hub page
+
+Given  "RX-RefillHub-12" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-12 		|
+
+Given "RX-RefillHub-12" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | AuthBuyoutUser1	     |
+
+Then "RX-RefillHub-12" Customer validates the New Refillhub functionalities:
+| Functionality				|FamilyMember |
+| Show History				|-			  | 
+
+Then "RX-RefillHub-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-12" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-12    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-13
+Scenario: Customer validates the hide/show prescriptions functionality in the one tab view refill hub page
+
+Given  "RX-RefillHub-13" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-13 		|
+
+Given "RX-RefillHub-13" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | AuthenticatedUser1    |
+
+Then "RX-RefillHub-13" Customer validates the New Refillhub functionalities:
+| Functionality				|FamilyMember |
+| HideAndShowRxs			|-			  | 
+| RefillDue					|1			  |
+
+Then "RX-RefillHub-13" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-13    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-14
+Scenario: Customer validates the Expand and Collapse functionalities in the New refill hub view
+
+Given  "RX-RefillHub-14" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-14 		|
+
+Given "RX-RefillHub-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | MultiRefillRxUser2    |
+
+Then "RX-RefillHub-14" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+|  VerifyExpandedMode |
+|  No                 |
+
+Then "RX-RefillHub-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-RefillHub-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | MultiRefillRxUser2    |
+
+Then "RX-RefillHub-14" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+|  VerifyExpandedMode |VerifyCollapseAfterExpand |
+|  Yes                |Yes                       |
+
+Then "RX-RefillHub-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-RefillHub-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | AuthenticatedUser1    |
+
+Then "RX-RefillHub-14" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+| InputFileName  | SheetName     | RowId     		     |  VerifyLineItemClick |
+| Pharmacy   	 | Refillhub     | CheckRxNameClick      |  Yes                 |
+| Pharmacy   	 | Refillhub     | CheckStatusLinkClick  |  Yes                 |
+| Pharmacy   	 | Refillhub     | CheckExpandIconClick  |  Yes                 |
+
+Then "RX-RefillHub-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-RefillHub-14" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | AuthenticatedUser1    |
+
+Then "RX-RefillHub-14" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+|  VerifyExpandedMode  | FamilyMember |
+|  Yes                 | 1            |
+
+Then "RX-RefillHub-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-14" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-14    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-15
+Scenario: Customer validates the Sorting of the New Refill hub page
+
+Given  "RX-RefillHub-15" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-15 		|
+
+Given "RX-RefillHub-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | Expressrefill         |
+
+Then "RX-RefillHub-15" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+|  VerifyExpandedMode |
+|  No                 |
+
+And "RX-RefillHub-15" Customer validates sorting of the refillhub page columns:
+|NoofTimesToClickTableHeader| ColumnToValidate 		| OrderType  | VerificationMode |
+|1			    			| LastFillDate	   		| Descending | Collapsed		|
+|1			    			| LastFillDate     		| Ascending  | Collapsed		|
+|1			    			| Prescription Name     | Ascending  | Collapsed		|
+|1			    			| Prescription Name    	| Descending | Collapsed		|
+|1			    			| Refills Left    	   	| Descending | Collapsed		|
+|1			    			| Refills Left       	| Ascending  | Collapsed		|
+
+Then "RX-RefillHub-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-RefillHub-15" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		     | 
+| CommonData 	 | login     | Expressrefill         |
+
+Then "RX-RefillHub-15" Customer validates the Expand and Collapse Functionalities of the Refill hub:
+|  VerifyExpandedMode |
+|  Yes                |
+
+And "RX-RefillHub-15" Customer validates sorting of the refillhub page columns:
+|NoofTimesToClickTableHeader| ColumnToValidate 		| OrderType  | VerificationMode |
+|1			    			| LastFillDate	   		| Descending | Expanded			|
+|1			    			| LastFillDate     		| Ascending  | Expanded			|
+|1			    			| Prescription Name     | Ascending  | Expanded			|
+|1			    			| Prescription Name    	| Descending | Expanded			|
+|1			    			| Refills Left    	   	| Descending | Expanded			|
+|1			    			| Refills Left       	| Ascending  | Expanded			|
+
+Then "RX-RefillHub-15" Customer selects a family member:
+| FamilyMemberOption    | 2  |
+
+And "RX-RefillHub-15" Customer validates sorting of the refillhub page columns:
+|NoofTimesToClickTableHeader| ColumnToValidate 		| OrderType  | VerificationMode |
+|1			    			| Prescription Name     | Ascending  | Collapsed		|
+|1			    			| Prescription Name    	| Descending | Collapsed		|
+|1			    			| LastFillDate	   		| Descending | Collapsed		|
+|1			    			| LastFillDate     		| Ascending  | Collapsed		|
+|1			    			| Refills Left    	   	| Descending | Collapsed		|
+|1			    			| Refills Left       	| Ascending  | Collapsed		|
+
+Then "RX-RefillHub-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-15" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-15    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-16
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for admin member with ship Rx ,pickup rx ,hidden rx and also verify default ship location
+
+Given  "RX-RefillHub-16" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-16 		|
+
+Given "RX-RefillHub-16" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			 | 
+| CommonData 	 | login     | HubAutoRefillUser1	 |
+
+Then "RX-RefillHub-16" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddr	 |
+
+Then "RX-RefillHub-16" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipHistory		 |
+
+Then "RX-RefillHub-16" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubHidden		 |
+
+Then "RX-RefillHub-16" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddr	 |
+
+Then "RX-RefillHub-16" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillPickupRefillHub	 |
+
+Then "RX-RefillHub-16" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillPickupRefillHub	 |
+
+Then "RX-RefillHub-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-16" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-16    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-17
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for family member with ship Rx ,pickup rx ,hidden rx and also verify default ship location
+
+Given  "RX-RefillHub-17" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-17 		|
+
+Given "RX-RefillHub-17" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			 | 
+| CommonData 	 | login     | HubAutoRefillUser1	 |
+
+Then "RX-RefillHub-17" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      						 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddrMem	 |
+
+Then "RX-RefillHub-17" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipHistoryMem	 |
+
+Then "RX-RefillHub-17" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubHiddenMem		 |
+
+Then "RX-RefillHub-17" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddrMem	 |
+
+Then "RX-RefillHub-17" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      						 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillPickupRefillHubMem	 |
+
+Then "RX-RefillHub-17" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillPickupRefillHubMem	 |
+
+Then "RX-RefillHub-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-17" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-17    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-18
+Scenario: Customer validates the Auto refill feature for Ship to home Rx in Refill hub and Rx history pages for Admin and family member user who have Expresspay information
+
+Given  "RX-RefillHub-18" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-18 		|
+
+Given "RX-RefillHub-18" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			      | 
+| CommonData 	 | login     | HubAutoRefillUser1  		  |
+
+Then "RX-RefillHub-18" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      						 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddr   	 |
+
+Then "RX-RefillHub-18" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipHistory           |
+
+Then "RX-RefillHub-18" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubHidden             |
+
+Then "RX-RefillHub-18" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddr       |
+
+Then "RX-RefillHub-18" Customer selects a family member:
+| FamilyMemberOption    |2|
+
+Then "RX-RefillHub-18" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      						 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddrMem    |
+
+Then "RX-RefillHub-18" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddrMem    |
+
+Then "RX-RefillHub-18" Customer deletes the cc details:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipDefaultAddr	 |
+
+Then "RX-RefillHub-18" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  			 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipNoCc              |
+
+Then "RX-RefillHub-18" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-18" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-18    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-19
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for admin HOH user & family members with Ms Rx and also verify default ship location
+
+Given  "RX-RefillHub-19" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-19 		|
+
+Given "RX-RefillHub-19" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			         | 
+| CommonData 	 | login     | HubAutoRefillHOHadminUser	 |
+
+Then "RX-RefillHub-19" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr	     |
+
+Then "RX-RefillHub-19" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHistory		 |
+
+Then "RX-RefillHub-19" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubMsHidden   	 |
+
+Then "RX-RefillHub-19" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr  	 |
+
+Then "RX-RefillHub-19" Customer selects a family member:
+| FamilyMemberOption    |1|
+
+Then "RX-RefillHub-19" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddrMem	 |
+
+Then "RX-RefillHub-19" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddrMem	 |
+
+Then "RX-RefillHub-19" Customer selects a family member:
+| FamilyMemberOption    |2|
+
+Then "RX-RefillHub-19" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsNHOHDefaultAddrMem	 |
+
+Then "RX-RefillHub-19" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsNHOHDefaultAddrMem	 |
+
+Then "RX-RefillHub-19" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-19" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-19    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-20
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for non HOH admin user & family members with Ms Rx and also verify default ship location
+
+Given  "RX-RefillHub-20" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-20 		|
+
+Given "RX-RefillHub-20" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			     | 
+| CommonData 	 | login     | HubAutoRefillnonHOHUser	 |
+
+Then "RX-RefillHub-20" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      						 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr1	 |
+
+Then "RX-RefillHub-20" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				 	 		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr1	 |
+
+Then "RX-RefillHub-20" Customer selects a family member:
+| FamilyMemberOption    |1|
+
+Then "RX-RefillHub-20" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddrMem1	 |
+
+Then "RX-RefillHub-20" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		     | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddrMem1	 |
+
+Then "RX-RefillHub-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-20" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-20    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-21
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for HOH independent user with Ms Rx and also verify default ship location
+
+Given  "RX-RefillHub-21" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-21 		|
+
+Given "RX-RefillHub-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			 | 
+| CommonData 	 | login     | HubAutoRefillHOHUser	 |
+
+Then "RX-RefillHub-21" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr	 |
+
+Then "RX-RefillHub-21" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHistory		 |
+
+Then "RX-RefillHub-21" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubMsHidden	     |
+
+Then "RX-RefillHub-21" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHOHDefaultAddr	 |
+
+Then "RX-RefillHub-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-21" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-21    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-22
+Scenario: Customer validates the Auto refill feature in Refill hub and Rx history pages for dependant user with Ms Rx and also verify default ship location
+
+Given  "RX-RefillHub-22" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-22 		|
+
+Given "RX-RefillHub-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			         | 
+| CommonData 	 | login     | HubAutoRefilldependentUser	 |
+
+Then "RX-RefillHub-22" Customer fetch the default pickup or ship location:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsDefaultAddr	 |
+
+Then "RX-RefillHub-22" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHistory		 |
+
+Then "RX-RefillHub-22" Customer validates the Auto Refill Off Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsHistory		 |
+
+Then "RX-RefillHub-22" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillHubMsHidden		 |
+
+Then "RX-RefillHub-22" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillMsDefaultAddr	 |
+
+Then "RX-RefillHub-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHub-22" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-22    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHub-23
+Scenario: Customer validates the Error messages displayed in Auto refill page
+
+Given  "RX-RefillHub-23" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHub  		| RX-RefillHub-23 		|
+
+Given "RX-RefillHub-23" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     			         | 
+| CommonData 	 | login     | HubAutoRefillHOHadminUser	 |
+
+Then "RX-RefillHub-23" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId      					 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipEmptyError	 |
+
+Then "RX-RefillHub-23" Customer validates the Auto Refill Overlay of the refillhub page:
+| InputFileName  | SheetName			| RowId    				  		 | 
+| Pharmacy  	 | HubAutoRefill		| HubAutoRefillShipInvalidError	 |
+
+Then "RX-RefillHub-23" Customer logout from walgreens:
+| Source    |
+| Global    |
+
+Then "RX-RefillHub-23" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	   |
+| QC-RX   		 | RefillHub  | RX-RefillHub-23    |
+#---------------------------------------------------------------------------------------------------------

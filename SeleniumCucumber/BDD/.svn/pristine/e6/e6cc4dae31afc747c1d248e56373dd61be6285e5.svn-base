@@ -1,0 +1,1003 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class AutoRefillVerificationLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to either cancel Auto Refill or cancel all the auto
+     *          refills
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date -19-Dec-12
+     ************************************************************* 
+     */
+    public static void cancelAutoRefill(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Cancel_LNK = "a[title*='Cancel']~CSS";
+	String OverlayYES_IMG = "//img[@title='Yes']~XPATH";
+	String Success_ELM = "//b[contains(text(),'Auto Refills Cancelled')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String CancelType = dataMap.get("CancelOption").get(0);
+	    if (CancelType.equalsIgnoreCase("SINGLE")) {
+		// Click Cancel link , Cancel should be present in auto refills
+		// page
+		if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+		    throw new Exception("Not able to click Cancel link, Auto Refill prescriptions are not available");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerifyClick(OverlayYES_IMG, browser)) {
+		    throw new Exception("Not able to click Yes in the confirmation overlay");
+		}
+		switchToDefault(browser);
+		// Check Confirmation message
+		if (!isElementPresentVerification(Success_ELM, browser)) {
+		    messagesMap.put("Expected page", "Confirmation message is not displayed");
+		    status = WARNING;
+		}
+	    } else if (CancelType.equalsIgnoreCase("CANCELALL")) {
+		int flag = 1;
+		while (flag == 1) {
+		    if (!isElementPresentVerification(Cancel_LNK, browser)) {
+			flag = 0;
+		    } else {
+			// Click Cancel link.
+			if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+			    throw new Exception("Not able to click Cancel link, Auto Refill prescriptions are not available");
+			}
+			switchToOverlay(browser);
+			if (!isElementPresentVerifyClick(OverlayYES_IMG, browser)) {
+			    throw new Exception("Not able to click Yes in the confirmation overlay");
+			}
+			switchToDefault(browser);
+			if (!isElementPresentVerification(Success_ELM, browser)) {
+			    messagesMap.put("Expected page", "Confirmation message is not displayed");
+			    status = WARNING;
+			}
+			flag = 1;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select Delivery Options and completes Auto refill
+     *          setup
+     * @author - Fyrose
+     * @Created -21-Dec-12
+     * @Modified By - SARAVANAN M
+     * @Modified Date - 30-JULY-2013
+     ************************************************************* 
+     */
+    public static void selectDeliveryOptionandCompleteAutoRefill(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Shiptome_RADIO = "//input[@id='ship']~XPATH";
+	String Pickup_RADIO = "//input[@id='pickup']~XPATH";
+	String LastPickup_RADIO = "//input[@id='lastpickup']~XPATH";
+	String Continue_IMG = "//input[@alt='Continue']~XPATH";
+	String ExpresspayPage_ELM = "//h1[contains(text(),'ExpressPay Credit Card Information')]~XPATH";
+	String Newcard_RADIO = "//input[@id='newccno']~XPATH";
+	String EXPmonth_LST = "//select[@id='expdate']~XPATH";
+	String EXPyear_LST = "//select[@id='expyear']~XPATH";
+	String CCNewzip_RADIO = "//input[@id='newcardholderzip']~XPATH";
+	String CardNumber_TXT = "//input[@id='ccNumber']~XPATH";
+	String Zipcode_TXT = "//input[@id='newcardholderzipcode']~XPATH";
+	String SaveandContinue = "//input[@alt='Save and Continue']~XPATH";
+	String SetupComplete_ELM = "//b[contains(text(),'Setup Complete')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DeliveryOptions = dataMap.get("DeliverOptions").get(0);
+	    if (DeliveryOptions.equalsIgnoreCase("SHIPTOME")) {
+		// Select Ship to me
+		if (!isElementPresentVerifyClick(Shiptome_RADIO, browser)) {
+		    throw new Exception("Not able to Ship to me Radio button");
+		}
+		if (!isElementPresentVerifyClick(Continue_IMG, browser)) {
+		    throw new Exception("not able to click continue button on delivery options page");
+		}
+		// Enter Credit card Information in Express pay page
+		if (!isElementPresentVerification(ExpresspayPage_ELM, browser)) {
+		    messagesMap.put("Expected page", "Express pay information page is not displayed after selecting Ship to me in auto refills delivery option");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Newcard_RADIO, browser)) {
+		    messagesMap.put("Expected page", "Not able to Select New Credit card radio button ");
+		    status = WARNING;
+		}
+		// Enter Card Number
+		if (!clearAndEnterText(CardNumber_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CCNumber"), browser)) {
+		    messagesMap.put("Expected page", "Not able to enter Credit card Number");
+		    status = WARNING;
+		}
+		if (!selectByVisibleText(EXPmonth_LST, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CCmonth"), browser)) {
+		    messagesMap.put("Expected page", "Not able to select Month ");
+		    status = WARNING;
+		}
+		if (!selectByVisibleText(EXPyear_LST, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CCyear"), browser)) {
+		    messagesMap.put("Expected page", "Not able to select Expiry year ");
+		    status = WARNING;
+		}
+		// Select New Zipcode Web radio button
+		if (!isElementPresentVerifyClick(CCNewzip_RADIO, browser)) {
+		    messagesMap.put("Expected page", "Not able to Select New Credit card radio button ");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Zipcode_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode"), browser)) {
+		    messagesMap.put("Expected page", "Not able to enter Zip Code");
+		    status = WARNING;
+		}
+		// CLick Save and continue
+		if (!isElementPresentVerifyClick(SaveandContinue, browser)) {
+		    throw new Exception("Not able to CLick Save and continue Button");
+		}
+		// Verify Success Message
+		if (!isElementPresentVerification(SetupComplete_ELM, browser)) {
+		    messagesMap.put("Expected page", "Success message is not displayed for completed Auto refills");
+		    status = WARNING;
+		}
+	    } else if (DeliveryOptions.equalsIgnoreCase("PICKUPLAST")) {
+		// Select Pickup by last location
+		if (!isElementPresentVerifyClick(LastPickup_RADIO, browser)) {
+		    throw new Exception("Not able to Ship to me Radio button");
+		}
+		if (!isElementPresentVerifyClick(Continue_IMG, browser)) {
+		    throw new Exception("not able to click continue button on delivery options page");
+		}
+		// Verify Success Message
+		if (!isElementPresentVerification(SetupComplete_ELM, browser)) {
+		    messagesMap.put("Expected page", "Success message is not displayed for completed Auto refills");
+		    status = WARNING;
+		}
+	    } else if (DeliveryOptions.equalsIgnoreCase("PICKUP")) {
+		String Submit = dataMap.get("Submit").get(0);
+		if (!isElementPresentVerifyClick(Pickup_RADIO, browser)) {
+		    throw new Exception("Not able to select Pickup Radio button");
+		}
+		// Click Continue if only Submit is YES. If it is NO then Call
+		// Change store Step.
+		if (Submit.equalsIgnoreCase("YES")) {
+		    if (!isElementPresentVerifyClick(Continue_IMG, browser)) {
+			throw new Exception("not able to click continue button on delivery options page");
+		    }
+		    if (!isElementPresentVerification(SetupComplete_ELM, browser)) {
+			messagesMap.put("Expected page", "Success message is not displayed for completed Auto refills");
+			status = WARNING;
+		    }
+		}
+	    }else if (DeliveryOptions.equalsIgnoreCase("MailServiceRx")) {
+
+		//# SARAVANAN M - JULY-30-2013- To submit the Auto refill for MS Rx
+		// Click Continue if only Submit is YES. If it is NO then Call
+		if (!isElementPresentVerifyClick(SaveandContinue, browser)) {
+		    throw new Exception("Not able to Click Save and continue Button");
+		}
+
+		if (!isElementPresentVerifyClick(SaveandContinue, browser)) {
+		    throw new Exception("Not able to Click Save and continue Button in credit card information page");
+		}
+		if (!isElementPresentVerification(SetupComplete_ELM, browser)) {
+		    messagesMap.put("Expected page", "Success message is not displayed for completed Auto refills");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method is used to select Rx from data sheet for autorefill and
+     *          navigates to Delivery options page
+     * @author - Mohana
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void selectRxforAutorefill(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Setupmoreautorefills_BTN = "img[alt='Set Up More Auto Refills']~CSS";
+	String Setupautorefill_BTN = "img[title='Set Up Auto Refills']~CSS";
+	WebElement AutorefillTable = null;
+	WebElement CheckBoxContainer = null;
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String Deliveryoptionspage_ELM = "//h1[contains(text(),'Delivery Options')]~XPATH";
+	Map<String, String> messagesMap = null;
+	boolean Flag = false;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.get("AutoRefillBTN").get(0).equalsIgnoreCase("Setupautorefill")) {
+		if (!isElementPresentVerifyClick(Setupautorefill_BTN, browser)) {
+		    throw new Exception("setupautorefill button does not exists");
+		}
+	    } else if (dataMap.get("AutoRefillBTN").get(0).equalsIgnoreCase("Setupmoreautorefill")) {
+		if (!isElementPresentVerifyClick(Setupmoreautorefills_BTN, browser)) {
+		    throw new Exception("setupmoreautorefill button does not exists");
+		}
+	    } else {
+		throw new Exception("Please enter Proper input for AutorefillBTN parameter");
+	    }
+	    String PrescriptionNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), dataMap.get("RxField").get(0)); // informs
+	    AutorefillTable = browser.findElement(By.xpath("//div[@class='blue-header-container']/table/tbody"));
+	    List<WebElement> TableRows = AutorefillTable.findElements(By.tagName("tr"));
+	    int noofrows = TableRows.size();
+	    String cellMarker = "";
+	    for (int row = 2; row <= noofrows; row += 1) { // RAM - 2/28/13 -
+		// Row Counter
+		// changed from 2 to
+		// 1
+		if (row != 1) {
+		    cellMarker = "[" + row + "]";
+		}
+		String firstColumnText = browser.findElement(By.xpath("//div[@class='blue-header-container']/table/tbody/tr" + cellMarker + "/td[4]")).getText();
+		if (StringUtils.contains(firstColumnText, PrescriptionNumber)) {
+		    CheckBoxContainer = browser.findElement(By.xpath("//div[@class='blue-header-container']/table/tbody/tr" + cellMarker + "/td"));
+		    CheckBoxContainer.findElement(By.tagName("input")).click();
+		    Flag = true;
+		    break;
+		}
+	    }
+	    if (!Flag) {
+		throw new Exception("None of the Rx was Selected");
+	    }
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		throw new Exception("Continue button does not exists");
+	    }
+	    if (!isElementPresentVerification(Deliveryoptionspage_ELM, browser)) {
+		messagesMap.put("Delivery options page", "not navigated to delivery option page");
+		status = "Warning";
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Update Credit Card Information from Edit Express pay Card Info
+     *          Page or Overlay
+     * @author - Siva Santhi Reddy P
+     * @Created -03 JULY 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void updateCCInfoFromEditExpresspayCardInformationPageorOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String EditBillingInfo_LNK = "a[title*='Edit Billing Information']~CSS";
+	String EditExpressPayCardInfoHeader_ELM = "//h1[contains(text(),'Edit ExpressPay Credit Card Information')]~XPATH";
+	String ExistingCreditCard_RADIO = "input#cardChoice~CSS";
+	String NewCreditCard_RADIO = "input#newccno~CSS";
+	String CCNumber_TXT = "input#ccNumber~CSS";
+	String ExpireMonth_LST = "select[name='ccMonth']~CSS";
+	String ExpireYear_LST = "select[name='ccYear']~CSS";
+	String ExistingZipcode_RADIO = "input#cardHolderZipChoice~CSS";
+	String NewZipcode_RADIO = "input#newcardholderzip~CSS";
+	String Zipcode_TXT = "input[name='cardHolderZip']~CSS";
+	String SaveChanges_BTN = "//input[@alt='Save Changes' or @alt='Save and Continue']~XPATH";
+	String CCNumberErrorMessage_ELM = "//div[contains(text(),'Enter a valid credit card number.')]~XPATH";
+	String CCMonthErrorMessage_ELM = "//div[contains(text(),'Enter a valid month.')]~XPATH";
+	String CCYearErrorMessage_ELM = "//div[contains(text(),'Enter a valid year.')]~XPATH";
+	String CCExpireErrorMessage_ELM = "//div[contains(text(),'Expiration date is not valid')]~XPATH";
+	String ZipcodeErrorMessage_ELM = "//div[contains(text(),'Enter a valid ZIP code.')]~XPATH";
+	String EditCCInfoSuccessMessage_ELM = "//*[contains(text(),'The changes to your ExpressPay credit card information were saved successfully')]~XPATH";
+	String AutoRefillSuccessMessage_ELM = "//*[contains(text(),'You have successfully set up Auto Refills.')]~XPATH";
+	String BillingInfoHeader_ELM = "//*[contains(text(),'Billing information')]~XPATH";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// get required inputs from Excel sheet.
+		String ClickEditBillingInfoLink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickEditBillingInfoLink");
+		String CCinfoInOveraly = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CCinfoInOveraly");
+		String CreditCardType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CreditCardType");
+		String CCNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CCNumber");
+		String CCExpireMonth = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CCMonth");
+		String CCExpireYear = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CCYear");
+		String ZipciodeType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipciodeType");
+		String Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		String ErrorFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorFields");
+		String SuccessMessageType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SuccessMessageType");
+
+		// Click on Edit Billing Info link if it given as Yes
+		if (ClickEditBillingInfoLink != null && ClickEditBillingInfoLink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(EditBillingInfo_LNK, browser)) {
+			throw new Exception("Not able to Click on Edit Billing Info Link");
+		    }
+		    switchToOverlay(browser);
+		    if (!isElementPresentVerification(EditExpressPayCardInfoHeader_ELM, browser)) {
+			messagesMap.put("Express Pay Card Info Header", "Header is missing in the Overaly");
+			status = WARNING;
+		    }
+		}
+		// if CC info is overlay means, Click Edit Billing Info and
+		// switch to Overlay
+		if (CCinfoInOveraly != null && CCinfoInOveraly.equalsIgnoreCase("Yes")) {
+		    switchToOverlay(browser);
+		}
+		// Select Existing credit card
+		if (CreditCardType != null && CreditCardType.equalsIgnoreCase("Exist")) {
+		    if (!checkBoxSelection(browser, ExistingCreditCard_RADIO, "SELECT")) {
+			throw new Exception("Not able to Select the Existing credit card Radio");
+		    }
+		}
+		// Select New Credit Card
+		else if (CreditCardType != null && CreditCardType.equalsIgnoreCase("New")) {
+		    if (!checkBoxSelection(browser, NewCreditCard_RADIO, "SELECT")) {
+			throw new Exception("Not able to Select the New credit card Radio");
+		    }
+		    if (!clearAndEnterText(CCNumber_TXT, CCNumber, browser)) {
+			messagesMap.put("Credit card Number", "Not able to enter credit card number");
+			status = WARNING;
+		    }
+		    if (CCExpireMonth != null && !CCExpireMonth.equals("-")) {
+			new Select(getElementByProperty(ExpireMonth_LST, browser)).selectByVisibleText(CCExpireMonth);
+		    }
+		    if (CCExpireYear != null && !CCExpireYear.equals("-")) {
+			new Select(getElementByProperty(ExpireYear_LST, browser)).selectByVisibleText(CCExpireYear);
+		    }
+		}
+		// Select Existing Zipocde
+		if (ZipciodeType != null && ZipciodeType.equalsIgnoreCase("Exist")) {
+		    if (!checkBoxSelection(browser, ExistingZipcode_RADIO, "SELECT")) {
+			throw new Exception("Not able to Select Existing Credit Card");
+		    }
+		}
+		// Enter New Zipcode
+		else if (ZipciodeType != null && ZipciodeType.equalsIgnoreCase("New")) {
+		    if (!checkBoxSelection(browser, NewZipcode_RADIO, "SELECT")) {
+			throw new Exception("Not able to Select New zipcode Radio Button");
+		    }
+		    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+			messagesMap.put("Zipcode", "Not able to enter new zipocde");
+			status = WARNING;
+		    }
+		}
+		// click on Save Changes
+		if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+		    throw new Exception("Not able to click on Save Changes");
+		}
+		// Verify Error Validations
+		if (ErrorFields != null && !ErrorFields.equals("-")) {
+		    String[] strErrorFields = ErrorFields.split(":");
+		    for (int k = 0; k < strErrorFields.length; k++) {
+			if (strErrorFields[k].equalsIgnoreCase("CCNumber")) {
+			    if (!isElementPresentVerification(CCNumberErrorMessage_ELM, browser)) {
+				messagesMap.put("CC Number Error Message", "Not able to find the error message");
+				status = WARNING;
+			    }
+			} else if (strErrorFields[k].equalsIgnoreCase("CCDate")) {
+			    if (CCExpireMonth == null) {
+				if (!isElementPresentVerification(CCMonthErrorMessage_ELM, browser)) {
+				    messagesMap.put("CC Month Error", "Not able to find the error message");
+				    status = WARNING;
+				}
+			    }
+			    if (CCExpireYear == null) {
+				if (!isElementPresentVerification(CCYearErrorMessage_ELM, browser)) {
+				    messagesMap.put("CC Year Error", "Not able to find the error message");
+				    status = WARNING;
+				}
+			    }
+			    if (CCExpireMonth != null && CCExpireYear != null) {
+				if (!isElementPresentVerification(CCExpireErrorMessage_ELM, browser)) {
+				    messagesMap.put("CC Expired Error Message", "Not able to find the error message");
+				    status = WARNING;
+				}
+			    }
+			} else if (strErrorFields[k].equalsIgnoreCase("Zipcode")) {
+			    if (!isElementPresentVerification(ZipcodeErrorMessage_ELM, browser)) {
+				messagesMap.put("Zipcode Error Message", "Not able to find the Error Message");
+				status = WARNING;
+			    }
+			}
+		    }
+		}
+		// If CC info in Overlay, then switch to default since the
+		// success message will be dispalyed in the Main page.
+		if (CCinfoInOveraly != null && CCinfoInOveraly.equalsIgnoreCase("Yes")) {
+		    switchToDefault(browser);
+		}
+		// Verify Billing Info Success Message
+		if (SuccessMessageType != null && SuccessMessageType.equalsIgnoreCase("BillingInfo")) {
+		    String[] ElementsToVerify = { EditCCInfoSuccessMessage_ELM, BillingInfoHeader_ELM, EditBillingInfo_LNK };
+		    for (int k = 0; k < ElementsToVerify.length; k++) {
+			if (!isElementPresentVerification(ElementsToVerify[k], browser)) {
+			    messagesMap.put(ElementsToVerify[k], "Object is Missing");
+			    status = WARNING;
+			}
+		    }
+		}
+		// Verify Auto Refill Success Message
+		else if (SuccessMessageType != null && SuccessMessageType.equalsIgnoreCase("AutoRefill")) {
+		    if (!isElementPresentVerification(AutoRefillSuccessMessage_ELM, browser)) {
+			messagesMap.put("Auto Refill Success Message", "Message is Missing");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Select Family Member, Prescription Type and/or Cancels all
+     *          setup auto refills. Page or Overlay
+     * @author - Siva Santhi Reddy P
+     * @Created -04 JULY 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void selectFamilyMemberOrCancelSetupAutoRefills(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FamilyMember_LST = "select#selectMemberView~CSS";
+	String PrescriptionType_LST = "select#selectType~CSS";
+	String Cancel_LNK = "//a[contains(text(),'Cancel')]";
+	String PrescriptionAutoRefillsHeader_ELM = "//h1[contains(text(),'Prescription Auto Refills')]~XPATH";
+	String Yes_BTN = "img[alt='Yes']~CSS";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// get required inputs from Excel sheet.
+		String FamilyMember = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FamilyMemberOption1");
+		String PrescriptionType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrescriptionType");
+		String CancelSetupAutoRefills = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "CancelSetupAutoRefills");
+
+		//System.err.println("First Member:" + new Select(getElementByProperty(FamilyMember_LST, browser)).getOptions().get(1).getText());
+		//System.err.println("Second Member:" + new Select(getElementByProperty(FamilyMember_LST, browser)).getOptions().get(2).getText());
+		if (FamilyMember != null && !FamilyMember.equals("-")) {
+		    new Select(getElementByProperty(FamilyMember_LST, browser)).selectByVisibleText(FamilyMember);
+		}
+		if (PrescriptionType != null && PrescriptionType.equalsIgnoreCase("Retail")) {
+		    new Select(getElementByProperty(PrescriptionType_LST, browser)).selectByIndex(0);
+		} else if (PrescriptionType != null && PrescriptionType.equalsIgnoreCase("Mail")) {
+		    new Select(getElementByProperty(PrescriptionType_LST, browser)).selectByIndex(1);
+		}
+		if (CancelSetupAutoRefills != null && CancelSetupAutoRefills.equalsIgnoreCase("Yes")) {
+		    if (isElementPresentVerification(Cancel_LNK, browser)) {
+			List<WebElement> setupAutoRefillCancelLinks = browser.findElements(By.xpath(Cancel_LNK));
+			int AutoRefillRxsize = setupAutoRefillCancelLinks.size();
+			while (AutoRefillRxsize > 0) {
+			    setupAutoRefillCancelLinks.get(0).click();
+			    switchToOverlay(browser);
+			    if (!isElementPresentVerifyClick(Yes_BTN, browser)) {
+				throw new Exception("Not able to Click on Yes Button");
+			    }
+			    switchToDefault(browser);
+			    // Validating Page Header to make sure page is
+			    // loaded.
+			    if (!isElementPresentVerification(PrescriptionAutoRefillsHeader_ELM, browser)) {
+				messagesMap.put("Auto Refills", "Page is not Loaded properly after removing one item");
+				status = WARNING;
+			    }
+			    // reset it
+			    setupAutoRefillCancelLinks = null;
+			    setupAutoRefillCancelLinks = browser.findElements(By.xpath(Cancel_LNK));
+			    if (setupAutoRefillCancelLinks != null) {
+				AutoRefillRxsize = setupAutoRefillCancelLinks.size();
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose -To perform error validations in Edit shipping information overlay in auto refills page.
+     * @author -Ygansh
+     * @Created - 8 Jul 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateShippingInfoFromEditShippingInformationOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String EditShippingAddress_LNK = "//a[contains(@title,'Edit Shipping Information - Opens a simulated dialog')]~XPATH";
+	String EditShippingAddressHeader_ELM = "//div[3]/div[@id='header_bar']/h1[contains(text(),'Edit Shipping Information')]~XPATH";
+	String StreetAddress_TXT = "input[id='street1']~CSS";
+	String City_TXT = "input[id='city']~CSS";
+	String State_LST = "select[id='State']~CSS";
+	String Zipcode_TXT = "input[id='zipcode']~CSS";
+	String Save_BTN = "input[title='Save']~CSS";
+	String StreetAddressErrorMessage_ELM = "//p[contains(text(),'Enter a valid street address')]~XPATH";
+	String CityErrorMessage_ELM = "//p[contains(text(),'Enter a valid city')]~XPATH";
+	String StateErrorMessage_ELM = "//p[contains(text(),'Select a state')]~XPATH";
+	String ZipcodeErrorMessage_ELM = "//p[contains(text(),'Enter a valid ZIP code')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    //CLICKS ON EDIT SHIPPING INFORMATION LINK AND CHECKS THE HEADER TEXT
+	    if (!isElementPresentVerifyClick(EditShippingAddress_LNK, browser)) {
+		throw new Exception("Not able to click Edit Shipping address link");
+	    }
+	    switchToOverlay(browser);
+	    if (!isElementPresentVerification(EditShippingAddressHeader_ELM, browser)) {
+		messagesMap.put("Overlay Header Text", "Header is missing in the overlay");
+	    }
+	    //VALIDATES ERROR MESSAGES FOR EACH FIELD
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String StreetAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StreetAddress");
+		String City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		String State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		String Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		String ErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorFields");
+
+		if (!clearAndEnterText(StreetAddress_TXT, StreetAddress, browser)) {
+		    messagesMap.put("Street Address", "Not able to enter street address");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(City_TXT, City, browser)) {
+		    messagesMap.put("City", "Not able to enter City");
+		    status = WARNING;
+		}
+		new Select(getElementByProperty(State_LST, browser)).selectByIndex(Integer.parseInt(State));
+		if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to enter Zipcode");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Save_BTN, browser)) {
+		    throw new Exception("Not able to click Save button");
+		}
+		if (ErrorValidation != null && !ErrorValidation.equalsIgnoreCase("-")) {
+		    String[] strErrorFields = ErrorValidation.split(":");
+		    System.err.println("String Lenght:" + strErrorFields.length);
+		    for (int k = 0; k < strErrorFields.length; k++) {
+			if (strErrorFields[k].equalsIgnoreCase("Address")) {
+			    if (!isElementPresentVerification(StreetAddressErrorMessage_ELM, browser)) {
+				messagesMap.put("Street Address Error Message", "Not able to find the error message");
+				status = WARNING;
+			    }
+			} else if (strErrorFields[k].equalsIgnoreCase("City")) {
+			    if (!isElementPresentVerification(CityErrorMessage_ELM, browser)) {
+				messagesMap.put("City Error Message", "Not able to find the error message");
+				status = WARNING;
+			    }
+			} else if (strErrorFields[k].equalsIgnoreCase("State")) {
+			    if (!isElementPresentVerification(StateErrorMessage_ELM, browser)) {
+				messagesMap.put("State Error Message", "Not able to find the error message");
+				status = WARNING;
+			    }
+			} else if (strErrorFields[k].equalsIgnoreCase("Zipcode")) {
+			    if (!isElementPresentVerification(ZipcodeErrorMessage_ELM, browser)) {
+				messagesMap.put("Zipcode Error Message", "Not able to find the error message");
+				status = WARNING;
+			    }
+			}
+		    }
+		}
+
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to change the delivery option and validating the change of last filled(either pickup or shipping) address in Manage Auto Refill page
+     * @author -  SARAVANAN M
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 06-FEB-2014
+     ************************************************************* 
+     */
+
+    public static void changeDeliverySettingsValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RetailTab_LNK="a[id='Retail']~CSS";
+	String MailServiceTab_LNK="a[id='Mail']~CSS";
+	String Shippinginfo_RDO = "//input[@id='ship']~XPATH";
+	String Shippinginfo_TXT = "//p[contains(@class,'ShipLoc2')]~XPATH";
+	String Pickup_RDO="//input[@id='pickup']~XPATH";
+	String LastFilled_RDO="//input[@id='lastpickup']~XPATH"; 
+	String EditExpressPay_LNK="//div[contains(@class,'ShipToHome')]//a[contains(@title,'Edit ExpressPay')]";
+	String AddExpresspay_LNK="//div[contains(@class,'ShipToHome')]//a[contains(@title,'add ExpressPay')]";
+	String ChangeStore_LNK="//a[contains(@title,'Change store')]~XPATH";
+	String ChooseStore_LNK="//a[contains(@title,'Choose store')]~XPATH";
+	String ChangeStore_ELM = "//h1[contains(text(),'Change Store')]~XPATH"; 
+	String FindaStore_BTN  = "input[id='findstore']~CSS";
+	String Zipcode_TXT     = "input[id='locator']~CSS";
+	String SelectStore_BTN = "//a[contains(@href,'changeStore=true')]~XPATH";
+	String PickupSave_BTN = "//p[@class='pickbtn']/input[@title='Save']";
+	String SaveLastFilled_BTN="//p[@class='lastbtn']/input[contains(@class,'LastFilledSave')]";
+	String Street_TXT = "input[id='street1']~CSS";
+	String City_TXT = "input[id='city2']~CSS";
+	String State_SELECT="select[id='StateNam']~CSS";
+	String AddressZipCode_TXT= "input[id='refillZipCode']~CSS";
+	String NewCreditCard_RDB = "input[id='newCardChoice']~CSS";
+	String NewCreditCardNumber_TXT = "//input[@id='CreditCardNumberNew' or @id= 'CreditCardNumber']~XPATH";
+	String ExpireMonth_SELECT = "//select[@id='Mont' or @id='Month11']~XPATH";
+	String ExpireYear_SELECT = "//select[@id='dobYea' or @id= 'dobYear5']~XPATH";
+	String BillingZipCode_TXT = "//input[@id='refillBillingZipCode' or @id= 'refillBillingZipCode2']~XPATH";
+	String AddressSave_BTN = "input[id='Save']~CSS";
+	Select SelectBox = null;
+	String RetailShippingSave_BTN="//p[@class='shipbtn']/input[@title='Save']";
+	String MailShippingSave_BTN="//input[2][@title='Save']~XPATH";
+	int MaxVal=1;
+	String ShippingAddress=null,PickupAddress=null,MailServiceAddress=null,CreditCard=null;
+	boolean RetailTabVerification=false,MSTabVerification=false,RetailLastFilled=false,RetailPickup=false,RetailShip=false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DeliverySettingVerification = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DeliverySettingVerification");
+	    String FamilyMember = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberOption");
+	    String UserType=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+
+	    if (!FamilyMember.equals("-") && FamilyMember != null) {
+		familyMemberSelector(browser, FamilyMember);
+	    }
+
+	    if(UserType.equalsIgnoreCase("RetailandMail")){
+		MaxVal=2;
+	    }else if(UserType.equalsIgnoreCase("Retail")){
+		MSTabVerification=true;
+	    }else if(UserType.equalsIgnoreCase("Mail")){
+		RetailTabVerification=true;
+	    }
+
+	    for(int Iterator=1;Iterator<=MaxVal;Iterator++){
+		if(!RetailTabVerification && isElementPresentVerifyClick(RetailTab_LNK, browser)){
+
+		    while(!(RetailLastFilled && RetailPickup && RetailShip)){
+
+			//Shipping option selection
+			if(!isCheckBoxSelected(browser, Shippinginfo_RDO, "Yes")){
+			    if(isElementPresentVerifyClick(Shippinginfo_RDO, browser)){
+				Thread.sleep(2000);
+				if(browser.findElement(By.xpath(AddExpresspay_LNK))!= null){
+				    CreditCard="Unavailable";
+				    browser.findElement(By.xpath(AddExpresspay_LNK)).click();
+				}else if(browser.findElement(By.xpath(EditExpressPay_LNK))!= null){
+				    CreditCard="Available";
+				    browser.findElement(By.xpath(EditExpressPay_LNK)).click();
+				}
+				else{
+				    messagesMap.put("Delivery Setting Section", "Edit Express link is not displayed under the Shipping radio button");
+				    status=WARNING;
+				}
+				if(!CreditCard.equals(null)){
+				    String Street=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StreetAddress");
+				    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+				    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+				    String ShippingAddressZipcode= getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingAddressZipcode");
+				    String CreditCardNumber =getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CreditCardNumber");
+				    String ExpireMonth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireMonth");
+				    String ExpireYear = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireYear");
+				    String BillingZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BillingZipcode");
+				    switchToOverlay(browser);
+
+				    if(!clearAndEnterText(Street_TXT, Street, browser)){
+					messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Street address text box");
+					status=WARNING;   
+				    }
+				    if(!clearAndEnterText(City_TXT, City, browser)){
+					messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the City text box");
+					status=WARNING;   
+				    }
+				    if(isElementPresentVerification(State_SELECT, browser)){
+					WebElement ShippingAddressState = getElementByProperty(State_SELECT, browser);
+					SelectBox = new Select(ShippingAddressState);
+					SelectBox.selectByValue(State);
+				    }
+
+				    if(!clearAndEnterText(AddressZipCode_TXT, ShippingAddressZipcode, browser)){
+					messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Shipping Address Zipcode text box");
+					status=WARNING;   
+				    }
+				    if(CreditCard.equalsIgnoreCase("Avaliable")){
+					if(!isElementPresentVerifyClick(NewCreditCard_RDB, browser)){
+					    messagesMap.put("Edit Shipping Address Overlay", "Not Able to click on the new Credit Card Number radio button");
+					    status=WARNING;    
+					}
+				    }
+
+				    if(!clearAndEnterText(NewCreditCardNumber_TXT, CreditCardNumber, browser)){
+					messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Credit Card Number text box");
+					status=WARNING;   
+				    }
+				    if(isElementPresentVerification(ExpireMonth_SELECT, browser)){
+					WebElement Expiremonth = getElementByProperty(ExpireMonth_SELECT, browser);
+					SelectBox = new Select(Expiremonth);
+					SelectBox.selectByValue(ExpireMonth);
+				    }
+				    if(isElementPresentVerification(ExpireYear_SELECT, browser)){
+					WebElement Expireyear = getElementByProperty(ExpireYear_SELECT, browser);
+					SelectBox = new Select(Expireyear);
+					SelectBox.selectByValue(ExpireYear);
+				    }
+
+				    if(!clearAndEnterText(BillingZipCode_TXT, BillingZipcode, browser)){
+					messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Billing Zipcode text box");
+					status=WARNING;   
+				    }
+				    if(!isElementPresentVerifyClick(AddressSave_BTN, browser)){
+					throw new Exception("Not able to Click ont the Save button in the edit shipping information overlay");
+				    }
+				    switchToDefault(browser);
+				    isElementPresentVerifyClick(RetailShippingSave_BTN, browser);
+				}
+			    }
+
+			    String ShipAddressContainer_ELM = "//p[contains(@class,'ShipAddr')]~XPATH";
+			    if(isCheckBoxSelected(browser, Shippinginfo_RDO, "Yes")){
+				ShippingAddress= getElementByProperty(ShipAddressContainer_ELM, browser).getText().trim();
+				TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation", ShippingAddress);
+				RetailShip=true;
+			    }
+
+			    if(DeliverySettingVerification.equalsIgnoreCase("Yes")){
+				WebElement TableBody = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody"));
+				List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+				for(int i = 1;i<=TableRows.size();i++){
+				    String firstColumnText = browser.findElement(By.xpath("//table[1]/tbody[1]/tr[" + i + "]/td[3]/div[2]")).getText();
+				    if(!firstColumnText.contains(ShippingAddress)){
+					messagesMap.put("Prescription Table", "Delivery address value is not matched with the Shipping location ROW="+i);
+					status=WARNING;  
+				    }
+				}
+			    }
+			}
+
+			//Pickup Location
+			if(!isCheckBoxSelected(browser, Pickup_RDO, "Yes")){
+			    String AddressContainer_ELM = "//p[contains(@class,'StoreAddr')]~XPATH";
+			    if(!isElementPresentVerifyClick(Pickup_RDO,browser)){
+				throw new Exception("Pick up location radio button is not able to select");
+			    }
+			    if(isElementPresentVerifyClick(ChangeStore_LNK, browser) || isElementPresentVerifyClick(ChooseStore_LNK, browser)){
+
+				//Choose or Change store
+				switchToOverlay(browser);
+				if(!isElementPresentVerification(ChangeStore_ELM, browser)){
+				    messagesMap.put("Change Store overlay", "Change store overlay is not displayed");
+				    status=WARNING;
+				}
+				String Zipcode=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode");
+				if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+				    messagesMap.put("Change Store overlay", "Not able to Enter Zip code in the Text Field.");
+				    status = WARNING;
+				}
+				if(!isElementPresentVerifyClick(FindaStore_BTN, browser)){
+				    messagesMap.put("Change Store overlay", "Not able to click on the Find a store button");
+				    status = WARNING;
+				}
+				if(!isElementPresentVerifyClick(SelectStore_BTN, browser)){
+				    messagesMap.put("Change Store overlay", "Not able to click on the Select a store button");
+				    status = WARNING;
+				}
+				switchToDefault(browser);
+				isElementPresentVerifyClick(PickupSave_BTN, browser);
+				if(isCheckBoxSelected(browser, Pickup_RDO, "Yes")){
+				    PickupAddress = getElementByProperty(AddressContainer_ELM, browser).getText().trim();
+				    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation", PickupAddress);
+				    RetailPickup=true;
+				}
+			    }
+
+			    if(DeliverySettingVerification.equalsIgnoreCase("Yes")){
+				WebElement TableBody = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody"));
+				List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+				for(int i = 1;i<=TableRows.size();i++){
+				    String firstColumnText = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody/tr[" + i + "]/td[3]/div[3]")).getText();
+				    if(!firstColumnText.contains(PickupAddress)){
+					messagesMap.put("Prescription Table", "Delivery address value is not matched with the Pickup location ROW="+i);
+					status=WARNING;  
+				    }
+				}
+			    }
+			}
+
+			//Last Filled option
+			if(RetailPickup && RetailShip){
+			    if(!isCheckBoxSelected(browser, LastFilled_RDO, "Yes")){
+				if(!isElementPresentVerifyClick(LastFilled_RDO,browser)){
+				    throw new Exception("Pick up location radio button is not able to select");
+				}
+				RetailLastFilled=true;
+				if(DeliverySettingVerification.equalsIgnoreCase("Yes")){
+				    WebElement TableBody = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody"));
+				    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+				    for(int i = 1;i<=TableRows.size();i++){
+					String firstColumnText = browser.findElement(By.xpath("//table[1]/tbody[1]/tr[" + i + "]/td[3]/div")).getText();
+					if(!(firstColumnText.contains(PickupAddress) || firstColumnText.contains(ShippingAddress))){
+					    messagesMap.put("Prescription Table", "Delivery address value is not matched with the last filled location ROW="+i);
+					    status=WARNING;  
+					}
+				    }
+				}
+			    }
+			    RetailTabVerification=true;
+			}
+		    }
+		}else if(!MSTabVerification){
+		    if(!isElementPresentVerifyClick(MailServiceTab_LNK, browser)){
+			throw new Exception("Unable to click Mail Service tab");
+		    }
+
+		    Thread.sleep(2000);
+		    if(browser.findElement(By.xpath(AddExpresspay_LNK))!= null){
+			CreditCard="Unavailable";
+			browser.findElement(By.xpath(AddExpresspay_LNK)).click();
+		    }else if(browser.findElement(By.xpath(EditExpressPay_LNK))!= null){
+			CreditCard="Available";
+			browser.findElement(By.xpath(EditExpressPay_LNK)).click();
+		    }
+		    else{
+			messagesMap.put("Delivery Setting Section", "Edit Express link is not displayed under the Shipping radio button");
+			status=WARNING;
+		    }
+
+		    if(!CreditCard.equals(null)){
+			String Street=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StreetAddress");
+			String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+			String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+			String ShippingAddressZipcode= getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingAddressZipcode");
+			String CreditCardNumber =getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CreditCardNumber");
+			String ExpireMonth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireMonth");
+			String ExpireYear = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireYear");
+			String BillingZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BillingZipcode");
+			switchToOverlay(browser);
+
+			if(!clearAndEnterText(Street_TXT, Street, browser)){
+			    messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Street address text box");
+			    status=WARNING;   
+			}
+			if(!clearAndEnterText(City_TXT, City, browser)){
+			    messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the City text box");
+			    status=WARNING;   
+			}
+			if(isElementPresentVerification(State_SELECT, browser)){
+			    WebElement ShippingAddressState = getElementByProperty(State_SELECT, browser);
+			    SelectBox = new Select(ShippingAddressState);
+			    SelectBox.selectByValue(State);
+			}
+
+			if(!clearAndEnterText(AddressZipCode_TXT, ShippingAddressZipcode, browser)){
+			    messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Shipping Address Zipcode text box");
+			    status=WARNING;   
+			}
+			if(CreditCard.equalsIgnoreCase("Avaliable")){
+			    if(!isElementPresentVerifyClick(NewCreditCard_RDB, browser)){
+				messagesMap.put("Edit Shipping Address Overlay", "Not Able to click on the new Credit Card Number radio button");
+				status=WARNING;    
+			    }
+			}
+
+			if(!clearAndEnterText(NewCreditCardNumber_TXT, CreditCardNumber, browser)){
+			    messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Credit Card Number text box");
+			    status=WARNING;   
+			}
+			if(isElementPresentVerification(ExpireMonth_SELECT, browser)){
+			    WebElement Expiremonth = getElementByProperty(ExpireMonth_SELECT, browser);
+			    SelectBox = new Select(Expiremonth);
+			    SelectBox.selectByValue(ExpireMonth);
+			}
+			if(isElementPresentVerification(ExpireYear_SELECT, browser)){
+			    WebElement Expireyear = getElementByProperty(ExpireYear_SELECT, browser);
+			    SelectBox = new Select(Expireyear);
+			    SelectBox.selectByValue(ExpireYear);
+			}
+
+			if(!clearAndEnterText(BillingZipCode_TXT, BillingZipcode, browser)){
+			    messagesMap.put("Edit Shipping Address Overlay", "Not Able to enter the text in the Billing Zipcode text box");
+			    status=WARNING;   
+			}
+			if(!isElementPresentVerifyClick(AddressSave_BTN, browser)){
+			    throw new Exception("Not able to Click ont the Save button in the edit shipping information overlay");
+			}
+			switchToDefault(browser);
+			isElementPresentVerifyClick(MailShippingSave_BTN, browser);
+		    }
+
+		    if(DeliverySettingVerification.equalsIgnoreCase("Yes")){
+			MailServiceAddress = getElementByProperty(Shippinginfo_TXT, browser).getText().trim();
+
+			WebElement TableBody = browser.findElement(By.xpath("//div[@id='tabContent']/div/div[4]/table/tbody"));
+			List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+
+			for(int i = 1;i<=TableRows.size();i++){
+			    String firstColumnText = browser.findElement(By.xpath("//table[1]/tbody[1]/tr[" + i +" ]/td[3]/div[contains(@class,'content_ShipAddd2')]")).getText();
+
+			    if(!firstColumnText.contains(MailServiceAddress)){
+				messagesMap.put("Prescription Table", "Delivery address value is not matched with the Shipping location at ROW="+i);
+				status=WARNING;  
+			    }
+			}
+		    }
+		    MSTabVerification=true;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

@@ -1,0 +1,1584 @@
+@checkout @siteintegration @SiteIntegrationCheckout
+Feature: This feature Contains Site Integration (WP) Checkout Flows with Different Combinations
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-1
+Scenario: Customer Adds a Daily living item to the cart for pick up store, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given "SDD-SITEINTEGRATION-1" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-1 |
+
+Given "SDD-SITEINTEGRATION-1" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-1" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+ 
+Given "SDD-SITEINTEGRATION-1" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-1" Customer Clears the Shopping Cart
+
+And  "SDD-SITEINTEGRATION-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | sdd_DL  |
+
+Then "SDD-SITEINTEGRATION-1" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-1" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-1" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-1" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection2 |
+
+Then "SDD-SITEINTEGRATION-1" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation10 |
+
+Then "SDD-SITEINTEGRATION-1" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	    |
+| SDDData       | subTotaldetails | sddwebonly1 |
+
+Then "SDD-SITEINTEGRATION-1" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-1" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   			   |
+| SDDData       | pickuppage   | sddwebonlyPickupdata1 |
+
+Then "SDD-SITEINTEGRATION-1" Customer validates the Store Information:
+| InputFileName | SheetName 	| RowId   		   |
+| SDDData       | storedetails  | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-1" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		         |
+| SDDData       | pickuppage   | sddwebonlyPickupdata1   |
+
+Then "SDD-SITEINTEGRATION-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-1" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId       |
+|  SDDData      | orderreviewdetails |sddwebonly1  |
+
+Then "SDD-SITEINTEGRATION-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	|
+| SDDData       | orderconfirmationdetails |sddwebonly1 |
+
+Then "SDD-SITEINTEGRATION-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-1" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-1" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	   |
+|    SDDData    | orderconfirmationdetails |  sddwebonly1  |
+
+Then "SDD-SITEINTEGRATION-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-1 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-2
+Scenario: Customer adds a two DL items to cart one for Pick up and other for ship, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given "SDD-SITEINTEGRATION-2" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-2 |
+
+Then "SDD-SITEINTEGRATION-2" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-2" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-2" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-2" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-2" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_web_ch1  |
+
+Then "SDD-SITEINTEGRATION-2" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-2" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-2" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-2" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	    		   |
+| SDDData       | Product Details  | ProductInformation10  |
+
+Then "SDD-SITEINTEGRATION-2" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	     |
+| SDDData       | subTotaldetails | DLPUAndShip1 |
+
+Then "SDD-SITEINTEGRATION-2" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-2" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId         |
+| SDDData       | pickuppage   | DLPickUpinfo1 |
+
+Then "SDD-SITEINTEGRATION-2" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLPickUpinfo2     |
+
+Then "SDD-SITEINTEGRATION-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City  | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress     | 	-               | -                | 	- 	   | 	-      |		 -	    |  - 	|  -    |	 -    | -             | -            | -              |
+
+Then "SDD-SITEINTEGRATION-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |        Standard          |       -	 	            |
+
+Then "SDD-SITEINTEGRATION-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-2" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId       |
+|  SDDData      | orderreviewdetails |DLPUAndShip1 |
+
+Then "SDD-SITEINTEGRATION-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	    |
+| SDDData       | orderconfirmationdetails |DLPUAndShip1    |
+
+Then "SDD-SITEINTEGRATION-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-2" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-2" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId          |
+|    SDDData    | orderconfirmationdetails |  DLPUAndShip1  |
+
+Then "SDD-SITEINTEGRATION-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-2 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-3
+Scenario: Customer adds a DL item to cart for PU and an RX item for PU, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-3" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-3 |
+
+Then "SDD-SITEINTEGRATION-3" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-3" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-3" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-3" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | retailRx22  |
+
+Then "SDD-SITEINTEGRATION-3" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	      |
+| SDDData       | Product Details  | RxPURefill1  |
+
+When  "SDD-SITEINTEGRATION-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-3" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-3" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-3" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-3" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-3" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	    		   |
+| SDDData       | Product Details  | ProductInformation10  |
+
+Then "SDD-SITEINTEGRATION-3" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	      |
+| SDDData       | subTotaldetails | DLRXPickup1   |
+
+Then "SDD-SITEINTEGRATION-3" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-3" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId           |
+| SDDData       | pickuppage   | DLRXPickUpinfo1 |
+
+Then "SDD-SITEINTEGRATION-3" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLRXPickUpinfo1   |
+
+Then "SDD-SITEINTEGRATION-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-3" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |DLRXPickup1	   |
+
+Then "SDD-SITEINTEGRATION-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |DLRXPickup1		      |
+
+Then "SDD-SITEINTEGRATION-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-3" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-3" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	  |
+|    SDDData    | orderconfirmationdetails |  DLRXPickup1 |
+
+Then "SDD-SITEINTEGRATION-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-3 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-4
+Scenario: Customer adds a DL item to cart for PU and an CL item, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-4" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-4 |
+
+Then "SDD-SITEINTEGRATION-4" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-4" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-4" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-4" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-4" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-4" Customer Goes to the Shopping Cart
+
+And "SDD-SITEINTEGRATION-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-SITEINTEGRATION-4" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-4" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		  |
+| SDDData       | storedetails   | storeselection2|
+
+Then "SDD-SITEINTEGRATION-4" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	    		   |
+| SDDData       | Product Details  | ProductInformation10  |
+
+Then "SDD-SITEINTEGRATION-4" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	      |
+| SDDData       | subTotaldetails | DLCLpickup1   |
+
+Then "SDD-SITEINTEGRATION-4" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-SITEINTEGRATION-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  PickUpDetails 	 |
+
+Then "SDD-SITEINTEGRATION-4" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId         |
+| SDDData       | pickuppage   | DLPickupCL    |
+
+Then "SDD-SITEINTEGRATION-4" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLPickupCL        |
+
+Then "SDD-SITEINTEGRATION-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | yes  		|  -                 | -                | Test    	| Test     	| 104 wilmot road| Deerfield | 16    | 60015   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -		                 | overnight                |
+
+Then "SDD-SITEINTEGRATION-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-4" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |DLCLpickup1	   |
+
+Then "SDD-SITEINTEGRATION-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |DLCLpickup1		      |
+
+Then "SDD-SITEINTEGRATION-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-4" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-4" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    		 |
+|    SDDData    | orderconfirmationdetails |  DLCLpickup1    |
+
+Then "SDD-SITEINTEGRATION-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-4 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-5
+Scenario: Customer adds two DL items to cart for PU and ship an CL item, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-5" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-5 |
+
+Then "SDD-SITEINTEGRATION-5" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-5" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-5" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-5" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-5" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  		 	 |
+| CommonData    | search    | sdd_web_ch1		     |
+
+Then "SDD-SITEINTEGRATION-5" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-5" Customer Goes to the Shopping Cart
+
+And "SDD-SITEINTEGRATION-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-SITEINTEGRATION-5" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-5" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-5" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	    		   |
+| SDDData       | Product Details  | ProductInformation10  |
+
+Then "SDD-SITEINTEGRATION-5" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	      |
+| SDDData       | subTotaldetails | DLCLpickup2   |
+
+Then "SDD-SITEINTEGRATION-5" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-SITEINTEGRATION-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  PickUpDetails	 |
+
+Then "SDD-SITEINTEGRATION-5" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId         |
+| SDDData       | pickuppage   | DLPickUpinfo2 |
+
+Then "SDD-SITEINTEGRATION-5" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLPickUpinfo2     |
+
+Then "SDD-SITEINTEGRATION-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City  | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  |   -                 | -                |	 -     | 	-      | 	-		    | 	- 	| 	-   |	 -    | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | Standard                 | overnight                |
+
+Then "SDD-SITEINTEGRATION-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-5" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |DLCLpickup2	   |
+
+Then "SDD-SITEINTEGRATION-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-5" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |DLCLpickup2		      |
+
+Then "SDD-SITEINTEGRATION-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-5" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-5" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    		 |
+|    SDDData    | orderconfirmationdetails |  DLCLpickup2    |
+
+Then "SDD-SITEINTEGRATION-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-5 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-6
+Scenario: Customer adds two DL items to cart for PU and and ship ,RX item for PU and CL for ship, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-6" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-6 |
+
+Then "SDD-SITEINTEGRATION-6" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-6" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-6" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-6" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId       |
+| CACData       | RefillRx  | retailRx22  |
+
+When  "SDD-SITEINTEGRATION-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId     |
+| CommonData    | search    | sdd_DL    |
+
+Then "SDD-SITEINTEGRATION-6" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_web_ch1  |
+
+Then "SDD-SITEINTEGRATION-6" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-6" Customer Goes to the Shopping Cart
+
+And "SDD-SITEINTEGRATION-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-SITEINTEGRATION-6" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-6" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-6" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	     		  |
+| SDDData       | Product Details  | ProductInformation10 |
+| SDDData       | Product Details  | RxPURefill1 		  |
+
+Then "SDD-SITEINTEGRATION-6" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	   				 |
+| SDDData       | subTotaldetails | DLRXCLPickupAndShipInfo1 |
+
+Then "SDD-SITEINTEGRATION-6" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-6" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId           |
+| SDDData       | pickuppage   | DLRXPickUpinfo2 |
+
+Then "SDD-SITEINTEGRATION-6" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLRXProductinfo2  |
+
+Then "SDD-SITEINTEGRATION-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "SDD-SITEINTEGRATION-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | -   		|  -                 | -                | -         | -         | -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | overnight                |
+
+Then "SDD-SITEINTEGRATION-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-6" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId      				 |
+|  SDDData      | orderreviewdetails |DLRXCLPickupAndShipInfo1	 |
+
+Then "SDD-SITEINTEGRATION-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-6" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  	 |
+| SDDData       | orderconfirmationdetails |DLRXCLPickupAndShipInfo1 |
+
+Then "SDD-SITEINTEGRATION-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-6" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-6" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    			   		|
+|    SDDData    | orderconfirmationdetails |  DLRXCLPickupAndShipInfo1  |
+
+Then "SDD-SITEINTEGRATION-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-6 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-7
+Scenario: Customer adds a DL item to cart for PU, RX item for PU and CL, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-7" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-7 |
+
+Then "SDD-SITEINTEGRATION-7" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-7" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-7" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-7" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-7" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx22 |
+
+When  "SDD-SITEINTEGRATION-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | sdd_DL  |
+
+Then "SDD-SITEINTEGRATION-7" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-7" Customer Goes to the Shopping Cart
+
+And "SDD-SITEINTEGRATION-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-SITEINTEGRATION-7" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-7" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-7" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	     		  |
+| SDDData       | Product Details  | ProductInformation10 |
+| SDDData       | Product Details  | RxPURefill1 		  |
+
+Then "SDD-SITEINTEGRATION-7" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	   				 |
+| SDDData       | subTotaldetails | DLRXCLPickupAndShipInfo2 |
+
+Then "SDD-SITEINTEGRATION-7" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-7" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId           |
+| SDDData       | pickuppage   | DLRXPickUpinfo2 |
+
+Then "SDD-SITEINTEGRATION-7" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLRXProductinfo2  |
+
+Then "SDD-SITEINTEGRATION-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "SDD-SITEINTEGRATION-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | -   		|  -                 | -                | -         | -         | -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -	                     | overnight                |
+
+Then "SDD-SITEINTEGRATION-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-7" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId      				 |
+|  SDDData      | orderreviewdetails |DLRXCLPickupAndShipInfo2	 |
+
+Then "SDD-SITEINTEGRATION-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-7" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  	 |
+| SDDData       | orderconfirmationdetails |DLRXCLPickupAndShipInfo2 |
+
+Then "SDD-SITEINTEGRATION-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-7" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-7" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    			   		|
+|    SDDData    | orderconfirmationdetails |  DLRXCLPickupAndShipInfo2  |
+
+Then "SDD-SITEINTEGRATION-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-7 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-8
+Scenario: Customer adds two DL items to cart for PU and ship, RX item for PU, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-8" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-8 |
+
+Then "SDD-SITEINTEGRATION-8" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-8" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-8" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-8" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-8" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx22 |
+
+When  "SDD-SITEINTEGRATION-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | sdd_DL  |
+
+Then "SDD-SITEINTEGRATION-8" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_web_ch1  |
+
+Then "SDD-SITEINTEGRATION-8" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-8" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-8" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-8" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-8" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	     		  |
+| SDDData       | Product Details  | ProductInformation10 |
+| SDDData       | Product Details  | RxPURefill1 		  |
+
+Then "SDD-SITEINTEGRATION-8" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	   				 |
+| SDDData       | subTotaldetails | DLRXPickupAndShipInfo1   |
+
+Then "SDD-SITEINTEGRATION-8" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-8" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId           |
+| SDDData       | pickuppage   | DLRXPickUpinfo3 |
+
+Then "SDD-SITEINTEGRATION-8" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	       |
+| SDDData       | pickuppage   | DLRXProductinfo3  |
+
+Then "SDD-SITEINTEGRATION-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | -   		|  -                 | -                | -         | -         | -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "SDD-SITEINTEGRATION-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-8" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId      				 |
+|  SDDData      | orderreviewdetails |DLRXPickupAndShipInfo1	 |
+
+Then "SDD-SITEINTEGRATION-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-8" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			   |
+| SDDData       | orderconfirmationdetails |DLRXPickupAndShipInfo1 |
+
+Then "SDD-SITEINTEGRATION-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-8" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-8" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    			   	  |
+|    SDDData    | orderconfirmationdetails |  DLRXPickupAndShipInfo1  |
+
+Then "SDD-SITEINTEGRATION-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-8 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-9
+Scenario: Customer adds a DL item to cart for PU, MP RX item, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-9" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-9 |
+
+Then "SDD-SITEINTEGRATION-9" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-9" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-9" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-9" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-9" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   |
+| CACData       | RefillRx  | mailrx6 |
+
+When  "SDD-SITEINTEGRATION-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | sdd_DL  |
+
+Then "SDD-SITEINTEGRATION-9" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-9" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-9" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-9" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-9" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	  			  |
+| SDDData       | Product Details  | ProductInformation10 |
+
+Then "SDD-SITEINTEGRATION-9" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	   		    |
+| SDDData       | subTotaldetails | DLMPRXPickupinfo1   |
+
+Then "SDD-SITEINTEGRATION-9" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-9" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId         |
+| SDDData       | pickuppage   | DLPickUpinfo1 |
+
+Then "SDD-SITEINTEGRATION-9" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	    |
+| SDDData       | pickuppage   | DLPickUpinfo2  |
+
+Then "SDD-SITEINTEGRATION-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | -   		|  -                 | -                | -         | -         | -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -		                 | -                        |
+
+Then "SDD-SITEINTEGRATION-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-9" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId             |
+|  SDDData      | orderreviewdetails |DLMPRXPickupinfo1  |
+
+Then "SDD-SITEINTEGRATION-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-9" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	      |
+| SDDData       | orderconfirmationdetails |DLMPRXPickupinfo1 |
+
+Then "SDD-SITEINTEGRATION-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-9" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-9" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		      | RowId    		     |
+|    SDDData    | orderconfirmationdetails |  DLMPRXPickupinfo1  |
+
+Then "SDD-SITEINTEGRATION-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		   |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-9 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-10
+Scenario: Customer adds a DL item to cart for PU, speciality RX item, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-10" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-10 |
+
+Then "SDD-SITEINTEGRATION-10" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |SpecialtyUser |
+
+And "SDD-SITEINTEGRATION-10" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-10" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-10" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-10" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId        |
+| CACData       | RefillRx  | SpecialtyRx5 |
+
+When  "SDD-SITEINTEGRATION-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | sdd_DL  |
+
+Then "SDD-SITEINTEGRATION-10" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-10" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-10" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-10" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-10" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 	   			  |
+| SDDData       | Product Details  | ProductInformation10 |
+
+Then "SDD-SITEINTEGRATION-10" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 	   		    |
+| SDDData       | subTotaldetails | DLSPRXPickUpinfo1   |
+
+Then "SDD-SITEINTEGRATION-10" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-10" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	    |
+| SDDData       | pickuppage   | DLPickUpinfo1  |
+
+Then "SDD-SITEINTEGRATION-10" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	    |
+| SDDData       | pickuppage   | DLPickUpinfo2  |
+
+Then "SDD-SITEINTEGRATION-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | -   		|  -                 | -                | -         | -         | -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+And "SDD-SITEINTEGRATION-10" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	   | DatePickerLogic  |Date  	  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5 | 	-			  |  Default  | 	-    |   -       |   -  		 |
+
+Then "SDD-SITEINTEGRATION-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	 		|
+| PharmacyLinkVerification  |Authenticated    |ContinueButtoninShipMethod 	|
+
+Then "SDD-SITEINTEGRATION-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-10" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId     		  |
+|  SDDData      | orderreviewdetails |DLSPRXPickUpinfo1   |
+
+Then "SDD-SITEINTEGRATION-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-10" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |DLSPRXPickUpinfo1     |
+
+Then "SDD-SITEINTEGRATION-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-10" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-10" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    			   |
+|    SDDData    | orderconfirmationdetails |  DLSPRXPickUpinfo1    |
+
+Then "SDD-SITEINTEGRATION-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-10 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-11
+Scenario: Customer adds a RX item for ship, DL item for PU and verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-11" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-11 |
+
+Then "SDD-SITEINTEGRATION-11" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-11" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-11" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-11" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-11" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     	|
+| CACData       | RefillRx  | retailRx22	|
+
+Then "SDD-SITEINTEGRATION-11" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-11" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-11" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | RefillRxShipInfo2	 |
+
+When  "SDD-SITEINTEGRATION-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-11" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-11" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-11" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     	|
+| SDDData       | Product Details  | ProductInformation10	|
+
+Then "SDD-SITEINTEGRATION-11" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 			    |
+| SDDData       | subTotaldetails | RxShipDLpickupinfo  |
+
+Then "SDD-SITEINTEGRATION-11" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-11" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	    |
+| SDDData       | pickuppage   | DLPickUpinfo1  |
+
+Then "SDD-SITEINTEGRATION-11" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   	    |
+| SDDData       | pickuppage   | DLPickUpinfo2  |
+
+Then "SDD-SITEINTEGRATION-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  |  -                  | -                | -      	| -      	| -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| Standard        |        -		         |       -	 	            |
+
+Then "SDD-SITEINTEGRATION-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-11" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   	   |
+|  SDDData      | orderreviewdetails |RxShipDLpickupinfo   |
+
+Then "SDD-SITEINTEGRATION-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  	  |
+| SDDData       | orderconfirmationdetails | RxShipDLpickupinfo       |
+
+Then "SDD-SITEINTEGRATION-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-11" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-11" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId     		      |
+|    SDDData    | orderconfirmationdetails |RxShipDLpickupinfo    |
+
+Then "SDD-SITEINTEGRATION-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-11 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-12
+Scenario: Customer adds a RX item for ship, two DL items for ship and PU and CL, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-12" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-12 |
+
+Then "SDD-SITEINTEGRATION-12" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-12" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-12" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-12" Customer Clears the Shopping Cart
+
+When "SDD-SITEINTEGRATION-12" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx22 |
+
+Then "SDD-SITEINTEGRATION-12" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-12" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-12" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			    |
+| SDDData       | Product Details  | RefillRxShipInfo2	|
+
+And "SDD-SITEINTEGRATION-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When "SDD-SITEINTEGRATION-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_web_ch1  |
+
+Then "SDD-SITEINTEGRATION-12" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-12" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-12" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-12" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     	|
+| SDDData       | Product Details  | ProductInformation10	|
+
+Then "SDD-SITEINTEGRATION-12" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 		  |
+| SDDData       | subTotaldetails | RxDLCLDLShip  |
+
+Then "SDD-SITEINTEGRATION-12" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   	   |
+| Doctor Information 	   |
+
+Then "SDD-SITEINTEGRATION-12" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-12" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "SDD-SITEINTEGRATION-12" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		   |
+| SDDData       | pickuppage   | mixcartRXDLCL1	   |
+
+Then "SDD-SITEINTEGRATION-12" Customer validates the Store Information:
+| InputFileName | SheetName 	| RowId   		    |
+| SDDData       | storedetails  | storeselection2   |
+
+Then "SDD-SITEINTEGRATION-12" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		 |
+| SDDData       | pickuppage   | mixcartRXDLCL1	 |
+
+Then "SDD-SITEINTEGRATION-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | No 		 	|  -                 | -                | -      	| -      	| -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| Standard        |        Standard	         |       Standard           |
+
+Then "SDD-SITEINTEGRATION-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-12" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |RxDLCLDLShip 	   |
+
+Then "SDD-SITEINTEGRATION-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |RxDLCLDLShip		  |
+
+Then "SDD-SITEINTEGRATION-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-12" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-12" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId     	  |
+|    SDDData    | orderconfirmationdetails |RxDLCLDLShip  |
+
+Then "SDD-SITEINTEGRATION-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-12 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-13
+Scenario: Customer adds a RX item for ship, a DL item for PU and CL, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-13" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-13 |
+
+Then "SDD-SITEINTEGRATION-13" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-13" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-13" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-13" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-13" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx22 |
+
+Then "SDD-SITEINTEGRATION-13" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-13" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-13" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | RefillRxShipInfo2	 |
+
+And "SDD-SITEINTEGRATION-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SITEINTEGRATION-13" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "SDD-SITEINTEGRATION-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-13" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-13" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-13" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation10 |
+
+Then "SDD-SITEINTEGRATION-13" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 		      |
+| SDDData       | subTotaldetails | RxCLShipDLPickup  |
+
+Then "SDD-SITEINTEGRATION-13" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-SITEINTEGRATION-13" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SITEINTEGRATION-13" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "SDD-SITEINTEGRATION-13" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   			   |
+| SDDData       | pickuppage   | RxCLShipDLPickup	   |
+
+Then "SDD-SITEINTEGRATION-13" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		         |
+| SDDData       | pickuppage   | RxCLShipDLPickup		 |
+
+Then "SDD-SITEINTEGRATION-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | No 		 	|  -                 | -                | -      	| -      	| -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| Standard        |        -		         |       Standard           |
+
+Then "SDD-SITEINTEGRATION-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-13" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |RxCLShipDLPickup |
+
+Then "SDD-SITEINTEGRATION-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-13" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |RxCLShipDLPickup	  |
+
+Then "SDD-SITEINTEGRATION-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-13" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-13" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId     		  	   |
+|    SDDData    | orderconfirmationdetails |RxCLShipDLPickup       |
+
+Then "SDD-SITEINTEGRATION-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-13 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SITEINTEGRATION-14
+Scenario: Customer adds a RX item for ship, two DL items for ship and PU, verifies pickup details, payment, billing, order review and order confirmation page
+
+Given  "SDD-SITEINTEGRATION-14" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-14 |
+
+Then "SDD-SITEINTEGRATION-14" Customer login to the Yahoo.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-14" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "SDD-SITEINTEGRATION-14" Customer login to the walgreens.com:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+And "SDD-SITEINTEGRATION-14" Customer Clears the Shopping Cart
+
+When  "SDD-SITEINTEGRATION-14" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx22 |
+
+Then "SDD-SITEINTEGRATION-14" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SITEINTEGRATION-14" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		    |
+| SDDData       | storedetails   | storeselection2  |
+
+Then "SDD-SITEINTEGRATION-14" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			    |
+| SDDData       | Product Details  | RefillRxShipInfo2	|
+
+When  "SDD-SITEINTEGRATION-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_web_ch1  |
+
+Then "SDD-SITEINTEGRATION-14" Customer adds Daily Living items to the cart from search.
+
+When  "SDD-SITEINTEGRATION-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | sdd_DL	   |
+
+Then "SDD-SITEINTEGRATION-14" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SITEINTEGRATION-14" Customer Goes to the Shopping Cart
+
+Then "SDD-SITEINTEGRATION-14" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation10 |
+
+Then "SDD-SITEINTEGRATION-14" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName 	  | RowId 		  |
+| SDDData       | subTotaldetails | DLRxDLPickup  |
+
+Then "SDD-SITEINTEGRATION-14" Customer saves the item details from the Shopping Cart page:
+
+Then "SDD-SITEINTEGRATION-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PikckUpDetails 	   |
+
+Then "SDD-SITEINTEGRATION-14" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		 |
+| SDDData       | pickuppage   | DLRxDLPickup	 |
+
+Then "SDD-SITEINTEGRATION-14" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		 |
+| SDDData       | pickuppage   | DLRxDLPickup	 |
+
+Then "SDD-SITEINTEGRATION-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| shippingaddress  	  | No 		 	|  -                 | -                | -      	| -      	| -  			 | -   		 | -     | -   	   | -             | -            | - 			   |
+
+Then "SDD-SITEINTEGRATION-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| Standard        |        Standard	         |       -	 	            |
+
+Then "SDD-SITEINTEGRATION-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SITEINTEGRATION-14" Customer verifies Order details in the Order Review Page:
+| InputFileName | SheetName    	     | RowId    	   |
+|  SDDData      | orderreviewdetails |DLRxDLPickup 	   |
+
+Then "SDD-SITEINTEGRATION-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SITEINTEGRATION-14" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    			  |
+| SDDData       | orderconfirmationdetails |DLRxDLPickup		  |
+
+Then "SDD-SITEINTEGRATION-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+And "SDD-SITEINTEGRATION-14" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName    | RowId   	 |
+| 	SDDData 	| login 	   |MixedRxUser1 |
+
+Then "SDD-SITEINTEGRATION-14" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId     		  	   |
+|    SDDData    | orderconfirmationdetails |DLRxDLPickup	       |
+
+Then "SDD-SITEINTEGRATION-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId       		    |
+| QC-SDD		| SITEINTEGRATION  | SDD-SITEINTEGRATION-14 |
+

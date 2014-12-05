@@ -1,0 +1,2663 @@
+package walgreens.ecom.batch.automation.library.dwar;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class GoalSettingVerificationLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Setup and Edit Walk Goal(including happy flows,
+     *          error validation and link verification)
+     * @author - Siva
+     * @Created - 27-Dec-2012
+     * @Modified By - SARAVANAN M
+     * @Modified Date -31 JULY 2013
+     ************************************************************* 
+     */
+    public static void setupWalkGoal(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Walk_ICON = "//img[@alt='Walk'or @alt='Walk Tick']~XPATH";
+	String WalkField_TXT = "input[id='measurement']~CSS";
+	String WalkManage_LNK = "a[id='wewalk']~CSS";
+	String DistanceType_LST = "select[id='distanceWalk']~CSS";
+	String Duration_LST = "select[id='duration']~CSS";
+	String PopularWalkGoalSetup_LNK = "//a[contains(text(),'See popular Walk goals for inspiration')]~XPATH";
+	String StartDate_TXT = "input#startDate~CSS";
+	String EndDate_TXT = "input#endDate~CSS";
+	String StartingDate_ICON = "//form[@id='walkform']/div[3]/div/div[3]/div/div/a~XPATH";
+	String NoEndDate_CHK = "input#endDateFlag~CSS";
+	String EndingDate_ICON = "//form[@id='walkform']/div[3]/div/div[4]/div/div/div/a~XPATH";
+	String NameYourGoal_TXT = "input[id='goalName']~CSS";
+	String Back_LNK = "//form[@id='walkform']/div[3]/div[4]/a~XPATH";
+	String SaveGoal_BTN = "input[id='saveWalk']~CSS";
+	String FirstPopularGoal_RADIO = "input[name='popularGoal']~CSS";
+	String PopularGoalSection_DIV = "//div[@class='float_left']/ul~XPATH";
+	String Cancel_LNK = "a[id='back']~CSS";
+	String UsethisPopualrGoal_BTN = "img[alt='use this popular goal']~CSS";
+	String DateSelectorHeader_ELM = "//div[@id='dp-popup']/h2~XPATH";
+	String WalkIconWithTickMark_ICON = "//a/span[contains(text(),'Edit Walk Goal')]~XPATH";
+	String NextButton = "a[title='Next month']~CSS";
+	String PreviousButton = "a[title='Previous month']~CSS";
+	String EditWalkGoal_LNK = "img[title='Edit goal']~CSS";
+	String DisabledPrevMonth_LNK = "//a[contains(@class,'disabled')][@title='Previous month']~XPATH";
+	String DisabledNextMonth_LNK = "//a[contains(@class,'disabled')][@title='Next month']~XPATH";
+
+	// Error Fields(Highlighted in Red color)
+	String RedHighLightedWalkField = "//div[contains(@class,'regError')]/div/input[@id='measurement']~XPATH";
+	String RedHighlightedStartDateField = "//div[contains(@class,'regError')]/div/input[@id='startDate']~XPATH";
+	String RedHighlightedEndDateField = "//div[contains(@class,'regError')]/div/input[@id='endDate']~XPATH";
+	// String RedHighlightedNameYourGoalField =
+	// "//div[contains(@class,'regError')]/div/input[@id='goalName']~XPATH";
+	boolean SelectionFound = false;
+	String SelectedPopularGoal = null;
+	List<WebElement> PopularGoalRadioButtons = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		boolean isWalkGoalSetupPage=false;
+		// getting data from Excel
+		String ClickWalkIcon = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickWalkIcon");
+		String WalkValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "WalkValue");
+		String DistanceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DistanceType");
+		String Duration = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Duration");
+		String DateFieldValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DateFieldValue");
+		String StartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StartingDate");
+		String NoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoEndDate");
+		String EndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EndingDate");
+		String GoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GoalName");
+		String Backlink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Backlink");
+		String SaveGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SaveGoal");
+		String ErrorValidationFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidationFields");
+		String PrepopVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrepopVerify");
+		String PreviousRowId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PreviousRowId");
+		String PopularWalkGoalSetup = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularWalkGoalSetup");
+		String PopularGoalType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularGoalType");
+		String CancelinPopularWalkOverly = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+		String UseThisPopularGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UseThisPopularGoal");
+                
+		if(isElementPresentVerification(WalkField_TXT, browser)){
+		   if(getElementByProperty(WalkField_TXT, browser).isDisplayed())  // Added For the Cases Clicking  on back Button
+	                isWalkGoalSetupPage=true;
+		}
+
+		// click on Walk Icon
+		if(!isWalkGoalSetupPage){ 
+		    
+		    if (ClickWalkIcon.equalsIgnoreCase("Yes")) {
+			
+			if (!isElementPresentVerifyClick(Walk_ICON, browser)) {
+			    throw new Exception("Not able to click on Walk Icon");
+			}
+		    } else if (ClickWalkIcon.equalsIgnoreCase("Edit")) {
+			if(!isElementPresentVerifyClick(WalkManage_LNK, browser)){
+			    throw new Exception("Not able to click on Walk Manage link");
+			}
+			if (!isElementPresentVerifyClick(EditWalkGoal_LNK, browser)) {
+			    throw new Exception("Not able to find the Edit Walk Goal Link");
+			}
+		    }
+		    if(getElementByProperty(Walk_ICON, browser).isDisplayed()){
+			    getElementByProperty(Walk_ICON, browser).click();
+                       }
+		}
+		// Popular Goal selection
+		if (PopularWalkGoalSetup.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(PopularWalkGoalSetup_LNK, browser)) {
+			throw new Exception("Not able to click on Popular Walk Goal Setup link");
+		    }
+		    switchToOverlay(browser);
+		    // By default First Radio button should be selected
+		    if (!getElementByProperty(FirstPopularGoal_RADIO, browser).isSelected()) {
+			messagesMap.put("Default Radio", "Rdio button is not selected by default");
+			status = WARNING;
+		    }
+		    // select Required Radio button based on input
+		    if (!PopularGoalType.equals("-")) {
+			PopularGoalRadioButtons = getElementByProperty(PopularGoalSection_DIV, browser).findElements(By.tagName("li"));
+			for (int increment = 0; increment < PopularGoalRadioButtons.size(); increment++) {
+			    if (PopularGoalRadioButtons.get(increment).getText().contains(PopularGoalType)) {
+				PopularGoalRadioButtons.get(increment).findElement(By.tagName("input")).click();
+				SelectedPopularGoal = PopularGoalRadioButtons.get(increment).getText();
+				break;
+			    }
+			}
+		    } else {
+			// it will take the default selected Goal Name
+			SelectedPopularGoal = getElementByProperty(PopularGoalSection_DIV, browser).findElement(By.tagName("li")).getText();
+		    }
+		    // click on Cancel
+		    if (CancelinPopularWalkOverly.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+			    throw new Exception("Not able to click on Cancel link");
+			}
+		    }
+		    // click on Use This Popular Goal
+		    if (UseThisPopularGoal.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(UsethisPopualrGoal_BTN, browser)) {
+			    throw new Exception("Not able to click on Use this Popular goal button ");
+			}
+		    }
+		    switchToDefault(browser);
+		    // verifying whether cancel/Use this Popular Goal button is
+		    // navigated back to Walk Fragment section
+		    if (isElementPresentVerification(WalkValue, browser)) {
+			messagesMap.put("Cancel link/UsethisPopularGoal in overlay", "Its navigated back to Walk details Fragment section");
+			status = WARNING;
+		    }
+		}
+		// enter walk value if it not equal to "-"
+		if (!WalkValue.equalsIgnoreCase("-")) {
+
+		    clearAndEnterText(WalkField_TXT, WalkValue, browser);
+		}
+		// Select Distance type if it not equal to "-"
+		if (!DistanceType.equalsIgnoreCase("-")) {
+		    selectByVisibleText(DistanceType_LST, DistanceType, browser);
+		}
+		// Select Duration type if it not equal to "-"
+		if (!Duration.equalsIgnoreCase("-")) {
+		    selectByVisibleText(Duration_LST, Duration, browser);
+		}
+		if (!StartingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for Start date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(StartDate_TXT, StartingDate, browser);
+		    }
+		    // selecting date using calendar icon
+		    // added previous month selection code changes by Rajesh
+		    else {
+			String[] StartDate = StartingDate.split(":");
+			getElementByProperty(StartingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (!isElementPresentVerification(DisabledNextMonth_LNK, browser));
+
+			if (!SelectionFound) {
+			    do {
+				String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+				if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				    SelectionFound = true;
+				    break;
+				}
+				if (!isElementPresentVerifyClick(PreviousButton, browser)) {
+				    throw new Exception("Not able to click on Previous month selection link");
+				}
+			    } while (!isElementPresentVerification(DisabledPrevMonth_LNK, browser));
+			}
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(StartDate[0])
+						&& !isDateSelected) {
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+
+		    }
+		}
+		// click on No End date check box
+		if (NoEndDate.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NoEndDate_CHK, browser)) {
+			throw new Exception("Not able to click on No End Date Chekbox");
+		    }
+		} else if (!EndingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for End date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(EndDate_TXT, EndingDate, browser);
+		    }
+		    // selecting date using calendar icon
+		    else {
+			if (EndingDate.equalsIgnoreCase("ToBeExpired")) {// #SARAVANAN
+			    // M
+			    // -7/JUNE/2013-
+			    // In
+			    // order
+			    // to
+			    // set
+			    // the
+			    // expiry
+			    // date
+			    int ExpiryDifference = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpiryDifference"));
+			    Calendar cal = Calendar.getInstance();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    String CurrentDate = dateFormat.format(cal.getTime());
+			    // Converting Current date to date format
+			    Date givenDate = dateFormat.parse(CurrentDate);
+			    // Creating Gregorian Calendar instance
+			    Calendar CalendarInstance = new GregorianCalendar();
+			    // Adding given date to calendar
+			    CalendarInstance.setTime(givenDate);
+			    CalendarInstance.add(Calendar.DATE, ExpiryDifference);
+			    SimpleDateFormat dateFormat1 = new SimpleDateFormat("d:MMMM:yyyy");
+			    EndingDate = dateFormat1.format(CalendarInstance.getTime());
+			}
+			String[] EndDate = EndingDate.split(":");
+
+			// Temporary code to click on check box - Start
+			//
+			while (getElementByProperty(NoEndDate_CHK, browser).isSelected()) {
+			    getElementByProperty(NoEndDate_CHK, browser).click();
+			}
+			// //Temporary code to click on check box- -End
+
+			getElementByProperty(EndingDate_ICON, browser).click();
+			String DateSelectorText = "";
+			int loopInc = 0;
+			do {
+			    DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+
+			    if (DateSelectorText.contains(EndDate[1]) && DateSelectorText.contains(EndDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			    loopInc++;
+			} while (getElementByProperty(NextButton, browser).isEnabled() && loopInc < 12);
+
+			if (!SelectionFound) {
+			    do {
+				DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+				if (DateSelectorText.contains(EndDate[1]) && DateSelectorText.contains(EndDate[2])) {
+				    SelectionFound = true;
+				    break;
+				}
+				if (!isElementPresentVerifyClick(PreviousButton, browser)) {
+				    throw new Exception("Not able to click on Previous Button");
+				}
+			    } while (getElementByProperty(PreviousButton, browser).isEnabled());
+			}
+
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(EndDate[0]) && !isDateSelected) {
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// Enter Goal Name if it not equal to "-"
+		if (!GoalName.equalsIgnoreCase("-")) {
+		    clearAndEnterText(NameYourGoal_TXT, GoalName, browser);
+		}
+		// Prepopulation verification
+		if (PrepopVerify.equalsIgnoreCase("PreviousDetails")) {
+		    String PreviousWalkValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "WalkValue");
+		    String PreviousDistanceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "DistanceType");
+		    String PreviousDuration = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "Duration");
+		    String PreviousStartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "StartingDate");
+		    String PreviousNoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "NoEndDate");
+		    String PreviousEndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "EndingDate");
+		    String PreviousGoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "GoalName");
+		    if (!PreviousWalkValue.equals("-")) {
+			String CurrentWalkValue = getElementByProperty(WalkField_TXT, browser).getAttribute("value");
+			if (!PreviousWalkValue.equals(CurrentWalkValue)) {
+			    messagesMap.put("Walk Filed", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousDistanceType.equals("-")) {
+			String CurrentDistanceType = new Select(getElementByProperty(DistanceType_LST, browser)).getFirstSelectedOption().getText();
+			if (!PreviousDistanceType.equals(CurrentDistanceType)) {
+			    messagesMap.put("Distance Type List", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousDuration.equals("-")) {
+			String CurrentDuration = new Select(getElementByProperty(Duration_LST, browser)).getFirstSelectedOption().getText();
+			if (!PreviousDuration.equals(CurrentDuration)) {
+			    messagesMap.put("Duration List", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousStartingDate.equals("-")) {
+			String CurrentStartDate = getElementByProperty(StartDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentStartDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousStartingDate.equals(FinalDate)) {
+			    messagesMap.put("Start Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (PreviousNoEndDate.equalsIgnoreCase("Yes")) {
+			if (!isCheckBoxSelected(browser, NoEndDate_CHK, "YES")) {
+			    messagesMap.put("No End Date Check box", "Checkbox is not selected");
+			    status = WARNING;
+			}
+		    } else if (!PreviousEndingDate.equals("-")) {
+			String CurrentEndDate = getElementByProperty(EndDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentEndDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousEndingDate.equals(FinalDate)) {
+			    messagesMap.put("End Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousGoalName.equals("-")) {
+			String CurrentGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value");
+			if (!PreviousGoalName.equals(CurrentGoalName)) {
+			    messagesMap.put("Previous Goal Name", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		}
+		// verifying Overlay Selected values in Walk Fragment
+		// Section(Prepopulation)
+		else if (PrepopVerify.equals("PopularGoalDetails")) {
+		    String PopulatedWalkValue = getElementByProperty(WalkField_TXT, browser).getAttribute("value").trim();
+		    String PopulatedDistanceType = new Select(getElementByProperty(DistanceType_LST, browser)).getFirstSelectedOption().getText().trim();
+		    String PopulatedDuration = new Select(getElementByProperty(Duration_LST, browser)).getFirstSelectedOption().getText().trim();
+		    String PopulatedGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value").trim();
+		    // Changing the Word Format based on the application
+		    if (PopulatedDuration.equals("day")) {
+			PopulatedDuration = "daily";
+		    } else if (PopulatedDuration.equals("week")) {
+			PopulatedDuration = "weekly";
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedWalkValue)) {
+			messagesMap.put("Walk Filed", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedDistanceType)) {
+			messagesMap.put("Distance Type List", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedDuration)) {
+			messagesMap.put("Duration Type List", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.equals(PopulatedGoalName)) {
+			messagesMap.put("Name Your Goal Field", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		}
+		// click on back link
+		if (Backlink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Back_LNK, browser)) {
+			throw new Exception("Not able to click Back Link");
+		    }
+		}
+		// click on save goal
+		if (SaveGoal.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SaveGoal_BTN, browser)) {
+			throw new Exception("Not able to click on Save Goal Button");
+		    }
+		    // validating Error Fields(Which should be highlight in Red
+		    // colour)
+		    if (!ErrorValidationFields.equalsIgnoreCase("-")) {
+			String[] ErrorFields = ErrorValidationFields.split(":");
+			for (int j = 0; j < ErrorFields.length; j++) {
+			    if (ErrorFields[j].equalsIgnoreCase("Walk")) {
+				if (!isElementPresentVerification(RedHighLightedWalkField, browser)) {
+				    messagesMap.put("Walk Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("StartDate")) {
+			     * if (!isElementPresentVerification(
+			     * RedHighlightedStartDateField, browser)) {
+			     * messagesMap.put("Start Date Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			    else if (ErrorFields[j].equalsIgnoreCase("EndDate")) {
+				if (!isElementPresentVerification(RedHighlightedEndDateField, browser)) {
+				    messagesMap.put("End Date Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("NameYourGoal"))
+			     * { if (!isElementPresentVerification(
+			     * RedHighlightedNameYourGoalField, browser)) {
+			     * messagesMap.put("Name Your Goal Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			}
+		    }
+		    // if error message is mentioned as "-" then verify for the
+		    // success Message
+		    else {
+			if (!isElementPresentVerification(WalkIconWithTickMark_ICON, browser)) {
+			    messagesMap.put("Walk Goal Icon", "Walk Icon Object is not displaying with tick mark");
+			    status = WARNING;
+			}
+		    }
+		}
+		
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Setup Run Goal(including happy flows, error
+     *          validation and link verification)
+     * @author - Siva
+     * @Created -31 Dec-2012
+     * @Modified By - Rajesh
+     * @Modified Date -4 JUNE 2013
+     ************************************************************* 
+     */
+    public static void setupRunGoal(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Run_ICON = "//img[@alt='Run']~XPATH";
+	String RunManage_LNK = "a[id='werun']~CSS";
+	String RunField_TXT = "input[id='measurementRun']~CSS";
+	String DistanceType_LST = "//select[contains(@name,'runGoalBean.unit')]~XPATH";
+	String Duration_LST = "//select[contains(@name,'runGoalBean.duration')]~XPATH";
+	String StartDate_TXT = "input#startDaterun~CSS";
+	String EndDate_TXT = "input#endDaterun~CSS";
+	String StartingDate_ICON = "div[class*='formelements']>*>*>*>a[title='Choose date']~CSS";
+	String EndingDate_ICON = "div:nth-child(4)>*>*>*>a[title='Choose date']~CSS";
+	String DateSelectorHeader_ELM = "//div[@id='dp-popup']/h2~XPATH";
+	String NextButton = "a[title='Next month']~CSS";
+	String PreviousButton = "a[title='Previous month']~CSS";
+	String NoEndDate_CHK = "input#endDateFlagRun~CSS";
+	String NameYourGoal_TXT = "input#goalNamerun~CSS";
+	String SaveGoal_BTN = "input#saveRun~CSS";
+	String Back_LNK = "//form[@id='runform']/div[3]/div[4]/a~XPATH";
+	String RunIconWithTickMark_ICON = "//a/span[contains(text(),'Edit Run Goal')]~XPATH";
+	String PopularRunGoal_LNK = "//a[contains(text(),'See popular Run goals for inspiration')]~XPATH";
+	String FirstPopularGoal_RADIO = "input[name='popularGoal']~CSS";
+	String PopularGoalSection_DIV = "//div[@class='float_left']/ul~XPATH";
+	String Cancel_LNK = "a[id='back']~CSS";
+	String UsethisPopualrGoal_BTN = "img[alt='use this popular goal']~CSS";
+	String EditRunGoal_LNK = "img[title='Edit goal']~CSS";
+	String DisabledPrevMonth_LNK = "//a[contains(@class,'disabled')][@title='Previous month']~XPATH";
+	String DisabledNextMonth_LNK = "//a[contains(@class,'disabled')][@title='Next month']~XPATH";
+	// Error Message Elements
+	String RedHighlightedStartDateField = "//div[contains(@class,'regError')]/div/input[@id='startDaterun']~XPATH";
+	String RedHighlightedEndDateField = "//div[contains(@class,'regError')]/div/input[@id='endDaterun']~XPATH";
+	String RedHighlightedRunField = "//div[contains(@class,'regError')]/div/input[@id='measurementRun']~XPATH";
+	// String RedHighlightedNameYourGoalField =
+	// "//div[contains(@class,'regError')]/div/input[@id='goalNamerun']~XPATH";
+	List<WebElement> PopularGoalRadioButtons = null;
+	String SelectedPopularGoal = null;
+	boolean SelectionFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String ClickRunIcon = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickRunIcon");
+		String RunValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RunValue");
+		String Distance = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Distance");
+		String Duration = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Duration");
+		String DateFieldValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DateFieldValue");
+		String StartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StartingDate");
+		String NoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoEndDate");
+		String EndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EndingDate");
+		String GoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GoalName");
+		String SaveGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SaveGoal");
+		String Backlink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "BackLink");
+		String PrepopVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrepopVerify");
+		String ErrorValidationFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidationFields");
+		String PreviousRowId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PreviousRowID");
+		String PopularRunGoalSetup = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularRunGoalSetup");
+		String PopularGoalType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularGoalType");
+		String CancelinPopularRunOverly = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+		String UseThisPopularGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UseThisPopularGoal");
+		// click on Run Icon
+		if (ClickRunIcon.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Run_ICON, browser)) {
+			throw new Exception("Not able to click on Run Icon");
+		    }
+		} else if (ClickRunIcon.equalsIgnoreCase("Edit")) {
+		    if(!isElementPresentVerifyClick(RunManage_LNK, browser)){
+			    throw new Exception("Not able to click on Run Manage link");
+			}
+		    if (!isElementPresentVerifyClick(EditRunGoal_LNK, browser)) {
+			throw new Exception("Not able to find the Edit Goal Link");
+		    }
+		}
+		// Popluar Goal selection
+		if (PopularRunGoalSetup.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(PopularRunGoal_LNK, browser)) {
+			throw new Exception("Not able to click on Popular Run Goal Setup link");
+		    }
+		    switchToOverlay(browser);
+		    if (!getElementByProperty(FirstPopularGoal_RADIO, browser).isSelected()) {
+			messagesMap.put("Default Radio", "Rdio button is not selected by default");
+			status = WARNING;
+		    }
+		    // select Required Radio button based on input
+		    if (!PopularGoalType.equals("-")) {
+			PopularGoalRadioButtons = getElementByProperty(PopularGoalSection_DIV, browser).findElements(By.tagName("li"));
+			for (int increment = 0; increment < PopularGoalRadioButtons.size(); increment++) {
+			    if (PopularGoalRadioButtons.get(increment).getText().contains(PopularGoalType)) {
+				PopularGoalRadioButtons.get(increment).findElement(By.tagName("input")).click();
+				SelectedPopularGoal = PopularGoalRadioButtons.get(increment).getText();
+				break;
+			    }
+			}
+		    } else {
+			// it will take the default selected Value text
+			SelectedPopularGoal = getElementByProperty(PopularGoalSection_DIV, browser).findElement(By.tagName("li")).getText();
+		    }
+		    // click on Cancel
+		    if (CancelinPopularRunOverly.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+			    throw new Exception("Not able to click on Cancel link");
+			}
+		    }
+		    // click on Use This Popular Goal
+		    if (UseThisPopularGoal.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(UsethisPopualrGoal_BTN, browser)) {
+			    throw new Exception("Not able to click on Use this Popular goal button ");
+			}
+		    }
+		    switchToDefault(browser);
+		    // verifying whether cancel/Usethis Popular Goal button is
+		    // navigated back to run Fragment section
+		    if (!isElementPresentVerification(RunField_TXT, browser)) {
+			messagesMap.put("Cancel link/UsethisPopularGoal in overlay", "Its navigated back to Run details Fragment section");
+			status = WARNING;
+		    }
+		}
+		// enter Run value if it not equal to "-"
+		if (!RunValue.equalsIgnoreCase("-")) {
+		    clearAndEnterText(RunField_TXT, RunValue, browser);
+		}
+		// Select Distance type if it not equal to "-"
+		if (!Distance.equalsIgnoreCase("-")) {
+		    selectByVisibleText(DistanceType_LST, Distance, browser);
+		}
+		// Select Duration type if it not equal to "-"
+		if (!Duration.equalsIgnoreCase("-")) {
+		    selectByVisibleText(Duration_LST, Duration, browser);
+		}
+		if (!StartingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for Start date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(StartDate_TXT, StartingDate, browser);
+		    }
+		    // selecting date using calender icon
+		    // added previous month selection code changes by Rajesh
+		    else {
+			String[] StartDate = StartingDate.split(":");
+
+			getElementByProperty(StartingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (!isElementPresentVerification(DisabledNextMonth_LNK, browser));
+
+			if (!SelectionFound) {
+			    do {
+				String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+				if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				    SelectionFound = true;
+				    break;
+				}
+				if (!isElementPresentVerifyClick(PreviousButton, browser)) {
+				    throw new Exception("Not able to click on Previous month selection link");
+				}
+			    } while (!isElementPresentVerification(DisabledPrevMonth_LNK, browser));
+			}
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(StartDate[0])
+						&& !isDateSelected) {					  
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// click on No End date check box
+		if (NoEndDate.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NoEndDate_CHK, browser)) {
+			throw new Exception("Not able to click on No End Date Chekbox");
+		    }
+		} else if (!EndingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for End date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+
+			clearAndEnterText(EndDate_TXT, EndingDate, browser);
+		    }
+		    // selecting date using calendar icon
+		    else {
+			if (EndingDate.equalsIgnoreCase("ToBeExpired")) {// #SARAVANAN
+			    // M
+			    // -7/JUNE/2013-
+			    // In
+			    // order
+			    // to
+			    // set
+			    // the
+			    // expiry
+			    // date
+			    int ExpiryDifference = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpiryDifference"));
+			    Calendar cal = Calendar.getInstance();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    String CurrentDate = dateFormat.format(cal.getTime());
+			    // Converting Current date to date format
+			    Date givenDate = dateFormat.parse(CurrentDate);
+			    // Creating Gregorian Calendar instance
+			    Calendar CalendarInstance = new GregorianCalendar();
+			    // Adding given date to calendar
+			    CalendarInstance.setTime(givenDate);
+			    CalendarInstance.add(Calendar.DATE, ExpiryDifference);
+			    SimpleDateFormat dateFormat1 = new SimpleDateFormat("d:MMMM:yyyy");
+			    EndingDate = dateFormat1.format(CalendarInstance.getTime());
+			}
+			String[] EndDate = EndingDate.split(":");
+			// Temporary code-Start
+			while (getElementByProperty(NoEndDate_CHK, browser).isSelected()) {
+			    getElementByProperty(NoEndDate_CHK, browser).click();
+			}
+			// Temporary code-End
+			getElementByProperty(EndingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(EndDate[1]) && DateSelectorText.contains(EndDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (getElementByProperty(NextButton, browser).isEnabled());
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(EndDate[0]) && !isDateSelected) {
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given End date");
+			}
+		    }
+		}
+		// Enter Goal Name if it not equal to "-"
+		if (!GoalName.equalsIgnoreCase("-")) {
+		    clearAndEnterText(NameYourGoal_TXT, GoalName, browser);
+		}
+		// Prepopulation verification
+		if (PrepopVerify.equalsIgnoreCase("PreviousDetails")) {
+		    String PreviousRunValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "RunValue");
+		    String PreviousDistanceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "Distance");
+		    String PreviousDuration = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "Duration");
+		    String PreviousStartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "StartingDate");
+		    String PreviousNoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "NoEndDate");
+		    String PreviousEndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "EndingDate");
+		    String PreviousGoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "GoalName");
+
+		    if (!PreviousRunValue.equals("-")) {
+			String CurrentRunValue = getElementByProperty(RunField_TXT, browser).getAttribute("value");
+			if (!PreviousRunValue.equals(CurrentRunValue)) {
+			    messagesMap.put(" Filed", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousDistanceType.equals("-")) {
+			String CurrentDistanceType = new Select(getElementByProperty(DistanceType_LST, browser)).getFirstSelectedOption().getText();
+			if (!PreviousDistanceType.equals(CurrentDistanceType)) {
+			    messagesMap.put("Distance Type List", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousDuration.equals("-")) {
+			String CurrentDuration = new Select(getElementByProperty(Duration_LST, browser)).getFirstSelectedOption().getText();
+			if (!PreviousDuration.equals(CurrentDuration)) {
+			    messagesMap.put("Duration List", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousStartingDate.equals("-")) {
+			String CurrentStartDate = getElementByProperty(StartDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentStartDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousStartingDate.equals(FinalDate)) {
+			    messagesMap.put("Start Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (PreviousNoEndDate.equalsIgnoreCase("Yes")) {
+			if (!isCheckBoxSelected(browser, NoEndDate_CHK, "YES")) {
+			    messagesMap.put("No End Date Check box", "Checkbox is not selected");
+			    status = WARNING;
+			}
+		    } else if (!PreviousEndingDate.equals("-")) {
+			String CurrentEndDate = getElementByProperty(EndDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentEndDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousEndingDate.equals(FinalDate)) {
+			    messagesMap.put("End Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousGoalName.equals("-")) {
+			String CurrentGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value");
+			if (!PreviousGoalName.equals(CurrentGoalName)) {
+			    messagesMap.put("Previous Goal Name", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		} // verifying Overlay Selected values in Run Frangment
+		// Section(Prepopulation)
+		else if (PrepopVerify.equalsIgnoreCase("PopularGoalDetails")) {
+		    String PopulatedRunValue = getElementByProperty(RunField_TXT, browser).getAttribute("value");
+		    String PopulatedDistanceType = new Select(getElementByProperty(DistanceType_LST, browser)).getFirstSelectedOption().getText();
+		    String PopulatedDuration = new Select(getElementByProperty(Duration_LST, browser)).getFirstSelectedOption().getText();
+		    String PopulatedGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value");
+		    // Changing the Word Format based on the application
+		    if (PopulatedDuration.equals("day")) {
+			PopulatedDuration = "daily";
+		    } else if (PopulatedDuration.equals("week")) {
+			PopulatedDuration = "weekly";
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedRunValue)) {
+			messagesMap.put("Walk Filed", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedDistanceType)) {
+			messagesMap.put("Distance Type List", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.contains(PopulatedDuration)) {
+			messagesMap.put("Duration Type List", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		    if (!SelectedPopularGoal.equals(PopulatedGoalName)) {
+			messagesMap.put("Name Your Goal Field", "Value wrongly prepopulated");
+			status = WARNING;
+		    }
+		}
+		// click on back link
+		if (Backlink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Back_LNK, browser)) {
+			throw new Exception("Not able to enter Back Link");
+		    }
+		}
+		// click on save goal
+		if (SaveGoal.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SaveGoal_BTN, browser)) {
+			throw new Exception("Not able to click on Save Goal Button");
+		    }
+		    // validating Error Fields(Which should be highlight in Red
+		    // colour)
+		    if (!ErrorValidationFields.equalsIgnoreCase("-")) {
+			String[] ErrorFields = ErrorValidationFields.split(":");
+			for (int j = 0; j < ErrorFields.length; j++) {
+			    if (ErrorFields[j].equalsIgnoreCase("Run")) {
+				if (!isElementPresentVerification(RedHighlightedRunField, browser)) {
+				    messagesMap.put("Run Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("StartDate")) {
+			     * if (!isElementPresentVerification(
+			     * RedHighlightedStartDateField, browser)) {
+			     * messagesMap.put("Start Date Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			    else if (ErrorFields[j].equalsIgnoreCase("EndDate")) {
+				if (!isElementPresentVerification(RedHighlightedEndDateField, browser)) {
+				    messagesMap.put("End Date Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("NameYourGoal"))
+			     * { if (!isElementPresentVerification(
+			     * RedHighlightedNameYourGoalField, browser)) {
+			     * messagesMap.put("Name Your Goal Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			}
+		    }
+		    // if error message is mentioned as "-" then verify for the
+		    // success Message
+		    else {
+			if (!isElementPresentVerification(RunIconWithTickMark_ICON, browser)) {
+			    messagesMap.put("Run Goal Icon", "Run Icon Object is not displaying with tick mark");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Setup Weight Goal(including happy flows, error
+     *          validation and link verification)
+     * @author - Siva
+     * @Created -31-Dec-2012
+     * @Modified By -Rajesh
+     * @Modified Date -04 JUNE 2013
+     ************************************************************* 
+     */
+    public static void setupWeightGoal(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Weight_IMG = "//img[@alt='Weight']~XPATH";
+	String WeightManage_LNK = "a[id='weightgoal']~CSS";
+	String Current_TXT = "input[id='initialMeasurement'][title='Current Weight']~CSS";
+	String Goal_TXT = "input#goalMeasurement~CSS";
+	String StartDate_TXT = "input#startDateweight~CSS";
+	String EndDate_TXT = "input#endDateweight~CSS";
+	String StartingDate_ICON = "//form[@id='weightform']/div[3]/div/div[5]/div/div/a[@title='Choose date']~XPATH";
+	String EndingDate_ICON = "//form[@id='weightform']/div[3]/div/div[6]/div/div/div/a[@title='Choose date']~XPATH";
+	String DateSelectorHeader_ELM = "//div[@id='dp-popup']/h2~XPATH";
+	String NextButton = "a[title='Next month']~CSS";
+	String PreviousButton = "a[title='Previous month']~CSS";
+	String NoEndDate_CHK = "input#endDateFlagWeight~CSS";
+	String NameYourGoal_TXT = "input#goalNameweight~CSS";
+	String SaveGoal_BTN = "input#saveWeight~CSS";
+	String Back_LNK = "//form[@id='weightform']/div[3]/div[4]/a~XPATH";
+	String WeightIconWithTickMark_ICON = "//a/span[contains(text(),'Edit Weight Goal')]~XPATH";
+	String EditWeightGoal_LNK = "img[title='Edit goal']~CSS";
+	String DisabledPrevMonth_LNK = "//a[contains(@class,'disabled')][@title='Previous month']~XPATH";
+	String DisabledNextMonth_LNK = "//a[contains(@class,'disabled')][@title='Next month']~XPATH";
+	// Error validation Elements
+	String RedHighlightedStartDateField = "//div[contains(@class,'regError')]/div/input[@id='startDateweight']~XPATH";
+	String RedHighlightedEndDateField = "//div[contains(@class,'regError')]/div/input[@id='endDateweight']~XPATH";
+	String RedHighLightedCurrentField = "//div[contains(@class,'regError')]/div/input[@id='initialMeasurement']~XPATH";
+	String RedHighlightedGoalField = "//div[contains(@class,'regError')]/div/input[@id='goalMeasurement']~XPATH";
+	// String RedHighlightedNameYourGoalField =
+	// "//div[contains(@class,'regError')]/div/input[@id='goalNameweight']~XPATH";
+	boolean SelectionFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// get the data from Excel
+		String ClickWeightIcon = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickWeightIcon");
+		String Current = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Current");
+		String Goal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Goal");
+		String DateFieldValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DateFieldValue");
+		String StartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StartingDate");
+		String NoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoEndDate");
+		String EndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EndingDate");
+		String NameYourGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GoalName");
+		String SaveGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SaveGoal");
+		String Backlink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Backlink");
+		String PrepopVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrepopVerify");
+		String ErrorValidationFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidationFields");
+		String PreviousRowId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PreviousRowID");
+		// click on Run Icon
+		if (ClickWeightIcon.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Weight_IMG, browser)) {
+			throw new Exception("Not able to click on Weight Icon");
+		    }
+		} else if (ClickWeightIcon.equalsIgnoreCase("Edit")) {
+		    if(!isElementPresentVerifyClick(WeightManage_LNK, browser)){
+			    throw new Exception("Not able to click on Weight Manage link");
+			}
+		    if (!isElementPresentVerifyClick(EditWeightGoal_LNK, browser)) {
+			throw new Exception("Not able to find the Edit Goal Link");
+		    }
+		}
+		// enter Current field value
+		if (!Current.equals("-")) {
+		    clearAndEnterText(Current_TXT, Current, browser);
+		}
+		// enter Goal field value
+		if (!Goal.equals("-")) {
+		    clearAndEnterText(Goal_TXT, Goal, browser);
+		}
+		if (!StartingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for Start date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(StartDate_TXT, StartingDate, browser);
+		    }
+		    // selecting date using calender icon
+		    // added previous month selection code changes by Rajesh
+		    else {
+			String[] StartDate = StartingDate.split(":");
+			getElementByProperty(StartingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (!isElementPresentVerification(DisabledNextMonth_LNK, browser));
+			if (!SelectionFound) {
+			    do {
+				String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+				if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				    SelectionFound = true;
+				    break;
+				}
+				if (!isElementPresentVerifyClick(PreviousButton, browser)) {
+				    throw new Exception("Not able to click on Previous month selection link");
+				}
+			    } while (!isElementPresentVerification(DisabledPrevMonth_LNK, browser));
+			}
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(StartDate[0])
+						&& !isDateSelected) {					   
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// click on No End date check box
+		if (NoEndDate.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NoEndDate_CHK, browser)) {
+			throw new Exception("Not able to click on No End Date Chekbox");
+		    }
+		} else if (!EndingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for End date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(EndDate_TXT, EndingDate, browser);
+		    }
+		    // selecting date using calendar icon
+		    else {
+			if (EndingDate.equalsIgnoreCase("ToBeExpired")) {// #SARAVANAN
+			    // M
+			    // -7/JUNE/2013-
+			    // In
+			    // order
+			    // to
+			    // set
+			    // the
+			    // expiry
+			    // date
+			    int ExpiryDifference = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpiryDifference"));
+			    Calendar cal = Calendar.getInstance();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    String CurrentDate = dateFormat.format(cal.getTime());
+			    // Converting Current date to date format
+			    Date givenDate = dateFormat.parse(CurrentDate);
+			    // Creating Gregorian Calendar instance
+			    Calendar CalendarInstance = new GregorianCalendar();
+			    // Adding given date to calendar
+			    CalendarInstance.setTime(givenDate);
+			    CalendarInstance.add(Calendar.DATE, ExpiryDifference);
+			    SimpleDateFormat dateFormat1 = new SimpleDateFormat("d:MMMM:yyyy");
+			    EndingDate = dateFormat1.format(CalendarInstance.getTime());
+			}
+			String[] EndDate = EndingDate.split(":");
+			// Temp
+			while (getElementByProperty(NoEndDate_CHK, browser).isSelected()) {
+			    getElementByProperty(NoEndDate_CHK, browser).click();
+			}
+			// Temp
+			getElementByProperty(EndingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(EndDate[1]) && DateSelectorText.contains(EndDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (getElementByProperty(NextButton, browser).isEnabled());
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(EndDate[0]) && !isDateSelected) {  
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// Enter Name Your Goal
+		if (!NameYourGoal.equals("-")) {
+		    clearAndEnterText(NameYourGoal_TXT, NameYourGoal, browser);
+		}
+		// verify Prepopulation
+		if (PrepopVerify.equalsIgnoreCase("PreviousDetails")) {
+		    String PreviousCurrentValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "Current");
+		    String PreviousGoalValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "Goal");
+		    String PreviousStartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "StartingDate");
+		    String PreviousNoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "NoEndDate");
+		    String PreviousEndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "EndingDate");
+		    String PreviousNameYourGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "GoalName");
+		    if (!PreviousCurrentValue.equals("-")) {
+			String CurrentValue = getElementByProperty(Current_TXT, browser).getAttribute("value");
+			if (!PreviousCurrentValue.equals(CurrentValue)) {
+			    messagesMap.put("Current Field", "Value Wrongly Prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousGoalValue.equals("-")) {
+			String GoalValue = getElementByProperty(Goal_TXT, browser).getAttribute("value");
+			if (!PreviousGoalValue.equals(GoalValue)) {
+			    messagesMap.put("Goal Field", "Value Wrongly Prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousStartingDate.equals("-")) {
+			String CurrentStartDate = getElementByProperty(StartDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentStartDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousStartingDate.equals(FinalDate)) {
+			    messagesMap.put("Start Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (PreviousNoEndDate.equalsIgnoreCase("Yes")) {
+			if (!isCheckBoxSelected(browser, NoEndDate_CHK, "YES")) {
+			    messagesMap.put("No End Date Check box", "Checkbox is not selected");
+			    status = WARNING;
+			}
+		    } else if (!PreviousEndingDate.equals("-")) {
+			String CurrentEndDate = getElementByProperty(EndDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentEndDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousEndingDate.equals(FinalDate)) {
+			    messagesMap.put("End Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousNameYourGoal.equals("-")) {
+			String CurrentGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value");
+			if (!PreviousNameYourGoal.equals(CurrentGoalName)) {
+
+			    messagesMap.put("Goal Name Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		}
+		// click on back link
+		if (Backlink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Back_LNK, browser)) {
+			throw new Exception("Not able to enter Back Link");
+		    }
+		}
+		// click on save goal
+		if (SaveGoal.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SaveGoal_BTN, browser)) {
+			throw new Exception("Not able to click on Save Goal Button");
+		    }
+		    // validating Error Fields(Which should be highlight in Red
+		    // colour)
+		    if (!ErrorValidationFields.equalsIgnoreCase("-")) {
+			String[] ErrorFields = ErrorValidationFields.split(":");
+			for (int j = 0; j < ErrorFields.length; j++) {
+			    if (ErrorFields[j].equalsIgnoreCase("Current")) {
+				if (!isElementPresentVerification(RedHighLightedCurrentField, browser)) {
+				    messagesMap.put("Current Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    } else if (ErrorFields[j].equalsIgnoreCase("Goal")) {
+				if (!isElementPresentVerification(RedHighlightedGoalField, browser)) {
+				    messagesMap.put("Goal Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("StartDate")) {
+			     * if (!isElementPresentVerification(
+			     * RedHighlightedStartDateField, browser)) {
+			     * messagesMap.put("Start Date Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			    else if (ErrorFields[j].equalsIgnoreCase("EndDate")) {
+				if (!isElementPresentVerification(RedHighlightedEndDateField, browser)) {
+				    messagesMap.put("End Date Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("NameYourGoal"))
+			     * { if (!isElementPresentVerification(
+			     * RedHighlightedNameYourGoalField, browser)) {
+			     * messagesMap.put("Name Your Goal Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			}
+		    }
+		    // if error message is mentioned as "-" then verify for the
+		    // success Message
+		    else {
+			if (!isElementPresentVerification(WeightIconWithTickMark_ICON, browser)) {
+			    messagesMap.put("Weight Goal Icon", "Weight Icon Object is not displaying with tick mark");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Setup Frequency Goal(including happy flows, error
+     *          validation and link verification)
+     * @author - Siva
+     * @Created - 02-Jan-2013
+     * @Modified By -Rajesh
+     * @Modified Date - 4 JUNE 2013
+     ************************************************************* 
+     */
+    public static void setupFrequencyGoal(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Frequency_ICON = "//img[@alt='Frequency']~XPATH";
+	String FrequencyManage_LNK = "a[id='frequencygoal']~CSS";
+	String BeActive_LST = "//select[@id='measurementFreq']~XPATH";
+	String PopularFrequencyGoals_LNK = "//a[contains(text(),'See popular Frequency goals')]~XPATH";
+	String StartDate_TXT = "input#startDatefreq~CSS";
+	String StartingDate_ICON = "//form[@id='frequencyform']/div[3]/div/div/div/div/a[@title='Choose date']~XPATH";
+	String EndDate_TXT = "input#endDatefreq~CSS";
+	String EndingDate_ICON = "//form[@id='frequencyform']/div[3]/div/div[4]/div/div/div/a[@title='Choose date']~XPATH";
+	String NextButton = "a[title='Next month']~CSS";
+	String PreviousButton = "a[title='Previous month']~CSS";
+	String NoEndDate_CHK = "input#endDateFlagFrequency~CSS";
+	String NameYourGoal_TXT = "input#goalNamefreq~CSS";
+	String SaveMyGoal_BTN = "input#saveFrequency~CSS";
+	String Back_LNK = "//form[@id='frequencyform']/div[3]/div[4]/a~XPATH";
+	String PopularGoalSection_DIV = "//div[@class='float_left']/ul~XPATH";
+	String FirstPopularGoal_RADIO = "input[name='popularGoal']~CSS";
+	String Cancel_LNK = "a[id='back']~CSS";
+	String UsethisPopualrGoal_BTN = "img[alt='use this popular goal']~CSS";
+	String DateSelectorHeader_ELM = "//div[@id='dp-popup']/h2~XPATH";
+	String FrequencyIconWithTickMark_ICON = "//a/span[contains(text(),'Edit Frequency Goal')]~XPATH";
+	String EditFrequencyGoal_LNK = "img[title='Edit goal']~CSS";
+	String DisabledPrevMonth_LNK = "//a[contains(@class,'disabled')][@title='Previous month']~XPATH";
+	String DisabledNextMonth_LNK = "//a[contains(@class,'disabled')][@title='Next month']~XPATH";
+	// Error Elements
+	String RedHighlightedStartDateField = "//div[contains(@class,'regError')]/div/input[@id='startDatefreq']~XPATH";
+	String RedHighlightedEndDateField = "//div[contains(@class,'regError')]/div/input[@id='endDatefreq']~XPATH";
+	// String RedHighlightedNameYourGoalField =
+	// "//div[contains(@class,'regError')]/div/input[@id='goalNameweight']~XPATH";
+	List<WebElement> PopularGoalRadioButtons = null;
+	String SelectedPopularGoal = null;
+	boolean SelectionFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// getting data from Excel
+		String ClickFrequencyIcon = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickFrequencyIcon");
+		String ActiveDays = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ActiveDays");
+		String DateFieldValue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DateFieldValue");
+		String StartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "StartingDate");
+		String NoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NoEndDate");
+		String EndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EndingDate");
+		String GoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GoalName");
+		String Backlink = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Backlink");
+		String SaveGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SaveGoal");
+		String ErrorValidationFields = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidationFields");
+		String PrepopVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrepopVerify");
+		String PreviousRowId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PreviousRowId");
+		String PopularWalkGoalSetup = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularWalkGoalSetup");
+		String PopularGoalType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PopularGoalType");
+		String CancelinPopularWalkOverly = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cancel");
+		String UseThisPopularGoal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UseThisPopularGoal");
+		String StartDate_ELM = "";
+		// click on Frequency Icon
+		if (ClickFrequencyIcon.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Frequency_ICON, browser)) {
+			throw new Exception("Not able to click on Frequency Icon");
+		    }
+		} else if (ClickFrequencyIcon.equalsIgnoreCase("Edit")) {
+		    if(!isElementPresentVerifyClick(FrequencyManage_LNK, browser)){
+			    throw new Exception("Not able to click on Frequency Manage link");
+			}
+		    if (!isElementPresentVerifyClick(EditFrequencyGoal_LNK, browser)) {
+			throw new Exception("Not able to find the Edit Goal Link");
+		    }
+		}
+		// Popluar Goal selection
+		if (PopularWalkGoalSetup.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(PopularFrequencyGoals_LNK, browser)) {
+			throw new Exception("Not able to click on Popular Frequency Goal Setup link");
+		    }
+		    switchToOverlay(browser);
+		    // By default First Radio button should be selected
+		    if (!getElementByProperty(FirstPopularGoal_RADIO, browser).isSelected()) {
+			messagesMap.put("Default Radio", "Rdio button is not selected by default");
+			status = WARNING;
+		    }
+		    // select Required Radio button based on input
+		    if (!PopularGoalType.equals("-")) {
+			PopularGoalRadioButtons = getElementByProperty(PopularGoalSection_DIV, browser).findElements(By.tagName("li"));
+			for (int increment = 0; increment < PopularGoalRadioButtons.size(); increment++) {
+			    if (PopularGoalRadioButtons.get(increment).getText().contains(PopularGoalType)) {
+				PopularGoalRadioButtons.get(increment).findElement(By.tagName("input")).click();
+				SelectedPopularGoal = PopularGoalRadioButtons.get(increment).getText();
+				break;
+			    }
+			}
+		    } else {
+			SelectedPopularGoal = getElementByProperty(PopularGoalSection_DIV, browser).findElement(By.tagName("li")).getText();
+		    }
+
+		    // click on Cancel
+		    if (CancelinPopularWalkOverly.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+			    throw new Exception("Not able to click on Cancel link");
+			}
+		    }
+		    // click on Use This Popular Goal
+		    if (UseThisPopularGoal.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(UsethisPopualrGoal_BTN, browser)) {
+			    throw new Exception("Not able to click on Use this Popular goal button ");
+			}
+		    }
+		    switchToDefault(browser);
+		    if (!isElementPresentVerification(SaveMyGoal_BTN, browser)) {
+			messagesMap.put("Use this Popular Goal/Cance link in overly", "Overlay Close/UsethisPopular Goal is not navigated back to Frequency fragment section");
+			status = WARNING;
+		    }
+		}
+		// select active days value if it not equal to "-"
+		if (!ActiveDays.equalsIgnoreCase("-")) {
+		    selectByVisibleText(BeActive_LST, ActiveDays, browser);
+		}
+		if (!StartingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for Start date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+			clearAndEnterText(StartDate_TXT, StartingDate, browser);
+		    }
+		    // selecting date using calender icon
+		    // added previous month selection code changes by Rajesh
+		    else {
+			String[] StartDate = StartingDate.split(":");
+			getElementByProperty(StartingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (!isElementPresentVerification(DisabledNextMonth_LNK, browser));
+
+			if (!SelectionFound) {
+			    do {
+				String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+				if (DateSelectorText.contains(StartDate[1]) && DateSelectorText.contains(StartDate[2])) {
+				    SelectionFound = true;
+				    break;
+				}
+				if (!isElementPresentVerifyClick(PreviousButton, browser)) {
+				    throw new Exception("Not able to click on Previous month selection link");
+				}
+			    } while (!isElementPresentVerification(DisabledPrevMonth_LNK, browser));
+			}
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(StartDate[0])
+						&& !isDateSelected) {					  
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// click on No End date check box
+		if (NoEndDate.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(NoEndDate_CHK, browser)) {
+			throw new Exception("Not able to click on No End Date Chekbox");
+		    }
+		} else if (!EndingDate.equalsIgnoreCase("-")) {
+		    // if we are validating for special character for End date
+		    // field we will directly enter in the text box
+		    if (DateFieldValue.equalsIgnoreCase("Invalid")) {
+
+			clearAndEnterText(EndDate_TXT, EndingDate, browser);
+		    }
+		    // selecting date using calender icon
+		    else {
+			if (EndingDate.equalsIgnoreCase("ToBeExpired")) {// #SARAVANAN
+			    // M
+			    // -7/JUNE/2013-
+			    // In
+			    // order
+			    // to
+			    // set
+			    // the
+			    // expiry
+			    // date
+			    int ExpiryDifference = Integer.parseInt(getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ExpiryDifference"));
+			    Calendar cal = Calendar.getInstance();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    String CurrentDate = dateFormat.format(cal.getTime());
+			    // Converting Current date to date format
+			    Date givenDate = dateFormat.parse(CurrentDate);
+			    // Creating Gregorian Calendar instance
+			    Calendar CalendarInstance = new GregorianCalendar();
+			    // Adding given date to calendar
+			    CalendarInstance.setTime(givenDate);
+			    CalendarInstance.add(Calendar.DATE, ExpiryDifference);
+			    SimpleDateFormat dateFormat1 = new SimpleDateFormat("d:MMMM:yyyy");
+			    EndingDate = dateFormat1.format(CalendarInstance.getTime());
+			}
+			String[] EndDate = EndingDate.split(":");
+
+			// Temporary code-Start
+			while (getElementByProperty(NoEndDate_CHK, browser).isSelected()) {
+			    getElementByProperty(NoEndDate_CHK, browser).click();
+			}
+			// Temporary code-End
+			getElementByProperty(EndingDate_ICON, browser).click();
+			do {
+			    String DateSelectorText = getElementByProperty(DateSelectorHeader_ELM, browser).getText();
+			    if (DateSelectorText.contains(EndDate[1]) && DateSelectorText.contains(EndDate[2])) {
+				SelectionFound = true;
+				break;
+			    }
+			    if (!isElementPresentVerifyClick(NextButton, browser)) {
+				throw new Exception("Not able to click on Next Button");
+			    }
+			} while (getElementByProperty(NextButton, browser).isEnabled());
+			if (!SelectionFound) {
+			    messagesMap.put("Required Month & Year", "Required Month & Year not found");
+			    status = WARNING;
+			}
+			String dateCal_TBL = "//table[@class='jCalendar']/tbody~XPATH";
+			int NoOfRows = getElementByProperty(dateCal_TBL, browser).findElements(By.tagName("tr")).size();
+			boolean isDateSelected = false;
+
+			for (int row = 1; row <= NoOfRows; row++) {
+			    if (!isDateSelected) {
+				int NoOfTds = getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]", browser).findElements(By.tagName("td")).size();
+				for (int col = 1; col <= NoOfTds; col++) {
+				    if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) != null) {
+					if ((getElementByProperty("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)).getText().trim().equals(EndDate[0]) && !isDateSelected) {					   
+					    if (isElementPresentVerifyClick("//table[@class='jCalendar']/tbody/tr[" + row + "]/td[" + col + "]", browser)) {
+						isDateSelected = true;
+					    }
+					}
+				    }
+				}
+			    }
+			}
+
+			if (!isDateSelected) {
+			    throw new Exception("Not able to select the given start date");
+			}
+		    }
+		}
+		// Enter Goal Name if it not equal to "-"
+		if (!GoalName.equalsIgnoreCase("-")) {
+		    clearAndEnterText(NameYourGoal_TXT, GoalName, browser);
+		}
+		// Prepopulation verification
+		if (PrepopVerify.equalsIgnoreCase("PreviousDetails")) {
+		    String PreviousActiveDays = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "ActiveDays");
+		    String PreviousStartingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "StartingDate");
+		    String PreviousNoEndDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "NoEndDate");
+		    String PreviousEndingDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "EndingDate");
+		    String PreviousGoalName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), PreviousRowId, "GoalName");
+		    if (!PreviousActiveDays.equals("-")) {
+			String CurrentActiveDays = new Select(getElementByProperty(BeActive_LST, browser)).getFirstSelectedOption().getText();
+			if (!PreviousActiveDays.equals(CurrentActiveDays)) {
+			    messagesMap.put("Active Days", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousStartingDate.equals("-")) {
+			String CurrentStartDate = getElementByProperty(StartDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentStartDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousStartingDate.equals(FinalDate)) {
+			    messagesMap.put("Start Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (PreviousNoEndDate.equalsIgnoreCase("Yes")) {
+			if (!isCheckBoxSelected(browser, NoEndDate_CHK, "YES")) {
+			    messagesMap.put("No End Date Check box", "Checkbox is not selected");
+			    status = WARNING;
+			}
+		    } else if (!PreviousEndingDate.equals("-")) {
+			String CurrentEndDate = getElementByProperty(EndDate_TXT, browser).getAttribute("value");
+			String FinalDate = dateFormatChanger(CurrentEndDate, "MM/dd/yyyy", "dd:MMMM:yyyy");
+			if (!PreviousEndingDate.equals(FinalDate)) {
+			    messagesMap.put("End Date Field", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		    if (!PreviousGoalName.equals("-")) {
+			String CurrentGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value");
+			if (!PreviousGoalName.equals(CurrentGoalName)) {
+			    messagesMap.put("Previous Goal Name", "Value wrongly prepopulated");
+			    status = WARNING;
+			}
+		    }
+		}
+		// verifying Overlay Selected values in Frequency Fragment
+		// Section(Pre-population)
+		else if (PrepopVerify.equalsIgnoreCase("PopularGoalDetails")) {
+		    String PopulatedActiveDays = new Select(getElementByProperty(BeActive_LST, browser)).getFirstSelectedOption().getText();
+		    String PopulatedGoalName = getElementByProperty(NameYourGoal_TXT, browser).getAttribute("value").trim();
+		    if (!SelectedPopularGoal.contains(PopulatedActiveDays)) {
+			messagesMap.put("Be Active List", "Field is not Prepopulated");
+			status = WARNING;
+		    }
+		    if (!PopulatedGoalName.equals(SelectedPopularGoal)) {
+			messagesMap.put("Name Your Goal", "Field is not Prepopulated");
+			status = WARNING;
+		    }
+		}
+		// click on back link
+		if (Backlink.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Back_LNK, browser)) {
+			throw new Exception("Not able to enter Back Link");
+		    }
+		}
+		// click on save goal
+		if (SaveGoal.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SaveMyGoal_BTN, browser)) {
+			throw new Exception("Not able to click on Save Goal Button");
+		    }
+		    // validating Error Fields(Which should be highlight in
+		    // Red
+		    // colour)
+		    if (!ErrorValidationFields.equalsIgnoreCase("-")) {
+			String[] ErrorFields = ErrorValidationFields.split(":");
+			for (int j = 0; j < ErrorFields.length; j++) {
+			    /*
+			     * if (ErrorFields[j].equalsIgnoreCase("StartDate"))
+			     * { if (!isElementPresentVerification(
+			     * RedHighlightedStartDateField, browser)) {
+			     * messagesMap.put("Start Date Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			    if (ErrorFields[j].equalsIgnoreCase("EndDate")) {
+				if (!isElementPresentVerification(RedHighlightedEndDateField, browser)) {
+				    messagesMap.put("End Date Field", "Field is not highlighted in Red colour");
+				    status = WARNING;
+				}
+			    }
+			    /*
+			     * else if
+			     * (ErrorFields[j].equalsIgnoreCase("NameYourGoal"))
+			     * { if (!isElementPresentVerification(
+			     * RedHighlightedNameYourGoalField, browser)) {
+			     * messagesMap.put("Name Your Goal Field",
+			     * "Field is not highlighted in Red colour"); status
+			     * = WARNING; } }
+			     */
+			}
+		    }
+		    // if error message is mentioned as "-" then verify for
+		    // the success Message
+		    else {
+			if (!isElementPresentVerification(FrequencyIconWithTickMark_ICON, browser)) {
+			    messagesMap.put("Frequency Goal Icon", "Frequency Icon Object is not displaying with tick mark");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Log WeighIn Activity(including happy flows, error
+     *          validation on both Min and Max fields)
+     * @author - Saravanan M
+     * @Created - 17-Jan-2013
+     * @Modified By -Siva
+     * @Modified Date -14 Mar 2013
+     ************************************************************* 
+     */
+    public static void setupWeighInActivity(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String WeighIn_TAB = "a>span[class='weigh_in']~CSS";
+	String Date_ICON = "input#WeighinDate~CSS";
+	String Weight_TXT = "input#weightMeasurement~CSS";
+	String Time_LST = "select[name*='timeofday']~CSS";
+	String More_LNK = "a#WeightMore~CSS";
+	String Note_TXT = "textarea#logTextAreaWeigh~CSS";
+	String Weist_TXT = "input#weightMeasurement1~CSS";
+	String Chest_TXT = "input#weightMeasurement2~CSS";
+	String Thigh_TXT = "input#weightMeasurement4~CSS";
+	String Neck_TXT = "input#weightMeasurement3~CSS";
+	String Calves_TXT = "input#weightMeasurement5~CSS";
+	String Arms_TXT = "input#weightMeasurement6~CSS";
+	String Log_BTN = "//div[@id='Weight_more']/*/input[@id='weighInLogMore']~XPATH";
+	String MoreOptionLog_BTN = "input[id='weighInLogMore']~CSS";
+	String DateSelectorHeader_TXT = "div#dp-popup>h2~CSS";
+	String WeighInLogFailMsg_TXT = "//div[contains(@class,'onSubmitWeightErrBox')]/p[contains(text(),'Oops, you forgot to enter some information.')]~XPATH";
+	String WeighInLogSuccessMsg_TXT = "//*[contains(text(),'Success! You logged a Weigh-In.')]~XPATH";
+	// Error Fields(Highlighted in Red color)
+	String RedHighLightedWalkField = "//input[@id='weightMeasurement'][contains(@class,'greyColor')]~XPATH";
+	boolean SelectionFound = false;
+	boolean regSuccessFlag = true;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// getting data from Excel
+		String Date = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Date");
+		String Weight = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Weight");
+		String Time = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Time");
+		String LogType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LogType");
+		String Emotion = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Emotion");
+		String ExtraNotes = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Notes");
+		String Weist = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Weist");
+		String Chest = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Chest");
+		String Neck = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Neck");
+		String Thighs = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Thighs");
+		String Calves = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Calves");
+		String Arms = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Arms");
+		String ErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidation");
+		// Clicking on Weigh In tab
+		if (!isElementPresentVerifyClick(WeighIn_TAB, browser)) {
+		    messagesMap.put("Weigh In Tab", "Not able to click on Weigh In Tab");
+		    status = WARNING;
+		}
+		if (!ErrorValidation.equalsIgnoreCase("Yes")) {
+		    // click on date icon
+		    if (!Date.equalsIgnoreCase("-")) // Actual Code
+		    {
+			// Validating the date given
+			getElementByProperty(Date_ICON, browser).click();
+			Calendar cal = Calendar.getInstance();
+			String CurrentDate[] = cal.getTime().toString().split(" ");
+			String DateGiven[] = { CurrentDate[2], CurrentDate[1], CurrentDate[CurrentDate.length - 1] };
+			getElementByProperty(Date_ICON, browser).click();
+			String dateSelectorHeader = getElementByProperty(DateSelectorHeader_TXT, browser).getText();
+			if (dateSelectorHeader.contains(DateGiven[1]) && dateSelectorHeader.contains(DateGiven[2])) {
+			    if (DateGiven[0].contains("0")) {
+				DateGiven[0] = DateGiven[0].replace("0", "");
+			    }
+			    getElementByProperty("//table/tbody/*/td[contains(text(),'" + DateGiven[0] + "')]~XPATH", browser).click();// Selecting
+			    // the
+			    // date
+			    // given
+			    SelectionFound = true;
+			}
+			if (!SelectionFound) {
+			    messagesMap.put("Selecting Date", "Date Given was unable to select.Please give the date with in 10 days previous of Today's date.");
+			    status = WARNING;
+			}
+		    }
+		    // Entering Weight
+		    if (!Weight.equalsIgnoreCase("-")) {
+			clearAndEnterText(Weight_TXT, Weight, browser);
+		    }
+
+		    // Select Time if it not equal to "-"
+		    if (!Time.equalsIgnoreCase("-")) {
+			selectByVisibleText(Time_LST, Time, browser);
+		    }
+		    if (LogType.equals("MoreFields")) {
+			if (!isElementPresentVerifyClick(More_LNK, browser)) {
+			    messagesMap.put("More Link", "Not able to click on More Link");
+			    status = WARNING;
+			}
+			// Selecting Emotions if its not equal to "-"
+			if (!Emotion.equalsIgnoreCase("-")) {
+			    getElementByProperty("img#emotionWeight_" + Emotion + "~CSS", browser).click();
+			}
+			// Enter Notes if it not equal to "-"
+			if (!ExtraNotes.equalsIgnoreCase("-")) {
+			    clearAndEnterText(Note_TXT, ExtraNotes, browser);
+			}
+			String MeasureFields[] = { Weist_TXT, Chest_TXT, Thigh_TXT, Neck_TXT, Calves_TXT, Arms_TXT };
+			String MeasureValues[] = { Weist, Chest, Thighs, Neck, Calves, Arms };
+			if (MeasureFields.length == MeasureValues.length) {
+			    for (int loopInc = 0; loopInc < MeasureFields.length; loopInc++) {
+				if (!MeasureValues[loopInc].equalsIgnoreCase("-")) {
+				    clearAndEnterText(MeasureFields[loopInc], MeasureValues[loopInc], browser);
+				}
+			    }
+			}
+		    }
+		    // Clicking on Log button
+		    if (getElementByProperty(Log_BTN, browser).isDisplayed()) {
+			if (!isElementPresentVerifyClick(Log_BTN, browser)) {
+			    throw new Exception("Not able to click on Log button");
+			}
+		    } else {
+			if (!isElementPresentVerifyClick(MoreOptionLog_BTN, browser)) {
+			    throw new Exception("Not able to click on Log button");
+			}
+		    }
+		    regSuccessFlag = true;
+		    if (regSuccessFlag) {
+			if (!isElementPresentVerification(WeighInLogSuccessMsg_TXT, browser)) {
+			    messagesMap.put("Weigh In Activity Log Success message", "Weigh In Activity Log Success message is not appeared");
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    // Error Validation for the field Weight(This alone
+		    // Mandatory field as of now)
+		    if (LogType.equalsIgnoreCase("MoreFields")) {
+			getElementByProperty(More_LNK, browser).click();
+			getElementByProperty(MoreOptionLog_BTN, browser).click();
+			if (!isElementPresentVerification(RedHighLightedWalkField, browser)) {
+			    messagesMap.put("Weigh In Tab", "Field is not highlighted in Red color");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerification(WeighInLogFailMsg_TXT, browser)) {
+			    messagesMap.put("Weigh In Activity Log Failure message", "Weigh In Activity Log Failure message is not appeared");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Log an Activity(including happy
+     *          flows(walk,run,other), error validation on both Min and Max
+     *          fields,Duration field error validation)
+     * @author - Saravanan M
+     * @Created - 18-Jan-2013
+     * @Modified By -Saravanan M
+     * @Modified Date -04 Apr 2013
+     ************************************************************* 
+     */
+    public static void setupLogActivity(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	boolean regSuccessFlag = false;
+	String LogActivity_TAB = "//a/span[contains(text(),'Log Activity')]~XPATH";
+	String Date_ICON = "//a[@title='Choose date']~XPATH";
+	String OtherActivityNameDisabled_TXT = "input#activityName[class*='greyColor']~CSS";
+	String OtherActivityNameEnabled_TXT = "input#activityName~CSS";
+	String More_LNK = "a#logMore~CSS";
+	String Less_LNK = "a#logless~CSS";
+	String ActivityWalk_RDO = "input#walkRadio~CSS";
+	String ActivityRun_RDO = "input#runRadio~CSS";
+	String ActivityOther_RDO = "input#otherRadio~CSS";
+	String Distance_TXT = "input#distance~CSS";
+	String DistanceMeasure_LST = "select#logRadioSelect~CSS";
+	String DurationHrs_TXT = "input#durationHrs~CSS";
+	String DurationMins_TXT = "input#durationMins~CSS";
+	String DurationSecs_TXT = "input#durationSecs~CSS";
+	String Note_TXT = "textarea#logTextArea~CSS";
+	String OtherActivityInfo_IMG = "img#activityInfo~CSS";
+	String OtherActivityInfoToolTip_ELM = "//div[@id='activityTooltip']/p~XPATH";
+	String DateSelectorHeader_TXT = "div#dp-popup>h2~CSS";
+	String LogMore_BTN = "//div[13]/div[8]/div/input[@id='logActivityMoreBtn']~XPATH";
+	String LogLess_BTN = "input#logActivityMoreBtn~CSS";
+	String LogActivitySuccessMsg_TXT = "//p[contains(text(),'Success! You logged an activity.')]~XPATH";
+	String LogActivityFailMsg_TXT = "//div/p[contains(text(),'Oops, you forgot to enter some information. Please try again.')]~XPATH";
+	String HoursFieldErrorMsg_TXT = "//div[@class='onSubmitLogActivityErrBox']/p[contains(text(),'Oops, you need to enter a number 0 to 23 in the hours field.')]";
+	String MinutesFieldErrorMsg_TXT = "//p[contains(text(),'Oops, you need to enter a number 0 to 59 in the minutes field.')]";
+	String SecondsFieldErrorMsg_TXT = "//p[contains(text(),'Oops, you need to enter a number 0 to 59 in the seconds field.')]";
+
+	// Error Fields(Highlighted in Red color)
+	String RedHighlightedDistanceField = "input#distance[class*='greyColor']~CSS";
+	String ActivityNameErrorMsg_TXT = "//p[contains(text(),'Oops, you forgot to enter some information. Please try again.')]";
+	//String ActivityNameErrorMsg_TXT = "//p[contains(text(),'Other Activity Should not be empty')]";
+	boolean SelectionFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// getting data from Excel
+		String Date = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Date");
+		String ActivityType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ActivityType");
+		String Distance = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Distance");
+		String DistanceMeasurement = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DistanceMeasurement");
+		String ExtraNotes = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Notes");
+		String Duration = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Duration");
+		String ActivityName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ActivityName");
+		String LogType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LogType");
+		String Emotion = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Emotion");
+		String ErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorValidation");
+		String DataSheetToolTipTxt = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OtherActivityToolTipTxt");
+		String DurationErrorValidation = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DurationFieldErrorValidation");
+		String arrDuration[] = Duration.split(":");
+		// Clicking on log activity tab
+		if (!isElementPresentVerifyClick(LogActivity_TAB, browser)) {
+		    messagesMap.put("Log Activity Tab", "Not able to click on Log Activity Tab");
+		    status = WARNING;
+		}
+		// click on date icon
+		if (!Date.equalsIgnoreCase("-")) // Actual Code
+		{
+		    // Validating the date given
+		    getElementByProperty(Date_ICON, browser).click();
+		    Calendar cal = Calendar.getInstance();
+		    String CurrentDate[] = cal.getTime().toString().split(" ");
+		    String DateGiven[] = { CurrentDate[2], CurrentDate[1], CurrentDate[CurrentDate.length - 1] };
+		    getElementByProperty(Date_ICON, browser).click();
+		    String dateSelectorHeader = getElementByProperty(DateSelectorHeader_TXT, browser).getText();
+		    if (dateSelectorHeader.contains(DateGiven[1]) && dateSelectorHeader.contains(DateGiven[2])) {
+			if (DateGiven[0].contains("0")) {
+			    DateGiven[0] = DateGiven[0].replace("0", "");
+			}
+			getElementByProperty("//table/tbody/*/td[contains(text(),'" + DateGiven[0] + "')]~XPATH", browser).click();// Selecting
+			// the
+			// date
+			// given
+			SelectionFound = true;
+		    }
+		    if (!SelectionFound) {
+			messagesMap.put("Selecting Date", "Date Given was unable to select.Please give the date with in 10 days previous of Today's date.");
+			status = WARNING;
+		    }
+		}
+		// Selecting Activity
+		if (ActivityType.equalsIgnoreCase("Walk")) {
+		    getElementByProperty(ActivityWalk_RDO, browser).click();
+		} else if (ActivityType.equalsIgnoreCase("Run")) {
+		    getElementByProperty(ActivityRun_RDO, browser).click();
+		} else {
+		    getElementByProperty(ActivityOther_RDO, browser).click();
+		    // Entering Activity Name
+		    if (!ActivityName.equals("-")) {
+			clearAndEnterText(OtherActivityNameEnabled_TXT, ActivityName, browser);
+		    }
+		    if (!DataSheetToolTipTxt.equalsIgnoreCase("-")) {
+			getElementByProperty(OtherActivityInfo_IMG, browser).click();
+			String ToolTipText = getElementByProperty(OtherActivityInfoToolTip_ELM, browser).getText();
+			if (!(ToolTipText.equals(DataSheetToolTipTxt))) {
+			    messagesMap.put("Other Activity Tool Tip Text", "Other Activity Tool Tip Text is not matching with the given Text");
+			    status = WARNING;
+			}
+		    }
+		}
+		// Distance Measurement selection
+		if (!DistanceMeasurement.equalsIgnoreCase("-")) {
+		    selectByVisibleText(DistanceMeasure_LST, DistanceMeasurement, browser);
+		}
+		// Entering Distance
+		if (!Distance.equalsIgnoreCase("-")) {
+		    clearAndEnterText(Distance_TXT, Distance, browser);
+		}
+		// Entering Duration if it not equal to "-"
+		if (!Duration.equalsIgnoreCase("-")) {
+		    if (arrDuration.length == 3) {
+			clearAndEnterText(DurationHrs_TXT, arrDuration[0], browser);
+			clearAndEnterText(DurationMins_TXT, arrDuration[1], browser);
+			clearAndEnterText(DurationSecs_TXT, arrDuration[2], browser);
+		    } else {
+			messagesMap.put("Duration", "Duration given is not valid");
+			status = WARNING;
+		    }
+		}
+		if (LogType.equals("MoreFields")) {
+		    if (!isElementPresentVerifyClick(More_LNK, browser)) {
+			messagesMap.put("More Link", "Not able to click on More Link");
+			status = WARNING;
+		    }
+
+		    // Selecting Emotions if its not equal to "-"
+		    if (!Emotion.equalsIgnoreCase("-")) {
+			getElementByProperty("img#emotion_" + Emotion + "~CSS", browser).click();
+		    }
+
+		    // Enter Notes if it not equal to "-"
+		    if (!ExtraNotes.equalsIgnoreCase("-")) {
+			clearAndEnterText(Note_TXT, ExtraNotes, browser);
+		    }
+		    // Clicking on Log button
+		    if (!isElementPresentVerifyClick(LogLess_BTN, browser)) {
+			getElementByProperty(LogMore_BTN, browser).click();
+		    }
+		    regSuccessFlag = true;
+		} else {
+		    // Clicking on Log button
+		    //System.out.println("entred else");
+		    if (!isElementPresentVerifyClick(LogMore_BTN, browser)) {
+			
+			getElementByProperty(LogLess_BTN, browser).click();
+		    }
+		    regSuccessFlag = true;
+		}
+		if (regSuccessFlag && !ErrorValidation.equalsIgnoreCase("Yes") && !DurationErrorValidation.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LogActivitySuccessMsg_TXT, browser)) {
+			messagesMap.put("Activity Logged Successfully message", "Activity Logged Successfully message is not appeared");
+			status = WARNING;
+		    }
+		} else {
+		    // Error Validation
+		    if (!DurationErrorValidation.equalsIgnoreCase("Yes")) {
+			if (ActivityType.equalsIgnoreCase("Other")) {
+			    if (!isElementPresentVerification(OtherActivityNameDisabled_TXT, browser)) {
+				messagesMap.put("Other Activity Name Field", "Field is not highlighted in Red color");
+				status = WARNING;
+			    }
+			    if (!isElementPresentVerification(ActivityNameErrorMsg_TXT, browser)) {
+				messagesMap.put("Other Activity Name Field", "Error message for Other Activity Name field is not displayed");
+				status = WARNING;
+			    }
+			} else {
+			    if (!isElementPresentVerification(RedHighlightedDistanceField, browser)) {
+				messagesMap.put("Distance Field", "Field is not highlighted in Red color");
+				status = WARNING;
+			    }
+			    if (!isElementPresentVerification(LogActivityFailMsg_TXT, browser)) {
+				messagesMap.put("Activity Logged Failure message", "Activity Logged Failure message is not appeared");
+				status = WARNING;
+			    }
+			}
+		    } else {
+			// Verifying the Duration fields error validation
+			if (Integer.parseInt(arrDuration[0]) > 23) {
+			    if (!isElementPresentVerifyClick(HoursFieldErrorMsg_TXT, browser)) {
+				messagesMap.put("Hours Field Error message", "Hours Field error message is not appeared");
+				status = WARNING;
+			    }
+			} else if (Integer.parseInt(arrDuration[1]) > 59) {
+			    if (!isElementPresentVerifyClick(MinutesFieldErrorMsg_TXT, browser)) {
+				messagesMap.put("Minutes Field Error message", "Minutes Field error message is not appeared");
+				status = WARNING;
+			    }
+			} else if (Integer.parseInt(arrDuration[2]) > 59) {
+			    if (!isElementPresentVerifyClick(SecondsFieldErrorMsg_TXT, browser)) {
+				messagesMap.put("Seconds Field Error message", "Seconds Field error message is not appeared");
+				status = WARNING;
+			    }
+			}
+		    }
+		    isElementPresentVerifyClick(Less_LNK, browser);
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Logged Activities(including UI of Entries
+     *          page and Each Entry,Sorting functionality)
+     * @author - Saravanan M
+     * @Created - 21-Jan-2013
+     * @Modified By - Saravanan M
+     * @Modified Date - 08 APR 2013
+     ************************************************************* 
+     */
+    public static void verifyLogEntries(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String AllLogEntries_LNK = "//a[contains(text(),'View all log entries')]~XPATH";
+	String UpperBackToDashBoard_BTN = "a[title='Back to dashboard']~CSS";
+	String LogEntriesTable_TBL = "//table/tbody~XPATH";
+	String NextPage_LNK = "//a/*[contains(text(),'››')]~XPATH";
+	String EditDeleteEntry_LNK = "//a[@title='Delete entry']~XPATH";
+	String GoalsAndProgressBar = "a>span[class*='goals_progress']~CSS";
+	String Today_BTN = "a#todayBtn~CSS";
+	String Last7Days_BTN = "a#last7daysBtn~CSS";
+	String Last30Days_BTN = "//a[contains(text(),'30 Days')]~XPATH";
+	String NoOfTotalActivities_TXT = "//div[@id='activities']/p~XPATH";
+	String TodayLogEntry_LNK = "//a[contains(@title,'See individual log entries for today')]~XPATH";
+	String Last7dayLogEntry_LNK = "//a[contains(@title,'See individual log entries for last 7 days')]~XPATH";
+	String Last30dayLogEntry_LNK = "//a[contains(@title,'See individual log entries for last 30 days')]~XPATH";
+	String UpperFilter_LST = "//form[1]/div[5]/div[2]/select[@id='filterByActivity']~XPATH";
+	String LowerFilter_LST = "//form[2]/div[3]/div[2]/select[@id='filterByActivity']~XPATH";
+	String YourLogEntriesHeader_LBL = "//label[contains(text(),'All Log Entries')]~XPATH";
+	String DateColumn_H = "//th/a/span[contains(text(),'Date')]~XPATH";
+	String TypeColumn_H = "//th/a/span[contains(text(),'Type')]~XPATH";
+	String AccomplishmentsColumn_H = "//th[contains(text(),'Accomplishment')]~XPATH";
+	String TimeColumn_H = "//th[contains(text(),'Time')]~XPATH";
+	String DeviceColumn_H = "//th/a/span[contains(text(),'Device')]~XPATH";
+	String Last7DaysEditColumn_H = "//th[contains(text(),'Editable for 7 days')]~XPATH";
+	String DscSorting_LNK = "//a/img[@title='Descending']~XPATH";
+	String AscSorting_LNK = "//a/img[@title='Ascending']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// getting data from Excel
+		String AllLogEntriesVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AllLogEntriesVerify");
+		String TodayLogEntriesVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "TodayLogEntriesVerify");
+		String Last7daysLogEntriesVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Last7daysLogEntriesVerify");
+		String Last30daysLogEntriesVerify = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Last30daysLogEntriesVerify");
+		String SortingVerification = "Yes";
+		String SortingOrder = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SortingOrder");
+		String SortingColumn = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SortingColumn");
+		String EditVerification = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EditVerification");
+		String SortingElement = "";
+		String ColumnValue = "";
+		boolean Clicked = false;
+		boolean NotNull = false;
+		boolean isEndOfTable = false;
+		boolean isEditPresent = false;
+		boolean isDeviceNotPresent = true;
+		int NoOfEntries = 0;
+		int RowIncrementer = 4;
+		int ActualNoOfLogEntries = 0;
+		int SplitValue = 0;
+		// Getting Current Date
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String CurrentDate = dateFormat.format(cal.getTime());
+		// Converting Current date to date format
+		Date givenDate = dateFormat.parse(CurrentDate);
+		// Creating Gregorian Calendar instance
+		Calendar CalendarInstance = new GregorianCalendar();
+		// Adding given date to calendar
+		CalendarInstance.setTime(givenDate);
+		// AllLogEntriesVerify is 'Yes' then goto that page and
+		// calculating the date limit
+		if (AllLogEntriesVerify.equalsIgnoreCase("Yes")) {
+		    getElementByProperty(AllLogEntries_LNK, browser).click();
+		    // Getting date Limit
+		    CalendarInstance.add(Calendar.DATE, -7);// Reducing 7 days
+		    // from the given
+		    // Date
+		}
+		// TodayLogEntriesVerify is 'Yes' then goto that page and
+		// calculating the date limit
+		if (TodayLogEntriesVerify.equalsIgnoreCase("Yes")) {
+		    isElementPresentVerifyClick(GoalsAndProgressBar, browser);
+		    isElementPresentVerifyClick(Today_BTN, browser);
+		    ActualNoOfLogEntries = Integer.parseInt(getElementByProperty(NoOfTotalActivities_TXT, browser).getText());
+		    isElementPresentVerifyClick(TodayLogEntry_LNK, browser);
+		}
+		// Last7daysLogEntriesVerify is 'Yes' then goto that page and
+		// calculating the date limit
+		if (Last7daysLogEntriesVerify.equalsIgnoreCase("Yes")) {
+		    isElementPresentVerifyClick(GoalsAndProgressBar, browser);
+		    isElementPresentVerifyClick(Last7Days_BTN, browser);
+		    ActualNoOfLogEntries = Integer.parseInt(getElementByProperty(NoOfTotalActivities_TXT, browser).getText());
+		    isElementPresentVerifyClick(Last7dayLogEntry_LNK, browser);
+		    // Getting date Limit
+		    CalendarInstance.add(Calendar.DATE, -7);// Reducing 7 days
+		    // from the given
+		    // Date
+		}
+		// Last30daysLogEntriesVerify is 'Yes' then goto that page and
+		// calculating the date limit
+		if (Last30daysLogEntriesVerify.equalsIgnoreCase("Yes")) {
+		    isElementPresentVerifyClick(GoalsAndProgressBar, browser);
+		    isElementPresentVerifyClick(Last30Days_BTN, browser);
+		    ActualNoOfLogEntries = Integer.parseInt(getElementByProperty(NoOfTotalActivities_TXT, browser).getText());
+		    isElementPresentVerifyClick(Last30dayLogEntry_LNK, browser);
+		    // Getting date Limit
+		    CalendarInstance.add(Calendar.DATE, -30);// Reducing 7 days
+		    // from the given
+		    // Date
+		}
+		String strDate = CalendarInstance.get(Calendar.DAY_OF_MONTH) + "/" + (CalendarInstance.get(Calendar.MONTH) + 1) + "/" + CalendarInstance.get(Calendar.YEAR);
+		// Converting reduced date to date format
+		Date DateLimit = dateFormat.parse(strDate);
+		String ElementsToVerify[] = { UpperBackToDashBoard_BTN, UpperFilter_LST, LowerFilter_LST, YourLogEntriesHeader_LBL, DateColumn_H, TypeColumn_H, AccomplishmentsColumn_H, TimeColumn_H,
+			DeviceColumn_H, Last7DaysEditColumn_H, LogEntriesTable_TBL };
+		do {
+		    // Verifying the UI of Your log Entries Page
+		    for (int loopInc = 0; loopInc < ElementsToVerify.length; loopInc++) {
+			if (!isElementPresentVerification(ElementsToVerify[loopInc], browser)) {
+			    messagesMap.put(ElementsToVerify[loopInc], "The Element " + ElementsToVerify[loopInc] + " is not present");
+			    status = WARNING;
+			}
+		    }
+		    // Verifying the Table values
+		    List<WebElement> tablehandler = getElementByProperty(LogEntriesTable_TBL, browser).findElements(By.tagName("tr"));
+		    NoOfEntries = getElementByProperty(LogEntriesTable_TBL, browser).findElements(By.xpath("//a[@title='Click to expand']")).size();
+		    int NoOfTableRows = tablehandler.size();
+		    for (int row = 1; row <= NoOfTableRows; row += RowIncrementer) {
+			for (int td = 2; td < 6; td++) {
+			    // Verifying the Entries Table whether any value is
+			    // left Empty
+			    if (!((getElementByProperty("//table/tbody/tr[" + row + "]/td[" + td + "]", browser)).getText()).equalsIgnoreCase(null)) {
+				NotNull = true;
+			    } else {
+				messagesMap.put("Empty Value", "Found Empty value in Log Activities Entry table");
+				status = WARNING;
+			    }
+			}
+			if (NotNull) {
+			    if (EditVerification.equals("Yes")) {
+				String Device = getElementByProperty("//table/tbody/tr[" + row + "]/td[6]", browser).getText();
+				if (!(Device.trim().equalsIgnoreCase("") || Device.equalsIgnoreCase(null))) {
+				    isDeviceNotPresent = true;
+				}
+				if (AllLogEntriesVerify.equalsIgnoreCase("Yes")) {
+				    if (NoOfEntries <= 20) {
+					String RawDate = getElementByProperty("//table/tbody/tr[" + row + "]/td[2]", browser).getText().split(" ")[1].trim();
+					SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM/dd/yyyy");
+					Date InterDate = dateFormat1.parse(RawDate);
+					String ConvertedDate = dateFormat.format(InterDate);
+					Date LogDate = dateFormat.parse(ConvertedDate);
+					// Verifying whether the Current Log
+					// Entry
+					// Date is not before than 7 days in
+					// order
+					// to verify the presence of Edit link
+					if (((DateLimit.before(LogDate)) || (DateLimit.equals((LogDate))))) {
+					    isEditPresent = true;
+					} else {
+					    isEditPresent = false;
+					}
+				    } else {
+					messagesMap.put("Number of Entries", "Number of Entries in the table is greater than 20");
+					status = WARNING;
+				    }
+				}
+				if ((TodayLogEntriesVerify.equalsIgnoreCase("Yes")) || (Last7daysLogEntriesVerify.equalsIgnoreCase("Yes")) || (Last30daysLogEntriesVerify.equalsIgnoreCase("Yes"))) {
+				    if (NoOfEntries <= ActualNoOfLogEntries) {
+					String RawDate = getElementByProperty("//table/tbody/tr[" + row + "]/td[2]", browser).getText().split(" ")[1].trim();
+					SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM/dd/yyyy");
+					Date InterDate = dateFormat1.parse(RawDate);
+					String ConvertedDate = dateFormat.format(InterDate);
+					Date LogDate = dateFormat.parse(ConvertedDate);
+					// Verifying whether the Current Log
+					// Entry
+					// Date is equal/after to Date Limit in
+					// order to verify the presence of Edit
+					// link
+					if ((DateLimit.equals(LogDate)) || !(DateLimit.before(LogDate))) {
+					    isEditPresent = true;
+					}
+				    } else {
+					messagesMap.put("Number of Entries", "Number of Entries in the table is greater than Logged Activities");
+					status = WARNING;
+				    }
+				}
+				if (isEditPresent && isDeviceNotPresent) {
+				    // Clicking on Edit Link
+				    if (!isElementPresentVerifyClick("//table/tbody/tr[" + row + "]/td[7]/a", browser)) {
+					messagesMap.put("Edit Link", "Unable to click Edit Link");
+					status = WARNING;
+				    } else {
+					// verifying presence of Delete Entry
+					// Link
+					if (!isElementPresentVerification(EditDeleteEntry_LNK, browser)) {
+					    messagesMap.put("Delete Entry Link", "Delete Entry Link is not present");
+					    status = WARNING;
+					}
+					// verifying presence of cancel Link
+					// and clicking it
+					if (!isElementPresentVerification("//table/tbody/tr[" + (row + (RowIncrementer - 1)) + "]//a[@title='Save changes']", browser)) {
+					    messagesMap.put("Save Changes", "Link is Missing");
+					    status = WARNING;
+					}
+					if (!isElementPresentVerifyClick("//table/tbody/tr[" + (row + (RowIncrementer - 1)) + "]//a[@title='Cancel']", browser)) {
+					    messagesMap.put("Cancel Link", "Unable to click Cancel Link");
+					    status = WARNING;
+					    break;
+					}
+				    }
+				}
+			    } else {
+				// Sorting of date Column
+				if (SortingVerification.equalsIgnoreCase("Yes") && !Clicked) {
+				    if (SortingColumn.equalsIgnoreCase("Date")) {
+					SortingElement = DateColumn_H;
+					ColumnValue = "2";
+					SplitValue = 1;
+				    } else {
+					SortingElement = TypeColumn_H;
+					ColumnValue = "3";
+					SplitValue = 0;
+				    }
+				    if (SortingOrder.equalsIgnoreCase("Descending")) {
+					do {
+					    getElementByProperty(SortingElement, browser).click();
+					} while (!isElementPresentVerification(DscSorting_LNK, browser));
+				    } else if (SortingOrder.equalsIgnoreCase("Ascending")) {
+					do {
+					    getElementByProperty(SortingElement, browser).click();
+					} while (!isElementPresentVerification(AscSorting_LNK, browser));
+				    } else {
+					throw new Exception("Sorting order is not set correctly");
+				    }
+				    Clicked = true;
+				}
+				if (Clicked) {
+				    if (isElementPresentVerification("//table/tbody/tr[" + (row + 4) + "]/td[" + ColumnValue + "]", browser)) {
+					String CompareData1 = getElementByProperty("//table/tbody/tr[" + row + "]/td[" + ColumnValue + "]", browser).getText().split(" ")[SplitValue].trim();
+					String CompareData2 = getElementByProperty("//table/tbody/tr[" + (row + 4) + "]/td[" + ColumnValue + "]", browser).getText().split(" ")[SplitValue].trim();
+					if (SortingOrder.equalsIgnoreCase("Ascending")) {
+					    if (!(CompareData1.compareToIgnoreCase(CompareData2) <= 0)) {
+						messagesMap.put("Ascending order sorting", "Values are not sorted correctly in " + SortingColumn + " Column");
+						status = WARNING;
+					    }
+					} else if (SortingOrder.equalsIgnoreCase("Descending")) {
+					    if (!(CompareData1.compareToIgnoreCase(CompareData2) >= 0)) {
+						messagesMap.put("Descending order sorting", "Values are not sorted correctly in " + SortingColumn + " Column");
+						status = WARNING;
+					    }
+					} else {
+					    messagesMap.put("Sorting", "Sorting is not happened");
+					    status = WARNING;
+					}
+				    }
+				}
+			    }
+			}
+			if (row < (NoOfTableRows - 3) || row < ((RowIncrementer * NoOfEntries) - 3)) {
+			    // Clicking on Expand Symbol([+]) of Next Row
+			    if (!isElementPresentVerification("//table/tbody/tr[" + (row + 4) + "]/td[1]/a", browser)) {
+				isEndOfTable = true;
+				break;
+			    }
+			} else {
+			    isEndOfTable = true;
+			}
+		    }
+		} while (isElementPresentVerifyClick(NextPage_LNK, browser) && isEndOfTable);
+		// Clicking on Back to Dash Board button in order to navigate
+		// back to Walk with Walgreens landing page
+		if (isElementPresentVerifyClick(UpperBackToDashBoard_BTN, browser)) {
+		    if (!isElementPresentVerification(AllLogEntries_LNK, browser)) {
+			messagesMap.put("All Log Entries Link-Dash Board", "Unable to move to Dashboard");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the Profile Headlines and the Balance Rewards
+     *          points earned for the First time goal set and the Logged
+     *          Activities
+     * @author - Saravanan M
+     * @Created - 02-FEB-2013
+     * @Modified By -Saravanan M
+     * @Modified Date -07-MAR-2013
+     ************************************************************* 
+     */
+    public static void verifyProfileHeadlines(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String setFirstGoal_LBL = "//p[contains(text(),'Balance Rewards')]~XPATH";
+	String setMotivationalQuote_LNK = "a#profileLink~CSS";
+	String whatsYourMotivation_LNK = "p#profileText~CSS";
+	String NoActivitiesLogged_LBL = "//p[contains(text(),'You have not logged any activities')]~XPATH";
+	String AllLogEntries_LNK = "//a[contains(@title,'View all log entries')]~XPATH";
+	String UpperBackToDashBoard_BTN = "//div/a[@title='Back to dashboard']~XPATH";
+	String LogEntriesTable_TBL = "//table/tbody~XPATH";
+	String NextPage_LNK = "//a[contains(text(),'Next')]~XPATH";
+	String ActivityCount_LBL = "p[class*='activity_count']~CSS";
+	String Journals_LBL = "//p[contains(text(),'Journal entries logged')]~XPATH";
+	String FirstGoalReward_LBL = "//p[contains(@class,'br_count')][contains(text(),'250')]~XPATH";
+	String BREarned_LBL = "//p[contains(text(),'Points earned through Steps')]~XPATH";
+	float totalmiles = 0;
+	int totalBRPoints = 0;
+	int WeighInLogCount = 0;
+	int otherActivityCount = 0;
+	int NoOfEntries = 0;
+	boolean IsGoalSet = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String WhatsUrMotivationalText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WhatsYourMotivationalQuote");
+	    String setYourFirstGoalText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "setYourFirstGoal");
+	    String ActivityLogText = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ActivityLog");
+	    // Verifying What's Your Motivation? text
+	    String whatsUrMotivationalQuoteTXT = getElementByProperty(whatsYourMotivation_LNK, browser).getText().trim();
+	    if (!(whatsUrMotivationalQuoteTXT.equals(WhatsUrMotivationalText))) {
+		messagesMap.put("What's Your Motivation?", "What's Your Motivation? is mismatching with the given data");
+		status = WARNING;
+	    }
+	    // Verifying presence of Se motivation,profile picture link
+	    if (!isElementPresentVerification(setMotivationalQuote_LNK, browser)) {
+		messagesMap.put("Set Motivational Quote,Profile Picture link", "Link is not present in profile Header");
+		status = WARNING;
+	    }
+	    // Verifying Set Your First goal section
+	    if (setYourFirstGoalText.equalsIgnoreCase("Yes")) {
+		IsGoalSet = true;
+		if (!ActivityLogText.equalsIgnoreCase("Yes")) {
+		    if (!(isElementPresentVerification(FirstGoalReward_LBL, browser) && isElementPresentVerification(BREarned_LBL, browser))) {
+			messagesMap.put("Balance Rewards Section", "Balance Rewards Section is not present as expected");
+			status = WARNING;
+		    }
+		}
+	    } else if (!setYourFirstGoalText.equalsIgnoreCase("-")) {
+		String SetFirstGoalTXT = getElementByProperty(setFirstGoal_LBL, browser).getText().trim();
+		if (!(SetFirstGoalTXT.equals(setYourFirstGoalText))) {
+		    messagesMap.put("Set your First Goal Text", "Set your First Goal Text is mismatching with the given data");
+		    status = WARNING;
+		}
+	    }
+	    getElementByProperty(AllLogEntries_LNK, browser).click();
+	    // getting Total number of logs entered from the All log entries
+	    // table
+	    if (isElementPresentVerification(LogEntriesTable_TBL, browser)) {
+		do {
+		    NoOfEntries = NoOfEntries + getElementByProperty(LogEntriesTable_TBL, browser).findElements(By.xpath("//a[@title='Click to expand']")).size();
+		    int NoOfTableRows = NoOfEntries * 4;
+		    if (NoOfEntries > 0) {
+			for (int row = 1; row <= NoOfTableRows; row++) {
+			    String ActivityType = getElementByProperty("//table/tbody/tr[" + row + "]/td[3]", browser).getText();
+			    if (ActivityType.equalsIgnoreCase("Walk") || ActivityType.equalsIgnoreCase("Run")) {
+				// Counting Walk,Run miles and other activities
+				Float mileFromTbl = Float.parseFloat(getElementByProperty("//table/tbody/tr[" + row + "]/td[4]", browser).getText().trim().split(" mi")[0]);
+				totalmiles = totalmiles + mileFromTbl;
+			    } else if (ActivityType.equalsIgnoreCase("Weigh-in")) {
+				WeighInLogCount++;
+			    } else if (ActivityType.contains("Other")) {
+				otherActivityCount++;
+			    }
+			}
+		    }
+		} while (isElementPresentVerifyClick(NextPage_LNK, browser));
+	    } else {
+		NoOfEntries = 0;
+	    }
+	    if (isElementPresentVerifyClick(UpperBackToDashBoard_BTN, browser)) {
+		if (!isElementPresentVerification(AllLogEntries_LNK, browser)) {
+		    messagesMap.put("All Log Entries Link-Dash Board", "Unable to move to Dashboard");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying Activities logged
+	    if (NoOfEntries == 0 && (!ActivityLogText.equals("-"))) {
+		String ActivitiesLoggedTXT = getElementByProperty(NoActivitiesLogged_LBL, browser).getText().trim();
+		if (!(ActivitiesLoggedTXT.equals(ActivityLogText))) {
+		    messagesMap.put("Activities Logged", "Activities Logged is mismatching with the given data");
+		    status = WARNING;
+		}
+	    } else {
+		int ActivityCount = Integer.parseInt(getElementByProperty(ActivityCount_LBL, browser).getText().trim());
+		if (NoOfEntries == ActivityCount) {
+		    if (!isElementPresentVerification(Journals_LBL, browser)) {
+			messagesMap.put("Journals Text", "Journals Text is not present in the Profile Headline");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Activities Logged Count", "Activities Logged Count is mismatching with the Activities in All log Entries table");
+		    status = WARNING;
+		}
+		if (NoOfEntries > 0) {
+		    // Calculating total miles and Balance Rewards points
+		    if ((totalmiles >= 1) && (totalmiles <= 50)) {
+			totalBRPoints = (int) totalmiles * 20;
+			if ((WeighInLogCount >= 1)) {
+			    totalBRPoints = totalBRPoints + 20;
+			}
+			if ((otherActivityCount >= 1)) {
+			    totalBRPoints = totalBRPoints + 20;
+			}
+		    } else if (totalmiles > 50) {
+			totalBRPoints = 1000;
+		    } else {
+			totalBRPoints = 0;
+		    }
+		    if (IsGoalSet) {
+			totalBRPoints = totalBRPoints + 250;
+		    }
+		    if (!(isElementPresentVerification("//p[contains(@class,'br_count')][contains(text(),'" + totalBRPoints + "')]", browser) && isElementPresentVerification(BREarned_LBL, browser))) {
+			messagesMap.put("Balance Rewards Section", "Balance Rewards Points are not updated correctly");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to change the screen name from the Steps dashboard
+     * @author - Saravanan M
+     * @Created - 12-APR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+
+    public static void UpdateScreenName(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CurrentScreenName_TXT = "//*[contains(text(),'Welcome,')]~XPATH";
+	String EditName_LNK = "a[title*='Edit name']~CSS";
+	String NewProfileNameTextField_TXT = "input#newNameTxtBox~CSS";
+	String ChangeYourScreenNameHeader_H = "//b[contains(text(),'Change your screen name')]~XPATH";
+	String ChangeYourScreenNameDescription_TXT = "//p[contains(text(),' Remember this')]~XPATH";
+	String ValidationTooShort_LBL = "//label[contains(text(),'too short')]~XPATH";
+	String ValidationAvailable_LBL = "//label[contains(text(),'available')]~XPATH";
+	String Cancel_LNK = "a#back~CSS";
+	String ValidationSuccessfulUpdate_LBL = "//label[contains(text(),'Your screen name has been successfully changed.')]~XPATH";
+	String ValidationNotAvailable_LBL = "//label[contains(text(),'unavailable')]~XPATH";
+	String Close_LNK = "a#closeEditNameOverlay~CSS";
+	String Submit_BTN = "//a/img[@title='Submit']~XPATH";
+	String ScreenNameLimitationText_TXT = "//ul[@class='guideTxt']~XPATH";
+	String OverlayCurrentScreenName_TXT = "//p/label[2][contains(@for,'currentScreenName')]~XPATH";
+	String currentScreenName = "";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String NewScreenNameValidationType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "NewScreenNameValidationType");
+		String LimitationText = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LimitationText");
+		String ChangeYourScreenNameDesc = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ChangeYourScreenNameDesc");
+		if (isElementPresentVerification(CurrentScreenName_TXT, browser)) {
+		    currentScreenName = getElementByProperty(CurrentScreenName_TXT, browser).getText().split(",")[1].trim();
+		} else {
+		    throw new Exception("Current Profile name is not present");
+		}
+		if (isElementPresentVerifyClick(EditName_LNK, browser)) {
+		    switchToOverlay(browser);
+		    // verifying Overlay header
+		    if (!isElementPresentVerification(ChangeYourScreenNameHeader_H, browser)) {
+			messagesMap.put("Change Your Screen Name Overlay", "Overlay Header is not present/wrongly displayed");
+			status = WARNING;
+		    }
+		    // Verifying the Change Your Screen Name description
+		    if (!((getElementByProperty(ChangeYourScreenNameDescription_TXT, browser).getText()).equals(ChangeYourScreenNameDesc))) {
+			messagesMap.put("Change Your Screen Name description", "Description text is wrongly displayed");
+			status = WARNING;
+		    }
+		    // Verifying Presence of Current Screen Name
+		    if (!((getElementByProperty(OverlayCurrentScreenName_TXT, browser).getText()).contains(currentScreenName))) {
+			messagesMap.put("Current Screen Name in Overlay", "Current Screen Name in Overlay is not present/wrongly displayed");
+			status = WARNING;
+		    }
+		    // Verifying the limitations text
+		    if (!((getElementByProperty(ScreenNameLimitationText_TXT, browser).getText()).contains(LimitationText))) {
+			messagesMap.put("Screen name limitation text", "Screen name limitation text is wrongly displayed");
+			status = WARNING;
+		    }
+		    // Entering new Screen Name
+		    // Generate Random Screen Name Data
+		    Calendar cal = Calendar.getInstance();
+		    String timeinmills = Long.toString(cal.getTimeInMillis());
+		    String tmpScreenName = ("screenname0" + timeinmills);
+		    if (!(NewScreenNameValidationType.equals("-"))) {
+			if ((NewScreenNameValidationType.equalsIgnoreCase("Too Short"))) {
+			    getElementByProperty(NewProfileNameTextField_TXT, browser).sendKeys(tmpScreenName.substring(0, 4));
+			    if (!isElementPresentVerification(ValidationTooShort_LBL, browser)) {
+				messagesMap.put("New Screen Name validation", "Short Screen name validation text 'Too Short' is not displayed");
+				status = WARNING;
+			    }
+			    getElementByProperty(Cancel_LNK, browser).click();
+			} else if ((NewScreenNameValidationType.equalsIgnoreCase("Unavailable"))) {
+			    getElementByProperty(NewProfileNameTextField_TXT, browser).sendKeys("kalaisub3");
+			    if (!isElementPresentVerification(ValidationNotAvailable_LBL, browser)) {
+				messagesMap.put("New Screen Name validation", "Unavailable Screen name validation text 'Unavailable' is not displayed");
+				status = WARNING;
+			    }
+			    getElementByProperty(Cancel_LNK, browser).click();
+			} else if ((NewScreenNameValidationType.equalsIgnoreCase("Successful Update"))) {
+			    getElementByProperty(NewProfileNameTextField_TXT, browser).sendKeys(tmpScreenName.substring(0, 24));
+			    if (isElementPresentVerification(ValidationAvailable_LBL, browser)) {
+				getElementByProperty(Submit_BTN, browser).click();
+				// Verifying the submitted screen name in the
+				// overlay
+				if (!(isElementPresentVerification("//label[contains(text(),'" + tmpScreenName + "')]", browser))) {
+				    messagesMap.put("Update of New Screen Name", "Updated new screen name is not displayed in Dashboard");
+				    status = WARNING;
+				}
+				// Verifying the presence of success message and
+				// absence of Submit button & Limitation text
+				// area
+				if (!isElementPresentVerification(ValidationSuccessfulUpdate_LBL, browser) && isElementPresentVerification(Submit_BTN, browser)
+					&& isElementPresentVerification(ScreenNameLimitationText_TXT, browser)) {
+				    messagesMap.put("New Screen Name Update", "Screen name is not updated successfully/submit btton present even after the New Screen name submitted");
+				    status = WARNING;
+				}
+			    } else {
+				messagesMap.put("New Screen Name validation", "Available Screen name validation text 'Available' is not displayed");
+				status = WARNING;
+			    }
+			    getElementByProperty(Close_LNK, browser).click();
+			}
+
+		    }
+		    switchToDefault(browser);
+		    if ((NewScreenNameValidationType.equalsIgnoreCase("Successful Update"))) {
+			browser.get(browser.getCurrentUrl());
+			if (!(getElementByProperty(CurrentScreenName_TXT, browser).getText().split(",")[1].trim()).equals(tmpScreenName)) {
+			    messagesMap.put("Update of New Screen Name", "Updated new screen name is not displayed in Dashboard");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

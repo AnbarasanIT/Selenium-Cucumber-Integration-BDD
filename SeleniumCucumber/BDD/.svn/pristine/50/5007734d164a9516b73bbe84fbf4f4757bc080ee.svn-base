@@ -1,0 +1,59 @@
+package walgreens.ecom.batch.framework.poc;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.android.AndroidDriver;
+
+public class AndroidRealDevicePOC_AndroidDriver {
+    
+    public static void main(String[] args) throws InterruptedException {
+	WebDriver driver = new AndroidDriver(); 
+	driver.get("http://m.walgreens.com");
+	Thread.sleep(2000);
+	driver.navigate().to("https://m.walgreens.com/mt/www.walgreens.com/login.jsp?");
+	Thread.sleep(5000);
+
+	driver.findElement(By.cssSelector("input[name='login']")).sendKeys("prodfifth@test.com");
+	driver.findElement(By.cssSelector("input[name='password']")).sendKeys("password1");
+	driver.findElement(By.cssSelector("input[type='submit']")).click();
+	Thread.sleep(5000);
+	driver.findElement(By.cssSelector("a[href*='Your Account'][class*='lmb']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("a[href*='shopLanding']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Search'][name*='Ntt']")).sendKeys("prod6148306");
+	driver.findElement(By.cssSelector("input[value*='Search'][name*='Ntt']")).sendKeys(Keys.RETURN);
+	Thread.sleep(5000);
+	driver.findElement(By.cssSelector("a[href*='prod6148306'][class*='SearchLink']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[id*='add-to-cart']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Checkout'][class*='blue']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Continue checkout'][class*='blue']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Continue checkout'][class*='blue']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Continue checkout'][class*='blue']")).click();
+	Thread.sleep(3000);
+	driver.findElement(By.cssSelector("input[value*='Submit order'][class*='blue']")).click();
+	Thread.sleep(3000);
+	if (driver.findElement(By.cssSelector("div[class*='title']")) != null) {
+	    System.out.println("PASS");
+
+	}else {
+	    System.out.println("FAIL");
+	}
+	    
+	
+	
+	
+		//div[class*='product-name']
+	
+	
+	
+	driver.quit();
+    }
+
+}

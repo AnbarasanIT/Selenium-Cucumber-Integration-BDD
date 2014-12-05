@@ -1,0 +1,794 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import cucumber.runtime.IS;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class InStoreOrderingCheckoutLibrary extends CheckoutLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select ISO Store from the Walgreens ISO landing
+     *          Page.
+     * @author - Siva Santhi Reddy P
+     * @Created -24 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectISOStore(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String StoreNumber_TXT = "input#storeNumber~CSS";
+	String LookUp_BTN = "input#isoSearch~CSS";
+	String Yes_BTN = "input[title='Yes']~CSS";
+	String WrongStore_LNK = "a[title='Wrong Store?']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Data From Excel Sheet
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    if (!clearAndEnterText(StoreNumber_TXT, StoreNumber, browser)) {
+		messagesMap.put("Store Number Field", "Not able to Enter Store Number");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(LookUp_BTN, browser)) {
+		throw new Exception("Not able to click on Look Up Button");
+	    }
+	    if (!isElementPresentVerifyClick(Yes_BTN, browser)) {
+		throw new Exception("Not ableto click on Yes Button");
+	    }
+	    if (!isElementPresentVerification(WrongStore_LNK, browser)) {
+		messagesMap.put("Store Section", "Store is not Selected");
+		status = WARNING;
+	    }
+	    String Storenumber_ELM = "//*[contains(text(),'" + StoreNumber + "')]~XPATH";
+	    if (!isElementPresentVerification(Storenumber_ELM, browser)) {
+		messagesMap.put("Selected Store", "Selected Store is not getting dispalyed");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to enter Sold to Information and Select Ship to Option
+     *          Page.
+     * @author - Siva Santhi Reddy P
+     * @Created -24 SEP 2013
+     * @Modified By - Hasan Javeed
+     * @Modified Date - 13 DEC 2013
+     ************************************************************* 
+     */
+    public static void enterSoldToInfoAndSelectShipToAddress(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FirstName_TXT = "input#billFirstName~CSS";
+	String LastName_TXT = "input#billLastName~CSS";
+	String PhoneAreaCode_TXT = "input#billAreaCode~CSS";
+	String PhoneNumber_TXT = "input#billPhone~CSS";
+	String EmailAddress_TXT = "input#billEmail~CSS";
+	String ShiptoShop_RADIO = "input#instoreShipToShop~CSS";
+	String ShipToCustomerAddress_RADIO = "input#instoreShipToCustAddr~CSS";
+	String BillAddress_TXT = "input#billAddress~CSS";
+	String BillCity_TXT = "input#billCity~CSS";
+	String BillState_LST = "select#billState~CSS";
+	String BillZipcode_TXT = "input#billZip~CSS";
+	String BillZipcodeExtn_TXT = "input#billZipExt~CSS";
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String VerifycountryPageHeader_ELM = "//strong[contains(text(),'Verify Customer')]~XPATH";
+	String Select_BTN = "//input[@title='Select']~XPATH";
+	String OrderReivewPageHeader_ELM = "//h2[contains(text(),'Checking Out: Reviewing the Order')]~XPATH";
+	String EmployeeNumber_TXT = "//input[@id='employeeNo']~XPATH";
+	String EmployeeError_TXT = "//p[contains(text(),'Please enter your 7-digit employee ID.')]~XPATH";
+	String Apply_BTN = "//input[@value='Apply']~XPATH";
+	String S2Sunavailable_Message = "//strong[contains(text(),'Ship to Store service is not available.')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Get Data From Excel Sheet
+		String EmployeeNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EmployeeNumber");
+		String FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FirstName");
+		String LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LastName");
+		String PhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PhoneNumber");
+		String EmailAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "yahooUserName");
+		String ShipTo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ShipTo");
+		String Address = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+		String City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		String State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		String Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		String ZipcodeExtn = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipcodeExtn");
+		String EmployeeError = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "EmployeeError");
+
+		if (EmployeeNumber != null && !EmployeeNumber.equals("-")) {
+		    if (!clearAndEnterText(EmployeeNumber_TXT, EmployeeNumber, browser)) {
+			messagesMap.put("EmployeeNumber", "Not able to Enter EmployeeNumber number");
+			status = WARNING;
+		    }
+
+		    if (!isElementPresentVerifyClick(Apply_BTN, browser)) {
+			messagesMap.put("EmployeeApplyButton", "Not able to click on apply button");
+			status = WARNING;
+		    }
+		    if (EmployeeError != null && EmployeeError.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerification(EmployeeError_TXT, browser)) {
+			    messagesMap.put("Employee exception", "Not able to view Employee exception");
+			    status = WARNING;
+			}
+			System.out.println("Status is:" + isElementPresentVerification(EmployeeError_TXT, browser));
+		    }
+		}
+
+		if (EmailAddress != null && !EmailAddress.equals("-")) {
+		    if (!clearAndEnterText(EmailAddress_TXT, EmailAddress, browser)) {
+			messagesMap.put("Email Address", "Not able to Enter Email Address");
+			status = WARNING;
+		    }
+		}
+		if (FirstName != null && !FirstName.equals("-")) {
+		    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+			messagesMap.put("First Name", "Not able to Enter First Name");
+			status = WARNING;
+		    }
+		}
+		if (LastName != null && !LastName.equals("-")) {
+		    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+			messagesMap.put("Last Name", "Not able to Enter Last Name");
+			status = WARNING;
+		    }
+		}
+		if (PhoneNumber != null && !PhoneNumber.equals("-")) {
+		    String PhoneAreaCode = PhoneNumber.substring(0, 3);
+		    String ActualPhoneNumber = PhoneNumber.substring(3, 10);
+		    if (!clearAndEnterText(PhoneAreaCode_TXT, PhoneAreaCode, browser)) {
+			messagesMap.put("Phone Area code", "Not able to Enter Phone Area code");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(PhoneNumber_TXT, ActualPhoneNumber, browser)) {
+			messagesMap.put("Actual Phone Number", "Not able to Enter Actual Phone Number");
+			status = WARNING;
+		    }
+		}
+
+		if (ShipTo != null && ShipTo.equalsIgnoreCase("Store")) {
+		    if (!checkBoxSelection(browser, ShiptoShop_RADIO, "SELECT")) {
+			throw new Exception("Not able to Select Ship to Shop Radio Button");
+		    }
+		} else if (ShipTo != null && (ShipTo.equalsIgnoreCase("CustomerAddress") || ShipTo.equalsIgnoreCase("StoreDisabled"))) {
+
+		    if (ShipTo.equalsIgnoreCase("CustomerAddress")) {
+			if (!checkBoxSelection(browser, ShipToCustomerAddress_RADIO, "SELECT")) {
+			    throw new Exception("Not able to Select Ship to Customer Address Radio Button");
+			}
+		    } else if (ShipTo.equalsIgnoreCase("StoreDisabled")) {
+			if (!isElementPresentVerification(S2Sunavailable_Message, browser)) {
+			    throw new Exception("Ship to store service unavailable message is not present");
+			}
+		    }
+
+		    if (!clearAndEnterText(BillAddress_TXT, Address, browser)) {
+			messagesMap.put("Address", "Not able to Enter Address");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(BillCity_TXT, City, browser)) {
+			messagesMap.put("City", "Not able to Enter City");
+			status = WARNING;
+		    }
+		    new Select(getElementByProperty(BillState_LST, browser)).selectByIndex(Integer.parseInt(State));
+		    if (!clearAndEnterText(BillZipcode_TXT, Zipcode, browser)) {
+			messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(BillZipcodeExtn_TXT, ZipcodeExtn, browser)) {
+			messagesMap.put("ZipcodeExtn", "Not able to Enter ZipcodeExtn");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		    throw new Exception("Not able to Click on Continue button");
+		}
+		if (isElementPresentVerification(VerifycountryPageHeader_ELM, browser)) {
+		    if (!isElementPresentVerifyClick(Select_BTN, browser)) {
+			throw new Exception("Not able to Click on Select Button");
+		    }
+		}
+
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Submit ISO Order and get ISO Order Details from
+     *          Order Request Form
+     * @author - Siva Santhi Reddy P
+     * @Created -25 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void submitOrderAndGetISOOrderDetails(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PlaceOrder_BTN = "//input[@title='Place Order']~XPATH";
+	String OrderConfirmationPageHeader_ELM = "//h2[contains(text(),'Checking Out: Paying & Finishing')]~XPATH";
+	String OrderSavedMessage_ELM = "//p[contains(text(),'The order is now saved in the system, awaiting payment.')]~XPATH";
+	String OrderNumber = null, PageText = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(PlaceOrder_BTN, browser)) {
+		throw new Exception("Not able to Click on Place Order Button");
+	    }
+	    if (!isElementPresentVerification(OrderConfirmationPageHeader_ELM, browser)) {
+		messagesMap.put("Order Confirmation Page Header", "Not able to find the message");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(OrderSavedMessage_ELM, browser)) {
+		messagesMap.put("Order Saved Message", "Not able to find the message");
+		status = WARNING;
+	    }
+	    String baseWindow = browser.getWindowHandle();
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+		if (browser.switchTo().window(NewWinHandle).getTitle().contains("Invoice")) {
+		    break;
+		}
+	    }
+	    Thread.sleep(2000L);
+	    // Getting Windo Text using PageSource
+	    PageText = browser.getPageSource();
+	    // Seperating Order ID from the Page Text.
+	    OrderNumber = PageText.split("Order Number:")[1].trim().substring(3, 13);
+	    // Switching back to old/base Window.
+	    browser.switchTo().window(baseWindow);
+	    // Saving the Order Number
+	    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1", OrderNumber);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to update the Tandem File
+     * @author - Siva Santhi Reddy P
+     * @Created -26 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateOrderDetailsinTandemFile(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String strLine = null, InputFilePath = null, OutputFilePath = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Test Data from Excel
+	    String OrderID = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1");
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    String TandemCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TandemCode");
+	    String InputFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InputFileName");
+	    String OutputFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OutputFileName");
+	    // Assign Fiel Path
+	    InputFilePath = System.getProperty("user.dir") + EcommTestRunner.config.getString("fulfillmentFilesPath") + InputFileName;
+	    OutputFilePath = System.getProperty("user.dir") + EcommTestRunner.config.getString("fulfillmentFilesPath") + OutputFileName;
+
+	    FileInputStream fstream = new FileInputStream(InputFilePath);
+	    BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fstream));
+	    StringBuilder fileContent = new StringBuilder();
+	    strLine = bufferReader.readLine();
+	    if (OrderID != null && !OrderID.equals("-")) {
+		strLine = strLine.replace("ORDERNUMBER", OrderID);
+	    }
+	    if (StoreNumber != null && !StoreNumber.equals("-")) {
+		strLine = strLine.replace("STORENUMBER", StoreNumber);
+	    }
+	    if (TandemCode != null && !TandemCode.equals("-")) {
+		strLine = strLine.replace("TANDEMCODE", TandemCode);
+	    }
+	    fileContent = fileContent.append(strLine);
+	    System.out.println("File content:" + fileContent);
+	    FileWriter fstreamWrite = new FileWriter(OutputFilePath);
+	    BufferedWriter out = new BufferedWriter(fstreamWrite);
+	    out.write(fileContent.toString());
+	    out.close();
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to apply Balance Rewards Membership in ISO Shopping
+     *          Cart Page
+     * @author - Siva Santhi Reddy P
+     * @Created -30 SEP 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void applyBRMembershipFromCart(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String AARPCARD_RADIO = "input#aarpcard~CSS";
+	String BalanceRewardsNumber_TXT = "input#loyaltyNo~CSS";
+	String Apply_BTN = "input#loyallookup~CSS";
+	String MembershipAppliedMessage_ELM = "//div[contains(text(),'Membership confirmed')]~XPATH";
+	String LoyaltyEarnPoints_ELM = "//div[contains(@class,'cartPageLoyaltysection')]/div[2]/p[2]~XPATH";
+	String EarnLoyaltyPoints = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    // Get Test Data from Excel
+	    String MembershipType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MembershipType");
+	    String MembershipNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MembershipNumber");
+
+	    if (MembershipType != null && MembershipType.equalsIgnoreCase("AARP")) {
+		if (!isElementPresentVerifyClick(AARPCARD_RADIO, browser)) {
+		    throw new Exception("Not able to Click on AARPCARD Radio Button");
+		}
+	    }
+	    if (!clearAndEnterText(BalanceRewardsNumber_TXT, MembershipNumber, browser)) {
+		messagesMap.put("Membership Number", "Not able to Enter Membership Number");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Apply_BTN, browser)) {
+		throw new Exception("Not able to Click on Apply Button");
+	    }
+	    if (!isElementPresentVerification(MembershipAppliedMessage_ELM, browser)) {
+		messagesMap.put("Membership Applied Message", "Message is not getting displayed");
+		status = WARNING;
+	    }
+	    if (isElementPresentVerification(LoyaltyEarnPoints_ELM, browser)) {
+		EarnLoyaltyPoints = getElementByProperty(LoyaltyEarnPoints_ELM, browser).getText().split("points")[0].replaceAll(",", "").trim();
+	    } else {
+		messagesMap.put("Loyalty Earn Points", "Earn Points are not getting displayed in Shopping Cart");
+		status = WARNING;
+	    }
+	    // Sharing Earn Loyalty Points through Hash Map
+	    sharedProperties.put("EarnLoyaltyPoints", EarnLoyaltyPoints);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validate Tender Code in Dynamo Log
+     * @author - Siva Santhi Reddy P
+     * @Created -08 OCT 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateTenderCodeinDynamoLog(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderID = null, TenderCode = null, DynamoLogFilePath = null, totalFileContent = null, displayedTenderCode = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Test Data from Excel
+	    OrderID = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1");
+	    TenderCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TenderCode");
+	    DynamoLogFilePath = System.getProperty("user.dir") + EcommTestRunner.config.getString("fulfillmentFilesPath") + "\\dynamo.log";
+	    totalFileContent = retrieveFileContentToaString(DynamoLogFilePath);
+	    // Split the string and find the required Value
+	    String contentOrderIDSplit[] = totalFileContent.split(OrderID);
+	    displayedTenderCode = contentOrderIDSplit[contentOrderIDSplit.length - 1].split("<TenderCode>")[1].split("<")[0].trim();
+	    if (!displayedTenderCode.equals(TenderCode)) {
+		messagesMap.put("Tender Code", "Tender Code is displaying Wrongly. Expected:" + TenderCode + " But displayed Tender Code is:" + displayedTenderCode);
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Apply BR membership using Name and phone from shopping Cart
+     * @author - Siva Santhi Reddy P
+     * @Created -21 OCT 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void applyBRMembershipbyNameAndPhoneDetails(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LookUpMemberbyNameAndPhone_LNK = "//a[contains(@href,'loyalty_lookup_iso.jsp')]~XPATH";
+	String CheckoutLoyaltyLookUp_ELM = "//h2[contains(text(),'Checking Out: Loyalty Lookup')]~XPATH";
+	String LastName_TXT = "input#lastname~CSS";
+	String Phone_TXT = "input#phone~CSS";
+	String Zipcode_TXT = "input#zip~CSS";
+	String FirstName_TXT = "input#firstname~CSS";
+	String LookUp_BTN = "//input[contains(@src,'btn_lookup.gif')]~XPATH";
+	String Apply_BTN = "input[title='Select']~CSS";
+	String MembershipConfirmed_ELM = "//div[contains(text(),'Membership confirmed')]~XPATH";
+	String PointsEligibleNote_ELM = "//p[contains(text(),'Points this order is eligible for:')]~XPATH";
+	String LoyaltyPoints_ELM = "//div[contains(@class,'cartPageLoyaltysection')]/div[2]/p[2]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Test Data from Excel
+	    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    if (!isElementPresentVerifyClick(LookUpMemberbyNameAndPhone_LNK, browser)) {
+		throw new Exception("Not able to click on LookUp Member by name Link");
+	    }
+	    if (!isElementPresentVerification(CheckoutLoyaltyLookUp_ELM, browser)) {
+		messagesMap.put("Look up Member details Page", "Page header is not found");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+		messagesMap.put("Last Name", "Not able to enter Last Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Phone_TXT, PhoneNumber, browser)) {
+		messagesMap.put("Phone Number", "Not able to enter Phone Number");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Zipcode", "Not able to enter Zipcode");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(LookUp_BTN, browser)) {
+		throw new Exception("Not abole to click on Look Up Button");
+	    }
+	    if (!isElementPresentVerification(Apply_BTN, browser)) {
+		messagesMap.put("Apply Button is Missing", "No Search Results were found");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Apply_BTN, browser)) {
+		throw new Exception("Not able to Click on Apply Button");
+	    }
+	    if (!isElementPresentVerification(MembershipConfirmed_ELM, browser)) {
+		messagesMap.put("Memberhship Confirm Message", "Message is missing in Cart");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(PointsEligibleNote_ELM, browser)) {
+		messagesMap.put("Points Eligible Note Message", "Message is Mising");
+		status = WARNING;
+	    }
+	    if (getElementByProperty(LoyaltyPoints_ELM, browser).getText().trim().equals("0")) {
+		messagesMap.put("Loyalty Points", "Points should not display as Zero");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Apply BR membership using Name and phone from shopping Cart
+     * @author - Siva Santhi Reddy P
+     * @Created -21 OCT 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyOrderDetailsinCheckoutPages(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderSummaryHeader_ELM = "//*[contains(text(),'Order Summary')]~XPATH";
+	String OrderTotal_ELM = "//b[contains(text(),'Order Total:')]~XPATH";
+	String OrderTotalValue_ELM = "//p[contains(@class,'odertotal_onprint')]/strong~XPATH";
+	String PointsEligibleMessage_ELM = "//strong[contains(text(),'Your order is eligible for:')]~XPATH";
+	String SoldtoShhiptoHeader_ELM = "//h4[contains(text(),'Sold to/Ship To')]~XPATH";
+	String OrderSavedMessage_ELM = "//p[contains(text(),'The order is now saved in the system, awaiting payment.')]~XPATH";
+	String RePrintRecord_BTN = "img[alt='Reprint Record']~CSS";
+	String OrderRequestFormURL = "OrderRequestForm.jsp";
+	String InstoreBarCode_IMG = "//img[contains(@src,'instore_barcode.jsp?')]~XPATH";
+	String ReturnsAndRefundsHeader_ELM = "//b[contains(text(),' Refunds & Returns:')]~XPATH";
+	String DateEntered_ELM = "//td[contains(text(),'Date Entered:')]~XPATH";
+	String TimeEntered_ELM = "//td[contains(text(),'Time Entered:')]~XPATH";
+	String DisplayedDate_ELM = "//div[contains(@class,'innerrightcontainer')]/table/tbody/tr[2]/td[2]~XPATH";
+	String DisplayedTime_ELM = "//div[contains(@class,'innerrightcontainer')]/table/tbody/tr[3]/td[2]~XPATH";
+	String WarningTriangle_IMG = "//img[@alt='Warning Triangle']";
+	String CurrentURL = null, FinalURL = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Get Test Data from Excel
+	    String VerificationPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerificationPage");
+	    String LoyaltyEligible = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LoyaltyEligible");
+	    String ElementtoVerify[] = { OrderSummaryHeader_ELM, OrderTotal_ELM, OrderTotalValue_ELM, SoldtoShhiptoHeader_ELM };
+	    String WinHandleBefore = browser.getWindowHandle();
+	    if (VerificationPage.equalsIgnoreCase("OrderConfirmation")) {
+		if (!isElementPresentVerification(OrderSavedMessage_ELM, browser)) {
+		    messagesMap.put("Order Saved message", "Message is Missing");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(RePrintRecord_BTN, browser)) {
+		    messagesMap.put("Re Print Record", "Button is Missing");
+		    status = WARNING;
+		}
+		List<WebElement> WarningTraiangleElements = browser.findElements(By.xpath(WarningTriangle_IMG));
+		if (WarningTraiangleElements.size() != 2) {
+		    messagesMap.put("Warning Traiangles", "Expected-2 but it dispalyed" + WarningTraiangleElements.size());
+		    status = WARNING;
+		}
+		for (String Handle : browser.getWindowHandles()) {
+		    browser.switchTo().window(Handle);
+		    if (browser.switchTo().window(Handle).getTitle().contains("Online Orders")) {
+			break;
+		    }
+		}
+		String OrderConfiramtionpageElements[] = { InstoreBarCode_IMG, ReturnsAndRefundsHeader_ELM, DateEntered_ELM, TimeEntered_ELM };
+		for (int i = 0; i < ElementtoVerify.length; i++) {
+		    if (!isElementPresentVerification(OrderConfiramtionpageElements[i], browser)) {
+			messagesMap.put(OrderConfiramtionpageElements[i], "Object is Missing");
+			status = WARNING;
+		    }
+		}
+		// Getting Current Date and Time from Calander
+		Calendar cal = Calendar.getInstance();
+		String CurrentDateTime = cal.getTime().toString();
+		String DisplayedDate = getElementByProperty(DisplayedDate_ELM, browser).getText().trim();
+		String DisplayedTime = getElementByProperty(DisplayedTime_ELM, browser).getText().trim().split(" ")[0];
+		String CurrentDate = CurrentDateTime.split(" ")[1] + "/" + CurrentDateTime.split(" ")[2] + "/" + CurrentDateTime.split(" ")[5];
+		// Changing Date Format
+		CurrentDate = dateFormatChanger(CurrentDate, "MMM/dd/yyyy", "MM/dd/yy");
+		String CurrentTime = (CurrentDateTime.split(":")[0] + ":" + CurrentDateTime.split(":")[1]).split(" ")[3].trim();
+		if (!CurrentDate.equals(DisplayedDate)) {
+		    messagesMap.put("dATE", "Displayed time is not matching with current Date");
+		    status = WARNING;
+		}
+		if (!CurrentTime.trim().equals(DisplayedTime.trim())) {
+		    messagesMap.put("Time", "Displayed time is not matching with current time");
+		    status = WARNING;
+		}
+	    }
+	    for (int i = 0; i < ElementtoVerify.length; i++) {
+		if (!isElementPresentVerification(ElementtoVerify[i], browser)) {
+		    messagesMap.put(ElementtoVerify[i], "Object is Missing");
+		    status = WARNING;
+		}
+	    }
+	    if (LoyaltyEligible != null && LoyaltyEligible.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(PointsEligibleMessage_ELM, browser)) {
+		    messagesMap.put("Loyalty Points Eligible Message", "Message is Missing");
+		    status = WARNING;
+		}
+		String LoyaltyPoints = getElementByProperty(PointsEligibleMessage_ELM, browser).getText().split("\n")[1].split(" ")[0];
+		if (LoyaltyPoints.equals("0")) {
+		    messagesMap.put("Loyalty Points", "Points Should not be Zero");
+		    status = WARNING;
+		}
+	    }
+	    browser.switchTo().window(WinHandleBefore);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - prepopulation in sold to page
+     * @author - Hasan Javeed
+     * @Created -12 DEC 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyPrepopulationInSoldToPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String FirstName_TXT = "input#billFirstName~CSS";
+	String LastName_TXT = "input#billLastName~CSS";
+	String PhoneAreaCode_TXT = "input#billAreaCode~CSS";
+	String PhoneNumber_TXT = "input#billPhone~CSS";
+	String EmailAddress_TXT = "input#billEmail~CSS";
+	String ShiptoShop_RADIO = "input#instoreShipToShop~CSS";
+	String ShipToCustomerAddress_RADIO = "input#instoreShipToCustAddr~CSS";
+	String BillAddress_TXT = "input#billAddress~CSS";
+	String BillCity_TXT = "input#billCity~CSS";
+	String BillState_LST = "select#billState~CSS";
+	String BillZipcode_TXT = "input#billZip~CSS";
+	String BillZipcodeExtn_TXT = "input#billZipExt~CSS";
+	String Continue_BTN = "input[title='Continue']~CSS";
+	String VerifycountryPageHeader_ELM = "//strong[contains(text(),'Verify Customer')]~XPATH";
+	String Select_BTN = "//input[@title='Select']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		// Get Data From Excel Sheet
+		String FirstName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FirstName");
+		String LastName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LastName");
+		String PhoneNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PhoneNumber");
+		String EmailAddress = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "yahooUserName");
+		String Address = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+		String City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		String State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		String Zipcode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Zipcode");
+		String ZipcodeExtn = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipcodeExtn");
+
+		System.out.println(FirstName);
+		System.out.println(LastName);
+		System.out.println(PhoneNumber);
+		System.out.println(EmailAddress);
+		System.out.println(Address);
+		System.out.println(City);
+		System.out.println(State);
+		System.out.println(Zipcode);
+		System.out.println(ZipcodeExtn);
+
+		// get attribute value of all the fields
+		String emailPrepopulation = getElementByProperty(EmailAddress_TXT, browser).getAttribute("value");
+		String FirtNamePrepopulation = getElementByProperty(FirstName_TXT, browser).getAttribute("value");
+		String LastNamePrepopulation = getElementByProperty(LastName_TXT, browser).getAttribute("value");
+		String PhoneAreaCodePrepopulation = getElementByProperty(PhoneAreaCode_TXT, browser).getAttribute("value");
+		String PhoneNumPrepopulation = getElementByProperty(PhoneNumber_TXT, browser).getAttribute("value");
+
+		if (!emailPrepopulation.contains(EmailAddress)) {
+		    messagesMap.put("Prepopulation", "Email address prepopulation failed");
+		    status = WARNING;
+		}
+		if (!FirtNamePrepopulation.contains(FirstName)) {
+		    messagesMap.put("Prepopulation", "First name prepopulation failed");
+		    status = WARNING;
+		}
+		if (!LastNamePrepopulation.contains(LastName)) {
+		    messagesMap.put("Prepopulation", "Last name prepopulation failed");
+		    status = WARNING;
+		}
+
+		String PhoneAreaCode = PhoneNumber.substring(0, 3);
+		String ActualPhoneNumber = PhoneNumber.substring(3, 10);
+
+		if (!PhoneAreaCodePrepopulation.contains(PhoneAreaCode)) {
+		    messagesMap.put("Prepopulation", "Phone Area code prepopulation failed");
+		    status = WARNING;
+		}
+
+		if (!PhoneNumPrepopulation.contains(ActualPhoneNumber)) {
+		    messagesMap.put("Prepopulation", "Phone Number prepopulation failed");
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerification(ShipToCustomerAddress_RADIO, browser)) {
+		    if (!isElementPresentVerifyClick(ShipToCustomerAddress_RADIO, browser)) {
+			throw new Exception("Not able to Click on ship to customer radio button");
+		    }
+
+		}
+
+		String AddressPrepopulation = getElementByProperty(BillAddress_TXT, browser).getAttribute("value");
+		String CityPrepopulation = getElementByProperty(BillCity_TXT, browser).getAttribute("value");
+		String StatePrepopulation = getElementByProperty(BillState_LST, browser).getAttribute("value");
+		String ZipCodePrepopulation = getElementByProperty(BillZipcode_TXT, browser).getAttribute("value");
+
+		if (!AddressPrepopulation.contains(Address)) {
+		    messagesMap.put("Prepopulation", "Address prepopulation failed");
+		    status = WARNING;
+		}
+
+		if (!CityPrepopulation.contains(City)) {
+		    messagesMap.put("Prepopulation", "City prepopulation failed");
+		    status = WARNING;
+		}
+
+		if (!ZipCodePrepopulation.contains(Zipcode)) {
+		    messagesMap.put("Prepopulation", "Zipcode prepopulation failed");
+		    status = WARNING;
+		}
+
+		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		    throw new Exception("Not able to Click on Continue button");
+		}
+		if (isElementPresentVerification(VerifycountryPageHeader_ELM, browser)) {
+		    if (!isElementPresentVerifyClick(Select_BTN, browser)) {
+			throw new Exception("Not able to Click on Select Button");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

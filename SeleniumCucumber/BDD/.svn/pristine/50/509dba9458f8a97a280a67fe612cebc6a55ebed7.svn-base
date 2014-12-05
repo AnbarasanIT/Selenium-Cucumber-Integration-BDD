@@ -1,0 +1,55 @@
+package walgreens.ecom.batch.automation.stepdefinitions.marketing.directMail;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.marketing.directMail.DirectMailPreferenceFormValidationsLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.And;
+import cucumber.table.DataTable;
+
+public class DirectMailSteps {
+
+    @And("^\"([^\"]*)\" Customer validates UI of Postal Mail Preferences under Direct Mail:$")
+    public void Customer_validates_UI_of_Postal_Mail_Preferences_under_Direct_Mail(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates UI of Postal Mail Preferences under Direct Mail:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    DirectMailPreferenceFormValidationsLibrary.validateUIMailPreferencesform(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    @And("^\"([^\"]*)\" Customer performs postal mail preferences funtionality:$")
+    public void Customer_performs_postal_mail_preferences_funtionality(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer performs postal mail preferences funtionality:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    DirectMailPreferenceFormValidationsLibrary.MailPreferencesSubmission(browser, scenario, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    } 
+}

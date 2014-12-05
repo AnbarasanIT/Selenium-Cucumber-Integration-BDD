@@ -1,0 +1,56 @@
+package walgreens.ecom.batch.automation.stepdefinitions.accountdashboard.order_activity;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.accountdashboard.accounthome.AccountHomeBannerVerificationLibrary;
+import walgreens.ecom.batch.automation.library.accountdashboard.order_activity.OrderStatusHistoryValidationsLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class OrderStatusAndHistoryValidationsSteps {
+    @Then("^\"([^\"]*)\" Customer verifies the order status and history:$")
+    public void Customer_verifies_the_order_status_and_history(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies the order status and history:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    OrderStatusHistoryValidationsLibrary.orderStatusAndHistoryValidations(browser, step, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer verifies the required order details from order status and history:$")
+    public void Customer_verifies_the_required_order_details_from_order_status_and_history(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer verifies the required order details from order status and history:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    OrderStatusHistoryValidationsLibrary.verifyOrderDetailsFromOrderStatusAndHistory(browser, step, scenario, dataMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

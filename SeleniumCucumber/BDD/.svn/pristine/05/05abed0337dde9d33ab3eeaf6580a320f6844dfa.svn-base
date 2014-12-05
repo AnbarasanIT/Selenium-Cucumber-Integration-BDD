@@ -1,0 +1,480 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutPSCLibrary extends CheckoutLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Navigate to Select Membership type
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Thangaraj
+     * @Modified Date - 26 Aug 2012
+     ************************************************************* 
+     */
+
+    public static void NavtoSelectMembershipPage(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String JOinSavingsclub_BTN = "//img[@title='Join Prescription Savings Club today!' or @title='Individual membership $20. Family membership $35.']~XPATH";
+	String PleaseMakeSelection_Header = "//h2[contains(text(),'Club Membership Options')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(JOinSavingsclub_BTN, browser)) {
+		throw new Exception("Not able to click on Join Now Button");
+	    }
+	    if (!isElementPresentVerification(PleaseMakeSelection_Header, browser)) {
+		messagesMap.put("Expected Target Page", "Not able to navigate to Select Membership Page by clicking Join now buton");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Membership Type
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Thangaraj R
+     * @Modified Date - 3 April 2013
+     ************************************************************* 
+     */
+    public static void SelectMembershipTypeandContiue(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String IndividualEnrollment_BTN = "a[href*='pscenrollsingle']~CSS";
+	String FamilyEnrollment_BTN = "a[href*='pscenrollfamily']~CSS";
+	String RenewMembership_BTN = "img[title='Renew']~CSS";
+	String YourMembershipInfo_Header = "//strong[contains(text(),'Your Membership Information')]~XPATH";
+	String MembershipCardInfo_Header = "//strong[contains(text(),'Membership Card Information')]~XPATH";
+	String SignInPage_Header = "//h1[contains(text(),'Sign In or Register')]~XPATH";
+	String PSCBannerinSigninPage_IMG = "img[title='Prescription Savings Club']~CSS";
+	String ManageYourPersonalInfo_Header = "//h2[contains(text(),'Manage Your Personal Information')]~XPATH";
+	String Address_TXT = "input[id='address']~CSS";
+	String City_TXT = "input[id='city']~CSS";
+	String State_TXT = "select[id='State']~CSS";
+	String Zipcode_TXT = "input[id='perzipcode']~CSS";
+	String PhoneNumber_TXT = "input[id='primaryPhone']~CSS";
+	String DobMonth_TXT = "select[id='dobMonth']~CSS";
+	String DobDay_TXT = "select[id='dobDay']~CSS";
+	String DobYear_TXT = "select[id='dobYear']~CSS";
+	String Gender_TXT = "select[id='gender']~CSS";
+	String SaveChanges_TXT = "input[title='save changes']~CSS";
+	String[] DOB = new String[3];
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("EnrollmentType").get(0).equalsIgnoreCase("Individual")) {
+		if (!isElementPresentVerifyClick(IndividualEnrollment_BTN, browser)) {
+		    throw new Exception("Not able to find and/or click on Individual Enrollment Radio  Button");
+		}
+
+	    } else if (dataMap.get("EnrollmentType").get(0).equalsIgnoreCase("Family")) {
+		if (!isElementPresentVerifyClick(FamilyEnrollment_BTN, browser)) {
+		    throw new Exception("Not able to find and/or click on Family Enrollment Radio  Button");
+		}
+	    } else if (dataMap.get("EnrollmentType").get(0).equalsIgnoreCase("RenewMembership")) {
+		if (!isElementPresentVerifyClick(RenewMembership_BTN, browser)) {
+		    throw new Exception("Not able to find and/or click on renewel Radio  Button");
+		}
+	    }
+	    if (dataMap.get("UserType").get(0).equalsIgnoreCase("Pharmacy")) {
+		if (!dataMap.get("EnrollmentType").get(0).equalsIgnoreCase("RenewMembership")) {
+		    if (!isElementPresentVerification(YourMembershipInfo_Header, browser)) {
+			messagesMap.put("PSC Configuration page", "Page is not navigated to PSC Configuration page afer Selecting Membership Type and clicking Continue button");
+			status = WARNING;
+		    }
+		} else {
+		    if (!isElementPresentVerification(MembershipCardInfo_Header, browser)) {
+			messagesMap.put("PSC Configuration page", "Page is not navigated to Membership Card Info page After selecting Renew membership button in  Membershiptype Page");
+			status = WARNING;
+		    }
+		}
+	    } else if (dataMap.get("UserType").get(0).equalsIgnoreCase("Light")) {
+		if (!isElementPresentVerification(ManageYourPersonalInfo_Header, browser)) {
+		    messagesMap.put("Edit Personal Information Page", "Page is not Navigated to Edit Personal Information Page");
+		    status = WARNING;
+		}
+		// Modified for Edit personal information for PSC
+		if (!clearAndEnterText(Address_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Address"), browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in address field");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(City_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City"), browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in City field");
+		    status = WARNING;
+		}
+		new Select(getElementByProperty(State_TXT, browser)).selectByVisibleText(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+			"State"));
+
+		if (!clearAndEnterText(Zipcode_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode"), browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in Zipcode field");
+		    status = WARNING;
+		}
+		String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+		if (PhoneNumber != null && PhoneNumber.equalsIgnoreCase("Random")) {
+		    PhoneNumber = randomPhoneNumberGenerator();
+		}
+		if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in Phone Number field");
+		    status = WARNING;
+		}
+		// Modified for Random DOB
+		String strDOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB");
+		if (strDOB != null && strDOB.equalsIgnoreCase("Random")) {
+		    strDOB = randomDOBGenerator();
+		}
+		DOB = strDOB.split(":");
+		new Select(getElementByProperty(DobMonth_TXT, browser)).selectByValue(DOB[0]);
+		new Select(getElementByProperty(DobDay_TXT, browser)).selectByValue(DOB[1]);
+		new Select(getElementByProperty(DobYear_TXT, browser)).selectByValue(DOB[2]);
+		new Select(getElementByProperty(Gender_TXT, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+			"Gender"));
+		if (!isElementPresentVerifyClick(SaveChanges_TXT, browser)) {
+		    messagesMap.put("PSC Configuration page", " Save changes button isnot available");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("UserType").get(0).equalsIgnoreCase("Guest")) {
+		if (!isElementPresentVerification(SignInPage_Header, browser)) {
+		    messagesMap.put("Sign-in Page", "Page is not Navigated to Sign-in Page");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(PSCBannerinSigninPage_IMG, browser)) {
+		    messagesMap.put("PSC Image", "PSC Image Banner is missing in Sign-in Page");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Perform actions on Enrollment Information Page
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Siva
+     * @Modified Date - 28-JUN-2013
+     ************************************************************* 
+     */
+    public static void enrollmentInforeviewandSelction(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String EditPresonalInfo_LNK = "a[title='Edit Your Personal Information >']~CSS";
+	String PreferaFamilyMbrship_LNK = "a[title='Prefer a Family Membership?']~CSS";
+	String PreferaIndividualMbrship_LNK = "a[title='Prefer an Individual Membership?']~CSS";
+	String FamilyMemberAddNow_BTN = "img[title='Add Now']~CSS";
+	String AgreeTermsAndCondtions_CHK = "input#chk1~CSS";
+	String AddToCart_BTN = "input#Add_to_Cart_mem~CSS";
+	String ManageYourPersonalInfo_Header = "//h2[contains(text(),'Manage Your Personal Information')]~XPATH";
+	String AddFamilyMember_Header = "//h2[contains(text(),'Add a Family Member')]~XPATH";
+	String ShoppingCart_Header = "//*[contains(text(),'Shopping Cart')]~XPATH";
+	String PSCLinkinCart_LNK = "//a[contains(text(),'Prescription Savings Club')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("EditPersonalInformation").get(0).equalsIgnoreCase("yes")) {
+		if (!isElementPresentVerifyClick(EditPresonalInfo_LNK, browser)) {
+		    throw new Exception("Not able to find and/or click on Edit PersonalInfo link");
+		}
+		if (!isElementPresentVerification(ManageYourPersonalInfo_Header, browser)) {
+		    messagesMap.put("Edit Personal Info page", "Unable to Navigate to Edit Personal Info page after clicking Edit Info button in Enrollment Info Page");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("ChangeMemershipType").get(0).equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(PreferaIndividualMbrship_LNK, browser))
+		    getElementByProperty(PreferaIndividualMbrship_LNK, browser).click();
+		else if (isElementPresentVerification(PreferaFamilyMbrship_LNK, browser))
+		    getElementByProperty(PreferaFamilyMbrship_LNK, browser).click();
+		else
+		    throw new Exception("Not able to find the Change Membership(Either Individual or Family) link");
+	    }
+	    if (dataMap.get("AddFamilyMember").get(0).equalsIgnoreCase("yes")) {
+		if (!isElementPresentVerifyClick(FamilyMemberAddNow_BTN, browser)) {
+		    throw new Exception("No able to click on Add Now button to add family Members");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(AddFamilyMember_Header, browser)) {
+		    messagesMap.put("Family Member Overlay Header", "Family member overlay Header is Missing");
+		    status = WARNING;
+		}
+		switchToDefault(browser);
+	    }
+	    if (dataMap.get("AcceptsTermsAndConditionsAndAddtocart").get(0).equalsIgnoreCase("yes")) {
+		if (!isElementPresentVerifyClick(AgreeTermsAndCondtions_CHK, browser)) {
+		    throw new Exception("Not able to click on Termsandconditions Checkbox ");
+		}
+		if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+		    throw new Exception("Not able to click on Add to Cart Button");
+		}
+		if (!isElementPresentVerification(ShoppingCart_Header, browser)) {
+		    messagesMap.put("Shoping Cart", "Not able to Find shopping Cart Header");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(PSCLinkinCart_LNK, browser)) {
+		    messagesMap.put("PSC Item in Cart", "Not able to find the item");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Update Personal Information
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Siva
+     * @Modified Date - 08 Nov 2012
+     ************************************************************* 
+     */
+    public static void updatingPersonalInformation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String HomeAddress_TXT = "input#street1~CSS";
+	String City_TXT = "input#city~CSS";
+	String State_LST = "select#state~CSS";
+	String Zipcode_TXT = "input#zipcode1~CSS";
+	String PhoneDetails_TXT = "input#primaryPhone~CSS";
+	String PhoneNumberType_LST = "select#primaryPhoneType~CSS";
+	String DOBMonth_LST = "select#dobMonth~CSS";
+	String DOBDate_LST = "select#dobDay~CSS";
+	String DOBYear_LST = "select#dobYear~CSS";
+	String Gender_LST = "select#gender~CSS";
+	String SaveChanges_BTN = "input[title='save changes']~CSS";
+	String YourMembershipInfo_Header = "//strong[contains(text(),'Your Membership Information')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String HomeAddress = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Address");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Phone");
+	    String PhoneType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneType");
+	    String DOBMonth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB-Month");
+	    String DOBDate = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB-Day");
+	    String DOBYear = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB-Year");
+	    String Gender = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Gender");
+
+	    if (!HomeAddress.equals("\".\"-"))
+		clearAndEnterText(HomeAddress_TXT, HomeAddress, browser);
+	    if (!City.equals("\".\"-"))
+		clearAndEnterText(City_TXT, City, browser);
+	    if (!State.equals("\".\"-"))
+		new Select(getElementByProperty(State_LST, browser)).selectByIndex(Integer.parseInt(State));
+	    if (!Zipcode.equals("\".\"-"))
+		clearAndEnterText(Zipcode_TXT, Zipcode, browser);
+	    if (!PhoneNumber.equals("\".\"-"))
+		clearAndEnterText(PhoneDetails_TXT, PhoneNumber, browser);
+	    if (!PhoneType.equals("\".\"-"))
+		new Select(getElementByProperty(PhoneNumberType_LST, browser)).selectByVisibleText(PhoneType);
+	    if (!DOBMonth.equals("\".\"-"))
+		new Select(getElementByProperty(DOBMonth_LST, browser)).selectByIndex(Integer.parseInt(DOBMonth));
+	    if (!DOBDate.equals("\".\"-"))
+		new Select(getElementByProperty(DOBDate_LST, browser)).selectByIndex(Integer.parseInt(DOBDate));
+	    if (!DOBYear.equals("\".\"-"))
+		new Select(getElementByProperty(DOBYear_LST, browser)).selectByIndex(Integer.parseInt(DOBYear));
+	    if (!Gender.equals("\".\"-"))
+		new Select(getElementByProperty(Gender_LST, browser)).selectByIndex(Integer.parseInt(Gender));
+
+	    if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+		throw new Exception("Not able to click on Save Changes Button");
+	    }
+	    if (!isElementPresentVerification(YourMembershipInfo_Header, browser)) {
+		messagesMap.put(" PSC Configuration Page", "Not able to Navigate back to PSC Configuration Page by clicking Save changes button");
+		status = WARNING;
+		// throw new
+		// Exception("Not able to Navigate back to PSC Configuration Page by clicking Save changes button in Edit Personal Info Page");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Add Family member for Family PSC Checkout
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Siva
+     * @Modified Date - 28 JUN 2013
+     ************************************************************* 
+     */
+    public static void addFamilymemberforPSCEnrollment(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RelationShip_LST = "select#psc_relationCode1~CSS";
+	String FirstName_TXT = "input#psc_firstname1~CSS";
+	String LastName_TXT = "input#psc_lastname1~CSS";
+	String Address_TXT = "input#street11~CSS";
+	String City_TXT = "input#city1~CSS";
+	String State_LST = "select#state1~CSS";
+	String Zipcode_TXT = "input#zipcode1~CSS";
+	String PhoneDetails_TXT = "input#fullPhoneNumber1~CSS";
+	String DOBMonth_LST = "select#birthMonth1~CSS";
+	String DOBDate_LST = "select#birthDay1~CSS";
+	String DOBYear_LST = "select#birthYear1~CSS";
+	String Gender_LST = "select#psc_gender1~CSS";
+	String AddFamilyMember_BTN = "input#add_prescription~CSS";
+	String Edit_LNK = "a[title='Edit']~CSS";
+	String Remove_LNK = "a[title='Remove']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String FName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB");
+	    String Gender = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Gender");
+	    String Relationship = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RelationShip");
+	    String Address = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Address");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ZipCode");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+
+	    switchToOverlay(browser);
+	    if (!clearAndEnterText(FirstName_TXT, FName, browser)) {
+		messagesMap.put("First Name", "Not able to Enter First Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(LastName_TXT, LName, browser)) {
+		messagesMap.put("Last Name", "Not able to Enter Last Name");
+		status = WARNING;
+	    }
+	    if (DOB != null && DOB.equalsIgnoreCase("Random")) {
+		DOB = randomDOBGenerator();
+	    }
+	    String[] StrDOB = DOB.split(":");
+	    StrDOB[0] = dateFormatChanger(StrDOB[0], "MM", "MMM").toUpperCase();
+	    new Select(getElementByProperty(RelationShip_LST, browser)).selectByVisibleText(Relationship);
+	    new Select(getElementByProperty(DOBMonth_LST, browser)).selectByVisibleText(StrDOB[0]);
+	    new Select(getElementByProperty(DOBDate_LST, browser)).selectByVisibleText(StrDOB[1]);
+	    new Select(getElementByProperty(DOBYear_LST, browser)).selectByVisibleText(StrDOB[2]);
+	    new Select(getElementByProperty(State_LST, browser)).selectByVisibleText(State);
+	    new Select(getElementByProperty(Gender_LST, browser)).selectByVisibleText(Gender);
+	    if (!clearAndEnterText(Address_TXT, Address, browser)) {
+		messagesMap.put("Address Name", "Not able to Enter Address");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(City_TXT, City, browser)) {
+		messagesMap.put("City Name", "Not able to Enter City Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PhoneDetails_TXT, PhoneNumber, browser)) {
+		messagesMap.put("Phone Details", "Not able to Enter Phone Details");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(AddFamilyMember_BTN, browser)) {
+		throw new Exception("Not able to click on Add Family Member button");
+	    }
+	    switchToDefault(browser);
+	    String AddedFamilyMember = "//td[contains(text(),'" + FName + " " + LName + "')]";
+	    if (!isElementPresentVerification(AddedFamilyMember, browser)) {
+		throw new Exception("Added Family Member was not found in the configuration Page");
+	    }
+	    if (!isElementPresentVerification(Edit_LNK, browser)) {
+		messagesMap.put("Edit Link", "Link is Missing");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(Remove_LNK, browser)) {
+		messagesMap.put("Remove Link", "Link is Missing");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Enter PSC Card Information
+     * @author - Sri Vishnu Prakash
+     * @Created - 31-May-2012
+     * @Modified By -Siva
+     * @Modified Date - 08 Nov 2012
+     ************************************************************* 
+     */
+    public static void enteringPSCCardNumber(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String MembershipIDNumber_TXT = "input#idNumber~CSS";
+	String Submit_BTN = "input[title='Submit']~CSS";
+	String YourMembershipInfo_Header = "//strong[contains(text(),'Your Membership Information')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!clearAndEnterText(MembershipIDNumber_TXT, dataMap.get("CardIdNumber").get(0), browser))
+		throw new Exception("Not able to Enter Membership Card Number");
+	    if (!isElementPresentVerifyClick(Submit_BTN, browser))
+		throw new Exception("Not able to click on Sumbit button");
+	    if (!isElementPresentVerification(YourMembershipInfo_Header, browser)) {
+		messagesMap.put("PSC Configuration page", "Page is not navigated to PSC Configuration page after Clicking on Sumbit button");
+		status = WARNING;
+		// throw new
+		// Exception(" Page is not navigated to PSC Configuration page after Clicking on Sumbit button from Membership Number page");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+}

@@ -1,0 +1,1647 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.accountdashboard.pharmacy_health.ManageHealthHistoryLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutPharmacyLibrary extends CheckoutLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add Transfer Prescription to cart
+     * @author - Imran
+     * @Created -
+     * @Modified By - Thangaraj
+     * @Modified Date -02-Sep-2013
+     ************************************************************* 
+     */
+    public static void addTransferPresciption(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Pharmacy_ANCHOR = "a.menu_Pharmacy~CSS";
+	String TransferPrescription_ANCHOR = "//ul[@class='link-arrow-list']/li/a[@title='Transfer Prescriptions']~XPATH";
+	String TransferPharmacyPhonenumber_TXT = "input#pharmacyphone~CSS";
+	String TransferPharmacyName_TXT = "input#pharmacyname~CSS";
+	String TransferPrescriptionName_TXT = "input#prescriptionName1~CSS";
+	// String TransferPrescriptionName_TXT = "input#query~CSS";
+	String TransferPrescriptionNumber_TXT = "input#prescriptionNumber1~CSS";
+	String Transferaddtocart_BTN = "*[title*='Add to Cart']~CSS";
+	String NinetyDay_CHK = "*[id='flag90Day']~CSS";
+	String ShoppingCart_Heading = "//*[contains(text(),'Shopping Cart')]~XPATH";
+	boolean isOnTranferPrescriptionPage = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		isOnTranferPrescriptionPage = isElementPresentVerification(TransferPharmacyPhonenumber_TXT, browser);
+		// Handling transfer rx from left navigation,Pharmacy tour and
+		// for newely registered user
+		if (!isOnTranferPrescriptionPage) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_ANCHOR, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(TransferPrescription_ANCHOR, browser)) {
+			    getElementByProperty(TransferPrescription_ANCHOR, browser).sendKeys(Keys.RETURN);
+			}
+			isOnTranferPrescriptionPage = isElementPresentVerification(TransferPharmacyPhonenumber_TXT, browser);
+		    } else {
+			messagesMap.put("Transfer Prescriptions page", "Not able to Navigate to Transfer Prescriptions page by clicking on Pharmacy Tab. ");
+			status = WARNING;
+		    }
+		    if (!isOnTranferPrescriptionPage) {
+			String tranferPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + "pharmacy/order/transferprescription.jsp";
+			getUrl(browser, tranferPrescriptionURL);
+			isOnTranferPrescriptionPage = isElementPresentVerification(TransferPharmacyPhonenumber_TXT, browser);
+		    }
+		}
+		if (!isOnTranferPrescriptionPage) {
+		    throw new Exception("Not able to Navigate to Transfer Prescriptions page.");
+		} else {
+		    familyMemberSelector(browser, dataMap.get("FamilyMemberOption").get(i));
+		    if (!clearAndEnterText(TransferPharmacyName_TXT, dataMap.get("PharmacyName").get(i), browser)) {
+			messagesMap.put("Pharmacy Name", "Not able to Enter Pharmacy Name in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(TransferPharmacyPhonenumber_TXT, dataMap.get("PharmacyPhone").get(i), browser)) {
+			messagesMap.put("Pharmacy Phone", "Not able to Enter Pharmacy Phone in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(TransferPrescriptionName_TXT, dataMap.get("PrescriptionName").get(i), browser)) {
+			messagesMap.put("Prescription Name", "Not able to Enter Prescription Name in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(TransferPrescriptionNumber_TXT, dataMap.get("PrescriptionNumber").get(i), browser)) {
+			messagesMap.put("Prescription Number", "Not able to Enter Prescription Number in the Text Field.");
+			status = WARNING;
+		    }
+		    if ("yes".equals(dataMap.get("isNinetyDay").get(i))) {
+			if (!isElementPresentVerifyClick(NinetyDay_CHK, browser)) {
+			    messagesMap.put("Ninety day prescription CheckBox", "Not able to Check the Ninety day prescription CheckBox.");
+			    status = WARNING;
+			}
+		    }
+		    // Enter the add health history information
+		    if (dataMap.get("AddHealthHistoryLink") != null) {
+			if (dataMap.get("AddHealthHistoryLink").get(0).equalsIgnoreCase("Yes")) {
+			    ManageHealthHistoryLibrary.addHealthHistoryOrAddHealthInsurance(browser, stepBean, dataMap);
+			}
+		    }
+		    if (isElementPresentVerification(Transferaddtocart_BTN, browser)) {
+			getElementByProperty(Transferaddtocart_BTN, browser).sendKeys(Keys.RETURN);
+		    } else {
+			throw new Exception("Not able to verify Add to cart Button on Transfer Prescriptions page.");
+		    }
+		}
+	    }// end of for loop
+
+	    if (!isElementPresentVerification(ShoppingCart_Heading, browser)) {
+		messagesMap.put("Shopping Cart Page", "Not able to Verify the Shopping Cart Page Heading after adding a Transfer Prescription to the cart");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to select Required option(Pickup/Ship) form Cart and
+     *          verfiying the Destination Page after clicking Proceed to
+     *          Checkout
+     * @author - Imran
+     * @Created -
+     * @Modified By - Siva, Ram
+     * @Modified Date -19-MAR-2013, 11/29/2013
+     ************************************************************* 
+     */
+    public static void selectDeliveryOptionAndProceedToCheckout(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ProceedToCheckout_BTN = "input[value='Proceed to checkout']~CSS";
+	String SelectPickupInStore_BTN = "input#pickupStore1~CSS";
+	String SelectShipTo_BTN = "input#shipto1~CSS";
+	String PickUpLocation_Heading = "//h2[contains(text(),'Pickup Location') or contains(text(),'Pickup details')]~XPATH";
+	String ShippingInformation_Heading = "//*[contains(text(),'Shipping Information') or contains(text(),'Ship  address')]~XPATH";
+	String DoctorInformation_Heading = "//h1[contains(text(),'Patient and Doctor Details')]~XPATH";
+	String deliveryOption = null;
+	String expectedTargetPage = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    deliveryOption = dataMap.get("DeliveryOption").get(0);
+	    expectedTargetPage = dataMap.get("ExpectedTargetPage").get(0);
+
+	    if ("PickUpInStore".equalsIgnoreCase(deliveryOption)) {
+		if (!isElementPresentVerifyClick(SelectPickupInStore_BTN, browser)) {
+		    throw new Exception("Not able to click on Select Pickup Instore Button");
+		}
+	    } else if ("ShipToYou".equalsIgnoreCase(deliveryOption)) {
+		if (!isElementPresentVerifyClick(SelectShipTo_BTN, browser)) {
+		    throw new Exception("Not able to click on Select ShipToYou Button");
+		}
+	    }
+	    if (isElementPresentVerification(ProceedToCheckout_BTN, browser)) {
+
+		//RAM (11/29/13) - Added to handle CBT for CHROME/IE 
+		try {
+		    getElementByProperty(ProceedToCheckout_BTN, browser).click();
+		} catch (Exception e) {
+		    getElementByProperty(ProceedToCheckout_BTN, browser).sendKeys(Keys.ENTER);
+		}
+
+	    } 
+
+	    if ("Pickup Location".equalsIgnoreCase(expectedTargetPage)) {
+		if (!isElementPresentVerification(PickUpLocation_Heading, browser)) {
+		    messagesMap.put("Expected Target Page", "Not able to find Pickup Location Page");
+		    status = WARNING;
+		}
+	    } else if ("Shipping Information".equalsIgnoreCase(expectedTargetPage)) {
+		if (!isElementPresentVerification(ShippingInformation_Heading, browser)) {
+		    messagesMap.put("Expected Target Page", "Not able to find Shipping Info Page");
+		    status = WARNING;
+		}
+	    } else if ("Doctor Information".equals(expectedTargetPage)) {
+		if (!isElementPresentVerification(DoctorInformation_Heading, browser)) {
+		    messagesMap.put("Expected Target Page", "Not able to find Doctor Info Page");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Select a pickup store if it already isn't selected
+     * @author - Chezhiyan. E
+     * @throws
+     * @Created - 27-Dec-2011
+     * @Modified By - Siva
+     * @Modified Date -08-Nov-12
+     ************************************************************* 
+     **/
+    public static void selectRxPickupDateAndTime(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean) {
+	String status = PASS;
+	String PickUpLocation_Heading = "//h2[contains(text(),'Pickup details')]~XPATH";
+	// String ReviewOrder_Heading =
+	// "//h2[contains(text(),'Review Order & Submit')]~XPATH";
+	String PickUpoptionsPageDate_LST = "select#pickupDate~CSS";
+	String PickUpoptionsPageTime_LST = "select#pickupTime~CSS";
+	String Continue_BTN = "input[title*='Continue']~CSS"; // SIMEON - 8/28/13 - Added '*'
+	String StoreNumber_ELM = "//p[contains(text(),'Store')]~XPATH";
+	String StoreNumberwithWalgreensText_ELM = "//p[contains(text(),'Walgreens')]~XPATH";
+	String StoreNumber = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+
+	    if (isElementPresentVerification(StoreNumber_ELM, browser)) {
+		StoreNumber = getElementByProperty(StoreNumber_ELM, browser).getText().split(" ")[1].trim();
+	    } else {
+		StoreNumber = getElementByProperty(StoreNumberwithWalgreensText_ELM, browser).getText().split("Walgreens")[1].trim();
+	    }
+	    sharedProperties.put("PickupStoreNumber", StoreNumber);
+	    if (isElementPresentVerification(PickUpLocation_Heading, browser)) {
+		new Select(getElementByProperty(PickUpoptionsPageDate_LST, browser)).selectByIndex(2);
+		Thread.sleep(3000L); // RAM
+		new Select(getElementByProperty(PickUpoptionsPageTime_LST, browser)).selectByIndex(2);
+		Thread.sleep(5000L); // RAM
+		if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		    throw new Exception("Not able to click on continue Button");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add New Prescription
+     * @author - Sri Vishnu Prakash
+     * @Created - 16-May-2012
+     * @Modified By -Thangaraj R
+     * @Modified Date - 18-Nov-2013
+     ************************************************************* 
+     */
+    public static void addNewPresciption(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Pharmacy_ANCHOR = "a.menu_Pharmacy~CSS";
+	String NewPrescriptions_LNK = "//ul[@class='link-arrow-list']/li/a[@title='Request New Prescription']~XPATH";
+	String DoctorFirstName_TXT = "input#doctorFirstName~CSS";
+	String DocotrLastName_TXT = "input#doctorLastName~CSS";
+	String DoctorPhoneNumber_TXT = "input#doctorPhone~CSS";
+	String DrugNameAndStrength_TXT = "input#prescriptionName1~CSS";
+	String DrungQuantity_TXT = "input#drugQty~CSS";
+	String NinetyDay_CHK = "*[id='flag90Day']~CSS";
+	String GenericEquivalent_CHK = "*[id='notAcceptGeneric']~CSS";
+	String NewPrescriptionURL = "pharmacy/order/enterprescription.jsp";
+	String NewRxAddtoCart_BTN = "input[alt='Add to Cart']~CSS";
+	String ShoppingCart_ELM = "//*[contains(text(),'Shopping Cart')]~XPATH";
+	String Prescription_Type_Overlay_Close = "a[id='overlayClose']~CSS";
+	boolean isOnNewPrescriptionPage = false;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		isOnNewPrescriptionPage = isElementPresentVerification(DoctorPhoneNumber_TXT, browser);
+		// Handling New rx from left navigation,Pharmacy tour and for
+		// newely registered user
+		if (!isOnNewPrescriptionPage) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_ANCHOR, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(NewPrescriptions_LNK, browser)) {
+			    getElementByProperty(NewPrescriptions_LNK, browser).sendKeys(Keys.RETURN);
+			}
+			isOnNewPrescriptionPage = isElementPresentVerification(DoctorPhoneNumber_TXT, browser);
+		    } else {
+			messagesMap.put("New Prescription page", "Not able to Navigate to New Prescription page by clicking on Pharmacy Tab. ");
+			status = WARNING;
+		    }
+		    if (!isOnNewPrescriptionPage) {
+			String newPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + NewPrescriptionURL;
+			getUrl(browser, newPrescriptionURL);
+			isOnNewPrescriptionPage = isElementPresentVerification(DoctorPhoneNumber_TXT, browser);
+		    }
+		}
+		if(EcommTestRunner.currentBrowserName.equalsIgnoreCase("chrome")){
+		    if(isElementPresentVerification(Prescription_Type_Overlay_Close, browser)){
+			getElementByProperty(Prescription_Type_Overlay_Close, browser).click();
+		    }
+		}
+		if (!isOnNewPrescriptionPage) {
+		    throw new Exception("Not able to Navigate to New Prescriptions page.");
+		} else {
+		    familyMemberSelector(browser, dataMap.get("FamilyMemberOption").get(i));
+		    if (!clearAndEnterText(DoctorFirstName_TXT, dataMap.get("DoctorFirstName").get(i), browser)) {
+			messagesMap.put("Doctor First Name", "Not able to Enter Doctor First Name in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(DocotrLastName_TXT, dataMap.get("DoctorLastName").get(i), browser)) {
+			messagesMap.put("Doctor Last Name", "Not able to Doctor Last Name in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(DoctorPhoneNumber_TXT, dataMap.get("DoctorPhoneNumber").get(i), browser)) {
+			messagesMap.put("Doctor Phone number", "Not able to Enter Doctor Phone number in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(DrugNameAndStrength_TXT, dataMap.get("DrugNameAndStrength").get(i), browser)) {
+			messagesMap.put("Drug Name and Strength", "Not able to Enter Drug Name and Strength in the Text Field.");
+			status = WARNING;
+		    }
+
+		    if(EcommTestRunner.currentBrowserName.equalsIgnoreCase("chrome")){
+			getElementByProperty(DrungQuantity_TXT, browser).sendKeys(dataMap.get("DrugQuantity").get(i));
+		    }
+
+		    if (EcommTestRunner.currentBrowserName.equalsIgnoreCase("firefox") && !clearAndEnterText(DrungQuantity_TXT, dataMap.get("DrugQuantity").get(i), browser)) {
+			messagesMap.put("Drug Quantity", "Not able to Enter Drug Quantity in the Text Field.");
+			status = WARNING;
+		    }
+		    if ("yes".equalsIgnoreCase(dataMap.get("isNinetyDayCheck").get(i))) {
+			if (!isElementPresentVerifyClick(NinetyDay_CHK, browser)) {
+			    messagesMap.put("Ninety day CheckBox", "Not able to Check the Ninety day prescription CheckBox.");
+			    status = WARNING;
+			}
+		    }
+		    if ("yes".equalsIgnoreCase(dataMap.get("isGenericEquivalentCheck").get(i))) {
+			if (isElementPresentVerification(GenericEquivalent_CHK, browser)) {
+			    getElementByProperty(GenericEquivalent_CHK, browser).click();
+			}
+			else{
+			    messagesMap.put("Geniric Equivalent CheckBox", "Not able to Check the Geniric Equivalent CheckBox.");
+			    status = WARNING;
+			}
+		    }
+		    // Enter the add health history information
+		    if (dataMap.get("AddHealthHistoryLink") != null) {
+			if (dataMap.get("AddHealthHistoryLink").get(0).equalsIgnoreCase("Yes")) {
+			    ManageHealthHistoryLibrary.addHealthHistoryOrAddHealthInsurance(browser, stepBean, dataMap);
+			}
+		    }
+		    if (isElementPresentVerification(NewRxAddtoCart_BTN, browser)) {
+			getElementByProperty(NewRxAddtoCart_BTN, browser).click();
+		    }
+		    else{
+			throw new Exception("Not able to click on Add to cart Button on New Prescriptions page.");
+		    }
+		}
+	    }// end of for loop
+
+	    if (!isElementPresentVerification(ShoppingCart_ELM, browser)) {
+		messagesMap.put("Shopping Cart", "Not able to Verify the Shopping Cart Page Heading");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify Rx Price in Shopping Cart.
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -08-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyShoppingCartRxCP(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PickupCashPrice_TXT = "//p[contains(@class,'retailPickupCashPrice ')]~XPATH";
+	String ShipCashPrice_TXT = "//p[contains(@class,'retailMailCashPrice')]~XPATH";
+	String SelectPickupInStore_RADIO = "input#pickupStore1~CSS";
+	String SelectShipTo_RADIO = "input#shipto1~CSS";
+	String NoCashPrice_TXT = "//p[contains(text(),'Price displayed when order is submitted, if available')]~XPATH";
+	String NocashPriceTextMsg = null, PickupCashprice = "noprice", ShipCashPrice = "noprice", CashpriceMesgBelowCart = null, CashpriceInsuranceMesgBelowCart = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> sharedProperties = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    sharedProperties = scenarioBean.getSharedStepProperties();
+	    if (sharedProperties == null) {
+		sharedProperties = new HashMap<String, String>();
+		scenarioBean.setSharedStepProperties(sharedProperties);
+	    }
+	    CashpriceInsuranceMesgBelowCart = getTestData("CommonData", "GenaralInfo", "CashpriceInsuranceMesgBelowCart", "Message");
+	    String CashpriceInsuranceMesgBelowCart_TXT = "//p[contains(text(),'" + CashpriceInsuranceMesgBelowCart + "')]~XPATH";
+	    CashpriceMesgBelowCart = getTestData("CommonData", "GenaralInfo", "CashpriceMesgBelowCart", "Message");
+	    String CashPriceBelowCartMsg_TXT = "//p[contains(text(),'" + CashpriceMesgBelowCart + "')]~XPATH";
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+		    if (!isElementPresentVerifyClick(SelectPickupInStore_RADIO, browser)) {
+			throw new Exception("Not able to click the select Pickup Radio button");
+		    }
+		} else if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+		    if (!isElementPresentVerifyClick(SelectShipTo_RADIO, browser)) {
+			throw new Exception("Not able to click the select Pickup Radio button");
+		    }
+		}
+		NocashPriceTextMsg = getTestData("CommonData", "GenaralInfo", "NocashPriceTextMsg", "Message");
+		if (dataMap.get("RxCashPrice").get(i).equalsIgnoreCase("Yes")) {
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+			String cashprice = getElementByProperty(PickupCashPrice_TXT, browser).getText();
+			PickupCashprice = cashprice;// new line
+			if (cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("cash price", "cash price is not displaying in shopping cart for pickup");
+			    status = WARNING;
+			}
+			sharedProperties.put("ShoppingCartCashPrice", cashprice);
+		    } else if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+			String cashprice = getElementByProperty(ShipCashPrice_TXT, browser).getText();
+			ShipCashPrice = cashprice;// new line
+			if (cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("cash price", "cash price is not displaying in shopping cart for ship");
+			    status = WARNING;
+			}
+			sharedProperties.put("ShoppingCartCashPrice", cashprice);
+		    }
+		} else if (dataMap.get("RxCashPrice").get(i).equalsIgnoreCase("No")) {
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Pickup")) {
+
+			if (!getElementByProperty(NoCashPrice_TXT, browser).isDisplayed()) {
+			    messagesMap.put("No cash price", "No cash price Message is not displaying in shopping cart");
+			    status = WARNING;
+			}
+			String cashprice = getElementByProperty(PickupCashPrice_TXT, browser).getText();
+			if (!cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("cash price", "cash price is displaying in shopping cart for pickup");
+			    status = WARNING;
+			}
+		    }
+		    if (dataMap.get("ShippingType").get(i).equalsIgnoreCase("Ship")) {
+			String cashprice = getElementByProperty(ShipCashPrice_TXT, browser).getText();
+			if (!cashprice.equals(NocashPriceTextMsg)) {
+			    messagesMap.put("No cash price", "No cash price Message is not displaying in shopping cart for ship");
+			    status = WARNING;
+			}
+		    }
+		}
+		if ((PickupCashprice != null || ShipCashPrice != null) && (PickupCashprice.contains("$") || ShipCashPrice.contains("$"))) {
+		    if (!isElementPresentVerification(CashPriceBelowCartMsg_TXT, browser)) {
+			messagesMap.put("cash price", "cash price message is not displaying in shopping cart");
+			status = WARNING;
+		    }
+		}
+
+		else {
+		    if (!isElementPresentVerification(CashpriceInsuranceMesgBelowCart_TXT, browser)) {
+			messagesMap.put("cash price", "No cash price message is not displaying in shopping cart");
+			status = WARNING;
+		    }
+		}
+
+	    }// for loop
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify Rx Price in Order Review Page.
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -19-MAR-2013
+     ************************************************************* 
+     */
+    public static void verifyReviewOrderRxCP(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String CashPrice_TXT = "//div[2]/div[4]/p~XPATH";
+	String CashPrice_SDDON_ELM = "//div[contains(@class,'shipMthdStrokeClr')]/div/div[4]/p~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String CartCashPrice = null, CashpriceMesgBelowRX = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("ShoppingCartCashPrice"))) {
+			    CartCashPrice = sharedProperties.get("ShoppingCartCashPrice");
+			}
+		    }
+		}
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CashPrice_TXT = CashPrice_SDDON_ELM;
+	    }
+	    CashpriceMesgBelowRX = getTestData("CommonData", "GenaralInfo", "CashpriceMesgBelowCart", "Message").trim();
+	    String CashpriceMesgBelowRX_TXT = "//p[contains(text(),'" + CashpriceMesgBelowRX + "')]~XPATH";
+
+	    if (dataMap.get("RxCashPrice").get(0).equals("Yes")) {
+		if (!getElementByProperty(CashPrice_TXT, browser).getText().contains("$")) {
+		    messagesMap.put("cash price", "cash price is not displaying in Order Reveiw Page");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(CashpriceMesgBelowRX_TXT, browser)) {
+		    messagesMap.put("cash price", "cash price message is not displaying in Review Page");
+		    status = WARNING;
+
+		}
+	    }
+	    if (dataMap.get("RxCashPrice").get(0).equals("No")) {
+		String NoCashPrice = getElementByProperty(CashPrice_TXT, browser).getText();
+		if (!NoCashPrice.equals("--")) {
+		    messagesMap.put("cash price", "cash price is not displaying as -- in Review Order");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("PriceMatch").get(0).equals("-")) {
+		if (dataMap.get("PriceMatch").get(0).equals("Yes")) {
+		    String CashPriceRevieworder = getElementByProperty(CashPrice_TXT, browser).getText();
+		    if (!CashPriceRevieworder.equals(CartCashPrice)) {
+			messagesMap.put("PriceMatch", "cash price Review order and shopping cart is not matching");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify Rx Price in Order Confirmation Page.
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -19-MAR0-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderConfirmationRxCP(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String CashPrice_TXT = "//div[2]/div[4]/p~XPATH";
+	String NoCashPrice_TXT = "//div[2]/div[4]/p/span~XPATH";
+	String CashPrice_SDDON_ELM = "//div[contains(@class,'shipMthdStrokeClr')]/div/div[3]/p~XPATH";
+	Map<String, String> sharedProperties = null;
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	String CartCashPrice = null, CashpriceMesgBelowRX = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("ShoppingCartCashPrice"))) {
+			    CartCashPrice = sharedProperties.get("ShoppingCartCashPrice");
+			}
+		    }
+		}
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CashPrice_TXT = CashPrice_SDDON_ELM;
+		NoCashPrice_TXT = CashPrice_SDDON_ELM;
+	    }
+	    CashpriceMesgBelowRX = getTestData("CommonData", "GenaralInfo", "CashpriceMesgBelowCart", "Message").trim();
+	    String CashpriceMesgBelowRX_TXT = "//p[contains(text(),'" + CashpriceMesgBelowRX + "')]~XPATH";
+
+	    if (dataMap.get("RxCashPrice").get(0).equals("Yes")) {
+		if (!getElementByProperty(CashPrice_TXT, browser).getText().contains("$")) {
+		    messagesMap.put("cash price", "cash price is not displaying in Order Confirmation Page");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(CashpriceMesgBelowRX_TXT, browser)) {
+		    messagesMap.put("cash price", "cash price message is not displaying in Review Page");
+		    status = WARNING;
+
+		}
+	    }
+	    if (dataMap.get("RxCashPrice").get(0).equals("No")) {
+		if (!isElementPresentVerification(NoCashPrice_TXT, browser)) {
+		    messagesMap.put("cash price", "cash price is displaying in Order Confirmation");
+		    status = WARNING;
+		}
+		String NoCashPrice = getElementByProperty(NoCashPrice_TXT, browser).getText();
+		if (!NoCashPrice.equals("--")) {
+		    messagesMap.put("cash price", "cash price is not displaying as -- in Order confirmation page");
+		    status = WARNING;
+		}
+	    }
+	    if (!dataMap.get("PriceMatch").get(0).equals("-")) {
+		if (dataMap.get("PriceMatch").get(0).equals("Yes")) {
+		    String CashPriceOrderConfirmation = getElementByProperty(CashPrice_TXT, browser).getText();
+		    if (!CashPriceOrderConfirmation.equals(CartCashPrice)) {
+			messagesMap.put("PriceMatch", "cash price Review order and shopping cart is not matching");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Change store in Pickup Location Page
+     * @author - Hasan javeed
+     * @Created -
+     * @Modified By - Thangaraj R, Ram (11/28) - Fixed the OR for BCT,
+     * 		      SARAVANAN M (12/04)- Changed the code to select store from store details page
+     * @Modified Date - 16-Oct-2013
+     ************************************************************* 
+     */
+    public static void changeStoreRx(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ChangeDetails_LNK = "//a[@title='change store' or contains(text(),'Find a store')]~XPATH";
+	String SelectAStoreInPickup_BTN = "img[alt='Select a Store']~CSS";
+	String FindNearWalgreens_TXT = "input[id='locator']~CSS";
+	String FindAStore_BTN = "input[id='findstore']~CSS";
+	String ChangeStore_SDDON_LNK = "a[title='change store']~CSS";
+	String ChangeStore_SDDOFF_LNK = "a[title='Change store']~CSS";
+	//	String StoreLocatorResults_TBL = "//div[@id='storeSearchResult']/div";
+	String SearchResultContent="//div[@id='storeSearchResult']/div[contains(@class,'resultContainer')]";
+	String SelectThisStore_BTN = "//a/img[@title='Select this store']";
+	String FindStoreNext_LNK = "a[title='Next']~CSS";
+	String Findastore_LNK = "//a[contains(text(),'Find a store')]~XPATH";
+	WebElement StoreLocatorContainer = null;
+	String cellMarker = null, Zipcode = null, StoreNumber = null, isStoreFound = "No";
+	String[] arrSetOfStores = null;
+	int StoreIncrementor = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		// modified to handle Change store functionality for Express
+		// Refill
+		if (isElementPresentVerification(ChangeStore_SDDON_LNK, browser)) {
+		    if (!isElementPresentVerifyClick(ChangeStore_SDDON_LNK, browser)) {
+			throw new Exception("Not able to click on Change Store link");
+		    }
+		} else if (isElementPresentVerification(ChangeStore_SDDOFF_LNK, browser)) {
+		    if (!isElementPresentVerifyClick(ChangeStore_SDDOFF_LNK, browser)) {
+			throw new Exception("Not able to click on Change Store link");
+		    }
+		} else if (isElementPresentVerification(Findastore_LNK, browser)) {
+		    if (!isElementPresentVerifyClick(Findastore_LNK, browser)) {
+			throw new Exception("Not able to click on find a store link");
+		    }
+		}
+	    } else {
+		if (isElementPresentVerifyClick(ChangeDetails_LNK, browser)) {
+		} else {
+		    isElementPresentVerifyClick(SelectAStoreInPickup_BTN, browser);
+		}
+	    }
+	    if (!clearAndEnterText(FindNearWalgreens_TXT, Zipcode, browser)) {
+		throw new Exception("Not able to enter Zipcode");
+	    }
+	    if (!isElementPresentVerifyClick(FindAStore_BTN, browser)) {
+		throw new Exception("Not able to click on the Find a Store Button");
+	    }
+	    do {
+		Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		// WebElement StoreLocatorTable =
+		// getElementByProperty(StoreLocatorResults_TBL, browser);
+		// List<WebElement> temp =
+		// StoreLocatorTable.findElements(By.xpath("div")); //
+		// StoreLocatorTable.findElements(By.cssSelector("div"));
+
+		List<WebElement> temp = browser.findElements(By.xpath(SearchResultContent));
+		// since we have results of places in alternate rows only like
+		// 1,3,5...
+		System.out.println("temp.size()="+temp.size());
+		for (int i = 1; i <= temp.size(); i++) {
+		    cellMarker = "[" + i + "]";
+		    if (!StoreNumber.contains(":")) {
+			// Did not find other Proper Element to verify instead
+			// of Thread.sleep.
+			Thread.sleep(1000);
+			String StoreResultsDivText = browser.findElement(By.xpath(SearchResultContent + cellMarker)).getText();
+
+			if (StoreResultsDivText.contains(StoreNumber)) {
+			    System.out.println("YES");
+			    StoreLocatorContainer = browser.findElement(By.xpath(SearchResultContent + cellMarker));
+			    browser.findElement(By.xpath(SearchResultContent + cellMarker + "//a[@title='Details and Directions']")).click();
+			    //RAM - 11/29 - Fixed for CBT - Chrome/IE doesn't work on click method
+			    try {
+				browser.findElement(By.xpath(SelectThisStore_BTN)).click();
+			    } catch (Exception e) {
+				browser.findElement(By.xpath(SelectThisStore_BTN)).sendKeys(Keys.ENTER);
+			    }
+
+			    isStoreFound = "Yes";
+			    break;
+			} else {
+			    isStoreFound = "No";
+			    continue;
+
+			}
+		    } else {
+			arrSetOfStores = StoreNumber.split(":");
+			for (StoreIncrementor = 0; StoreIncrementor < arrSetOfStores.length; StoreIncrementor++) {
+			    if (browser.findElement(By.xpath("//div[@id='storeSearchResult']/div" + cellMarker)).getText().contains(arrSetOfStores[StoreIncrementor])) {
+				StoreLocatorContainer = browser.findElement(By.xpath("//div[@id='storeSearchResult']/div" + cellMarker));
+				StoreLocatorContainer.findElement(By.cssSelector(SelectThisStore_BTN)).sendKeys(Keys.RETURN);
+				isStoreFound = "Yes";
+				break;
+			    } else {
+				isStoreFound = "No";
+				continue;
+			    }
+			}
+			if (isStoreFound.equalsIgnoreCase("Yes")) {
+			    break;
+			}
+		    }
+		}
+
+		if (isStoreFound.equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(FindStoreNext_LNK, browser)) {
+			getElementByProperty(FindStoreNext_LNK, browser).click();
+			isStoreFound = "No";
+			Thread.sleep(2000);
+		    } else {
+			// Done only to get out of the while loop when there are
+			// no more stores available, after searching through all
+			// displayed stores.
+			isStoreFound = "Yes";
+		    }
+		} else {
+		    break;
+		}
+	    } while (isStoreFound.equalsIgnoreCase("No"));
+
+	    if (isStoreFound.equalsIgnoreCase("Yes")) {
+		// Modified to Change store for express Refills . Modified by
+		// FYROSE Date 5-Mar-2013
+		if (dataMap.get("ExpressRx") != null) {
+		    if (dataMap.get("ExpressRx").get(0).equalsIgnoreCase("-")) {
+			// Dont do anything
+		    } else {
+			// get full Express refill review page table and store
+			// number should be present in the page
+			String StoreTable_TBL = "//form//div[@id='productSection']~XPATH";
+			if (isElementPresentVerification(StoreTable_TBL, browser)) {
+			    String StoreDiv_ELM = "div#storedetails~CSS";
+			    String StoreText = getElementByProperty(StoreDiv_ELM, browser).getText();
+			    if (!StoreText.toLowerCase().contains(StoreNumber.toLowerCase())) {
+				messagesMap.put("Changed Store - express rx", "Express Refill changed store is not displayed");
+				status = WARNING;
+			    }
+			} else {
+			    messagesMap.put("Changed Store - express rx", "Express Refill review page table not found");
+			    status = WARNING;
+			}
+
+		    }
+		} else {
+
+		    String SelectedStore = "//*[contains(text(),'" + StoreNumber + "')]~XPATH";
+		    if (!isElementPresentVerification(SelectedStore, browser)) {
+			messagesMap.put("selected store", "selected store is not present in pickup option page");
+			status = WARNING;
+			// throw new
+			// Exception("selected store is not present in pickup option page");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the Order details (Rx details, Pickup info,
+     *          Pyament section etc) in the Order Review Page
+     * @Input -
+     * @author - Siva Santhi Reddy
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -05-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderdetailsinReviewOrderPage(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String changePickupStore_LNK = "a[title='Change store or Pickup time']~CSS";
+	String StoreDetails_LNK = "a[title='Store Details']~CSS";
+	String PickupDetailsHeader_ELM = "//h4[contains(text(),'Pickup Details')]~XPATH";
+	String RightNavigationContainer_ELM = "//div[@class='mrgTop20px']/div[2]~XPATH";
+	String ShippingInformationHeader_ELM = "//h4[contains(text(),'Shipping Information')]~XPATH";
+	String ShippingInformationChange_LNK = "a[title='Change Shipping Information']~CSS";
+	String ShippingMethodChange_LNK = "a[title='Change Shipping Method']~CSS";
+	String ChangeBillingInfo_LNK = "a[title='Change Billing Information']~CSS";
+	String PaymentHeader_ELM = "//strong[contains(text(),'Payment')]~XPATH";
+	String BillingInfoHeader_ELM = "//strong[contains(text(),'Billing Information')]~XPATH";
+	String CheckoutRxType = null, StoreNumber = null, RxInformation = null, PickupInformation = null, ShippingInfo = null, PaymentSection = null;
+	WebElement PickupDetails_DIV = null;
+	String CheckoutRxType_ELM = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getSharedProperties = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Getting the share properties (Store Number which was assigned to
+	    // Hasmap in the select Pick date and time method)
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    StoreNumber = getSharedProperties.get("PickupStoreNumber");
+
+	    // Getting the info from Excel sheet for which sections needs to be
+	    // verified
+	    RxInformation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxInformation");
+	    CheckoutRxType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CheckoutRxType");
+	    PickupInformation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PickupInfoSection");
+	    ShippingInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingInfoSection");
+	    PaymentSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PaymentSummarySection");
+
+	    // verifying Rx checkout Type interaction i.e. New, Transfer,
+	    // Refill(If all needs to be verified in single iteration, please
+	    // differentiate with comma(,).
+	    if (RxInformation.equalsIgnoreCase("Yes")) {
+		String[] TypeofRxcheckout = CheckoutRxType.split(",");
+		for (int i = 0; i < TypeofRxcheckout.length; i++) {
+		    CheckoutRxType_ELM = "//span[contains(text(),'" + TypeofRxcheckout[i] + "')]~XPATH";
+		    if (!isElementPresentVerification(CheckoutRxType_ELM, browser)) {
+			messagesMap.put(TypeofRxcheckout[i] + "-Checkout", "- Rx chekcout type is missing in the Review Order Page");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (PickupInformation.equalsIgnoreCase("Yes")) {
+		// verifying Change Pickup Store Link
+		if (!isElementPresentVerification(changePickupStore_LNK, browser)) {
+		    messagesMap.put("Change Pickup Store", "Link is missing in Pickup Details section");
+		    status = WARNING;
+		}
+		// Veriying Store details link
+		if (!isElementPresentVerification(StoreDetails_LNK, browser)) {
+		    messagesMap.put("Store Details", "Link is missing in Pickup Details section");
+		    status = WARNING;
+		}
+		// verifying store Number in Pickup details DIV. (Divs are
+		// dynamically changing so finding the right div)
+		List<WebElement> RightNavDivisions = getElementByProperty(RightNavigationContainer_ELM, browser).findElements(By.xpath("//div[@class='mrgTop20px']/div[2]/div"));
+		for (int i = 0; i < RightNavDivisions.size(); i++) {
+		    if (RightNavDivisions.get(i).getText().contains("Pickup Details")) {
+			PickupDetails_DIV = RightNavDivisions.get(i);
+			break;
+		    }
+		}
+		if (!isElementPresentVerification(PickupDetailsHeader_ELM, browser)) {
+		    messagesMap.put("Pickup Section Header", "Pickup Section Header is missing");
+		    status = WARNING;
+		}
+		// verifying store Number
+		if (!PickupDetails_DIV.getText().contains(StoreNumber)) {
+		    messagesMap.put("Store Number", "Store Number is wrongly getting displayed in Pickup details section");
+		    status = WARNING;
+		}
+	    }
+	    if (ShippingInfo.equalsIgnoreCase("Yes")) {
+		// verifying shipping info header
+		if (!isElementPresentVerification(ShippingInformationHeader_ELM, browser)) {
+		    messagesMap.put("Shipping Info", "Shipping Info Header Missing");
+		    status = WARNING;
+		}
+		// verifying shipping info change link
+		if (!isElementPresentVerification(ShippingInformationChange_LNK, browser)) {
+		    messagesMap.put("Shipping Info Change link", "Link is missing");
+		    status = WARNING;
+		}
+		// verifying shipping method change link
+		if (!isElementPresentVerification(ShippingMethodChange_LNK, browser)) {
+		    messagesMap.put("Shipping Method Change link", "Link is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (PaymentSection.equalsIgnoreCase("Yes")) {
+		// verifying Change Billing Info link
+		if (!isElementPresentVerification(ChangeBillingInfo_LNK, browser)) {
+		    messagesMap.put("Change Billing Info link", "Link is missing");
+		    status = WARNING;
+		}
+		// Verifying Payment Header section
+		if (!isElementPresentVerification(PaymentHeader_ELM, browser)) {
+		    messagesMap.put("Payment Section", "Payment Section Header is missing");
+		    status = WARNING;
+		}
+		// Verifying Billing Info Header
+		if (!isElementPresentVerification(BillingInfoHeader_ELM, browser)) {
+		    messagesMap.put("Billing Inof Section", "Billing Info Section Header is missing");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the Order details (Rx details, Pickup info,
+     *          Pyament section etc) in the Order Confirmation Page and Saves
+     *          the Order IDs in Excel
+     * @Input -
+     * @author - Siva Santhi Reddy
+     * @Created -26-DEC-12
+     * @Modified By -Siva
+     * @Modified Date -05-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyOrderdetailsinOrderConfirmationPage(EventFiringWebDriver browser, StepBean stepBean, ScenarioBean scenarioBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PickupDetailsHeader_ELM = "//h4[contains(text(),'Pickup Details')]~XPATH";
+	String RightNavigationContainer_ELM = "//div[@class='mrgTop20px']/div[2]~XPATH";
+	String ShippingInformationHeader_ELM = "//h4[contains(text(),'Shipping Information')]~XPATH";
+	String PaymentHeader_ELM = "//strong[contains(text(),'Payment')]~XPATH";
+	String BillingInfoHeader_ELM = "//strong[contains(text(),'Billing Information')]~XPATH";
+	String CheckoutRxType = null, StoreNumber = null, RxInformation = null, PickupInformation = null, ShippingInfo = null, PaymentSection = null, OrderType = null;
+	WebElement PickupDetails_DIV = null;
+	String CheckoutRxType_ELM = null;
+	Map<String, String> messagesMap = null;
+	Map<String, String> getSharedProperties = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Getting the share properties (Store Number which was assigned to
+	    // Hasmap in the select Pick date and time method)
+	    getSharedProperties = scenarioBean.getSharedStepProperties();
+	    StoreNumber = getSharedProperties.get("PickupStoreNumber");
+
+	    // Getting the info from Excel sheet for which sections needs to be
+	    // verified
+	    RxInformation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxInformation");
+	    CheckoutRxType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CheckoutRxType");
+	    PickupInformation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PickupInfoSection");
+	    ShippingInfo = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingInfoSection");
+	    PaymentSection = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PaymentSummarySection");
+	    OrderType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderType");
+
+	    // get Order details(will be saved in the Same Excel sheet Row)
+	    if (!CheckoutLibrary.getOrderIDs(browser, OrderType, dataMap)) {
+		if (OrderType != null && OrderType.equalsIgnoreCase("ShipToCustomer")) {
+		    messagesMap.put("Order IDs:", "Ship To Home Order are not getting generated in 'W' Series");
+		    status = WARNING;
+		}else {
+		    messagesMap.put("Order IDs:", "Orde IDs are Generating in Z Series");
+		    status = WARNING;
+		}
+	    }
+	    // verifying Rx checkout Type interaction i.e. New, Transfer,
+	    // Refill(If all needs to be verified in single iteration, please
+	    // differentiate with comma(,).
+	    if (RxInformation.equalsIgnoreCase("Yes")) {
+		String[] TypeofRxcheckout = CheckoutRxType.split(",");
+		for (int i = 0; i < TypeofRxcheckout.length; i++) {
+		    CheckoutRxType_ELM = "//span[contains(text(),'" + TypeofRxcheckout[i] + "')]~XPATH";
+		    if (!isElementPresentVerification(CheckoutRxType_ELM, browser)) {
+			messagesMap.put(TypeofRxcheckout[i] + "-Checkout", "- Rx chekcout type is missing in the Review Order Page");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (PickupInformation.equalsIgnoreCase("Yes")) {
+		// verifying Pickup Details Header to make sure Pickup section
+		// is displaying or not
+		List<WebElement> RightNavDivisions = getElementByProperty(RightNavigationContainer_ELM, browser).findElements(By.xpath("//div[@class='mrgTop20px']/div[2]/div"));
+		for (int i = 0; i < RightNavDivisions.size(); i++) {
+		    if (RightNavDivisions.get(i).getText().contains("Pickup Details")) {
+			PickupDetails_DIV = RightNavDivisions.get(i);
+			break;
+		    }
+		}
+		// Verifying Pickup Details Header section
+		if (!isElementPresentVerification(PickupDetailsHeader_ELM, browser)) {
+		    messagesMap.put("Pickup Section Header", "Pickup Section Header is missing");
+		    status = WARNING;
+		}
+		// verifying store Number
+		if (!PickupDetails_DIV.getText().contains(StoreNumber)) {
+		    messagesMap.put("Store Number", "Store Number is wrongly getting displayed in Pickup details section");
+		    status = WARNING;
+		}
+	    }
+	    if (ShippingInfo.equalsIgnoreCase("Yes")) {
+		// verifying shipping info header
+		if (!isElementPresentVerification(ShippingInformationHeader_ELM, browser)) {
+		    messagesMap.put("Shipping Info", "Shipping Info Header/section Missing");
+		    status = WARNING;
+		}
+	    }
+	    if (PaymentSection.equalsIgnoreCase("Yes")) {
+		// Verifying Payment Header section
+		if (!isElementPresentVerification(PaymentHeader_ELM, browser)) {
+		    messagesMap.put("Payment Section", "Payment Section Header is missing");
+		    status = WARNING;
+		}
+		// Verifying Billing Info Header
+		if (!isElementPresentVerification(BillingInfoHeader_ELM, browser)) {
+		    messagesMap.put("Billing Inof Section", "Billing Info Section Header is missing");
+		    status = WARNING;
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Verify Two day free shipping in shopping cart,
+     *          shipping method, review order and order confirmation page when
+     *          SDD is ON and OFF
+     * @author - Hasan javeed
+     * @Created - 13-Sep-13
+     * @Modified By -Ygnash
+     * @Modified Date -04-APR-2013
+     ************************************************************* 
+     */
+    public static void verifyFreeTwoDayShippingMessage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String FreeTwodayShippingSC_TXT = "//*[contains(text(),'Day Shipping')]~XPATH";
+	String StandardSM_RADIO = "//input[contains(@id,'shippingspeedradio_standard')]~XPATH";
+	String FreeTwodayShippingSM_TXT = "//strong[contains(text(),'2-Day Shipping')]~XPATH";
+	String ExpeditedPriceSM_TXT = "//strong[contains(@class,'strikeprice')]~XPATH";
+	String ExpeditedStrikedPriceSM_TXT = "//span[contains(@class,'strikeThrough')]~XPATH";
+	String TwoDayShippingFreeSM_TXT = "//div[2]/div/strong/span~XPATH";
+	String ExpeditedSM_RADIO = "//input[contains(@id,'shippingspeedradio_expedited')]~XPATH";
+	String ExpeditedMessageSM_TXT = "//label[@for='shippingspeedradio_expedited']~XPATH";
+	String ShipMethodMessage = "", ShipMethodPrice = "";
+	String ShipMethodFreeNoteMessage = "";
+	String ShipMethodActualPrice = "";
+	String shipMethodDeliveryMessage = "";
+	String ItemArriveTextMessage_ELM = "//*[contains(text(),'after processing')]~XPATH";
+	String ShippingCostMessage_ELM = "//*[contains(@class,'stdShipping')]~XPATH";
+	String ShippingCostOrderConfirmationMessage_ELM = "//*[@class='shippingTextSdd']~XPATH";
+	String ShipMethodDeliveryNoteMessage_ELM = "//div[2]/div[contains(@class,'shippingInfoSmallText')]~XPATH";
+	String[] ExpeditedShipMethodTextMessage = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ShippingMethodExpeditedMsg = getTestData("CommonData", "GenaralInfo", "ShippingMethodExpeditedMsg", "Message");
+	    String StandardMessage = getTestData("CommonData", "GenaralInfo", "StandardMessage", "Message");
+	    String ExpeditedMessage = getTestData("CommonData", "GenaralInfo", "ExpeditedMessage", "Message");
+	    String OvernightMessage = getTestData("CommonData", "GenaralInfo", "OvernightMessage", "Message");
+	    String StandardShippingPrice = getTestData("CommonData", "GenaralInfo", "StandardShippingPrice", "Message");
+	    String ExpeditedRetailPrice = getTestData("CommonData", "GenaralInfo", "ExpeditedRetailPrice", "Message");
+	    String ExpeditedMailplanPrice = getTestData("CommonData", "GenaralInfo", "ExpeditedMailplanPrice", "Message");
+	    String TwodayShippingPrice = getTestData("CommonData", "GenaralInfo", "TwodayShippingPrice", "Message");
+	    String OvernightShippingPrice = getTestData("CommonData", "GenaralInfo", "OvernightShippingPrice", "Message");
+
+	    // Shopping Cart logic
+
+	    if (dataMap.get("TargetPage").get(0).equals("Shopping Cart")) {
+
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    List<WebElement> DeliveryoptionsDivs = browser.findElements(By.xpath("//div[@id='deliveryoptionsJSversion']/div"));
+		    FreeTwodayShippingSC_TXT = "//div[@id='deliveryoptionsJSversion']/div[" + DeliveryoptionsDivs.size() + "]/div[2]/p[2]";
+		}
+		if (dataMap.get("FreeTwoDay").get(0).equals("Yes")) {
+		    if (isElementPresentVerification(FreeTwodayShippingSC_TXT, browser)) {
+			if (!getElementByProperty(FreeTwodayShippingSC_TXT, browser).getText().trim().equalsIgnoreCase("FREE 2–Day Shipping")) {
+			    messagesMap.put("Free Two Day Shipping", "Free 2-Day Shipping message is wrongly getting displayed");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Two Day Shipping", "Object is missing");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("No")) {
+		    if (isElementPresentVerification(FreeTwodayShippingSC_TXT, browser)) {
+			messagesMap.put("Two Day Shipping", "Free two day shipping is displayed in Shopping cart");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // Shipping Method logic
+	    if (dataMap.get("TargetPage").get(0).equals("Shipping Method")) {
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    ExpeditedShipMethodTextMessage = getElementByProperty(ExpeditedMessageSM_TXT, browser).getText().split(" ");
+		    ShipMethodFreeNoteMessage = ExpeditedShipMethodTextMessage[ExpeditedShipMethodTextMessage.length - 1].trim();
+		    shipMethodDeliveryMessage = getElementByProperty(ShipMethodDeliveryNoteMessage_ELM, browser).getText();
+		} else {
+		    ShipMethodFreeNoteMessage = getElementByProperty(TwoDayShippingFreeSM_TXT, browser).getText().trim();
+		    shipMethodDeliveryMessage = getElementByProperty(ExpeditedMessageSM_TXT, browser).getText().trim();
+		}
+		if (dataMap.get("FreeTwoDay").get(0).equals("Yes")) {
+		    if (!getElementByProperty(ExpeditedSM_RADIO, browser).isSelected()) {
+			throw new Exception("Expedited shipping is not selected by default");
+		    }
+		    if (!isElementPresentVerification(FreeTwodayShippingSM_TXT, browser)) {
+			messagesMap.put("Two Day Shipping", "Free Two day message is not displayed");
+			status = WARNING;
+		    }
+		    if (!shipMethodDeliveryMessage.contains(ShippingMethodExpeditedMsg)) {
+			messagesMap.put("Two Day Shipping", "Expedited message is not displaying correctly - BCC configurable");
+			status = WARNING;
+		    }
+		    if (SDDFlag.equalsIgnoreCase("ON")) {
+			ShipMethodActualPrice = ExpeditedShipMethodTextMessage[ExpeditedShipMethodTextMessage.length - 2].trim();
+		    } else {
+			ShipMethodActualPrice = getElementByProperty(ExpeditedPriceSM_TXT, browser).getText().trim();
+		    }
+		    if (ShipMethodActualPrice.contains("$12.95") && ShipMethodFreeNoteMessage.contains("FREE")) {
+			if (!isElementPresentVerification(ExpeditedStrikedPriceSM_TXT, browser)) {
+			    messagesMap.put("Two Day Shipping", "$12.95 is not striked out in Shipping Method");
+			    status = WARNING;
+			}
+		    } else {
+			messagesMap.put("Two Day Shipping", "$12.95 and FREE is not displayed in Shipping Method");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("No")) {
+		    if (!getElementByProperty(StandardSM_RADIO, browser).isSelected()) {
+			throw new Exception("Standard shipping is not selected by default");
+		    }
+		    if (!isElementPresentVerifyClick(ExpeditedSM_RADIO, browser)) {
+			throw new Exception("Unable to select Expedited shipping method");
+		    }
+		    if (SDDFlag.equalsIgnoreCase("ON")) {
+			ExpeditedShipMethodTextMessage = getElementByProperty(ExpeditedMessageSM_TXT, browser).getText().split(" ");
+			ShipMethodActualPrice = ExpeditedShipMethodTextMessage[ExpeditedShipMethodTextMessage.length - 1].trim();
+		    } else {
+			ShipMethodActualPrice = getElementByProperty(ExpeditedPriceSM_TXT, browser).getText().trim();
+		    }
+		    if (!ShipMethodActualPrice.contains("$10.95")) {
+			messagesMap.put("Two Day Shipping", "$10.95 is not displayed in Shipping Method");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("Disabled")) {
+		    if (!getElementByProperty(ExpeditedSM_RADIO, browser).getAttribute("disabled").equalsIgnoreCase("true")) {
+			throw new Exception("Expedited shipping is not Disabled");
+		    }
+		}
+	    }
+	    // Review Order logic
+	    if (dataMap.get("TargetPage").get(0).equals("Review Order")) {
+
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    ShipMethodMessage = getElementByProperty(ItemArriveTextMessage_ELM, browser).getText();
+		    ShipMethodPrice = getElementByProperty(ShippingCostMessage_ELM, browser).getText();
+		} else {
+		    List<WebElement> AvailableDivisions = getElementByProperty("//div[@class='th_652']", browser).findElements(By.tagName("strong"));
+		    int noofElementsFound = 0;
+		    for (int i = 0; i < AvailableDivisions.size(); i++) {
+			if (AvailableDivisions.get(i).getText().contains("after processing")) {
+			    ShipMethodMessage = AvailableDivisions.get(i).getText();
+			    noofElementsFound = 1;
+			} else if (AvailableDivisions.get(i).getText().contains("Shipping:")) {
+			    ShipMethodPrice = AvailableDivisions.get(i).getText();
+			    noofElementsFound = noofElementsFound + 1;
+			}
+			if (noofElementsFound == 2) {
+			    break;
+			}
+		    }
+		}
+		if ((dataMap.get("FreeTwoDay").get(0).equals("Yes") || dataMap.get("FreeTwoDay").get(0).equals("No")) && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("standard")) {
+		    if (!ShipMethodMessage.contains(StandardMessage)) {
+			messagesMap.put("Two Day Shipping", "Standard arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(StandardShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Standard shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("Yes") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Expedited arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(TwodayShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Two Day shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("No") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Expedited arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(ExpeditedRetailPrice)) {
+			messagesMap.put("Two Day Shipping", "Expedited shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		} else if ((dataMap.get("FreeTwoDay").get(0).equals("Yes") || dataMap.get("FreeTwoDay").get(0).equals("No")) && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("overnight")) {
+		    if (!ShipMethodMessage.contains(OvernightMessage)) {
+			messagesMap.put("Two Day Shipping", "Overnight arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(OvernightShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Overnight shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("MailPlan") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Mail plan Expedited arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(ExpeditedMailplanPrice)) {
+			messagesMap.put("Two Day Shipping", "Mail plan Expedited shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // Order Confirmation logic
+	    if (dataMap.get("TargetPage").get(0).equals("Order Confirmation")) {
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    ShipMethodMessage = getElementByProperty(ItemArriveTextMessage_ELM, browser).getText();
+		    ShipMethodPrice = getElementByProperty(ShippingCostOrderConfirmationMessage_ELM, browser).getText();
+		} else {
+		    List<WebElement> AvailableDivisions = getElementByProperty("//div[@class='th_652']", browser).findElements(By.tagName("strong"));
+		    int noofElementsFound = 0;
+		    for (int i = 0; i < AvailableDivisions.size(); i++) {
+			if (AvailableDivisions.get(i).getText().contains("after processing")) {
+			    ShipMethodMessage = AvailableDivisions.get(i).getText();
+			    noofElementsFound = 1;
+			} else if (AvailableDivisions.get(i).getText().contains("Shipping:")) {
+			    ShipMethodPrice = AvailableDivisions.get(i).getText();
+			    noofElementsFound = noofElementsFound + 1;
+			    ShipMethodPrice = ShipMethodPrice + " " + AvailableDivisions.get(i + 2).getText();
+			}
+			if (noofElementsFound == 2) {
+			    break;
+			}
+		    }
+		}
+		if ((dataMap.get("FreeTwoDay").get(0).equals("Yes") || dataMap.get("FreeTwoDay").get(0).equals("No") || dataMap.get("FreeTwoDay").get(0).equals("MailPlan"))
+			&& dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("standard")) {
+		    if (!ShipMethodMessage.contains(StandardMessage)) {
+			messagesMap.put("Two Day Shipping", "Standard arrive message is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(StandardShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Standard shipping price is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("Yes") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Expedited arrive message is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(TwodayShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Two Day shipping price is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("No") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Expedited arrive message is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(ExpeditedRetailPrice)) {
+			messagesMap.put("Two Day Shipping", "Expedited shipping price is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		} else if ((dataMap.get("FreeTwoDay").get(0).equals("Yes") || dataMap.get("FreeTwoDay").get(0).equals("No") || dataMap.get("FreeTwoDay").get(0).equals("MailPlan"))
+			&& dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("overnight")) {
+		    if (!ShipMethodMessage.contains(OvernightMessage)) {
+			messagesMap.put("Two Day Shipping", "Overnight arrive message is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(OvernightShippingPrice)) {
+			messagesMap.put("Two Day Shipping", "Overnight shipping price is displayed Wrong in Order confirmation page");
+			status = WARNING;
+		    }
+		} else if (dataMap.get("FreeTwoDay").get(0).equals("MailPlan") && dataMap.get("ShippingMethod").get(0).equalsIgnoreCase("Expedited")) {
+		    if (!ShipMethodMessage.contains(ExpeditedMessage)) {
+			messagesMap.put("Two Day Shipping", "Mail plan Expedited arrive message is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		    if (!ShipMethodPrice.equals(ExpeditedMailplanPrice)) {
+			messagesMap.put("Two Day Shipping", "Mail plan Expedited shipping price is displayed Wrong in Review order page");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to change the pick up time and check the same in review
+     *          order page
+     * 
+     * @Input -
+     * @author - Thangaraj R
+     * @Created -8-March-13
+     * @Modified By -Thangaraj R
+     * @Modified Date -3-4-2013
+     ************************************************************* 
+     */
+    public static void changePickUptimeFromReviewOrder(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PickUpLocation_Heading = "//h2[contains(text(),'Pickup details')]~XPATH";
+	String PickUpoptionsPageTime_LST = "select#pickupTime~CSS";
+	String Continue_BTN = "input[title*='Continue']~CSS";
+	String StoreDetails_LNK = "a[title='Store Details']~CSS";
+	String Changstore_LNK = "a[title='Change store or Pickup time']~CSS";
+	String PickupTimeReviewOrder_TXT = "//strong[contains(text(),'AM')]~XPATH";
+	String HelpSection_TXT = "//strong[contains(text(),'chat')]~XPATH";
+	String VerifySign_IMG = "img[alt='Norton Secured']~CSS";
+	String StoreDetails_TXT = "//strong[contains(text(),'Walgreens Pharmacy')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // verify the UI in review order page
+	    /* if (!isElementPresentVerification(StoreDetails_LNK, browser)) {
+		messagesMap.put("Review order", "Store Details link is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(HelpSection_TXT, browser)) {
+		messagesMap.put("Review order", "HelpSection text is not displayed");
+		status = WARNING;
+	    }*/
+	    if (!isElementPresentVerification(VerifySign_IMG, browser)) {
+		messagesMap.put("Review order", "VerifySign_IMG is not displayed");
+		status = WARNING;
+	    }
+	    /* if (!isElementPresentVerification(StoreDetails_TXT, browser)) {
+		messagesMap.put("Review order", "Store Details is not displayed");
+		status = WARNING;
+	    }*/
+	    if (!isElementPresentVerifyClick(Changstore_LNK, browser)) {
+		throw new Exception("Not able to click on Change store Button");
+	    }
+	    if (!isElementPresentVerification(PickUpLocation_Heading, browser)) {
+		messagesMap.put("Pick up location", "Pick up,location page is not displayed");
+		status = WARNING;
+	    }
+	    String PickUpTime = null;
+	    PickUpTime = dataMap.get("PickUpTime").get(0).trim();
+	    new Select(getElementByProperty(PickUpoptionsPageTime_LST, browser)).selectByVisibleText(PickUpTime);
+	    Thread.sleep(5000L); // RAM
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		throw new Exception("Not able to click on continue Button");
+	    }
+	    if (!getElementByProperty(PickupTimeReviewOrder_TXT, browser).getText().contains(dataMap.get("PickUpTime").get(0))) {
+		messagesMap.put("Pick Up time", "Pick up time changed in review order");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the comment box and the tex comparision
+     * 
+     * @Input -
+     * @author - Hasan Javeed
+     * @Created -19-June-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyCommentBoxRxPickupPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CommentBox_TXT = "//textarea[contains(@id,'txtarea')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String CommentText = getTestData("CommonData", "GenaralInfo", "PickupCommentText", "Message");
+	    if (dataMap.get("CommentBox").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(CommentBox_TXT, browser)) {
+		    messagesMap.put("Rx Pickup Location", "Comment Box is not displayed");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("CommentBox").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(CommentBox_TXT, browser)) {
+		    messagesMap.put("Rx Pickup Location", "Comment Box is displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("EnterComments").get(0).equals("Yes")) {
+		if (!clearAndEnterText(CommentBox_TXT, CommentText, browser)) {
+		    messagesMap.put("Rx Pickup Location", "Unable to enter text in Comment Box");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("CompareText").get(0).equalsIgnoreCase("Yes")) {
+		String CommentBoxText = getElementByProperty(CommentBox_TXT, browser).getAttribute("value").trim();
+		if (!CommentText.equals(CommentBoxText)) {
+		    messagesMap.put("Rx Pickup Location", "Text in Comment Box Doesnot match");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add multiple Transfer Prescriptions to cart
+     * @author - SARAVANAN M
+     * @Created -26-JUNE-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addMultipleTransferRxs(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Pharmacy_ANCHOR = "a.menu_Pharmacy~CSS";
+	String TransferPrescription_ANCHOR = "//ul[@class='link-arrow-list']/li/a[@title='Transfer Prescriptions']~XPATH";
+	String TransferPharmacyPhonenumber_TXT = "input#pharmacyphone~CSS";
+	String TransferPharmacyName_TXT = "input#pharmacyname~CSS";
+	String TransferPrescriptionName_TXT = "input#prescriptionName[FIELD]~CSS";
+	String TransferPrescriptionNumber_TXT = "input#prescriptionNumber[FIELD]~CSS";
+	String SelectFamilyMember_LST = "Select#selectMemberView[FIELD]~CSS";
+	String Transferaddtocart_BTN = "//input[@title='Add to Cart']~XPATH";
+	String NinetyDay_CHK = "*[id='flag90Day']~CSS";
+	String ShoppingCart_Heading = "//*[contains(text(),'Shopping Cart')]~XPATH";
+	String AddMorePrescription_LNK = "a#add_prescription~CSS";
+	String RemoveThisPrescription_LNK = "a#remove_prescription~CSS";
+	String RxSearchList_LST = "//ul[@id='searchResultsBox_transfer1']/li/a~XPATH";
+	boolean isOnTranferPrescriptionPage = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		// Handling transfer rx from left navigation,Pharmacy tour and
+		// for newely registered user
+		if (!isOnTranferPrescriptionPage) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_ANCHOR, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(TransferPrescription_ANCHOR, browser)) {
+			    getElementByProperty(TransferPrescription_ANCHOR, browser).sendKeys(Keys.RETURN);
+			}
+			isOnTranferPrescriptionPage = isElementPresentVerification(TransferPharmacyPhonenumber_TXT, browser);
+		    } else {
+			messagesMap.put("Transfer Prescriptions page", "Not able to Navigate to Transfer Prescriptions page by clicking on Pharmacy Tab. ");
+			status = WARNING;
+		    }
+		    if (!isOnTranferPrescriptionPage) {
+			String tranferPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + "pharmacy/order/transferprescription.jsp";
+			getUrl(browser, tranferPrescriptionURL);
+			isOnTranferPrescriptionPage = isElementPresentVerification(TransferPharmacyPhonenumber_TXT, browser);
+		    }
+		}
+		if (!isOnTranferPrescriptionPage) {
+		    throw new Exception("Not able to Navigate to Transfer Prescriptions page.");
+		} else {
+
+		    if (!clearAndEnterText(TransferPharmacyName_TXT, dataMap.get("PharmacyName").get(i), browser)) {
+			messagesMap.put("Pharmacy Name", "Not able to Enter Pharmacy Name in the Text Field.");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(TransferPharmacyPhonenumber_TXT, dataMap.get("PharmacyPhone").get(i), browser)) {
+			messagesMap.put("Pharmacy Phone", "Not able to Enter Pharmacy Phone in the Text Field.");
+			status = WARNING;
+		    }
+
+		    int NoOfRxFields = i + 1;
+		    if (i > 0) {
+			if (!isElementPresentVerifyClick(AddMorePrescription_LNK, browser)) {
+			    throw new Exception("Not able to add one more prescription field");
+			}
+		    }
+		    if (!dataMap.get("FamilyMemberOption").get(i).equals("-")) {
+			new Select(getElementByProperty(SelectFamilyMember_LST.replace("[FIELD]", Integer.toString(NoOfRxFields)), browser)).selectByIndex(Integer.parseInt(dataMap.get(
+				"FamilyMemberOption").get(i)));
+		    }
+		    if (dataMap.containsKey("SelectRxFromList") && dataMap.get("SelectRxFromList").get(i).equalsIgnoreCase("Yes")) {
+			if (clearAndEnterText(TransferPrescriptionName_TXT.replace("[FIELD]", Integer.toString(NoOfRxFields)), dataMap.get("PrescriptionName").get(i), browser)) {
+			    if (!isElementPresentVerifyClick(RxSearchList_LST, browser)) {
+				messagesMap.put("Prescription Name", "Not able to select the Rx from the Suggestion list.");
+				status = WARNING;
+			    }
+			}
+		    } else {
+			if (!clearAndEnterText(TransferPrescriptionName_TXT.replace("[FIELD]", Integer.toString(NoOfRxFields)), dataMap.get("PrescriptionName").get(i), browser)) {
+			    messagesMap.put("Prescription Name", "Not able to Enter Prescription Name in the Text Field.");
+			    status = WARNING;
+			}
+		    }
+		    if (!clearAndEnterText(TransferPrescriptionNumber_TXT.replace("[FIELD]", Integer.toString(NoOfRxFields)), dataMap.get("PrescriptionNumber").get(i), browser)) {
+			messagesMap.put("Prescription Number", "Not able to Enter Prescription Number in the Text Field.");
+			status = WARNING;
+		    }
+		    if (totalRowCount == NoOfRxFields) {
+			if (dataMap.containsKey("RemoveRx") && dataMap.get("RemoveRx").get(i).equalsIgnoreCase("Yes")) {
+			    if (isElementPresentVerification(TransferPrescriptionName_TXT.replace("[FIELD]", Integer.toString(NoOfRxFields)), browser)) {
+				if (!isElementPresentVerifyClick(RemoveThisPrescription_LNK, browser)) {
+				    if (isElementPresentVerification(TransferPrescriptionName_TXT.replace("[FIELD]", Integer.toString(NoOfRxFields)), browser)) {
+					messagesMap.put("Remove Prescription", "Not able to Remove this Prescription");
+					status = WARNING;
+				    }
+				}
+			    }
+			}
+
+			if ("yes".equals(dataMap.get("isNinetyDay").get(i))) {
+			    if (!isElementPresentVerifyClick(NinetyDay_CHK, browser)) {
+				messagesMap.put("Ninety day prescription CheckBox", "Not able to Check the Ninety day prescription CheckBox.");
+				status = WARNING;
+			    }
+			}
+			// Enter the add health history information
+			if (dataMap.get("AddHealthHistoryLink") != null) {
+			    if (dataMap.get("AddHealthHistoryLink").get(0).equalsIgnoreCase("Yes")) {
+				ManageHealthHistoryLibrary.addHealthHistoryOrAddHealthInsurance(browser, stepBean, dataMap);
+			    }
+			}
+			if (isElementPresentVerification(Transferaddtocart_BTN, browser)) {
+			    getElementByProperty(Transferaddtocart_BTN, browser).sendKeys(Keys.RETURN);
+			} else {
+			    throw new Exception("Not able to verify Add to cart Button on Transfer Prescriptions page.");
+			}
+			if (!isElementPresentVerification(ShoppingCart_Heading, browser)) {
+			    messagesMap.put("Shopping Cart Page", "Not able to Verify the Shopping Cart Page Heading after adding a Transfer Prescription to the cart");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

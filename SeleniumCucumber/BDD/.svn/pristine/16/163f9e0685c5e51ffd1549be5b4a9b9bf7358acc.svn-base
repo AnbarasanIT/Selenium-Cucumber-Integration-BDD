@@ -1,0 +1,542 @@
+@checkout @pharmacyCheckout @AutoRefillRxValidations
+
+Feature: Customer Setup,Cancels AutoRefills and Prescriptions Related Scenarios
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-1
+
+Scenario: Admin member setup Auto Refill, Setup more AutoRefills By selecting Ship to me as Deliver Option
+
+Given  "RX-SetupandCheckoutRx-1" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-1	|
+
+Given "RX-SetupandCheckoutRx-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| Pharmacy	     | login     | AutoRefilluser1	  |
+
+Then "RX-SetupandCheckoutRx-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+And "RX-SetupandCheckoutRx-1" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            | 
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	CANCELALL            |
+
+And "RX-SetupandCheckoutRx-1" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN          | RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	setupautorefill          |     Rx1  | 
+
+And "RX-SetupandCheckoutRx-1" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	SHIPTOME            |
+
+And "RX-SetupandCheckoutRx-1" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        | AutoRefillBTN             |RxField   |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	Setupmoreautorefill      |Rx3       |
+
+And "RX-SetupandCheckoutRx-1" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	SHIPTOME            |
+
+And "RX-SetupandCheckoutRx-1" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            | 
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-1      |	SINGLE               |
+
+Then "RX-SetupandCheckoutRx-1" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-1	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-2
+
+Scenario: Member member setup Auto Refill By selecting Last Pickup Option
+
+Given  "RX-SetupandCheckoutRx-2" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-2	|
+
+Given "RX-SetupandCheckoutRx-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| Pharmacy	     | login     | AutoRefilluser1	  |
+
+Then "RX-SetupandCheckoutRx-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+And "RX-SetupandCheckoutRx-2" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption           |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	CANCELALL              |
+
+And "RX-SetupandCheckoutRx-2" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN          |RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	setupautorefill        |Rx1      |
+
+And "RX-SetupandCheckoutRx-2" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	SHIPTOME            |
+
+
+And "RX-SetupandCheckoutRx-2" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN              |  RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	Setupmoreautorefill        |   Rx3     |
+
+And "RX-SetupandCheckoutRx-2" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | Submit  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	PICKUP              | No      |
+
+And "RX-SetupandCheckoutRx-2" Customer changes rx store or selects new store in pickup options page:
+|  InputFileName   | SheetName    | RowId                        |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |
+
+
+And "RX-SetupandCheckoutRx-2" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | Submit   |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	PICKUP              | Yes      |
+
+And "RX-SetupandCheckoutRx-2" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption           |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-2      |	SINGLE              |
+
+Then "RX-SetupandCheckoutRx-2" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-2	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-3
+Scenario: Member and Admin setup either setup Auto Refills or Set up more Auto refills  by Selecting Delivery option as Ship to me
+Given  "RX-SetupandCheckoutRx-3" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-3	|
+
+Given "RX-SetupandCheckoutRx-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| Pharmacy	     | login     | AutoRefilluser1	  |
+
+Then "RX-SetupandCheckoutRx-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+Then "RX-SetupandCheckoutRx-3" Customer selects a family member:
+| FamilyMemberOption    |1  |
+
+And "RX-SetupandCheckoutRx-3" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        |  CancelOption  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      | CANCELALL      |
+
+And "RX-SetupandCheckoutRx-3" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN          | RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	setupautorefill          |  Rx2     | 
+
+And "RX-SetupandCheckoutRx-3" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | 
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	SHIPTOME              |
+
+Then "RX-SetupandCheckoutRx-3" Customer selects a family member:
+| FamilyMemberOption |  self   |
+
+And "RX-SetupandCheckoutRx-3" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	CANCELALL            |
+
+And "RX-SetupandCheckoutRx-3" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN          |RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	setupautorefill          | Rx1     | 
+
+And "RX-SetupandCheckoutRx-3" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions      |    
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	SHIPTOME         |   
+
+And "RX-SetupandCheckoutRx-3" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN             |RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	Setupmoreautorefill       |Rx3      |
+
+And "RX-SetupandCheckoutRx-3" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions           |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	SHIPTOME              |
+
+And "RX-SetupandCheckoutRx-3" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-3      |	SINGLE               |
+
+Then "RX-SetupandCheckoutRx-3" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-3	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-4
+Scenario: Member and Admin setup either setup Auto Refills or Set up more Auto refills  by Selecting Delivery option as Ship to me and Pickup at Store
+Given  "RX-SetupandCheckoutRx-4" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-4	|
+
+Given "RX-SetupandCheckoutRx-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| Pharmacy	     | login     | AutoRefilluser1	  |
+
+Then "RX-SetupandCheckoutRx-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+Then "RX-SetupandCheckoutRx-4" Customer selects a family member:
+| FamilyMemberOption |  1   |
+
+And "RX-SetupandCheckoutRx-4" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	CANCELALL            |
+
+And "RX-SetupandCheckoutRx-4" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN        |   RxField |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	setupautorefill        |   Rx3     |
+
+And "RX-SetupandCheckoutRx-4" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | 
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	SHIPTOME            |
+
+Then "RX-SetupandCheckoutRx-4" Customer selects a family member:
+| FamilyMemberOption |  self   |
+
+And "RX-SetupandCheckoutRx-4" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	CANCELALL            |
+
+And "RX-SetupandCheckoutRx-4" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN          | RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	setupautorefill          |  Rx1       |
+
+And "RX-SetupandCheckoutRx-4" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | Submit  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	PICKUP              | No      |
+
+And "RX-SetupandCheckoutRx-4" Customer changes rx store or selects new store in pickup options page:
+|  InputFileName   | SheetName    | RowId                        |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |
+
+And "RX-SetupandCheckoutRx-4" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions         | Submit  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	PICKUP              | Yes     | 
+
+And "RX-SetupandCheckoutRx-4" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-4      |	SINGLE               |
+
+Then "RX-SetupandCheckoutRx-4" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-4	|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-5
+Scenario: Rx Registered user is able to setup Rx for autorefill using New Credit Card info in Edit Express Pay Credit Card Info Page.
+
+Given  "RX-SetupandCheckoutRx-5" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-5	|
+
+Given "RX-SetupandCheckoutRx-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId              |
+| Pharmacy	     | login     | SetupRxuser	  |
+
+Then "RX-SetupandCheckoutRx-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       		   | SheetName      | RowId 	   		   		   |
+| PharmacyHomePageLinkVerification | Authenticated  | Auto Refills  	   	       |
+| PharmacyLinkVerification		   | Authenticated  | SetupMoreAutorefillsButton   |
+| PharmacyLinkVerification 		   | Authenticated  | AutoRefillRxCheckbox         |
+| PharmacyLinkVerification 		   | Authenticated  | AutorefillContinue           |
+| PharmacyLinkVerification 		   | Authenticated  | ShipDeliveryOption           |
+| PharmacyLinkVerification 		   | Authenticated  | DeliveryOptionContinue       |
+| PharmacyLinkVerification 		   | Authenticated  | ExpressPayCancelLink         |
+| PharmacyLinkVerification 		   | Authenticated  | AutoRefillRxCheckbox         |
+| PharmacyLinkVerification 		   | Authenticated  | AutorefillContinue           |
+| PharmacyLinkVerification 		   | Authenticated  | ShipDeliveryOption           |
+| PharmacyLinkVerification 		   | Authenticated  | DeliveryOptionContinue       |
+
+Then "RX-SetupandCheckoutRx-5" Customer updates the Credit Card information from Edit ExpressPay Credit Card Information overlay or page:
+| InputFileName  | SheetName   | RowId           			|
+| Pharmacy	     | AutoRefill  | NewCreditCardDetails2 		|
+
+Then "RX-SetupandCheckoutRx-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       		   | SheetName      | RowId 	   		   		   |ClickObjectOverlay | TargetOverlay |
+| PharmacyLinkVerification 		   | Authenticated  | CancelAutoRefillLink 		   |	 -			   |		Yes	   |
+| PharmacyLinkVerification 		   | Authenticated  | YesButtonForCancelAutoRefill |	Yes			   |		-	   |
+
+Then "RX-SetupandCheckoutRx-5" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-5	|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-6
+Scenario: Rx Registered user is able to update his Express Pay Card Info from Edit Express Card Info Overaly.
+
+Given  "RX-SetupandCheckoutRx-6" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-6	|
+
+Given "RX-SetupandCheckoutRx-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData     | login     | RefillRx4 |
+
+Then "RX-SetupandCheckoutRx-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName      | RowId 	    |
+| PharmacyHomePageLinkVerification | Authenticated  | Auto Refills  |
+
+Then "RX-SetupandCheckoutRx-6" Customer updates the Credit Card information from Edit ExpressPay Credit Card Information overlay or page:
+| InputFileName  | SheetName   | RowId           			|
+| Pharmacy	     | AutoRefill  | EmptyCCDetails1 			|
+| Pharmacy	     | AutoRefill  | ExpireAndInvalidCCDetails1 |
+| Pharmacy	     | AutoRefill  | NewCreditCardDetails1		|
+
+Then "RX-SetupandCheckoutRx-6" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-6	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-7
+Scenario: Customer Cancels autorefills by navigating through Refill Prescription page
+Given  "RX-SetupandCheckoutRx-7" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-7	|
+
+Given "RX-SetupandCheckoutRx-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| Pharmacy	     | login     | SetupRxuser	  |
+
+Then "RX-SetupandCheckoutRx-7" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+And "RX-SetupandCheckoutRx-7" Customer cancels Auto Refills in Prescription Auto Refills Page:
+|  InputFileName   | SheetName    | RowId                        | CancelOption            |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-7      |	CANCELALL              |
+
+And "RX-SetupandCheckoutRx-7" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId                        |    AutoRefillBTN        |RxField  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-7      |	setupautorefill        |Rx1      |
+
+And "RX-SetupandCheckoutRx-7" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId                        | DeliverOptions  |
+|	 Pharmacy      | AutoRefill   | RX-SetupandCheckoutRx-7      |	SHIPTOME       |
+
+Then "RX-SetupandCheckoutRx-7" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	                   |ClickObjectOverlay |TargetOverlay  |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillRx1                 |-				   |-		       |
+| PharmacyHomePageLinkVerification | Authenticated        | EditCancelAutoRefill       |-				   |-		       |
+| PharmacyHomePageLinkVerification | Authenticated        | CancelAutorefill           |no			       |yes			   |
+| PharmacyHomePageLinkVerification | Authenticated        | NoCancelAutorefill         |Yes				   |No			   |
+| PharmacyHomePageLinkVerification | Authenticated        | CancelAutorefill           |no			       |yes			   |
+| PharmacyHomePageLinkVerification | Authenticated        | YesCancelAutorefill        |Yes				   |No			   |
+
+Then "RX-SetupandCheckoutRx-7" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-7	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-8
+Scenario: HOH User with no family members is is able to Navigate to Autorefill Page from 540 Autorefill Landing Page and navigates to its respectives page when 
+he clicks on Edit Shipping Info and Edit Billing Info links.
+
+Given  "RX-SetupandCheckoutRx-8" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-8	|
+
+Then "RX-SetupandCheckoutRx-8" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       | SheetName  | RowId 	        |
+| PharmacyLinkVerification | Anonymous  | SetupAutoRefills  |
+
+Then "RX-SetupandCheckoutRx-8" Customer login through the dynamic login section and validates destination page:
+| InputFileName   | SheetName      | RowId   	   |
+| CommonData      |   DynamicLogin | HOHAdminuser1 |
+
+Then "RX-SetupandCheckoutRx-8" Customer selects required family member, Prescription type and cancels all setup Autorefill Prescriptions:
+| InputFileName   | SheetName      | RowId   	    |
+| Pharmacy        |  AutoRefill    | MailPlanRxType |
+
+Then "RX-SetupandCheckoutRx-8" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       | SheetName            | RowId 	                    |ClickObjectOverlay |TargetOverlay  |
+| PharmacyLinkVerification | Authenticated        | EditShippingInfoLink        |-				    |	Yes         |
+| PharmacyLinkVerification | Authenticated        | CloseButtonToAutorefillPage |-				    |-		        |
+| PharmacyLinkVerification | Authenticated        | EditBillingInfoLink	        |-				    |	Yes         |
+| PharmacyLinkVerification | Authenticated        | CloseButtonToAutorefillPage |-				    |-		        |
+
+Then "RX-SetupandCheckoutRx-8" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-8	|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-9
+Scenario: Rx authenticated user with only Retail Rxs in account is not able to see RMST toggle in Setup Autorefills page.
+
+Given  "RX-SetupandCheckoutRx-9" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-9	|
+
+Given "RX-SetupandCheckoutRx-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId           |
+| Pharmacy       | login     | AutoRefilluser1 |
+
+Then "RX-SetupandCheckoutRx-9" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+
+Then "RX-SetupandCheckoutRx-9" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName  | SheetName 		|			 RowId           |
+| CommonData     | ObjectValidation | RMSTToggleinAutoRefillpage |
+
+Then "RX-SetupandCheckoutRx-9" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-9	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-10
+Scenario: Customer verifies user enrolled in mail service lands on auto-refill page via auto refill link,Admin user verifies the credit card error validations and information displayed when users setsup AR first time for a family member
+
+Given  "RX-SetupandCheckoutRx-10" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-10	|
+
+Given "RX-SetupandCheckoutRx-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| Pharmacy       | login     | HOHAdminUser1  |
+
+Then "RX-SetupandCheckoutRx-10" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	                   |
+| PharmacyHomePageLinkVerification | Authenticated        | RefillRx1                  |
+| PharmacyHomePageLinkVerification | Authenticated        | AutoRefill                 |
+| PharmacyHomePageLinkVerification | Authenticated        | ReturnToManagePrescription |
+| PharmacyLinkVerification         | Authenticated        | PharmacyTab                |
+| PharmacyHomePageLinkVerification | Authenticated        | SetupAutomaticRefills      |
+
+Then "RX-SetupandCheckoutRx-10" Customer selects required family member, Prescription type and cancels all setup Autorefill Prescriptions:
+| InputFileName	 | SheetName        | RowId 	              |
+| Pharmacy       | AutoRefill       | RX-SetupandCheckoutRx-6 |
+
+Then "RX-SetupandCheckoutRx-10" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       		   | SheetName      | RowId 	   		   		   		|
+| PharmacyLinkVerification		   | Authenticated  | SetupAutoRefills1            		|
+| PharmacyLinkVerification 		   | Authenticated  | AutorefillContinueErrorMessage  	|
+| PharmacyLinkVerification 		   | Authenticated  | AutoRefillRxCheckboxMailService   |
+| PharmacyLinkVerification 		   | Authenticated  | AutorefillContinue           		|
+| PharmacyLinkVerification 		   | Authenticated  | SaveandContinue              		|
+
+Then "RX-SetupandCheckoutRx-10" Customer updates the Credit Card information from Edit ExpressPay Credit Card Information overlay or page:
+| InputFileName	 | SheetName        | RowId 	                |
+| Pharmacy       | AutoRefill       | ExpireAndInvalidCCDetails1|
+
+Then "RX-SetupandCheckoutRx-10" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-10	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-11
+Scenario: Customer performs error validations in Edit shipping information overlay in Auto refills page.
+
+Given  "RX-SetupandCheckoutRx-11" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-11	|
+
+Given "RX-SetupandCheckoutRx-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId            |
+| Pharmacy       | login     | AutoRefilluser4  |
+
+Then "RX-SetupandCheckoutRx-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       		   | SheetName      | RowId 	   		   		 |
+| PharmacyLinkVerification         | Authenticated  | PharmacyTab                |
+| PharmacyHomePageLinkVerification | Authenticated  | SetupAutomaticRefills      |
+
+Then "RX-SetupandCheckoutRx-11" Customer updates the Shipping information from Edit Shipping Information overlay:
+| InputFileName	   | SheetName         | RowId 	   		   	       |
+| Pharmacy         | AutoRefill        | ShippingInfo1             |
+| Pharmacy         | AutoRefill        | ShippingInfo2             |
+
+Then "RX-SetupandCheckoutRx-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       | SheetName            | RowId 	                    |
+| PharmacyLinkVerification | Authenticated        | CloseButtonToAutorefillPage |
+
+Then "RX-SetupandCheckoutRx-11" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-SetupandCheckoutRx-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-11	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-SetupandCheckoutRx-12
+Scenario: Customer verifes the Autorefill status in the Refill hub page for the Mail Service Prescription
+
+Given  "RX-SetupandCheckoutRx-12" Customer starts the scenario:
+| InputFileName | SheetName 	           | RowId      		        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-12	|
+
+Given "RX-SetupandCheckoutRx-12" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      				    |
+| CommonData     | login     | RefillFasterAuthenticated	|
+
+Then "RX-SetupandCheckoutRx-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	  |
+| PharmacyHomePageLinkVerification | Authenticated        | Auto Refills          |
+| PharmacyHomePageLinkVerification | Authenticated        | RxType		          |
+
+And "RX-SetupandCheckoutRx-12" Customer selects required Rx for AutoRefill from Set Up Auto Refill page and navigates to Delivery Options Page:
+|  InputFileName   | SheetName    | RowId        |    AutoRefillBTN        |RxField  |
+|	 Pharmacy      | AutoRefill   | RefillON     |	setupautorefill        |Rx1      |
+
+And "RX-SetupandCheckoutRx-12" Customer Chooses Delivery options from Delivery Options for Auto Refills Page and completes the Auto Refill:
+|  InputFileName   | SheetName    | RowId        | DeliverOptions   |
+|	 Pharmacy      | AutoRefill   | RefillON     |	MailServiceRx   |
+
+Then "RX-SetupandCheckoutRx-12" Customer verifies the auto refill status in refill hub page:
+|  InputFileName   | SheetName    | RowId        |
+|	 Pharmacy      | AutoRefill   | RefillON     |
+
+And "RX-SetupandCheckoutRx-12" Customer cancels Auto Refills in Prescription Auto Refills Page:
+| CancelOption     |
+|	CANCELALL      |
+
+Then "RX-SetupandCheckoutRx-12" Customer logout from walgreens:
+|Source|
+|Global|
+
+Given "RX-SetupandCheckoutRx-12" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      				    |
+| CommonData     | login     | RefillFasterAuthenticated	|
+
+Then "RX-SetupandCheckoutRx-12" Customer verifies the auto refill status in refill hub page:
+|  InputFileName   | SheetName    | RowId         |
+|	 Pharmacy      | AutoRefill   | RefillOFF     |
+
+Then "RX-SetupandCheckoutRx-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | SetupandCheckoutRx       | RX-SetupandCheckoutRx-12	|
+#-----------------------------------------------------------------------------------------------------------

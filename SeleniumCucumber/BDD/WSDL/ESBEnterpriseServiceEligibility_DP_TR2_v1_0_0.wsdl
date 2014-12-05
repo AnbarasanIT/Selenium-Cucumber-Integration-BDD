@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.walgreens.com/esbd/eia/customereligibilityservice/v1" xmlns:esbheader="http://schema.walgreens.com/esbd/eia/esbSubHeader/v1" xmlns:esbfault="http://schema.walgreens.com/esbd/eia/esbSoapFault/v1"   xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ESBEnterpriseServiceEligibilityService" targetNamespace="http://service.walgreens.com/esbd/eia/customereligibilityservice/v1">
+	<wsdl:documentation><description>This WSDL file is defined for the ESB service for Enterprise Service Eligibility</description><history>
+		2012-07-30 Created the first version
+		2012-08-14 renamed Input Wrapper elements as per operation name
+		2013-06-06 Renamed the namespace for ESB header and ESB fault
+		</history><version>1.0.1</version><author>Stephane Tuong</author></wsdl:documentation>
+	<wsdl:types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service.walgreens.com/esbd/eia/customereligibilityservice/v1">
+			<xs:include schemaLocation="ESBServiceEligibility.xsd"/>
+		</xs:schema>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" targetNamespace="http://schema.walgreens.com/esbd/eia/esbSubHeader/v1">
+			<xs:include schemaLocation="ESBSubHeader.xsd"/>
+		</xs:schema>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" targetNamespace="http://schema.walgreens.com/esbd/eia/esbSoapFault/v1">
+			<xs:include schemaLocation="ESBFaultSchema.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="CustomerEnterpriseServiceEligibilityRequest">
+		<wsdl:part name="parameters" element="tns:getCustomerEnterpriseServiceEligibility"/>
+	</wsdl:message>
+	<wsdl:message name="CustomerEnterpriseServiceEligibilityResponse">
+		<wsdl:part name="parameters" element="tns:getCustomerEnterpriseServiceEligibilityResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="EnterprisePrescriptionRequiredRequest">
+		<wsdl:part name="parameters" element="tns:isEnterprisePrescriptionRequiredRequest"/>
+	</wsdl:message>
+	<wsdl:message name="EnterprisePrescriptionRequiredResponse">
+		<wsdl:part name="parameters" element="tns:isEnterprisePrescriptionRequiredResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="ESBFault">
+		<wsdl:part element="esbfault:faultDetail" name="faultDetail" />
+	</wsdl:message>
+	<wsdl:message name="ESBSubHeader">
+		<wsdl:part element="esbheader:ESBSubHeader" name="ESBSubHeader" />
+	</wsdl:message>
+	<wsdl:portType name="CustomerEnterpriseServiceEligibilityServicePort">
+		<wsdl:operation name="getCustomerEnterpriseServiceEligibility">
+			<wsdl:input name="CustomerEnterpriseServiceEligibilityRequest" message="tns:CustomerEnterpriseServiceEligibilityRequest">
+			</wsdl:input>
+			<wsdl:output name="CustomerEnterpriseServiceEligibilityResponse" message="tns:CustomerEnterpriseServiceEligibilityResponse">
+			</wsdl:output>
+			<wsdl:fault name="ESBFault" message="tns:ESBFault">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="isPrescriptionRequired">
+			<wsdl:input name="EnterprisePrescriptionRequiredRequest" message="tns:EnterprisePrescriptionRequiredRequest">
+			</wsdl:input>
+			<wsdl:output name="EnterprisePrescriptionRequiredResponse" message="tns:EnterprisePrescriptionRequiredResponse">
+			</wsdl:output>
+			<wsdl:fault name="ESBFault" message="tns:ESBFault">
+			</wsdl:fault>
+		</wsdl:operation>		
+	</wsdl:portType>
+	<wsdl:binding name="CustomerEnterpriseServiceEligibilityServiceSoapBinding" type="tns:CustomerEnterpriseServiceEligibilityServicePort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getCustomerEnterpriseServiceEligibility">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="CustomerEnterpriseServiceEligibilityRequest">
+				<soap:header message="tns:ESBSubHeader" part="ESBSubHeader" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="CustomerEnterpriseServiceEligibilityResponse">
+				<soap:header message="tns:ESBSubHeader" part="ESBSubHeader" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ESBFault">
+				<soap:fault name="ESBFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="isPrescriptionRequired">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="EnterprisePrescriptionRequiredRequest">
+				<soap:header message="tns:ESBSubHeader" part="ESBSubHeader" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="EnterprisePrescriptionRequiredResponse">
+				<soap:header message="tns:ESBSubHeader" part="ESBSubHeader" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ESBFault">
+				<soap:fault name="ESBFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CustomerEnterpriseServiceEligibilityWSService">
+		<wsdl:port name="CustomerEnterpriseServiceEligibilityWSPort" binding="tns:CustomerEnterpriseServiceEligibilityServiceSoapBinding">
+			<soap:address location="http://wagtzdpi.walgreens.com:10047/CustomerEnterpriseEligibilityService/tr2"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

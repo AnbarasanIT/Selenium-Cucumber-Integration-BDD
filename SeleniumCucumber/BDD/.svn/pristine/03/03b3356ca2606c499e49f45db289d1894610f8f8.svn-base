@@ -1,0 +1,1091 @@
+@dailyliving @InStoreOrderingFulfilment
+Feature:To validate TDD Fulfilment scenarios.
+#----------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-01
+Scenario: To verfiy the ISO emails and status for DC Cancel fulfillment opting ship to store
+
+Given "DL-ISOFULFILMENT-01" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-01   |
+
+Given "DL-ISOFULFILMENT-01" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	     |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToStoreInfo1  |
+
+And "DL-ISOFULFILMENT-01" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-01" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-01" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | 	DC1  |
+
+Then "DL-ISOFULFILMENT-01" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-01" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-01" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-01" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 RowId     	     |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToStoreInfo1  |
+
+Then "DL-ISOFULFILMENT-01" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-01  |
+
+Then "DL-ISOFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                         |          
+|  DataBase     | ISOFulfillment | displayStatus_SSOrdertable_initialinfo1   |
+|  DataBase     | ISOFulfillment | displayStatus_shipgrouptable_initialinfo1 |
+
+Then "DL-ISOFULFILMENT-01" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-01  |
+
+Then "DL-ISOFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-01" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-01" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                            |          
+|  DataBase     | ISOFulfillment | displayStatus_SSOrdertable_InProgressinfo1   |
+|  DataBase     | ISOFulfillment | displayStatus_shipgrouptable_InProgressinfo1 |
+
+And "DL-ISOFULFILMENT-01" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	     |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToStoreInfo1  |
+
+And "DL-ISOFULFILMENT-01" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-01  |
+
+Given "DL-ISOFULFILMENT-01" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+| DYNADMIN      | FEEDS          | OperaStatusCancel1     |
+| DYNADMIN      | FEEDS          | OrderIDInfo4           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-ISOFULFILMENT-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	        |
+| BatchData     | DCFulfillment  | dcInboundFile1   |
+| BatchData     | DCFulfillment  | dcOutboundFile1  |
+
+Then "DL-ISOFULFILMENT-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-ISOFULFILMENT-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                         |          
+|  DataBase     | ISOFulfillment | displayStatus_SSOrdertable_Failedinfo1    |
+|  DataBase     | ISOFulfillment | displayStatus_shipgrouptable_Failedinfo1  |
+
+And "DL-ISOFULFILMENT-01" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	     |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToStoreInfo1  |
+
+Then "DL-ISOFULFILMENT-01" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-01  |
+
+ Then "DL-ISOFULFILMENT-01" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-01   |
+
+#----------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-02
+Scenario: To verfiy the ISO emails and status for CH Cancel fulfillment opting ship to customer
+
+Given "DL-ISOFULFILMENT-02" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-02   |
+
+Given "DL-ISOFULFILMENT-02" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-02" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-02" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-02" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-02" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData    | search    | 	CH1  |
+
+Then "DL-ISOFULFILMENT-02" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-02" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-02" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-02" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 RowId     	       |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1 |
+
+Then "DL-ISOFULFILMENT-02" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-02  |
+
+Then "DL-ISOFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 			RowId      	                        |          
+|  DataBase     | ISOFulfillment | ch_displayStatus_SSOrdertable_initialinfo1   |
+|  DataBase     | ISOFulfillment | ch_displayStatus_shipgrouptable_initialinfo1 |
+
+Then "DL-ISOFULFILMENT-02" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-02  |
+
+Then "DL-ISOFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-02" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-02" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-02" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                               |          
+|  DataBase     | ISOFulfillment | ch_displayStatus_SSOrdertable_InProgressinfo1   |
+|  DataBase     | ISOFulfillment | ch_displayStatus_shipgrouptable_InProgressinfo1 |
+
+And "DL-ISOFULFILMENT-02" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-02" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-02  |
+
+Given "DL-ISOFULFILMENT-02" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-02" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob1 |
+
+Then "DL-ISOFULFILMENT-02" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-ISOFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-ISOFULFILMENT-02" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob3SubCommand4  |
+
+Then "DL-ISOFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-ISOFULFILMENT-02" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-ISOFULFILMENT-02" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-ISOFULFILMENT-02" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "DL-ISOFULFILMENT-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                           |          
+|  DataBase     | ISOFulfillment | ch_displayStatus_SSOrdertable_Failedinfo1   |
+|  DataBase     | ISOFulfillment | ch_displayStatus_shipgrouptable_Failedinfo1 |
+
+And "DL-ISOFULFILMENT-02" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-02" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-02  |
+
+ Then "DL-ISOFULFILMENT-02" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-02   |
+
+#----------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-03
+Scenario: To verfiy the ISO emails and status for complete fulfillment opting ship to customer
+
+Given "DL-ISOFULFILMENT-03" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-03   |
+
+Given "DL-ISOFULFILMENT-03" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-03" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-03" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-03" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_1  |
+
+Then "DL-ISOFULFILMENT-03" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_2  |
+
+Then "DL-ISOFULFILMENT-03" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-03" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-03" Customer applies Balance Rewards Membership from Shopping Cart:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info1   |
+
+Then "DL-ISOFULFILMENT-03" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-03" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-03" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-03  |
+
+Then "DL-ISOFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	                    |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_initialinfo1   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_initialinfo1 |
+
+Then "DL-ISOFULFILMENT-03" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-03  |
+
+Then "DL-ISOFULFILMENT-03" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-03" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-03" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                               |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_InProgressinfo1   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_InProgressinfo1 |
+
+And "DL-ISOFULFILMENT-03" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |		 RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-03" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-03  |
+
+Given "DL-ISOFULFILMENT-03" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-ISOFULFILMENT-03" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	  		   |
+|  DataBase     | MutlipleRowsQuery | dc_mutlipletshipment_storekeyvalues_1    |
+
+Then "DL-ISOFULFILMENT-03" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	 	     |
+| BatchData     | XMLDATA    | dcvendorIDupdate1 	         |
+| BatchData     | XMLDATA    | dcOrderIDupdate1 	         |
+| BatchData     | XMLDATA    | dcFulfillmentIDupdate1        |
+| BatchData     | XMLDATA    | dcCommerceIDupdate1 	 		 |
+| BatchData     | XMLDATA    | dcCommerceIDupdate2			 |
+
+Then "DL-ISOFULFILMENT-03" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 			RowId  	        |
+| BatchData     | DCFulfillment  | dcOutboundMutliShipFile1 |
+
+Then "DL-ISOFULFILMENT-03" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-ISOFULFILMENT-03" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                             |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_Completeinfo1   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_Completeinfo1 |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_Completeinfo2 |
+
+And "DL-ISOFULFILMENT-03" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-03" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-03  |
+
+ Then "DL-ISOFULFILMENT-03" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-03   |
+
+#----------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-04
+Scenario: To verfiy the ISO emails and status for Partial fulfillment opting ship to customer for CH Items
+
+Given "DL-ISOFULFILMENT-04" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-04  |
+
+Given "DL-ISOFULFILMENT-04" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-04" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-04" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser2   |
+
+Then "DL-ISOFULFILMENT-04" Customer verifies added Loyalty Points from Account Home page:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info2   |
+
+Then "DL-ISOFULFILMENT-04" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "DL-ISOFULFILMENT-04" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-04" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-04" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId  		     |
+| CommonData    | search    | 	loyaltybonuspoints1  |
+
+Then "DL-ISOFULFILMENT-04" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-04" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId  		     |
+| CommonData    | search    | 	loyaltybonuspoints1  |
+
+Then "DL-ISOFULFILMENT-04" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-04" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-04" Customer applies Balance Rewards Membership from Shopping Cart:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info1   |
+
+Then "DL-ISOFULFILMENT-04" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-04" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 RowId     	       |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1 |
+
+Then "DL-ISOFULFILMENT-04" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-04  |
+
+Then "DL-ISOFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 			RowId      	                        |          
+|  DataBase     | ISOFulfillment | ch_displayStatus_SSOrdertable_initialinfo2   |
+|  DataBase     | ISOFulfillment | ch_displayStatus_shipgrouptable_initialinfo2 |
+
+Then "DL-ISOFULFILMENT-04" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-04  |
+
+Then "DL-ISOFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-04" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-04" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                               |          
+|  DataBase     | ISOFulfillment | ch_displayStatus_SSOrdertable_InProgressinfo2   |
+|  DataBase     | ISOFulfillment | ch_displayStatus_shipgrouptable_InProgressinfo2 |
+
+And "DL-ISOFULFILMENT-04" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-04" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-04  |
+
+Given "DL-ISOFULFILMENT-04" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob1 |
+
+Then "DL-ISOFULFILMENT-04" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-ISOFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-ISOFULFILMENT-04" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand4  |
+
+Then "DL-ISOFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-ISOFULFILMENT-04" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-ISOFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-ISOFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+And "DL-ISOFULFILMENT-04" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-04" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-04  |
+
+Then "DL-ISOFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	           |          
+|  DataBase     | ISOFulfillment |  updatedatetoPrior7Days2    |
+
+Given "DL-ISOFULFILMENT-04" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-04" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	      		   |
+| DYNADMIN      | FEEDS          | InvalidateInventoryRepositoryCache  |
+| DYNADMIN      | FEEDS          | TriggerPostOrderSurveyJob	       |
+
+And "DL-ISOFULFILMENT-04" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-04" Customer Verifies Post Order Survey email:
+
+Given "DL-ISOFULFILMENT-04" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-04" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		|
+| DYNADMIN      | FEEDS          | LoggingDebugTransactionBatchJobInfo1 |
+| DYNADMIN      | FEEDS          | LoggingInfoTransactionBatchJobInfo1  |
+| DYNADMIN      | FEEDS          | LoggingDebugLogManagerInfo1          |
+| DYNADMIN      | FEEDS          | LoggingInfoLogManagerInfo1           |
+| DYNADMIN      | FEEDS          | LoggingDebugMonitorLogManagerInfo1   |
+| DYNADMIN      | FEEDS          | LoggingInfoMonitorLogManagerInfo1    |
+| DYNADMIN      | FEEDS          | LoggingDebugMonitorManagerInfo1      |
+| DYNADMIN      | FEEDS          | LoggingInfoMonitorManagerInfo1       |
+| DYNADMIN      | FEEDS          | LoggingDebugSvcManagerInfo1          |
+| DYNADMIN      | FEEDS          | LoggingInfoSvcManagerInfo1           |
+| DYNADMIN      | FEEDS          | LoggingDebugManagerInfo1             |
+| DYNADMIN      | FEEDS          | LoggingInfoManagerInfo1              |
+| DYNADMIN      | FEEDS          | LoggingDebugWrpperImpJob1            |
+| DYNADMIN      | FEEDS          | LoggingInfoWrpperImpJob1             |
+| DYNADMIN      | FEEDS          |LoyaltyProcessTransactionBatchJobInfo1|
+
+Then "DL-ISOFULFILMENT-04" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	           |          
+|  DataBase     | ISOFulfillment |  LoyaltyEarnCompleteInfo2   |
+
+Then "DL-ISOFULFILMENT-04" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 			RowId  	        |
+| BatchData     | ISOFulfillment | DynamoLogfiletoLocal1    |
+
+Then "DL-ISOFULFILMENT-04" Customer validates the Tender Code from the Dynamo Log file:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-04  |
+
+Then "DL-ISOFULFILMENT-04" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-04   |
+
+#--------------------------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-05
+Scenario: To verfiy the ISO emails and status for DC Partial fulfillment opting ship to customer
+
+Given "DL-ISOFULFILMENT-05" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-05   |
+
+Given "DL-ISOFULFILMENT-05" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-05" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-05" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser2   |
+
+Then "DL-ISOFULFILMENT-05" Customer verifies added Loyalty Points from Account Home page:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info2   |
+
+Then "DL-ISOFULFILMENT-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "DL-ISOFULFILMENT-05" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-05" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-05" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_1  |
+
+Then "DL-ISOFULFILMENT-05" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-05" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_2  |
+
+Then "DL-ISOFULFILMENT-05" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-05" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-05" Customer applies Balance Rewards Membership from Shopping Cart:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info1   |
+
+Then "DL-ISOFULFILMENT-05" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-05" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-05" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-05  |
+
+Then "DL-ISOFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	                    |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_initialinfo2   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_initialinfo2 |
+
+Then "DL-ISOFULFILMENT-05" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-05  |
+
+Then "DL-ISOFULFILMENT-05" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-05" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-05" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                               |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_InProgressinfo2   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_InProgressinfo2 |
+
+And "DL-ISOFULFILMENT-05" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |		 RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-05" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-05  |
+
+Given "DL-ISOFULFILMENT-05" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-ISOFULFILMENT-05" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	  		   |
+|  DataBase     | MutlipleRowsQuery | dc_mutlipletshipment_storekeyvalues_2    |
+
+Then "DL-ISOFULFILMENT-05" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	 	     |
+| BatchData     | XMLDATA    | dcvendorIDupdate2 	         |
+| BatchData     | XMLDATA    | dcOrderIDupdate2 	         |
+| BatchData     | XMLDATA    | dcFulfillmentIDupdate2        |
+| BatchData     | XMLDATA    | dcCommerceIDupdate3 	 		 |
+| BatchData     | XMLDATA    | dcCommerceIDupdate6			 |
+
+Then "DL-ISOFULFILMENT-05" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 			RowId  	        |
+| BatchData     | DCFulfillment  | dcOutboundPartialFile2   |
+
+Then "DL-ISOFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-ISOFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	                             |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_Completeinfo2   |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_Completeinfo3 |
+|  DataBase     | ISOFulfillment | dc_displayStatus_shipgrouptable_Completeinfo4 |
+|  DataBase     | ISOFulfillment | dc_loyaltywsstatus_initialinfo1		         |
+
+And "DL-ISOFULFILMENT-05" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-05" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-05  |
+
+Then "DL-ISOFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	           |          
+|  DataBase     | ISOFulfillment |  updatedatetoPrior7Days1    |
+
+Given "DL-ISOFULFILMENT-05" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-05" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	      		   |
+| DYNADMIN      | FEEDS          | InvalidateInventoryRepositoryCache  |
+| DYNADMIN      | FEEDS          | TriggerPostOrderSurveyJob	       |
+
+And "DL-ISOFULFILMENT-05" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-05" Customer Verifies Post Order Survey email:
+
+Given "DL-ISOFULFILMENT-05" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-05" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		|
+| DYNADMIN      | FEEDS          | LoggingDebugTransactionBatchJobInfo1 |
+| DYNADMIN      | FEEDS          | LoggingInfoTransactionBatchJobInfo1  |
+| DYNADMIN      | FEEDS          | LoggingDebugLogManagerInfo1          |
+| DYNADMIN      | FEEDS          | LoggingInfoLogManagerInfo1           |
+| DYNADMIN      | FEEDS          | LoggingDebugMonitorLogManagerInfo1   |
+| DYNADMIN      | FEEDS          | LoggingInfoMonitorLogManagerInfo1    |
+| DYNADMIN      | FEEDS          | LoggingDebugMonitorManagerInfo1      |
+| DYNADMIN      | FEEDS          | LoggingInfoMonitorManagerInfo1       |
+| DYNADMIN      | FEEDS          | LoggingDebugSvcManagerInfo1          |
+| DYNADMIN      | FEEDS          | LoggingInfoSvcManagerInfo1           |
+| DYNADMIN      | FEEDS          | LoggingDebugManagerInfo1             |
+| DYNADMIN      | FEEDS          | LoggingInfoManagerInfo1              |
+| DYNADMIN      | FEEDS          | LoggingDebugWrpperImpJob1            |
+| DYNADMIN      | FEEDS          | LoggingInfoWrpperImpJob1             |
+| DYNADMIN      | FEEDS          |LoyaltyProcessTransactionBatchJobInfo1|
+
+Then "DL-ISOFULFILMENT-05" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 		RowId      	           |          
+|  DataBase     | ISOFulfillment |  LoyaltyEarnCompleteInfo1   |
+
+Then "DL-ISOFULFILMENT-05" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 			RowId  	        |
+| BatchData     | ISOFulfillment | DynamoLogfiletoLocal1    |
+
+Then "DL-ISOFULFILMENT-05" Customer validates the Tender Code from the Dynamo Log file:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-05  |
+
+Then "DL-ISOFULFILMENT-05" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-05   |
+
+#--------------------------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-06
+Scenario: To verfiy the ISO emails and status for CH plus DC complete fulfillment opting ship to customer
+
+Given "DL-ISOFULFILMENT-06" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-06   |
+
+Given "DL-ISOFULFILMENT-06" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-06" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-06" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId               |
+| CommonData    | login     | Fullfillmentuser2   |
+
+Then "DL-ISOFULFILMENT-06" Customer verifies added Loyalty Points from Account Home page:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info2   |
+
+Then "DL-ISOFULFILMENT-06" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "DL-ISOFULFILMENT-06" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-06" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-06" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_1  |
+
+Then "DL-ISOFULFILMENT-06" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-06" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId 			|
+| CommonData    | search    | 	DC_loyaltyPoints_2  |
+
+Then "DL-ISOFULFILMENT-06" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-06" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "DL-ISOFULFILMENT-06" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-06" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-06" Customer applies Balance Rewards Membership from Shopping Cart:
+| 	InputFileName	 | 		SheetName 		| 		RowId              |
+| AccountDashboard   | BRMembershipDetails  | SaveIntialPoints_info1   |
+
+Then "DL-ISOFULFILMENT-06" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-06" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-06" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-06  |
+
+Then "DL-ISOFULFILMENT-06" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 				RowId      	                   |          
+|  DataBase     | MutlipleRowsQuery | DCAndCH_MultipleItems_PendingStoreInfo_1     |
+
+Then "DL-ISOFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	                    |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_initialinfo3   |
+
+Then "DL-ISOFULFILMENT-06" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-06  |
+
+Then "DL-ISOFULFILMENT-06" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-06" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-06" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+Then "DL-ISOFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	                     |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_InProgressinfo3 |
+
+And "DL-ISOFULFILMENT-06" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |		 RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+And "DL-ISOFULFILMENT-06" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-06  |
+
+Given "DL-ISOFULFILMENT-06" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | DelayAmountupdate1     |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-ISOFULFILMENT-06" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	  		     |
+|  DataBase     | MutlipleRowsQuery | DCAndCH_MultipleItems_PendingShipfo_1      |
+|  DataBase     | MutlipleRowsQuery | DCAndCH_MultipleItemsOrderStatusInfo_1     |
+
+Then "DL-ISOFULFILMENT-06" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName  	| 			RowId      	  	 	  		   |
+|  DataBase     | MutlipleRowsQuery | dc_mutlipletshipment_storekeyvalues_3    |
+
+Then "DL-ISOFULFILMENT-06" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	 	     |
+| BatchData     | XMLDATA    | dcvendorIDupdate1 	         |
+| BatchData     | XMLDATA    | dcOrderIDupdate1 	         |
+| BatchData     | XMLDATA    | dcFulfillmentIDupdate1        |
+| BatchData     | XMLDATA    | dcCommerceIDupdate4 	 		 |
+| BatchData     | XMLDATA    | dcCommerceIDupdate5			 |
+
+Then "DL-ISOFULFILMENT-06" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 			RowId  	        |
+| BatchData     | DCFulfillment  | dcOutboundMutliShipFile1 |
+
+Given "DL-ISOFULFILMENT-06" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-ISOFULFILMENT-06" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand1  |
+
+Then "DL-ISOFULFILMENT-06" Customer runs the Required Query from the DB:
+|InputFileName | SheetName      | 		RowId      	             |
+|  DataBase     | CHFulfillment | ch_singlequantity_vendor_info2 |
+
+Then "DL-ISOFULFILMENT-06" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand3  |
+|  BatchData    | CHFulfillment  | CHRunJob1SubCommand2  |
+
+Then "DL-ISOFULFILMENT-06" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	     		       |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobFileTransfertoWinscp1  |
+
+Then "DL-ISOFULFILMENT-06" Customer run the commands for the batch job:
+| InputFileName | SheetName      | 		RowId            |
+|  BatchData    | CHFulfillment  | CHRunJob2SubCommand4  |
+
+Then "DL-ISOFULFILMENT-06" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoLocal1   |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoLocal1    |
+
+Then "DL-ISOFULFILMENT-06" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     	  |
+| BatchData     | XMLDATA    | chorderXMLFile1Data1   |
+| BatchData     | XMLDATA    | chorderXMLFile1Data2   |
+
+Then "DL-ISOFULFILMENT-06" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | 		RowId  	     		              |
+| BatchData     | CHFulfillment  | CHJobInBoundTextFileTransfertoWinscp1  |
+| BatchData     | CHFulfillment  | CHJobInBoundXMLFileTransfertoWinscp1   | 
+
+Then "DL-ISOFULFILMENT-06" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	|
+| DYNADMIN      | FEEDS          | CHPefromJob2 |
+
+Then "DL-ISOFULFILMENT-06" Customer runs the Required Query from the DB:
+| InputFileName | SheetName      | 				RowId      	                     |          
+|  DataBase     | ISOFulfillment | dc_displayStatus_SSOrdertable_Completeinfo3   |
+
+Then "DL-ISOFULFILMENT-06" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName         | 				RowId      	               |          
+|  DataBase     | MutlipleRowsQuery | DCAndCH_MultipleItems_CompleteInfo_1     |
+
+And "DL-ISOFULFILMENT-06" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo1  |
+
+Then "DL-ISOFULFILMENT-06" Customer Verifies the Fullfillment Order Complete Email:
+| InputFileName 		| SheetName       | RowId     		     |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-06  |
+
+Then "DL-ISOFULFILMENT-06" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-06   |
+
+#--------------------------------------------------------------------------------------------------
+@DL-ISOFULFILMENT-07
+Scenario: Logged in user  DC and CH in cart  check all pages  proceed and submit order  check for pop up its copy and check email sent to store email address 
+and its format after placing order
+
+Given "DL-ISOFULFILMENT-07" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-07   |
+
+Given "DL-ISOFULFILMENT-07" Customer login to the Yahoo.com:
+| InputFileName | SheetName	     |	 RowId     	        |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo2  |
+
+And "DL-ISOFULFILMENT-07" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine2| ArchiveFolderName2 |
+
+Given "DL-ISOFULFILMENT-07" Customer logs into the Walgreens ISO store net:
+| InputFileName | SheetName	 |	 RowId     	  |
+|	SelfService	| ISOLOGIN	 | ISOLoginUser1  |
+
+And "DL-ISOFULFILMENT-07" Customer selects the required Store from ISO home page:
+| InputFileName | SheetName	   |	 RowId     	  |
+|	SDDData  	| storedetails | storeselection20 |
+
+And "DL-ISOFULFILMENT-07" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | 		RowId    | 	
+| CommonData    | search    | 	nonloyalty1  |
+
+Then "DL-ISOFULFILMENT-07" Customer adds Daily Living items to the cart from search.
+
+And "DL-ISOFULFILMENT-07" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "DL-ISOFULFILMENT-07" Customer adds Daily Living items to the cart from search.
+
+Then "DL-ISOFULFILMENT-07" Customer Goes to the Shopping Cart
+
+Then "DL-ISOFULFILMENT-07" Customer applies Balance Rewards Membership by using Name and Phone from Cart:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo2  |
+
+Then "DL-ISOFULFILMENT-07" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+| SoldOrShiptoAddress |
+
+Then "DL-ISOFULFILMENT-07" Customer enteres SoldTo information and selects ShipTo Address from ShipTo or Sold to Page:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo2  |
+
+Then "DL-ISOFULFILMENT-07" Customer verifies the Order Details from the Checkout pages:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo2  |
+
+Then "DL-ISOFULFILMENT-07" Customer submits the Order and gets Order Details from Order Request Form: 
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-07  |
+
+Then "DL-ISOFULFILMENT-07" Customer verifies the Order Details from the Checkout pages:
+| InputFileName | SheetName	     |	 	RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo3  |
+
+Then "DL-ISOFULFILMENT-07" Customer updates the order details in the Tandem File:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-07  |
+
+Then "DL-ISOFULFILMENT-07" Customer ftp the file for the batch job:
+| InputFileName | SheetName       | RowId  	     		  |
+| BatchData     | ISOFulfillment  | TandemFiletoWinscp1   |
+
+Given "DL-ISOFULFILMENT-07" Customer login to feeds instance:
+
+Then "DL-ISOFULFILMENT-07" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 				RowId     	     		    |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerLoginDebuginfo1 |
+
+Then "DL-ISOFULFILMENT-07" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | 			RowId     	         |
+| DYNADMIN      | FEEDS          | UpdatePaymentStatusMangerJob1 |
+
+And "DL-ISOFULFILMENT-07" Customer goes to the Inbox for the email client:
+| InputFileName | SheetName	     |		 RowId     	    |
+|	SelfService	| ISOSHIPTOINFO	 | ShipToCustomerinfo2  |
+
+And "DL-ISOFULFILMENT-07" Customer Verifies the Instore Online Order confirmation email:
+| 	InputFileName 		| SheetName	      |	 RowId     	         |
+|CheckoutOrderDetails	| ISOOrderDetails | DL-ISOFULFILMENT-07  |
+
+Then "DL-ISOFULFILMENT-07" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| ISOFULFILMENT	 | DL-ISOFULFILMENT-07   |
+

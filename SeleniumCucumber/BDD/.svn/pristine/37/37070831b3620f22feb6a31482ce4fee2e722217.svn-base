@@ -1,0 +1,412 @@
+@devsmoke @DevSmokeCheckout
+Feature: Customer is able to do different kinds of Daily living items check out
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@devsmoke-CHECKOUT-1
+Scenario: Add Product as Guest and Proceed till review order and sign in
+
+Given  "devsmoke-CHECKOUT-1" Customer starts the scenario:
+| InputFileName 	| SheetName 		| RowId         |
+| QC-devsmoke          | CHECKOUT      | devsmoke-CHECKOUT-1|
+
+And "devsmoke-CHECKOUT-1" Customer Clears the Shopping Cart
+
+And "devsmoke-CHECKOUT-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName			 | SheetName	 | RowId    	   |
+| CommonData-dev     | search    	 | loyaltysave1  |
+
+Then "devsmoke-CHECKOUT-1" Customer adds Daily Living items to the cart from search.
+
+Then "devsmoke-CHECKOUT-1" Customer Goes to the Shopping Cart
+
+# DO NOT REMOVE - SDD UPDATE FLAG
+#Then "devsmoke-CHECKOUT-1" Customer clicks on proceed to checkout button in the cart:
+#| ExpectedTargetPage     | SDD  |
+#| SigninorRegister			  | yes  |
+
+Then "devsmoke-CHECKOUT-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister			 |
+
+Then "devsmoke-CHECKOUT-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName 		 | SheetName | RowId 		    	 |
+| -		               | yes    | -	       | CommonData-dev    | login     | devlogin1	 		 |
+
+Then "devsmoke-CHECKOUT-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    | wag_sdduserqa3@yahoo.com | 8471234567   |  No	     |
+
+Then "devsmoke-CHECKOUT-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	     	  | standard		      	     |     -			     			    |
+
+Then "devsmoke-CHECKOUT-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName	    | CCSheetName | CCRowId |GuestPayment|
+| -		     	    | -              | true                  | -                  | CACData-dev         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "devsmoke-CHECKOUT-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+When "devsmoke-CHECKOUT-1" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId    |
+| CommonData-dev     | login     | devlogin1 |
+
+And "devsmoke-CHECKOUT-1" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId    |
+| CommonData-dev     | login     | devlogin1 |
+
+Then "devsmoke-CHECKOUT-1" Customer verifies order confirmation mail in yahoo:
+| InputFileName | SheetName    		       | RowId    	   |
+|    CACData-dev    | OrderConfirmationDetails |  devsmoke-CHECKOUT-1  |
+
+
+Then "devsmoke-CHECKOUT-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	 	 | RowId        |
+| QC-devsmoke         | CHECKOUT      | devsmoke-CHECKOUT-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@devsmoke-CLSelf-1
+Scenario: Guest User, Proceed to checkout login , No doctor in profile , enter fields that get search results  , Continue , Check Copy on Search results page, 
+Expand New Search Modify search to get no results , verify Copy to change to Null results, Click Back to Patient , Modify search to get results, Continue , check Copy
+
+Given  "devsmoke-CLSelf-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId     		  |
+| QC-devsmoke	    | CLSelf      | devsmoke-CLSelf-1	|
+
+And "devsmoke-CLSelf-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName     | SheetName | RowId |
+| CommonData-dev    | search    | cl1   |
+
+Then "devsmoke-CLSelf-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "devsmoke-CLSelf-1" Customer Goes to the Shopping Cart
+
+Then "devsmoke-CLSelf-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "devsmoke-CLSelf-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId 		|
+| -		             | yes    | -	     | CommonData-dev    | login     | devlogin1	|
+
+Then "devsmoke-CLSelf-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData-dev   |	CLPatientDoctorInfo | CL1Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "devsmoke-CLSelf-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  No	     |
+
+Then "devsmoke-CLSelf-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "devsmoke-CLSelf-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName	    | CCSheetName | CCRowId |GuestPayment|
+| -		     	    | -              | true                  | -                  | CACData-dev         | CreditCard  | cc1     | CreditCard |
+
+Then "devsmoke-CLSelf-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "devsmoke-CLSelf-1" Customer finished testing the scenario:
+| InputFileName 		| SheetName | RowId      			|
+| QC-devsmoke	        | CLSelf    | devsmoke-CLSelf-1	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@devsmoke-CLReorder-1
+Scenario: add to cart in reorder enabled. Add One pair to Cart from reorder, back to reorder , All Check box enabled, but Add to cart , Drop Down, Disabled but Error message Obtained (condition 1) checkout Skip presc pages, verify Disabled link, Verify For in review, Conf page
+
+Given  "devsmoke-CLReorder-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-devsmoke	        | CLReorder  | devsmoke-CLReorder-1	|
+
+Given "devsmoke-CLReorder-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData-dev    | login     | devlogin1	 |
+
+And "devsmoke-CLReorder-1" Customer Clears the Shopping Cart
+
+Then "devsmoke-CLReorder-1" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData-dev	    | CLReorder		| CLReorder4  |	 -  			  |	-					|
+| CACData-dev	    | CLReorder		| CLReorder3  |	 -				  |		-			    |
+
+Then "devsmoke-CLReorder-1" Customer Goes to the Shopping Cart
+
+Then "devsmoke-CLReorder-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+| Shipping Information   |
+
+Then "devsmoke-CLReorder-1" Customer reviews right Navigation box in shipping information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData-dev	    | CLRightNav		| CLNav1	 | No			|
+
+Then "devsmoke-CLReorder-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "devsmoke-CLReorder-1" Customer reviews right Navigation box in shipping method page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData-dev	    | CLRightNav		| CLNav1	 | No			|
+
+Then "devsmoke-CLReorder-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "devsmoke-CLReorder-1" Customer reviews right Navigation box in Payment information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData-dev	    | CLRightNav		| CLNav1	 | No			|
+
+Then "devsmoke-CLReorder-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName	    | CCSheetName | CCRowId |GuestPayment|
+| -		     	    | -              | true                  | -                  | CACData-dev         | CreditCard  | cc1     | CreditCard |
+
+Then "devsmoke-CLReorder-1" Customer verifies the right Navigation box in Review Order page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData-dev	    | CLRightNav		| CLNav1	 | No			|
+
+Then "devsmoke-CLReorder-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "devsmoke-CLReorder-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-devsmoke	        | CLReorder  | devsmoke-CLReorder-1 |
+
+#-----------------------------------------------------------------------------------------------------------
+@devsmoke-DLGuest-1
+Scenario: Anonymous User performs Paypal Checkout for 1-DC item,1-CH item
+
+Given  "devsmoke-DLGuest-1" Customer starts the scenario:
+| InputFileName       | SheetName 	  | RowId        		     |
+| QC-devsmoke         | DLGuest    | devsmoke-DLGuest-1   |
+
+#Given "devsmoke-DLGuest-1" Customer login to the paypal.com:
+#| InputFileName       | SheetName 	  | RowId       |
+#| CACData-dev		      | Paypal	      | paypal1	    |
+
+And "devsmoke-DLGuest-1" Customer Clears the Shopping Cart
+
+And "devsmoke-DLGuest-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData-dev    | search    | loyaltysave1 |
+
+Then "devsmoke-DLGuest-1" Customer adds Daily Living items to the cart from search.
+
+And "devsmoke-DLGuest-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData-dev    | search    | CH1      |
+
+Then "devsmoke-DLGuest-1" Customer adds Daily Living items to the cart from search.
+
+Then "devsmoke-DLGuest-1" Customer Goes to the Shopping Cart
+
+Then "devsmoke-DLGuest-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "devsmoke-DLGuest-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "devsmoke-DLGuest-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Sowmithra      | S     | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |wag_sdduserqa3@yahoo.com | 8471234567   |  Yes	       |
+
+Then "devsmoke-DLGuest-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "devsmoke-DLGuest-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData-dev        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "devsmoke-DLGuest-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "devsmoke-DLGuest-1" Customer finished testing the scenario:
+| InputFileName        | SheetName 	     | RowId                 |
+| QC-devsmoke          | DLGuest      | devsmoke-DLGuest-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@devsmoke-MixCart-1
+Scenario: Customer is able to checkout the combination of DC item, New Rx,CL,CH item
+
+Given  "devsmoke-MixCart-1" Customer starts the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-devsmoke   | MixCart | devsmoke-MixCart-1 |
+
+Given "devsmoke-MixCart-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       |
+| CommonData-dev  	 | login     | NewRxLogin |
+
+And "devsmoke-MixCart-1" Customer Clears the Shopping Cart
+
+And "devsmoke-MixCart-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData-dev    | search    | loyaltysave1    |
+
+Then "devsmoke-MixCart-1" Customer adds Daily Living items to the cart from search.
+
+Then "devsmoke-MixCart-1" Customer clicks on an object and validates the expected results:
+| InputFileName	 | SheetName        | RowId 	        	|
+|	CommonData-dev         | LinkNavigation   | NewPrescriptionLink   |
+
+When  "devsmoke-MixCart-1" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           |  Anderson      | 8471234567        | Aspirin 10 Mg       | 12           |
+
+And "devsmoke-MixCart-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId  |
+| CommonData-dev    | search    | CH1	 |
+
+Then "devsmoke-MixCart-1" Customer adds Daily Living items to the cart from search.
+
+And "devsmoke-MixCart-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData-dev    | search    | cl1   |
+
+Then "devsmoke-MixCart-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "devsmoke-MixCart-1" Customer clicks on proceed to checkout button in the cart:
+|ExpectedTargetPage   |
+|Pickup Location      |
+
+Then "devsmoke-MixCart-1" Customer selects rx pick up date and time and click on continue
+
+Then "devsmoke-MixCart-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData-dev       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "devsmoke-MixCart-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData-dev	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "devsmoke-MixCart-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "devsmoke-MixCart-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		          | standard                 | standard			        |
+
+Then "devsmoke-MixCart-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName	    | CCSheetName | CCRowId |GuestPayment|
+| -		     	    | -              | true                  | -                  | CACData-dev         | CreditCard  | cc1     | CreditCard |
+
+Then "devsmoke-MixCart-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "devsmoke-MixCart-1" Customer finished testing the scenario:
+| InputFileName | SheetName  | RowId                 |
+| QC-devsmoke   | MixCart | devsmoke-MixCart-1 |
+
+#-----------------------------------------------------------------------------------------------------------
+@devsmoke-RxRefill-1
+Scenario: Authenticated medicare/medicaid user performs combination of Transfer Rx with new and refill rxs Checkout for Self and verifies the absence of Walgreens $25 Coupon
+
+Given  "devsmoke-RxRefill-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        	 |
+| QC-devsmoke				| RxRefill		|devsmoke-RxRefill-1  |
+
+Given "devsmoke-RxRefill-1" Customer login to the walgreens.com:
+| InputFileName			 | SheetName | RowId      					|
+| CommonData-dev     | login     | refillpickuplogin    |
+
+And "devsmoke-RxRefill-1" Customer Clears the Shopping Cart
+
+Then  "devsmoke-RxRefill-1" Customer adds prescriptions for refill to cart:
+| InputFileName 		| SheetName | RowId   	    |AutoRefill |
+| CACData-dev       | RefillRx  | retailRx1    |No		      |
+
+Then "devsmoke-RxRefill-1" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "devsmoke-RxRefill-1" Customer selects rx pick up date and time and click on continue
+
+Then "devsmoke-RxRefill-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "devsmoke-RxRefill-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	  	|
+| QC-devsmoke		  	| RxRefill	  |devsmoke-RxRefill-1   |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@devsmoke-PickUp-1
+Scenario: Customer Adds a Daily living item to the cart for pick up store, verifies pick up store, payment, billing, order review and order confirmation page
+
+Given "devsmoke-PickUp-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        |
+| QC-devsmoke		| PickUp		| devsmoke-PickUp-1|
+
+Given "devsmoke-PickUp-1" Customer login to the walgreens.com:
+| InputFileName | SheetName 	| RowId     |
+| CommonData-dev    | login         | devlogin1  |
+
+And "devsmoke-PickUp-1" Customer Clears the Shopping Cart
+
+And  "devsmoke-PickUp-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   |
+| CommonData-dev    | search    | pickup_DL1  |
+
+Then "devsmoke-PickUp-1" Customer adds Daily Living items to the cart from search.
+
+Then "devsmoke-PickUp-1" Customer Goes to the Shopping Cart
+
+Then "devsmoke-PickUp-1" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "devsmoke-PickUp-1" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		          |
+| CommonData-dev       | storedetails   | storeselection2 	  |
+
+Then "devsmoke-PickUp-1" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| CommonData-dev       | ProductDetails  | ProductInformation1 |
+
+Then "devsmoke-PickUp-1" Customer saves the item details from the Shopping Cart page:
+
+Then "devsmoke-PickUp-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| PickUpDetails 	   |
+
+Then "devsmoke-PickUp-1" Customer verifies the PickUp Window Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   			   |
+| CommonData-dev       | pickuppage   | sddwebonlyPickupdata1 |
+
+Then "devsmoke-PickUp-1" Customer validates the Store Information:
+| InputFileName | SheetName 	| RowId   		          |
+| CommonData-dev       | storedetails  | storeselection2		  |
+
+Then "devsmoke-PickUp-1" Customer validates links, Product and Contact Details from Pickup Information page:
+| InputFileName | SheetName    | RowId   		         |
+| CommonData-dev       | pickuppage   | sddwebonlyPickupdata1   |
+
+Then "devsmoke-PickUp-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName	    | CCSheetName | CCRowId |GuestPayment|
+| -		     	    | -              | true                  | -                  | CACData-dev         | CreditCard  | cc1     | CreditCard |
+
+Then "devsmoke-PickUp-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "devsmoke-PickUp-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName | SheetName    			   | RowId    	|
+| CACData-dev       | OrderConfirmationDetails |devsmoke-PickUp-1 |
+
+Then "devsmoke-PickUp-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-devsmoke        | Pickup	| devsmoke-PickUp-1	|
+#------------------------------------------------------------------------------------------------------------------------------------------------

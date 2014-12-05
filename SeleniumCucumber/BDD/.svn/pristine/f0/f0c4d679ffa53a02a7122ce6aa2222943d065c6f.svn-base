@@ -1,0 +1,975 @@
+@checkout @ContactLensSelfOrdering
+Feature: Customer is able to do Contact Lens Checkout for Self
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-1
+Scenario: Guest User, Proceed to checkout login , No doctor in profile , enter fields that get search results  , Continue , Check Copy on Search results page, 
+Expand New Search Modify search to get no results , verify Copy to change to Null results, Click Back to Patient , Modify search to get results, Continue , check Copy
+
+Given  "CL-CLSelf-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-1	|
+
+And "CL-CLSelf-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-1" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "CL-CLSelf-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId 		     |
+| -		             | yes    | -	     | CommonData    | login     | refillRx3     	 |
+
+Then "CL-CLSelf-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL1Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data2   |    -		 		 |  Yes    	  |     -         |  -	 		  |  -		 		   | Yes  		    |   - 			| - 	   |  -			  		  |  -			 	     |
+| CACData	    | CLPatientDoctorInfo  | CL1Data3   |    -		 		 |  -	  	  |     -         |  -	 		  |  -		  		   | -    		    |  NullResults	| - 	   |  Yes		  		  |  PatientInfoPage     |
+
+Then "CL-CLSelf-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 					|   - 					   |
+
+Then "CL-CLSelf-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |    -		 		 |  -	  	  |     -         |  -	 	      |  -		           | -      		|   - 			| Yes 	   |  -			  		  |  ShippingInfoPage	|
+
+Then "CL-CLSelf-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-1	|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-2
+Scenario: Logged in User , CL Only Cart , Check progress Bar , no Doctor in Profile , Enter No fields City Click Continue . Alert .Enter Phone Number , Continue , Expand New Search Check Phone Prepopulation , Click Continue to Shopping, Submit order.
+
+Given  "CL-CLSelf-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-2	|
+
+Given "CL-CLSelf-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | refillRx3        |
+
+And "CL-CLSelf-2" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-2" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-2" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL2Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-2" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL2Data2   |   Yes 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  ContinuetoShipError  |  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL2Data3   |   -	 			 | -		  |   -  		  |  -			  | Yes	  			   |  -     		|  -					|  - 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "CL-CLSelf-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-2	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-3
+Scenario: Logged in User , CL and SS cart , check no progress bar, no Doctor in profile,   Enter Only Store and State and click Contintue , Click Continue to Shipping ,  Check alert and Prepopulation . Expand New Search Check prepop fields , Add City ,Last Name , fax and Address  
+and Click Continue to Shipping , Still Alert, Delete all fields in New Search and CLick Continue to Shipping , check alert. CLick back to patient info enter Phone continue, Expand new search all fields prepop , Continue to Shipping , No alert , Submit order
+
+Given  "CL-CLSelf-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-3	|
+
+Given "CL-CLSelf-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData    | login     | BatmanLightUser |
+
+And "CL-CLSelf-3" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | dl1   |
+
+Then "CL-CLSelf-3" Customer adds Daily Living items to the cart from search.
+
+And "CL-CLSelf-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-3" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-3" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-3" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL3Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-3" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL3Data2    |   Yes 			 | -		  |   Yes 		  |  CL3Data1	  | -	  			   |  -     		|  ContinuetoShipError  |  - 	  | 	   -			 | 	-				    |
+| CACData	    | CLPatientDoctorInfo  | CL3Data3    |   -	 			 | -		  |   -  		  |  -			  | Yes	  			   |  -     		|  ContinuetoShipError	|  - 	  | 	   -			 | 	-				    |
+| CACData	    | CLPatientDoctorInfo  | CL3Data4    |   -	 			 | -		  |   - 		  |  -			  | Yes	  			   |  -     		|  -					|  - 	  | 	   Yes			 | 	 PatientInfoPage    |
+
+
+Then "CL-CLSelf-3" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL3Data6   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-3" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL3Data5   |   -	 			 | Yes		  |   Yes 		  |  CL3Data6	  | -	  			   |  -     		|  -					|  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL3Data5   |   Yes 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  - 	  | 	   -			 | 	 ShippingInfo	    |
+
+Then "CL-CLSelf-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-3	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-4
+Scenario: Guest User, Proceed to checkout, login, one doctor in profile , Click find new doctor ,Enter Store and State and click Continue , Search results 
+Expand New Search Delete all fields in New Search and CLick new search , check alert. Enter ZIP and new search, verify result correct, select search results, select results , proceed to checkout Submit.
+
+Given  "CL-CLSelf-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-4	|
+
+And "CL-CLSelf-4" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| SigninorRegister   |
+
+Then "CL-CLSelf-4" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId 	        |
+| -		             | yes    | -	     | CommonData    | login     | ClDobUser2       |
+
+Then "CL-CLSelf-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL4Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL4Data2   |   -	 			 | Yes		  |   - 		  |  -			  | -	  			   |  Yes    		|  NullResults    		|  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL4Data3   |   -	 			 | Yes		  |   - 		  |  -			  | -	  			   |  Yes     		|  -					|  Yes	  | 	   -			 | 	 ShippingInfo	    |
+
+Then "CL-CLSelf-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+# Customer submits the order
+Then "CL-CLSelf-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-4	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-5
+Scenario: Logged in user, For Pt, no doctor info in profile, Enter Only Doctor Last Name and Fax and click Conitnue , Click Continue to Shipping ,Check alert and Prepopulation . 
+Expand New Search Check fields in New form, Enter City and Store and Click Continue to Shipping , Still Alert,Add Phone in New Search Continue to Shipping , No alert , Submit order
+
+Given  "CL-CLSelf-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-5	|
+
+Given "CL-CLSelf-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                |
+| CommonData    | login     | refillRx3            |
+
+And "CL-CLSelf-5" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-5" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL5Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL5Data2    |   Yes 			 | -		  |   Yes 		  |  CL5Data1	  | -	  			   |  -     		|  ContinuetoShipError  |  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL5Data3    |   -  			 | -		  |   - 		  |  -	    	  | Yes	  			   |  -     		|  ContinuetoShipError	|  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL5Data4    |   -  			 | -		  |   - 		  |  -	    	  | Yes	  			   |  -     		|  -					|  - 	  | 	   -			 | 	 ShippingInfo	    |
+
+Then "CL-CLSelf-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-5	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-6
+Scenario: Logged in user, For Pt, no doctor info in profile, NO Radio, Check Tool tip in doctor info and tool tip in Doctor info Check fields a) Store b)Doctor's last name, c) City d) State e) Phone f) Fax number , Enter No Fields check alert .
+Enter fields a) Store b)Doctor's last name, c) City d) State e) Phone f) Fax number , Continue. Expand New Search Check all fields Prepopulation . Click Continue to SHipping , Submit Order
+
+Given  "CL-CLSelf-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-6	|
+
+Given "CL-CLSelf-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | ClDobUser1	 |
+
+And "CL-CLSelf-6" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-6" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL6Data1   | 	Yes 	| - 						|  NoEntry						 |
+| CACData       |	CLPatientDoctorInfo | CL6Data2   | 	Yes 	| - 						|  -							 |
+
+Then "CL-CLSelf-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL6Data3   |   -	 			 | Yes		  |   Yes 		  |  CL6Data2	  | -	  			   |  -     		|  -					|  - 	  | 	   -			 | 	 -				    |
+| CACData	    | CLPatientDoctorInfo  | CL6Data3   |   Yes	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|   -					|  - 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CL-CLSelf-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-6" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-6	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-7
+Scenario: Logged in user, For Pt,  less than 13 yrs DOB in Profile,verify Patient Name and DOB prepopulate  , no doctor info in profile , check pre-populate no drp dwn,Chk fields, 
+Enter fields State Continue , Verify result correct Select Search results, proceed and submit in JS Chk tooltip
+
+Given  "CL-CLSelf-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-7	|
+
+Given "CL-CLSelf-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId              |
+| CommonData    | login     | refillRx3      	 |
+
+And "CL-CLSelf-7" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-7" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL7Data1   | 	Yes 	| - 						|  -							 |
+
+Then "CL-CLSelf-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL7Data2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes	  | 	   -			 | 	ShippingInfo        |
+
+Then "CL-CLSelf-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-7" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-7	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-8
+Scenario: Logged in user, For Pt, One doctor info in profile , Click find new Doctor,  Enter fields State , Click Continue .Check Search results.CLick select , Proceed Submit order.
+
+Given  "CL-CLSelf-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-8	|
+
+Given "CL-CLSelf-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData    | login     | Clwith1DocUser1 |
+
+And "CL-CLSelf-8" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-8" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-8" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-8" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 	 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL8Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-8" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL8Data2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CL-CLSelf-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-8" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-8	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-9
+Scenario: Logged in user, For Pt, One doctor info in profile check tool tip for Patient and Doctor ,Choose defaulted Doctor Continue and Submit.
+
+Given  "CL-CLSelf-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-9	|
+
+Given "CL-CLSelf-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId           |
+| CommonData    | login     | Clwith1DocUser1 |
+
+And "CL-CLSelf-9" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-9" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-9" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 	 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL9Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+
+Then "CL-CLSelf-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-9" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-9	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-10
+Scenario: Logged in user, For Pt, Multiple doctor info in profile , check tool tip for Patient and Doctor ,Change Doctor and check Address change, check tool tip for Patient and Doctor, check  drp dwn,choose one, Continue and submit in JS Chk tooltip
+
+Given  "CL-CLSelf-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-10	|
+
+Given "CL-CLSelf-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          	   |
+| CommonData    | login     | Clwithmultipledoc1   |
+
+And "CL-CLSelf-10" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-10" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-10" Customer Goes to the Shopping Cart
+
+Then "CL-CLSelf-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLSelf-10" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 	  |Continue	    |AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL10Data1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLSelf-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLSelf-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+
+Then "CL-CLSelf-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-10" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-10	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-11
+Scenario: CL only Cart, Check shipping method description in shipping method page, submit order in JS version
+
+Given  "CL-CLSelf-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-11	|
+
+Given "CL-CLSelf-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | refillRx3    |
+
+And "CL-CLSelf-11" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-11" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+
+Then "CL-CLSelf-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+|Doctor Information 	 |
+
+Then "CL-CLSelf-11" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CL-CLSelf-11" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLSelf-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage|
+| -               | -                        | standard                 |  Yes				|
+
+Then "CL-CLSelf-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-11" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     	  |
+| CheckoutOrderDetails  | OrderIds 	   |CL-CLSelf-11  |
+
+Then "CL-CLSelf-11" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-11" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-11	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-12
+Scenario: Add CL from reorder page , Check shipping method description in shipping method page, submit order in JS versio
+
+Given  "CL-CLSelf-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-12	|
+
+Given "CL-CLSelf-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | ClDobUser3   |
+
+And "CL-CLSelf-12" Customer Clears the Shopping Cart
+
+Then "CL-CLSelf-12" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder4  |	 -  			  |	-					|
+
+
+Then "CL-CLSelf-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+|Shipping Information    |
+
+Then "CL-CLSelf-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage |
+| -               | -                        | standard                 | Yes			     |
+
+Then "CL-CLSelf-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-12" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-12	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-13
+Scenario: CL and SS only Cart, Check shipping method description for CL in shipping method page, submit order in JS version
+
+Given  "CL-CLSelf-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-13	|
+
+Given "CL-CLSelf-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       |
+| CommonData    | login     | refillRx3   |
+
+And "CL-CLSelf-13" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CL-CLSelf-13" Customer adds Daily Living items to the cart from search.
+
+And "CL-CLSelf-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-13" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+| Doctor Information     |
+
+Then "CL-CLSelf-13" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CL-CLSelf-13" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLSelf-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage|
+| -               | standard                 | standard                 | Yes				|
+
+Then "CL-CLSelf-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-13" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     	  |
+| CheckoutOrderDetails  | OrderIds 	   |CL-CLSelf-13  |
+
+Then "CL-CLSelf-13" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-13" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-13	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-14
+Scenario: CL , SS and Rx New, transfer, refill in  Cart, Check shipping method description for CL in shipping method page, submit order in JS version
+
+Given  "CL-CLSelf-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-14	|
+
+Given "CL-CLSelf-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	     |
+| CommonData    | login     | MailPlanUser2  |
+
+And "CL-CLSelf-14" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-14" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "CL-CLSelf-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | nonloyalty1  |
+
+Then "CL-CLSelf-14" Customer adds Daily Living items to the cart from search.
+
+When  "CL-CLSelf-14" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | retailRx25 |
+
+When "CL-CLSelf-14" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+When "CL-CLSelf-14" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-123-1234  | CVS Transfer Rx     | 123654             |
+
+Then "CL-CLSelf-14" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou	   |Doctor Information   |
+
+Then "CL-CLSelf-14" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CL-CLSelf-14" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLSelf-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage|
+| standard        | -                        | standard                 | Yes			    |
+
+Then "CL-CLSelf-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-14" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-14" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-14	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-15
+Scenario: CL , Mail plan in  Cart, Check shipping method description for CL in shipping method page, submit order in JS version
+
+Given  "CL-CLSelf-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-15	|
+
+Given "CL-CLSelf-15" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	|
+| CommonData    | login     | MailPlanuser2 |
+
+And "CL-CLSelf-15" Customer Clears the Shopping Cart
+
+When  "CL-CLSelf-15" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | mailrx9   |
+
+And "CL-CLSelf-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-15" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLSelf-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+| Doctor Information     |
+
+Then "CL-CLSelf-15" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CL-CLSelf-15" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLSelf-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLSelf-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage |
+| standard        | -                        | standard                 |  Yes				 |
+
+Then "CL-CLSelf-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-15" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-15" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-15	|
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLSelf-16
+Scenario: CL , Specialty in  Cart, Check shipping method description for CL in shipping method page, submit order in JS version
+
+Given  "CL-CLSelf-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         |
+| QC-CL	        | CLSelf        | CL-CLSelf-16	|
+
+Given "CL-CLSelf-16" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	 |
+| CommonData    | login     | MailPlanuser2  |
+
+And "CL-CLSelf-16" Customer Clears the Shopping Cart
+
+And "CL-CLSelf-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLSelf-16" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When "CL-CLSelf-16" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | SpecialtyRx8   |
+
+Then "CL-CLSelf-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+| Doctor Information     |
+
+Then "CL-CLSelf-16" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		|Continue	|AgeErrorValidationType     |DoctorErrorValidationType      |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes     | - 					    |   - 					  		|
+
+Then "CL-CLSelf-16" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CL-CLSelf-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CL-CLSelf-16" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	     | DatePickerLogic  |Date  	   |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx8   | 	-			   |  Default  | 	-	  |    - 	  |   -			  |
+
+Then "CL-CLSelf-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |CLShipMethodMessage|
+| -               | -                        | standard                 |Yes				|
+
+Then "CL-CLSelf-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLSelf-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLSelf-16" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLSelf-16" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	|
+| QC-CL	        | CLSelf    | CL-CLSelf-16	|

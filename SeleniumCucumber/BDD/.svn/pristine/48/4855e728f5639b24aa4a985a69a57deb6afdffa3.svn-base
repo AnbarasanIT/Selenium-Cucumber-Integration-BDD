@@ -1,0 +1,209 @@
+@misc @EmailVerifications
+Feature: Customer is able Opens his personal email and performs required operations
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-1
+Scenario: Non-Loyalty Customers verifies Rx Order Confirmation Email
+
+Given  "EMAIL-CORE-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-1 |
+
+Given "EMAIL-CORE-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId           |
+| CommonData    | login		 | nonloyaltyuser1 |
+
+Given "EMAIL-CORE-1" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser1|
+
+And "EMAIL-CORE-1" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser1|
+
+Then "EMAIL-CORE-1" Customer opens the required Email:
+|EmailType  	|
+|RxConfirmation |
+
+And "EMAIL-CORE-1" Customer Verifies the Loylaty Info from Email:
+|EmailType 		 |LoyaltyBanner  | ActivateNow | JoinNow  | LearnMore |
+|RxConfirmation  | Yes           |   Yes 	   |  Yes     |  Yes      |
+
+Then "EMAIL-CORE-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-2
+Scenario: Non-Loyalty Customers verifies Order Details Email for Loyalty Savings and Bonus Points
+
+Given  "EMAIL-CORE-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-2 |
+
+Given "EMAIL-CORE-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId           |
+| CommonData    | login		 | nonloyaltyuser1 |
+
+Given "EMAIL-CORE-2" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser1|
+
+And "EMAIL-CORE-2" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser1|
+
+Then "EMAIL-CORE-2" Customer opens the required Email:
+|EmailType       	|
+|SSitemConfirmation |
+
+And "EMAIL-CORE-2" Customer Verifies the Loylaty Info from Email:
+|EmailType 			|LoyaltySaveMsg  | LoyaltyBonuPointMsg | JoinNowLInk  |  
+|SSitemConfirmation	| Yes 	         |   Yes	           |  Yes         |  
+
+Then "EMAIL-CORE-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-3
+Scenario: Non-Loyalty Customers verifies Order Details Email for Bonus Points
+
+Given  "EMAIL-CORE-3" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-3 |
+
+Given "EMAIL-CORE-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId           |
+| CommonData    | login		 | nonloyaltyuser2 |
+
+Given "EMAIL-CORE-3" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser2|
+
+And "EMAIL-CORE-3" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser2|
+
+Then "EMAIL-CORE-3" Customer opens the required Email:
+|EmailType       	|
+|SSitemConfirmation |
+
+And "EMAIL-CORE-3" Customer Verifies the Loylaty Info from Email:
+|EmailType 			|LoyaltySaveMsg  | LoyaltyBonuPointMsg | JoinNowLInk  |  
+|SSitemConfirmation	| No 	         |   Yes	           |  Yes         |  
+  
+Then "EMAIL-CORE-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-4
+Scenario: Non-Loyalty Customers verifies Order Details Email for Savings
+
+Given  "EMAIL-CORE-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-4 |
+
+Given "EMAIL-CORE-4" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId           |
+| CommonData    | login		 | nonloyaltyuser3 |
+
+Given "EMAIL-CORE-4" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser3|
+
+And "EMAIL-CORE-4" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser3|
+
+Then "EMAIL-CORE-4" Customer opens the required Email:
+|EmailType       	|
+|SSitemConfirmation |
+
+And "EMAIL-CORE-4" Customer Verifies the Loylaty Info from Email:
+|EmailType 			|LoyaltySaveMsg  | LoyaltyBonuPointMsg | JoinNowLInk  |  
+|SSitemConfirmation	| Yes 	         |   No 	           |  Yes         |  
+
+Then "EMAIL-CORE-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-4 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-5
+Scenario: Non-Loyalty Customers verifies Order Details Email and finds only JoinNow LInk
+
+Given  "EMAIL-CORE-5" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-5 |
+
+Given "EMAIL-CORE-5" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId           |
+| CommonData    | login		 | nonloyaltyuser4 |
+
+Given "EMAIL-CORE-5" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser4|
+
+And "EMAIL-CORE-5" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | nonloyaltyuser4|
+
+Then "EMAIL-CORE-5" Customer opens the required Email:
+|EmailType       	|
+|SSitemConfirmation |
+
+And "EMAIL-CORE-5" Customer Verifies the Loylaty Info from Email:
+|EmailType 			|LoyaltySaveMsg  | LoyaltyBonuPointMsg | JoinNowLInk  |  
+|SSitemConfirmation	| No 	         |   No 	           |  Yes         |  
+
+Then "EMAIL-CORE-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-6
+Scenario: Non-Loyalty Customers deletes all his personal emails
+
+Given "EMAIL-CORE-6" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-6 |
+
+Given "EMAIL-CORE-6" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId           |
+| CommonData     | login     | nonloyaltyuser5 |
+
+And "EMAIL-CORE-6" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId           |
+| CommonData     | login     | nonloyaltyuser5 |
+
+And "EMAIL-CORE-6" Customer deletes all the emails from the Inbox.
+
+Then "EMAIL-CORE-6" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-6 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@EMAIL-CORE-7
+Scenario: Customers Archives the required email in Client Email
+
+Given "EMAIL-CORE-7" Customer starts the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-7 |
+
+Given "EMAIL-CORE-7" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId           |
+| CommonData     | login     | nonloyaltyuser6 |
+
+And "EMAIL-CORE-7" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId           |
+| CommonData     | login     | nonloyaltyuser6 |
+
+And "EMAIL-CORE-7" Customer Archive the required Email:
+| InputFileName  | SheetName 	| EmailSubject     | ArchiveFolderName  |
+| CommonData     | GenaralInfo  | EmailSubjectLine1| ArchiveFolderName1 |
+
+Then "EMAIL-CORE-7" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId        |
+| QC-EMAIL      | CORE      | EMAIL-CORE-7 |
+

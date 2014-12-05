@@ -1,0 +1,353 @@
+@pharmacy @ExpressRefillMailPlanAndRetailRx
+Feature:  Customer checkouts the different type of prescriptions in the Express Refill page
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-1
+Scenario: Verify the UI of new Express Refill page and Mail service or Ship to you checkout flow for anonymous user
+
+Given "RX-ExpressRefillFlow-1" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-1 |
+
+Then "RX-ExpressRefillFlow-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId                  |ClickObjectOverlay|TargetOverlay|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | RefillFromAccount      |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | Prescriptionnumberlink |yes               |yes			|
+| PharmacyHomePageLinkVerification         | Anonymous            | CloseWindow            |yes               |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | AddMorePrescriptions   |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | Cancel                 |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |no                |no			|
+
+And "RX-ExpressRefillFlow-1" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |NavFromWagHome |
+| Pharmacy      | Prescription    | Prescription1    |no			 |
+
+Then "RX-ExpressRefillFlow-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId                  |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |
+
+And "RX-ExpressRefillFlow-1" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription2    |
+
+Then "RX-ExpressRefillFlow-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId                  |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |
+
+And "RX-ExpressRefillFlow-1" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription6    |
+
+And "RX-ExpressRefillFlow-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId       	   		|
+| DataBase      | Query         | ExpressRefillQuery1   |
+| DataBase      | Query         | ExpressRefillQuery2   |
+| DataBase      | Query         | ExpressRefillQuery3   |
+| DataBase      | Query         | ExpressRefillQuery4   |
+| DataBase      | Query         | ExpressRefillQuery5   |
+| DataBase      | Query         | ExpressRefillQuery6   |
+| DataBase      | Query         | ExpressRefillQuery7   |
+| DataBase      | Query         | ExpressRefillQuery8   |
+| DataBase      | Query         | ExpressRefillQuery9   |
+| DataBase      | Query         | ExpressRefillQuery10  |
+| DataBase      | Query         | ExpressRefillQuery11  |
+| DataBase      | Query         | ExpressRefillQuery12  |
+| DataBase      | Query         | ExpressRefillQuery13  |
+| DataBase      | Query         | ExpressRefillQuery14  |
+| DataBase      | Query         | ExpressRefillQuery15  |
+
+And "RX-ExpressRefillFlow-1" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | Expressrefill  |
+
+Then "RX-ExpressRefillFlow-1" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | Expressrefill  |
+
+And "RX-ExpressRefillFlow-1" Customer opens the required Email:
+|EmailType  	|
+|RxConfirmation |
+
+Then "RX-ExpressRefillFlow-1" Customer Verifies the Express Order info from Email:
+| InputFileName  | SheetName        | RowId         |EmailType 		 |
+| Pharmacy       | Prescription     | Prescription6 |RxConfirmation  |
+
+Then "RX-ExpressRefillFlow-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-1|
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-2
+Scenario: Verify the UI of new Express Refill page and Mail service or Ship to you checkout flow for logged in user
+
+Given "RX-ExpressRefillFlow-2" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-2 |
+
+Given "RX-ExpressRefillFlow-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData  	| login   	| Expressrefill |
+
+Then "RX-ExpressRefillFlow-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId           	  	 |ClickObjectOverlay|TargetOverlay|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill         	 |no                |no			|
+| PharmacyHomePageLinkVerification         | Authenticated        | ExpressRefillFromAccount |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          	 |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | Prescriptionnumberlink   |yes               |yes		|
+| PharmacyHomePageLinkVerification         | Anonymous            | CloseWindow              |yes               |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | AddMorePrescriptions     |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | Cancel                   |no                |no			|
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill            |no                |no			|
+
+And "RX-ExpressRefillFlow-2" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription1    |
+
+Then "RX-ExpressRefillFlow-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName      | SheetName     | RowId             |
+| Pharmacy           | ExpressOrder  |ExpressCheckout1   |
+
+Then "RX-ExpressRefillFlow-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId                  |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |
+
+And "RX-ExpressRefillFlow-2" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription2    |
+
+Then "RX-ExpressRefillFlow-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId                  |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill          |
+
+And "RX-ExpressRefillFlow-2" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription6    |
+
+Then "RX-ExpressRefillFlow-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName       |  SheetName    | RowId             |
+| Pharmacy            | ExpressOrder  |ExpressCheckout2   |
+
+And "RX-ExpressRefillFlow-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId       	   		|
+| DataBase      | Query         | ExpressRefillQuery1   |
+| DataBase      | Query         | ExpressRefillQuery2   |
+| DataBase      | Query         | ExpressRefillQuery3   |
+| DataBase      | Query         | ExpressRefillQuery4   |
+| DataBase      | Query         | ExpressRefillQuery5   |
+| DataBase      | Query         | ExpressRefillQuery6   |
+| DataBase      | Query         | ExpressRefillQuery7   |
+| DataBase      | Query         | ExpressRefillQuery8   |
+| DataBase      | Query         | ExpressRefillQuery9   |
+| DataBase      | Query         | ExpressRefillQuery10  |
+| DataBase      | Query         | ExpressRefillQuery11  |
+| DataBase      | Query         | ExpressRefillQuery12  |
+| DataBase      | Query         | ExpressRefillQuery13  |
+| DataBase      | Query         | ExpressRefillQuery14  |
+| DataBase      | Query         | ExpressRefillQuery15  |
+
+And "RX-ExpressRefillFlow-2" Customer login to the Email Client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | Expressrefill  |
+
+Then "RX-ExpressRefillFlow-2" Customer goes to the Inbox for the email client:
+| InputFileName  | SheetName | RowId          |
+| CommonData     | login     | Expressrefill  |
+
+And "RX-ExpressRefillFlow-2" Customer opens the required Email:
+|EmailType  	|
+|RxConfirmation |
+
+Then "RX-ExpressRefillFlow-2" Customer Verifies the Express Order info from Email:
+| InputFileName  | SheetName        | RowId         |EmailType 		 |
+| Pharmacy       | Prescription     | Prescription6 |RxConfirmation  |
+
+Then "RX-ExpressRefillFlow-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-2|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-3
+Scenario: Verify the Error validation in Checkout Review page for anonymous user and unauthenticated user
+
+Given "RX-ExpressRefillFlow-3" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-3 |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription4    |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription3    |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription5    |
+
+Given "RX-ExpressRefillFlow-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData  	| login   	| Expressrefill |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription4    |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription3    |
+
+Then "RX-ExpressRefillFlow-3" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-3" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId            |
+| Pharmacy      | Prescription    | Prescription5    |
+
+Then "RX-ExpressRefillFlow-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-3|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-4
+Scenario: Verify the functionality of Cancel button and Remove link for anonymous user and unauthenticated user
+
+Given "RX-ExpressRefillFlow-4" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-4 |
+
+Then "RX-ExpressRefillFlow-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-4" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId           |
+| Pharmacy      | Prescription    | Prescription7   |
+
+Then "RX-ExpressRefillFlow-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId          |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill  |
+
+And "RX-ExpressRefillFlow-4" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId           |
+| Pharmacy      | Prescription    | Prescription8   |
+
+Given "RX-ExpressRefillFlow-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData  	| login   	| Expressrefill |
+
+Then "RX-ExpressRefillFlow-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-4" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId           |
+| Pharmacy      | Prescription    | Prescription7   |
+
+Then "RX-ExpressRefillFlow-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+And "RX-ExpressRefillFlow-4" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId           |
+| Pharmacy      | Prescription    | Prescription8   |
+
+Then "RX-ExpressRefillFlow-4" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-4|
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-5
+Scenario: Verify error validation functionality in Express refill page for anonymous user
+
+Given "RX-ExpressRefillFlow-5" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-5 |
+
+Then "RX-ExpressRefillFlow-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-5" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                     |
+| Pharmacy      | Prescription    | RetailPickUpandMailServiceErrorValidation |
+
+Then "RX-ExpressRefillFlow-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-5" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                    |
+| Pharmacy      | Prescription    | RetailPickandShipToHomeErrorValidation   |
+
+Then "RX-ExpressRefillFlow-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-5" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                      |
+| Pharmacy      | Prescription    | RetailPickUPShipToHomeandMSErrorValidation |
+
+Then "RX-ExpressRefillFlow-5" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-5|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-ExpressRefillFlow-6
+Scenario: Verify error validation functionality in Express refill page for authenticated user
+
+Given "RX-ExpressRefillFlow-6" Customer starts the scenario:
+| InputFileName  | SheetName 	     | RowId      	          |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-6 |
+
+Given "RX-ExpressRefillFlow-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         |
+| CommonData  	| login   	| Expressrefill |
+
+Then "RX-ExpressRefillFlow-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-6" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                     |
+| Pharmacy      | Prescription    | RetailPickUpandMailServiceErrorValidation |
+
+Then "RX-ExpressRefillFlow-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-6" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                    |
+| Pharmacy      | Prescription    | RetailPickandShipToHomeErrorValidation   |
+
+Then "RX-ExpressRefillFlow-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId         |
+| PharmacyHomePageLinkVerification         | Anonymous            | ExpressRefill |
+
+And "RX-ExpressRefillFlow-6" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName | SheetName       | RowId                                      |
+| Pharmacy      | Prescription    | RetailPickUPShipToHomeandMSErrorValidation |
+
+Then "RX-ExpressRefillFlow-6" Customer finished testing the scenario:
+| InputFileName  | SheetName 	     | RowId     	         |
+| QC-RX   		 | ExpressRefillFlow | RX-ExpressRefillFlow-6|
+#-----------------------------------------------------------------------------------------------------------

@@ -1,0 +1,222 @@
+package walgreens.ecom.batch.framework.poc.webservice;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyStore;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.apache.http.entity.StringEntity;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import sun.misc.BASE64Encoder;
+
+public class SOAPTestDemo extends Thread {
+
+    public static void main(String[] args) {
+
+	// VARIABLES
+	// *********
+	String PASSWORD = null;
+	String KEYSTOREFILE = null;
+	String TRUSTSTOREFILE = null;
+	String INPUTFILE = null;
+	String URL = null;
+	String AUTHUSERNAME = "ecomm";
+	String AUTHPASSWORD = "Bi6Id10t";
+	String USECERTIFICATION = "YES";
+	String USEAUTHENTICATION = "NO";
+	//String CONNECTIONTYPE="http";
+	String CONNECTIONTYPE = "https";
+
+	// CONNECTION PROPERTIES
+	// *********************
+	URL = "https://wagtzdpi.walgreens.com:10045/memberenroll";
+	//URL = "http://devsb01.walgreens.com:15030";
+	//URL = 
+	PASSWORD = "changeit";
+	KEYSTOREFILE = "C:\\EcomQA\\workspace\\batch9qa_catwoman\\src\\walgreens\\ecom\\batch\\framework\\poc\\webservice\\Certificates\\loyaltyclientKeyStore.jks";
+	TRUSTSTOREFILE = "C:\\EcomQA\\workspace\\batch9qa_catwoman\\src\\walgreens\\ecom\\batch\\framework\\poc\\webservice\\Certificates\\wagtzdpiTruststore";
+	//INPUTFILE ="C:\\EcomQA\\workspace\\batch9qa_catwoman\\src\\walgreens\\ecom\\batch\\framework\\poc\\webservice\\SOAP_ICPLUS_PSPTSPRSCSvcC2.xml";
+	INPUTFILE = "C:\\EcomQA\\workspace\\batch9qa_catwoman\\src\\walgreens\\ecom\\batch\\framework\\poc\\webservice\\SOAP_LTY_MEMBERENROLL.xml";
+
+	// SET KEYSTORE_TRUSTSTORE
+	System.setProperty("javax.net.ssl.keyStore", KEYSTOREFILE);
+	System.setProperty("javax.net.ssl.keyStorePassword", PASSWORD);
+	System.setProperty("javax.net.ssl.trustStore", KEYSTOREFILE);
+	System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
+
+	// METHOD CALL TO REPLACE THE TEMPLATE XML WITH ACTUAL VALUES WILL GO IN HERE
+	// To Do
+
+	OutputStream out = null;
+	Writer wout = null;
+	InputStream in = null;
+	boolean resultFlag = true;
+
+	try {
+	    
+	    
+	    StringWriter writer = null;
+	    String xmlString = null;
+	    DocumentBuilderFactory docFactory = null;
+	    DocumentBuilder docBuilder = null;
+	    Document xmlDoc = null;
+	    DOMSource source = null;
+	    StreamResult result = null;
+	    TransformerFactory tFactory = null;
+	    Transformer transformer = null;
+
+	    try {
+		docFactory = DocumentBuilderFactory.newInstance();
+		docBuilder = docFactory.newDocumentBuilder();
+		xmlDoc = docBuilder.parse(INPUTFILE);
+		source = new DOMSource(xmlDoc.getDocumentElement());
+		writer = new StringWriter();
+		result = new StreamResult(writer);
+		tFactory = TransformerFactory.newInstance();
+		transformer = tFactory.newTransformer();
+		transformer.transform(source, result);
+		xmlString = writer.getBuffer().toString();
+	    } catch (Exception ex) {
+		System.out.println(ex);
+	    } finally {
+		try {
+
+		    result = null;
+		    writer = null;
+		    source = null;
+		    xmlDoc = null;
+		    docBuilder = null;
+		    docFactory = null;
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
+	    }
+	    
+	    // KS related stuff
+	    
+	    HostnameVerifier hv = new HostnameVerifier() {
+		public boolean verify(String urlHostName, SSLSession session) {
+		    System.out.println("Warning: URL Host: " + urlHostName + " vs. " + session.getPeerHost());
+		    return true;
+		}
+	    };
+
+	    KeyStore ks = KeyStore.getInstance("JKS");
+	    ks.load(new FileInputStream(KEYSTOREFILE), PASSWORD.toCharArray());
+	    KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+	    kmf.init(ks, PASSWORD.toCharArray());
+
+	    TrustManager[] tm;
+	    TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+	    tmf.init(ks);
+	    tm = tmf.getTrustManagers();
+
+	    SSLContext sslContext = SSLContext.getInstance("SSL");
+	    sslContext.init(kmf.getKeyManagers(), tm, null);
+
+	    SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+	    // CONNECTION
+	    java.net.URL url = null;
+	    HttpURLConnection connection = null;
+	    if (CONNECTIONTYPE.equalsIgnoreCase("HTTP")) {
+		url = new URL(URL);
+		connection = (HttpURLConnection) url.openConnection();
+	    } else if (CONNECTIONTYPE.equalsIgnoreCase("HTTPS")) {
+		url = new URL(null, URL, new sun.net.www.protocol.https.Handler());
+		HttpsURLConnection.setDefaultHostnameVerifier(hv);
+		connection = (HttpsURLConnection) url.openConnection();
+		((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
+	    } else {
+		
+	    }
+
+	    if (USEAUTHENTICATION.equalsIgnoreCase("YES")) {
+		BASE64Encoder enc = new sun.misc.BASE64Encoder();
+		String encodedAuthorization = enc.encode((AUTHUSERNAME + ":" + AUTHPASSWORD).getBytes());
+		connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
+	    }
+
+	    connection.setDoOutput(true);
+	    connection.setDoInput(true);
+	    connection.setRequestMethod("POST");
+
+	    out = connection.getOutputStream();
+	    wout = new OutputStreamWriter(out);
+	    StringEntity se=null;
+	    wout.write(xmlString);
+
+	    wout.flush();
+	    wout.close();
+
+	    in = connection.getInputStream();
+
+	    StringBuilder sb = new StringBuilder();
+
+	    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+
+	    String line;
+	    while ((line = r.readLine()) != null) {
+		sb.append(line);
+	    }
+
+	    System.out.println("\n RESPONSE: \n" + sb.toString());
+
+	    in.close();
+
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+	    DocumentBuilder builder;
+
+	    builder = factory.newDocumentBuilder();
+
+	    // Use String reader
+	    Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
+
+	    TransformerFactory tranFactory = TransformerFactory.newInstance();
+	    Transformer aTransformer = tranFactory.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+	    Source src = new DOMSource(document);
+	    Result dest = new StreamResult(new File("C:\\EcomQA\\workspace\\batch9qa_catwoman\\src\\walgreens\\ecom\\batch\\framework\\poc\\webservice\\response.xml"));
+	    aTransformer.transform(src, dest);
+
+	} catch (Exception ex) {
+	    System.out.println(ex);
+	} finally {
+	    try {
+		in.close();
+	    } catch (Exception ex) {
+		System.out.println(ex);
+	    }
+	}
+
+    }
+
+}

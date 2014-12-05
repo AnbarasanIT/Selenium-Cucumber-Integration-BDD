@@ -1,0 +1,1145 @@
+@dailyliving @OptimizedCheckout
+Feature: Customer is able to do checkout and Address validations in Shipping information page
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-1
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_CC paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-1" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-1|
+
+And "CAC-OptimizedCheckout-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-1" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-1" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-OptimizedCheckout-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-OptimizedCheckout-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-1|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-2
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_PayPal paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-2|
+
+And "CAC-OptimizedCheckout-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-2" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-2" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-OptimizedCheckout-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-OptimizedCheckout-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-2|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@CAC-OptimizedCheckout-3
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-3" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-3|
+
+And "CAC-OptimizedCheckout-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-3" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-3" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-OptimizedCheckout-3" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-OptimizedCheckout-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-3|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-4
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_CC paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-4|
+
+Then "CAC-OptimizedCheckout-4" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-4" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+
+And "CAC-OptimizedCheckout-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-4" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-4" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -  	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-4" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-4|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-5
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_PayPal paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-5|
+
+Then "CAC-OptimizedCheckout-5" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-5" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-5" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-5" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-5" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-5|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@CAC-OptimizedCheckout-6
+Scenario: Optimized Checkout_DL in cart_Guest User_No Shipping Info_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		 |
+| QC-CAC        | OptimizedCheckout	| CAC-OptimizedCheckout-6|
+
+Then "CAC-OptimizedCheckout-6" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-6" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-6" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-6" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | expedited		         |     -			        |
+
+Then "CAC-OptimizedCheckout-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-6" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-6|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-7
+Scenario: Optimized Checkout_CL in cart_Newly Registered User_No Shipping Info_CC paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-7|
+
+Then "CAC-OptimizedCheckout-7" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-7" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-7" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-7" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2     | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-OptimizedCheckout-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -  	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -			             |  overnight		        |
+
+Then "CAC-OptimizedCheckout-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-7" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-7|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-8
+Scenario: Optimized Checkout_CL in cart_Newly Registered User_No Shipping Info_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-8|
+
+Then "CAC-OptimizedCheckout-8" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-8" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-8" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-8" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-8" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2	 | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-8" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-OptimizedCheckout-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -  	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -			             |  overnight		        |
+
+Then "CAC-OptimizedCheckout-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-8" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-8|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-9
+Scenario: Optimized Checkout_CL in cart_Newly Registered User_No Shipping Info_CC paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-9|
+
+Then "CAC-OptimizedCheckout-9" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-9" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-9" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-9" Customer Goes to the Shopping Cart
+
+And "CAC-OptimizedCheckout-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-9" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-9" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-9" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2     | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-9" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-OptimizedCheckout-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -  	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -			             |  overnight		        |
+
+Then "CAC-OptimizedCheckout-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-9" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-9|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-10
+Scenario: Optimized Checkout_CL in cart_Newly Registered User_No Shipping Info_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-10|
+
+Then "CAC-OptimizedCheckout-10" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | 		SheetName     	| RowId           |
+| Global Register    | -      |  -	     | -			 | 			-			| -				  |
+
+Then "CAC-OptimizedCheckout-10" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser2 |
+
+And "CAC-OptimizedCheckout-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-10" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-10" Customer Goes to the Shopping Cart
+
+And "CAC-OptimizedCheckout-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-10" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-10" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-10" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2	 | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-10" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+Then "CAC-OptimizedCheckout-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  -  	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -			             |  overnight		        |
+
+Then "CAC-OptimizedCheckout-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-10" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-10|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-11
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_CC paymentType in profile_Place Order
+
+Given  "CAC-OptimizedCheckout-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-11|
+
+Given "CAC-OptimizedCheckout-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-11" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-11" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-11" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-11|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-12
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-12|
+
+Given "CAC-OptimizedCheckout-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-12" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-12" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+Then "CAC-OptimizedCheckout-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-12" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-12|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-13
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_PayPal paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-13" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-13|
+
+Given "CAC-OptimizedCheckout-13" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-13" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-13" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+Then "CAC-OptimizedCheckout-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-13" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-13|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-14
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_CC paymentType in profile_Place Order
+
+Given  "CAC-OptimizedCheckout-14" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-14|
+
+Given "CAC-OptimizedCheckout-14" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-14" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-14" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-14" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-14" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+
+Then "CAC-OptimizedCheckout-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-14" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-14" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-14|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-15
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-15" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-15|
+
+Given "CAC-OptimizedCheckout-15" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-15" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-15" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-15" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1     | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-15" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+
+Then "CAC-OptimizedCheckout-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+Then "CAC-OptimizedCheckout-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-15" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-15|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-16
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_CC paymentType in profile_Place Order
+
+Given  "CAC-OptimizedCheckout-16" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-16|
+
+Given "CAC-OptimizedCheckout-16" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-16" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-16" Customer Goes to the Shopping Cart
+
+And "CAC-OptimizedCheckout-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-16" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-16" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-16" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-16" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+
+Then "CAC-OptimizedCheckout-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-16" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-16|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-17
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-17" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-17|
+
+Given "CAC-OptimizedCheckout-17" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-17" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-17" Customer Goes to the Shopping Cart
+
+And "CAC-OptimizedCheckout-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		|
+| CommonData    | search    | CLProduct2    |
+
+Then "CAC-OptimizedCheckout-17" Customer adds Contact Lens items to the cart from search:
+| Side   | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "CAC-OptimizedCheckout-17" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CAC-OptimizedCheckout-17" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName 			| RowId 		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLuser1info1   | 	Yes 	| - 						|   - 							 |
+
+Then "CAC-OptimizedCheckout-17" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId     	 	|ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 			| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CLuser1info2   |   -	 			 | -		  |   - 		  |  -			  | -	  			   |  -     		|  -					|  Yes 	  | 	   -			 | 	 ShippingInfo       |
+
+
+Then "CAC-OptimizedCheckout-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+Then "CAC-OptimizedCheckout-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | -                     | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-17" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-17|
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-18
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_BML paymentType_Place Order
+
+Given  "CAC-OptimizedCheckout-18" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-18|
+
+Given "CAC-OptimizedCheckout-18" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser02  |
+
+And "CAC-OptimizedCheckout-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-18" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-18" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-18" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+And "CAC-OptimizedCheckout-18" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		-              | -                         |	-	  	 |		1 			|
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-18" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-18|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-19
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_select home address_CC paymentType in profile_Place Order
+
+Given  "CAC-OptimizedCheckout-19" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-19|
+
+Given "CAC-OptimizedCheckout-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-19" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-19" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| homeaddress   	  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-19" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-19|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-20
+Scenario: Optimized Checkout_DL in cart_Existing User_Shipping Info in profile_select shipping address_CC paymentType in profile_Place Order
+
+Given  "CAC-OptimizedCheckout-20" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-20|
+
+Given "CAC-OptimizedCheckout-20" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      	|
+| CommonData    | login     | OptimizedCHKuser01  |
+
+And "CAC-OptimizedCheckout-20" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-20" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-20" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-20" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "CAC-OptimizedCheckout-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| shippingaddress  	  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |
+
+# Customer submits the order
+Then "CAC-OptimizedCheckout-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "CAC-OptimizedCheckout-20" Customer logout from walgreens:
+|Source  |
+|Global  |
+
+Then "CAC-OptimizedCheckout-20" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-20|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-21
+Scenario: Optimized Checkout_DL in cart_Guest User_Shipping Info Address not Found Error_Back to Cart
+
+Given  "CAC-OptimizedCheckout-21" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-21|
+
+And "CAC-OptimizedCheckout-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-21" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-21" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-21" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-OptimizedCheckout-21" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-OptimizedCheckout-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|OptimizedCheckout|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104sadf		| DEE		 | 16    | 60015   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |		Yes		   |
+
+Then "CAC-OptimizedCheckout-21" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-OptimizedCheckout-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-21|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-OptimizedCheckout-22
+Scenario: Optimized Checkout_DL in cart_Guest User_Optimized checkout page_Back to cart_paypalExpress checkout_place order
+
+Given  "CAC-OptimizedCheckout-22" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-22|
+
+And "CAC-OptimizedCheckout-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-OptimizedCheckout-22" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-OptimizedCheckout-22" Customer Goes to the Shopping Cart
+
+Then "CAC-OptimizedCheckout-22" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-OptimizedCheckout-22" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-OptimizedCheckout-22" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City     | State | ZipCode |ZipExtn | EmailAddress    | PhoneNumber  |OffersbyEmail|OptimizedCheckout|Continue|
+| -					  | -                   | -                | -	       | -		   | 		-		| 	-	   | 	-  | -		 |   -    |			-		| 		-	   |  -  	     |		Yes		   |	No  |
+
+Then "CAC-OptimizedCheckout-22" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-OptimizedCheckout-22" Customer clicks on Checkout with Paypal button in the cart:
+|PaypalButton  | ExpectedTargetPage  |
+|		Click  | PaypalSignin 		 |
+
+Then "CAC-OptimizedCheckout-22" Customer Logs into Paypal site and selects address and clicks on continue:
+| InputFileName | SheetName | RowId     |
+| CACData       | Paypal	| Paypal2   |
+
+Then "CAC-OptimizedCheckout-22" Customer makes the selection from Paypal Express Review Order and Submit page:
+| InputFileName | SheetName | RowId   		 |
+| CACData       | Paypal	| SubmitOrder2   |
+
+Then "CAC-OptimizedCheckout-22" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      		  |
+| QC-CAC        | OptimizedCheckout	|  CAC-OptimizedCheckout-22|
+#------------------------------------------------------------------------------------------------------------------------------------------------

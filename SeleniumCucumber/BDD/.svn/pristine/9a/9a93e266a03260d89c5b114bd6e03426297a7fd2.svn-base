@@ -1,0 +1,1019 @@
+@loginandregistration @PharmacyPagesLoyaltyRegistration
+Feature: All the scenarios in the feature are related to Loyalty/WAG Registration when CL item in Cart.
+
+#EHF-696, EHF-713, EHF-951
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-1
+Scenario: Verifying the Confirmation modal for non logged in user for light registration with create new loyalty method by clicking rx 
+home page loyalty banner join now button
+
+Given  "LTY-RXPAGESLTYREG-1" Customer starts the scenario:
+| InputFileName | SheetName  		 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG      | LTY-RXPAGESLTYREG-1 |
+
+Then "LTY-RXPAGESLTYREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | PharmacyTab					 |
+#| 	  CSLR      | LinkNavigation | LoyaltyBannerinRxHomePage	 |
+| 	  CSLR      | LinkNavigation | RegisterButton				 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton	 |
+
+#Then "LTY-RXPAGESLTYREG-1" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	     |
+#| 	  CommonData  | ObjectValidation | MaybeLaterRadioButton |
+
+Then "LTY-RXPAGESLTYREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId     | 
+| -			                  | CreateNew	         | 60015   | Random   | Random    | Random  | Random   | Yes      | CSLR          | PersonalInfo | lightreg9 |
+
+Then "LTY-RXPAGESLTYREG-1" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New          | 
+
+Then "LTY-RXPAGESLTYREG-1" Customer finished testing the scenario:
+| InputFileName | SheetName  		 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG      | LTY-RXPAGESLTYREG-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-2
+Scenario: Verifying the Confirmation modal for non logged in user for light registration with create new loyalty method by clicking rx home page loyalty 
+banner join now button
+
+Given  "LTY-RXPAGESLTYREG-2" Customer starts the scenario:
+| InputFileName | SheetName  		 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG      | LTY-RXPAGESLTYREG-2 |
+
+Then "LTY-RXPAGESLTYREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | PharmacyTab					 |
+#| 	  CSLR      | LinkNavigation | LoyaltyBannerinRxHomePage	 |
+| 	  CSLR      | LinkNavigation | RegisterButton				 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton	 |
+
+#Then "LTY-RXPAGESLTYREG-2" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	     |
+#| 	  CommonData  | ObjectValidation | MaybeLaterRadioButton |
+
+Then "LTY-RXPAGESLTYREG-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone 	  | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId    	     | 
+| 9086034523                  |		ActivateNow      | 07202   | -        | MAR       | 03      | 1971     | Yes      | CSLR          | PersonalInfo | ActivateUserInfo4 |
+
+Then "LTY-RXPAGESLTYREG-2" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "LTY-RXPAGESLTYREG-2" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  Activate     | 
+
+Then "LTY-RXPAGESLTYREG-2" Customer finished testing the scenario:
+| InputFileName | SheetName  		 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG      | LTY-RXPAGESLTYREG-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-3
+Scenario:  Verify that the Updated Confirmation Overlay for the Lite with Rx Registration Flow via Refill Prescriptions Link
+
+Given  "LTY-RXPAGESLTYREG-3" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-3 |
+
+Then "LTY-RXPAGESLTYREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |ClickObjectOverlay | TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharmacyTab					 |		-			 |		-		 |	
+| 	  CSLR      | LinkNavigation | RefillFromAccountAnonymous	 |		-			 |      Yes	  	 |
+| 	  CSLR      | LinkNavigation | NewtoOnlinePharmacy			 |		Yes			 |		-		 |	
+
+Then "LTY-RXPAGESLTYREG-3" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	RxRefillReg2	 |
+
+And "LTY-RXPAGESLTYREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButtoninHippaPage	      	 |
+
+Then "LTY-RXPAGESLTYREG-3" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode4    | Yes 				| 	MATCHED  |
+
+And "LTY-RXPAGESLTYREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		   	 |ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | PharmacyTabtoWagRegOverlay  	 |			-	     |      Yes	     |
+
+Given "LTY-RXPAGESLTYREG-3" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-3" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-3" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode4    |
+
+Then "LTY-RXPAGESLTYREG-3" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-3" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				| 
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-3" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-3 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-4
+Scenario:  Verify that the Pharmacy Registration Page is displayed with Loyalty Options as Optinal by clicking Register link from New, Transfer, AutoRefill and 
+Prescription History, Print Rx Records, Order Status, Family Prescriptions, Refill Reminders Landing Pages.
+
+Given  "LTY-RXPAGESLTYREG-4" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-4 |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | Anonymous      | SetupAutoRefills	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	  |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | Anonymous      | NewPrescriptions	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	  |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | TransferPresriptions	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | PrescriptionHistory	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | PrintRxRecords   	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | ViewOrderStatus   	  |	
+| 	  CSLR     			    | LinkNavigation | RegisterButton	  	  |
+| 	  CSLR     				| LinkNavigation | SignupForRxAccess      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | FamilyPrescriptions 	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | Anonymous      | RxRefillReminders 	  |	
+| 	  CSLR     				| LinkNavigation | RegisterNowLink	      |
+
+#Then "LTY-RXPAGESLTYREG-4" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-4" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-4 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-5
+Scenario:  Verify that the Updated Confirmation Overlay for the Rx Registration Flow via Refill Prescriptions Link
+
+Given  "LTY-RXPAGESLTYREG-5" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-5 |
+
+Then "LTY-RXPAGESLTYREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-5" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | lightreg10 |
+
+Then "LTY-RXPAGESLTYREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      		| RowId 	     	  |ClickObjectOverlay | TargetOverlay |
+| PharmacyLinkVerification  | AdditionalLinks       | RefillFromAccount	  |		  -		      |    Yes		  |
+| PharmacyLinkVerification  | AdditionalLinks       | UpdateNowButton  	  |        Yes		  |     - 	      |
+
+Then "LTY-RXPAGESLTYREG-5" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | validdata4    |
+
+Then "LTY-RXPAGESLTYREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |
+| 	  CSLR      | LinkNavigation | AcceptButtoninHippaPage			   |
+
+Then "LTY-RXPAGESLTYREG-5" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode5    | Yes 				| 	MATCHED  |
+
+Then "LTY-RXPAGESLTYREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	      		    |TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharamcyTabtoRegOverlay	|	Yes		   |
+
+Then "LTY-RXPAGESLTYREG-5" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+|SuccessMessage 		|LoyaltyRegistration|
+| CompleteRegistration  |			-		|
+
+Given "LTY-RXPAGESLTYREG-5" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-5" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-5" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode5    |
+
+Then "LTY-RXPAGESLTYREG-5" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-5" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-5" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-6
+Scenario:  Verify that the Pharmacy Registration Page is displayed with Loyalty Options as Optinal by clicking Complete Registration Button from New, Transfer, AutoRefill and 
+Prescription History,Print Prescription Records,Email Reminders, Family Prescriptions Landing Pages for Light Reg Users.
+
+Given  "LTY-RXPAGESLTYREG-6" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-6 |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-6" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | lightreg10 |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | LightReg       | SetupAutoRefills	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton  |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | LightReg       | NewPrescriptions	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton  |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | Transfer Prescription  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | PrescriptionHistory	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | FamilyPrescriptions	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | PrintRxRecords   	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | RxRefillReminders   	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+#Then "LTY-RXPAGESLTYREG-6" Customer validates Default Selected Option and links availability in the Page:
+#| InputFileName   | SheetName        | RowId 	     	       |
+#| 	  CommonData  | ObjectValidation | LoyaltyOptionsasOptinal |
+
+Then "LTY-RXPAGESLTYREG-6" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-6 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-7
+Scenario:  Verify that the Updated Confirmation Overlay for the Lite and Rx Registration with Create New Loyalty Flow via Refill Prescriptions Link
+
+Given  "LTY-RXPAGESLTYREG-7" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-7 |
+
+Then "LTY-RXPAGESLTYREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |ClickObjectOverlay | TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharmacyTab					 |		-			 |		-		 |	
+| 	  CSLR      | LinkNavigation | RefillFromAccountAnonymous	 |		-			 |      Yes	  	 |
+| 	  CSLR      | LinkNavigation | NewtoOnlinePharmacy			 |		Yes			 |		-		 |	
+
+Then "LTY-RXPAGESLTYREG-7" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	RxRefillReg3	 |
+
+And "LTY-RXPAGESLTYREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButtoninHippaPage	      	 |
+
+Then "LTY-RXPAGESLTYREG-7" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode6    | Yes 				| 	MATCHED  |
+
+And "LTY-RXPAGESLTYREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		   	 |ClickObjectOverlay | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | PharmacyTabToLoyaltyOverlay  	 |			-	     |      Yes	     |
+
+Given "LTY-RXPAGESLTYREG-7" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-7" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-7" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode6    |
+
+Then "LTY-RXPAGESLTYREG-7" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-7" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-7" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-7  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-8
+Scenario:  Verify that the Updated Confirmation Overlay for the Lite and Rx Registration with Attach Loyalty Flow via Refill Prescriptions Link
+
+Given  "LTY-RXPAGESLTYREG-8" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-8 |
+
+Then "LTY-RXPAGESLTYREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |ClickObjectOverlay | TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharmacyTab					 |		-			 |		-		 |	
+| 	  CSLR      | LinkNavigation | RefillFromAccountAnonymous	 |		-			 |      Yes	  	 |
+| 	  CSLR      | LinkNavigation | NewtoOnlinePharmacy			 |		Yes			 |		-		 |	
+
+Then "LTY-RXPAGESLTYREG-8" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	RxRefillReg4	 |
+
+And "LTY-RXPAGESLTYREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 |
+| 	CSLR  		 | LinkNavigation  | BalanceRewardsLogoinReviewInfoPage	 |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |
+| 	CSLR  		 | LinkNavigation  | AcceptButtoninHippaPage	      	 |
+
+Then "LTY-RXPAGESLTYREG-8" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode7    | Yes 				| 	MATCHED  |
+
+Then "LTY-RXPAGESLTYREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	      		    |TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharamcyTabtoRegOverlay	|	Yes		   |
+
+Then "LTY-RXPAGESLTYREG-8" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+|SuccessMessage    |LoyaltyRegistration|
+| NewAccount       |	Activation     |
+
+Given "LTY-RXPAGESLTYREG-8" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-8" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-8" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode7    |
+
+Then "LTY-RXPAGESLTYREG-8" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-8" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-8" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-8 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-9
+Scenario: Verify that the Updated Confirmation Overlay for the Rx Registration with Create New Loyalty Flow via Refill Prescription Link
+
+Given  "LTY-RXPAGESLTYREG-9" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-9 |
+
+Then "LTY-RXPAGESLTYREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-9" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | lightreg10 |
+
+Then "LTY-RXPAGESLTYREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    			| RowId 	     	      |ClickObjectOverlay | TargetOverlay |
+| PharmacyLinkVerification  | AdditionalLinks       | RefillFromAccount	  |		  -		      |    Yes		  |
+| PharmacyLinkVerification  | AdditionalLinks       | UpdateNowButton  	  |        Yes		  |     - 	      |
+
+Then "LTY-RXPAGESLTYREG-9" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	      |
+|  Registration  | RxRegistration | validdata5    |
+
+Then "LTY-RXPAGESLTYREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     					   |
+| 	  CSLR      | LinkNavigation | SubmitButtoninAlmostDonePage	 	   |
+| 	  CSLR      | LinkNavigation | AcceptButtoninHippaPage			   |
+
+Then "LTY-RXPAGESLTYREG-9" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode8    | Yes 				| 	MATCHED  |
+
+Then "LTY-RXPAGESLTYREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	      		    |TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharamcyTabtoRegOverlay	|	Yes		   |
+
+Then "LTY-RXPAGESLTYREG-9" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+|SuccessMessage 		|LoyaltyRegistration|
+| CompleteRegistration  |	New		    	|
+
+Given "LTY-RXPAGESLTYREG-9" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-9" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-9" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode8    |
+
+Then "LTY-RXPAGESLTYREG-9" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-9" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-9" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-9 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-10
+Scenario: Verify that the Updated Confirmation Overlay for the Rx Registration with Attach Loyalty Flow via Refill Prescriptions Link
+
+Given  "LTY-RXPAGESLTYREG-10" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		   |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-10 |
+
+Then "LTY-RXPAGESLTYREG-10" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-10" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      	    |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | ActivateUserInfo5 |
+
+Then "LTY-RXPAGESLTYREG-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      		| RowId 	     	  |ClickObjectOverlay | TargetOverlay |
+| PharmacyLinkVerification  | AdditionalLinks       | RefillFromAccount	  |		  -		      |    Yes		  |
+| PharmacyLinkVerification  | AdditionalLinks       | UpdateNowButton  	  |        Yes		  |     - 	      |
+
+Then "LTY-RXPAGESLTYREG-10" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration | ActivationData4  |
+
+Then "LTY-RXPAGESLTYREG-10" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName       | RowId 	     					    |
+| 	CSLR  		| LinkNavigation  | BalanceRewardsLogoinReviewInfoPage	|
+| 	  CSLR      | LinkNavigation  | SubmitButtoninAlmostDonePage	 	|
+| 	  CSLR      | LinkNavigation  | AcceptButtoninHippaPage			    |
+
+Then "LTY-RXPAGESLTYREG-10" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode9    | Yes 				| 	MATCHED  |
+
+Then "LTY-RXPAGESLTYREG-10" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	      		    |TargetOverlay |
+| 	  CSLR      | LinkNavigation | PharamcyTabtoRegOverlay	|	Yes		   |
+
+Then "LTY-RXPAGESLTYREG-10" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+|SuccessMessage 		|LoyaltyRegistration|
+| CompleteRegistration  |	Activation    	|
+
+Given "LTY-RXPAGESLTYREG-10" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-10" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-10" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode9    |
+
+Then "LTY-RXPAGESLTYREG-10" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-10" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	   | SheetName       | RowId 	    			 	 		| 
+|	 CSLR				   | LinkNavigation  | ManageRefillRxUnauth    				|
+| PharmacyLinkVerification | UnAuthenticated | CompleteRegistration 				| 
+| 	  CSLR     			   | LinkNavigation  | ContinueButtoninVerifyIdentify    	| 
+
+Then "LTY-RXPAGESLTYREG-10" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-10 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-11
+Scenario: To verify whether user able to attaches the loyalty account from express refill order confirmation page
+
+Given  "LTY-RXPAGESLTYREG-11" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-11 |
+
+Then "LTY-RXPAGESLTYREG-11" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | UseExpressRefill       |
+
+Then "LTY-RXPAGESLTYREG-11" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName	  | SheetName      | RowId 	      |
+| Pharmacy        | ExpressRefill  | Production   |
+
+Then "LTY-RXPAGESLTYREG-11" Customer clicks on an object and validates the expected results:
+| InputFileName 				   | SheetName  | RowId      |
+| PharmacyHomePageLinkVerification | AddAdult   | SubmitRx   |
+
+Then "LTY-RXPAGESLTYREG-11" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | JoinNowButtonExpressOrderPage |
+| 	  CSLR      | LinkNavigation | RegisterButton    			 |
+| 	  CSLR      | LinkNavigation | SignUpForBasisAccessButton    |
+
+Then "LTY-RXPAGESLTYREG-11" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      | 
+| 		-                     | 	CreateNew        | 78456   | Random	 | Random    | Random  | Random   | Yes      | CSLR          | PersonalInfo | lightreg11 |
+
+Then "LTY-RXPAGESLTYREG-11" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New          | 
+
+Then "LTY-RXPAGESLTYREG-11" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-11 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-12
+Scenario: Verify the confirmation modal for logged in user with create new loyalty method from Loyalty banner in the Express Refill Order confirmation Page
+
+Given  "LTY-RXPAGESLTYREG-12" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-12 |
+
+Then "LTY-RXPAGESLTYREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | lightreg10 |
+
+Then "LTY-RXPAGESLTYREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | PharmacyTab	   |
+
+Then "LTY-RXPAGESLTYREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | UseExpressRefill       |
+
+Then "LTY-RXPAGESLTYREG-12" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName	  | SheetName      | RowId 	      |
+| Pharmacy        | ExpressRefill  | Production   |
+
+Then "LTY-RXPAGESLTYREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName 				   | SheetName  | RowId      |
+| PharmacyHomePageLinkVerification | AddAdult   | SubmitRx   |
+
+Then "LTY-RXPAGESLTYREG-12" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | JoinNowButtonLoggedInUser     |
+
+Then "LTY-RXPAGESLTYREG-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser|  
+| 		-                     | 	-                | 78456   | Random	 | Random    | Random  | Random   | -        | 
+
+Then "LTY-RXPAGESLTYREG-12" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -   		  |  New          | 
+
+Then "LTY-RXPAGESLTYREG-12" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-12 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-13
+Scenario: Verify the confirmation modal for logged in user with Attach loyalty method from Loyalty banner in the Express Refill Order confirmation Page
+
+Given  "LTY-RXPAGESLTYREG-13" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-13 |
+
+Then "LTY-RXPAGESLTYREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-13" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId             |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |    CSLR       | PersonalInfo | ActivateUserInfo6 |
+
+Then "LTY-RXPAGESLTYREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | PharmacyTab	   |
+
+Then "LTY-RXPAGESLTYREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | UseExpressRefill       |
+
+Then "LTY-RXPAGESLTYREG-13" Customer performs Express Refill from InStore Express Refills Page:
+| InputFileName	  | SheetName      | RowId 	      |
+| Pharmacy        | ExpressRefill  | Production   |
+
+Then "LTY-RXPAGESLTYREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName 				   | SheetName  | RowId      |
+| PharmacyHomePageLinkVerification | AddAdult   | SubmitRx   |
+
+Then "LTY-RXPAGESLTYREG-13" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	     			     |
+| 	  CSLR      | LinkNavigation | JoinNowButtonLoggedInUser     |
+
+Then "LTY-RXPAGESLTYREG-13" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser|  
+| 		7276234269            | 	ActivateNow      | 33755   | -   	 | JUN       | 06      | 1985     | -        | 
+
+Then "LTY-RXPAGESLTYREG-13" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "LTY-RXPAGESLTYREG-13" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| -  		  |  Activate     | 
+
+Then "LTY-RXPAGESLTYREG-13" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-13 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-14
+Scenario: To verifythe display of confirmation modal for creating Rx registration through Refill  Prescriptions link.User should be a existing light user and 
+should have attached or created loyalty membership to his account
+
+Given  "LTY-RXPAGESLTYREG-14" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-14 |
+
+Then "LTY-RXPAGESLTYREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-14" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | CreateNew            | 60015   | Random		 | Random 	 | Random  | Random   |Yes       |    CSLR       | PersonalInfo | lightreg12 |
+
+Then "LTY-RXPAGESLTYREG-14" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New	      | 
+
+Then "LTY-RXPAGESLTYREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName 		   | SheetName        | RowId 	         	  |
+|	 CSLR				   | LinkNavigation   | ManageRefillRxUnauth  |
+| 	  CSLR        		   | LinkNavigation   | CompleteRegButton 	  |
+
+Then "LTY-RXPAGESLTYREG-14" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration | CompleteReg1     |
+
+Then "LTY-RXPAGESLTYREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName       | RowId 	     					    |
+| 	  CSLR      | LinkNavigation  | SubmitButtoninAlmostDonePage	 	|
+| 	  CSLR      | LinkNavigation  | AcceptButtoninHippaPage			    |
+
+Then "LTY-RXPAGESLTYREG-14" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| InputFileName | SheetName		 | RowId 	 		      | FetchActivationFlag | UserType   |
+|   CSLR        | GenaralInfo    | AuthenticationCode12   | Yes 				| 	MATCHED  |
+
+Given "LTY-RXPAGESLTYREG-14" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "LTY-RXPAGESLTYREG-14" Customer selects the CSC Window
+
+And "LTY-RXPAGESLTYREG-14" Customer Authenticates an user:
+| InputFileName | SheetName		 | RowId 	 		      |
+|   CSLR        | GenaralInfo    | AuthenticationCode12   |
+
+Then "LTY-RXPAGESLTYREG-14" Customer selects the Default Window
+
+Then "LTY-RXPAGESLTYREG-14" Customer clicks on an object and validates the expected results:
+| InputFileName 	  	 		  | SheetName       | RowId 	    			 	 		|ClickObjectOverlay |
+|PharmacyHomePageLinkVerification | Authenticated   | RxConfirmationclose    				|Yes				|
+|	 CSLR				 		  | LinkNavigation  | ManageRefillRxUnauth    				|No					|
+| PharmacyLinkVerification 		  | UnAuthenticated | CompleteRegistration 					| No				|
+| 	  CSLR     					  | LinkNavigation  | ContinueButtoninVerifyIdentify    	| No				|
+
+Then "LTY-RXPAGESLTYREG-14" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-14 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-15
+Scenario:  Verify that the Pharmacy Registration Page is displayed with Loyalty Options as Optinal by clicking Complete Registration Button from New, Transfer, AutoRefill and 
+Prescription History,Print Prescription Records,Email Reminders, Family Prescriptions Landing Pages for Light Reg Loyalty User.
+
+Given  "LTY-RXPAGESLTYREG-15" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-15 |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName      | RowId 	       |
+| 	  CSLR      | LinkNavigation | RegisterLink	   |
+
+Then "LTY-RXPAGESLTYREG-15" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | CreateNew            | 60015   | Random		 | Random 	 | Random  | Random   |Yes       |    CSLR       | PersonalInfo | lightreg10 |
+
+Then "LTY-RXPAGESLTYREG-15" Customer verifies Loyalty Success Message in Account Creation page after Register:
+|RegisteredAs |MembershipType |
+| Guest		  |  New	      | 
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | LightReg       | SetupAutoRefills	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton  |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	  |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		  |
+| PharmacyLinkVerification  | LightReg       | NewPrescriptions	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton  |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | Transfer Prescription  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | PrescriptionHistory	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | FamilyPrescriptions	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | PrintRxRecords   	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+Then "LTY-RXPAGESLTYREG-15" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId 	     	      |
+| 	  CSLR     				| LinkNavigation | PharmacyTab		      |
+| PharmacyLinkVerification  | LightReg       | RxRefillReminders   	  |	
+| 	  CSLR     				| LinkNavigation | CompleteRegButton      |
+
+Then "LTY-RXPAGESLTYREG-15" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-15 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-16
+Scenario: Verify the Loyalty and Rx Registration Overlay for Guest user who has registered through 540 Pharmacy Chat Landing Page.
+
+Given  "LTY-RXPAGESLTYREG-16" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-16 |
+
+Then "LTY-RXPAGESLTYREG-16" Customer clicks on an object and validates the expected results:
+|		 InputFileName 	   | SheetName   	 | RowId 	       |
+| PharmacyLinkVerification | Anonymous 	 	 | pharmacychat	   |
+| 		CSLR			   | LinkNavigation  | RegisterNowLink |
+
+Then "LTY-RXPAGESLTYREG-16" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	         |
+|  Registration  | RxRegistration |	RxChatLoyalty1	 |
+
+And "LTY-RXPAGESLTYREG-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |		-		 |
+| 	CSLR  		 | LinkNavigation  | AccpetButtontoLoyaltyOverlay   	 |		Yes		 |
+
+Then "LTY-RXPAGESLTYREG-16" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+| SuccessMessage | LoyaltyRegistration | 
+|   PharmacyNewAccount   |      New  		   |
+
+And "LTY-RXPAGESLTYREG-16" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    	 | 
+| 	CSLR  		 | LinkNavigation  | CloseButtontoRxChatPage |	
+
+Then "LTY-RXPAGESLTYREG-16" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-RXPAGESLTYREG-16" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-16 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-17
+Scenario: Verify the Loyalty and Rx Registration Overlay for lite user who has completed Rx Registration through 540 Pharmacy Chat Landing Page.
+
+Given  "LTY-RXPAGESLTYREG-17" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-17 |
+
+And "LTY-RXPAGESLTYREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "LTY-RXPAGESLTYREG-17" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       | CommonData    | personalInfo | lightuser1 |
+
+Then "LTY-RXPAGESLTYREG-17" Customer clicks on an object and validates the expected results:
+|		 InputFileName 	   | SheetName   	 | RowId 	       |
+| PharmacyLinkVerification | LightReg 	 	 | pharmacychat	   |
+| PharmacyLinkVerification | LightReg 	 	 | Complete Regn   |
+
+Then "LTY-RXPAGESLTYREG-17" Customer enters required information in Rx Registration Page and clicks Submit:
+| InputFileName  | SheetName      | RowId 	          |
+|  Registration  | RxRegistration |	LightLoyaltyuser1 |
+
+And "LTY-RXPAGESLTYREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    		     	 | TargetOverlay |
+| 	CSLR  		 | LinkNavigation  | SubmitButtoninAlmostDonePage   	 |		-		 |
+| 	CSLR  		 | LinkNavigation  | AccpetButtontoLoyaltyOverlay   	 |		Yes		 |
+
+Then "LTY-RXPAGESLTYREG-17" Customer validates the Enrollment Message for Pharmacy in the Overaly:
+| 	SuccessMessage 		   | LoyaltyRegistration | 
+|   LTYCompleteRegistration   |      New  		     |
+
+And "LTY-RXPAGESLTYREG-17" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName       | RowId      	    	 | 
+| 	CSLR  		 | LinkNavigation  | CloseButtontoRxChatPage |	
+
+Then "LTY-RXPAGESLTYREG-17" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-RXPAGESLTYREG-17" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-17 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-18
+Scenario: Verify the Loyalty Registration Overlay for Rx Unauth user who has registered through 540 Pharmacy Chat Landing Page.
+
+Given  "LTY-RXPAGESLTYREG-18" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-18 |
+
+Given "LTY-RXPAGESLTYREG-18" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId     |
+| Registration  | RxRegistration | RxPharma7 |
+
+Then "LTY-RXPAGESLTYREG-18" Customer clicks on an object and validates the expected results:
+|		 InputFileName 	   | SheetName   	 | RowId 	      			  |
+| PharmacyLinkVerification | UnAuthenticated | PharmacyChatUnAuth	   			  |
+
+Then "LTY-RXPAGESLTYREG-18" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-18 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-RXPAGESLTYREG-19
+Scenario: Verify the Rx Unauth & Rx Authenticated Loyalty users is able to land on Pharmacy chat page when they click on Pharmacy Chat link Rx home page.
+
+Given  "LTY-RXPAGESLTYREG-19" Customer starts the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-19 |
+
+Given "LTY-RXPAGESLTYREG-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | 		RowId        |
+| CommonData  	| login   	| unauthenticated1	 |
+
+Then "LTY-RXPAGESLTYREG-19" Customer clicks on an object and validates the expected results:
+|		 InputFileName 	   | SheetName   	 | RowId 	      		|
+| PharmacyLinkVerification | UnAuthenticated | PharmacyChatLtyUser  |
+
+Then "LTY-RXPAGESLTYREG-19" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Given "LTY-RXPAGESLTYREG-19" Customer login to the walgreens.com:
+| InputFileName | SheetName | 		RowId    |
+| CommonData  	| login   	| loyaltyuser1	 |
+
+Then "LTY-RXPAGESLTYREG-19" Customer clicks on an object and validates the expected results:
+|		 InputFileName 	   | SheetName   	 | RowId 	      		|
+| PharmacyLinkVerification | UnAuthenticated | PharmacyChatLtyUser  |
+
+Then "LTY-RXPAGESLTYREG-19" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "LTY-RXPAGESLTYREG-19" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		    |
+| QC-LTY        | RXPAGESLTYREG  | LTY-RXPAGESLTYREG-19 |

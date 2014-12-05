@@ -1,0 +1,142 @@
+package walgreens.ecom.batch.automation.library.checkout_sdd;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class CheckoutDailyLivingLibrary_SDD_ON extends CheckoutLibrary_SDD_ON {
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is to Increase the Product Quantity by one in
+     *          Shopping Cart when SDD is ON
+     * @author - Siva
+     * @Created - 27-MAR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void increaseProductQuantity(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ProdutCart_Table = "//table[contains(@class,'sddCartTable')]/tbody~XPATH";
+	String quantityfield = "//input[@alt='Quantity']";
+	String ProductName = null;
+	int NoofRows = 0, Flag = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ProductName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword2");// used
+	    List<WebElement> TableRows = getElementByProperty(ProdutCart_Table, browser).findElements(By.tagName("tr"));
+	    NoofRows = TableRows.size();
+	    for (int ssrow = 4; ssrow <= NoofRows; ssrow = ssrow + 4) {
+		String ProductNameDivText = browser.findElement(By.xpath("//table[contains(@class,'sddCartTable')]/tbody/tr[" + ssrow + "]/td")).getText();
+		if (ProductNameDivText.contains(ProductName)) {
+		    Flag = Flag + 1;
+		    WebElement QuantityField = null;
+		    QuantityField = TableRows.get(ssrow - 1).findElement(By.xpath(quantityfield));
+		    if (QuantityField != null) {
+			String TextValue = TableRows.get(ssrow - 1).findElement(By.xpath(quantityfield)).getAttribute("value");
+			TableRows.get(ssrow - 1).findElement(By.xpath(quantityfield)).clear();
+			String UpdatedValue = new Integer(Integer.parseInt(TextValue) + 1).toString();
+			TableRows.get(ssrow - 1).findElement(By.xpath(quantityfield)).sendKeys(UpdatedValue);
+			break;
+		    } else {
+			throw new Exception("quantity Box not found");
+		    }
+
+		}
+	    }
+	    if (Flag == 0) {
+		messagesMap.put("Required Product", "Requied Product Not found to Increase the Quantity");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add Qualifying BOGO product from shopping for the
+     *          Eligible BOGO product in Cart When SDD is ON
+     * @author - Siva
+     * @Created - 27-MAR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addQualifyingBOGOProduct(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ProdutCart_Table = "//table[@class='sddCartTable']/tbody~XPATH";
+	String SelectQaulifyingItem_LNK = "//a[contains(@title,'Select qualifying item')]";
+	String SelectThisItem_BTN = "input.attr_submit_enbl~CSS";
+	String ProductName = null,QualifyingItem=null;
+	int NoofRows = 0, Flag = 0;
+	String ShoppingCart_ELM = "//h2[contains(text(),'Shopping Cart')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ProductName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword2");
+	    QualifyingItem = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "QualifyingItem");
+	    List<WebElement> TableRows = getElementByProperty(ProdutCart_Table, browser).findElements(By.tagName("tr"));
+	    NoofRows = TableRows.size();
+	    for (int ssrow = 3; ssrow <= NoofRows; ssrow = ssrow + 3) {
+		String ProductNameDivText = browser.findElement(By.xpath("//table[@class='sddCartTable']/tbody/tr[" +  (ssrow) + "]/td[1]/div/div[2]//a")).getText();
+		if (ProductNameDivText.contains(ProductName)) {
+		    Flag = Flag + 1;
+		    WebElement SelectingQualifyingItemLink = TableRows.get(ssrow).findElement(By.xpath(SelectQaulifyingItem_LNK));
+		    if (SelectingQualifyingItemLink != null) {
+			SelectingQualifyingItemLink.click();
+			if (QualifyingItem != null && !QualifyingItem.equals("-")) {
+			    List<WebElement> SelectItemButtons = browser.findElements(By.xpath("//input[@alt='Select Item']"));
+			    for (int k = 0; k < SelectItemButtons.size(); k++) {
+				if (SelectItemButtons.get(k).getAttribute("value").equalsIgnoreCase(QualifyingItem)) {
+				    SelectItemButtons.get(k).click();
+				    break;
+				}
+			    }
+			} else {
+			    getElementByProperty(SelectThisItem_BTN, browser).click();
+			}
+		    } else {
+			throw new Exception("Not able to find Select Qualifying Item");
+		    }
+		    break;
+		} else {
+		    continue; 
+		    
+		}    
+	    }
+	    if (Flag == 0) {
+		throw new Exception("Required Product not found to add the Qualify BOGO Product");
+	    }
+	    if (!isElementPresentVerification(ShoppingCart_ELM, browser)) {
+		messagesMap.put("Shopping Cart", "Shopping Cart Page is not getting displayed after adding Qualified BOGO Product");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

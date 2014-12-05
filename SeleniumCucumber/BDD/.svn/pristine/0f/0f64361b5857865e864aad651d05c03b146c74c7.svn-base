@@ -1,0 +1,213 @@
+package walgreens.ecom.batch.automation.stepdefinitions.checkout;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.checkout.CheckoutDailyLivingLibrary;
+import walgreens.ecom.batch.automation.library.checkout_sdd.CheckoutDailyLivingLibrary_SDD_ON;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.constants.IGlobalVariables;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class DailyLivingCheckoutSteps implements IGlobalVariables {
+
+    @Then("^\"([^\"]*)\" Customer adds Daily Living items to the cart from search.$")
+    public void Customer_adds_Daily_Living_items_to_the_cart_from_search(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer adds Daily Living items to the cart from search.");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.searchandAddDailyLivingItemsToTheCart(browser, step);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer Increases the quantity of the BOGO product by 1:$")
+    public void Customer_Increases_the_quantity_of_the_BOGO_product_by_1(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Increases the quantity of the BOGO product by 1:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutDailyLivingLibrary_SDD_ON.increaseProductQuantity(browser, step, dataMap);
+	    } else {
+		CheckoutDailyLivingLibrary.increaseProductQuantity(browser, step, dataMap);
+	    }
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer Verifies the display pricing of the products in Cart:$")
+    public void Customer_Verifies_the_display_pricing_of_the_products_in_Cart(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Verifies the display pricing of the products in Cart:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.verifyingPricingConfigurationinCart(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer Adds Color or Size variation Product to Cart or Shopping List:$")
+    public void Customer_Adds_Color_or_Size_variation_Product_to_Cart_or_Shopping_List(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Adds Color or Size variation Product to Cart or Shopping List:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.addVariationProductToCartOrShoppingList(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer selects the required option from Product Quicklook Overlay:$")
+    public void Customer_selects_the_required_option_from_Product_Quicklook_Overlay(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer selects the required option from Product Quicklook Overlay:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.addToCartfromQuickLookOverlay(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:$")
+    public void Customer_updates_the_Quantity_and_adds_Daily_Living_items_to_the_cart_from_VPD_Page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer updates the Quantity and adds Daily Living items to the cart from VPD Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.updateQuantityAndadditemtoCartFromVPDPage(browser, scenario, step, dataMap);
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:$")
+    public void Customer_adds_a_qualifying_BOGO_product_to_get_the_discount_from_the_shopping_cart_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer adds a qualifying BOGO product to get the discount from the shopping cart page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		CheckoutDailyLivingLibrary_SDD_ON.addQualifyingBOGOProduct(browser, step, dataMap);
+	    } else {
+		CheckoutDailyLivingLibrary.addQualifyingBOGOProduct(browser, step, dataMap);
+	    }
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customer validates available tabs in the Quick Look Overlay and Product Details Page:$")
+    public void Customer_validates_available_tabs_in_the_Quick_Look_Overay(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates available tabs in the Quick Look Overlay and Product Details Page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.validateTabsinQuickLookOverlay(browser, step, dataMap);
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+    
+    @Then("^\"([^\"]*)\" Customer validates PO Box address in shipping info page:$")
+    public void Customer_validates_PO_Box_address_in_shipping_info_page(String arg1) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	try {
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer validates PO Box address in shipping info page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    CheckoutDailyLivingLibrary.validatePOBoxAddress(browser, step);
+
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+}

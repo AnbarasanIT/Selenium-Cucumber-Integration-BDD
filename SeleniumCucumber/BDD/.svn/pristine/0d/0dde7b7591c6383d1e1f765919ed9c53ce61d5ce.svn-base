@@ -1,0 +1,513 @@
+@sdd @sddendtoend
+Feature: All the scenarios and Steps in this feature are to validate the Same Day Delivery (SDD) End to End functionality 
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-0
+Scenario: Logged in User is able to add Rx Pickup,CL,DL items for Ship(standard) and Pickup from Store
+
+Given  "SDD-SDDEndtoEnd-0" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-0  |
+
+#Given "SDD-SDDEndtoEnd-0" Customer login to the walgreens.com:
+#| InputFileName | SheetName  | RowId       |
+#| CommonData    | login      | refillRx5   |
+
+And "SDD-SDDEndtoEnd-0" Customer Clears the Shopping Cart
+
+#When  "SDD-SDDEndtoEnd-0" Customer adds prescriptions for refill to cart:
+#| InputFileName | SheetName | RowId     |
+#| CACData       | RefillRx  | retailRx4 |
+
+And "SDD-SDDEndtoEnd-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-0" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-0" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-0" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web1 |
+
+Then "SDD-SDDEndtoEnd-0" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-0" Customer Goes to the Shopping Cart
+
+#Then "SDD-SDDEndtoEnd-0" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+#| InputFileName | SheetName 	   | RowId 			     |
+#| SDDData       | Product Details  | ProductInformation1 |
+
+#Then "SDD-SDDEndtoEnd-0" Customer verifies Items Subtotal section from Shopping Cart page:
+#| InputFileName | SheetName   	  | RowId 			   |  
+#| SDDData       | subTotaldetails | subtotaldetaisl1   |
+
+Then "SDD-SDDEndtoEnd-0" Customer saves the item details from the Shopping Cart page:
+
+#Then "SDD-SDDEndtoEnd-0" Customer clicks on proceed to checkout button in the cart:
+#| ExpectedTargetPage  |
+#| Doctor Information  |
+
+#Then "SDD-SDDEndtoEnd-0" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+#| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+#| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+#Then "SDD-SDDEndtoEnd-0" Customer Selects required Option From Doctor Search Results Page:
+#| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+#| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  PickUpDetails	 |
+
+#Then "SDD-SDDEndtoEnd-0" Customer verifies the PickUp Window Details from Pickup Information page:
+#|CartItems | PrescriptionUrgentMessage | StoreHours |PharamcyHours |CurbsidePickup |ContinueShopping |
+#| RXAndDL  |		Yes				   |   Yes		|	Yes		   | 	-		   |	-			 |
+
+#Then "SDD-SDDEndtoEnd-0" Customer selects rx pick up date and time and click on continue
+
+#Then "SDD-SDDEndtoEnd-0" Customer selects a shipping option from the shipping information page and clicks on continue:
+#| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+#| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+#Then "SDD-SDDEndtoEnd-0" Customer selects a shipping speed from shipping method page and clicks on continue:
+#| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+#| -               | standard                 | standard                 |
+
+#Then "SDD-SDDEndtoEnd-0" Customer selects a payment option and clicks on continue button on the payment Information page:
+#| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+#| CreditCard    | -              | -                     | -                  |
+
+#Then "SDD-SDDEndtoEnd-0" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-0" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-0  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-1
+Scenario: Logged in User is able to add Rx Local Delivery,CL(standard),DL items for Local Delivery and ship(standard)
+
+Given  "SDD-SDDEndtoEnd-1" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-1  |
+
+Given "SDD-SDDEndtoEnd-1" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | refillRx4   |
+
+And "SDD-SDDEndtoEnd-1" Customer Clears the Shopping Cart
+
+When  "SDD-SDDEndtoEnd-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx3 |
+
+And "SDD-SDDEndtoEnd-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-1" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web1 |
+
+Then "SDD-SDDEndtoEnd-1" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-1" Customer Goes to the Shopping Cart
+
+Then "SDD-SDDEndtoEnd-1" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		         |
+| SDDData       | Product Details  | ProductInformation3 |
+
+Then "SDD-SDDEndtoEnd-1" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetails2   |
+
+Then "SDD-SDDEndtoEnd-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-SDDEndtoEnd-1" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SDDEndtoEnd-1" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-SDDEndtoEnd-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-SDDEndtoEnd-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | standard                 |
+
+Then "SDD-SDDEndtoEnd-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SDDEndtoEnd-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-1" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-1  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-2
+Scenario: Logged in User is able to add Rx Pickup,CL(expedited),DL items for Ship and Pickup from Store.
+
+Given  "SDD-SDDEndtoEnd-2" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-2  |
+
+Given "SDD-SDDEndtoEnd-2" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | refillRx4   |
+
+And "SDD-SDDEndtoEnd-2" Customer Clears the Shopping Cart
+
+When  "SDD-SDDEndtoEnd-2" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx3 |
+
+And "SDD-SDDEndtoEnd-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-2" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-2" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web1 |
+
+Then "SDD-SDDEndtoEnd-2" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-2" Customer Goes to the Shopping Cart
+
+Then "SDD-SDDEndtoEnd-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | ProductInformation1 |
+
+Then "SDD-SDDEndtoEnd-2" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetaisl1   |
+
+Then "SDD-SDDEndtoEnd-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-SDDEndtoEnd-2" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SDDEndtoEnd-2" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  PickUpDetails	 |
+
+Then "SDD-SDDEndtoEnd-2" Customer verifies the PickUp Window Details from Pickup Information page:
+|CartItems | PrescriptionUrgentMessage | StoreHours |PharamcyHours |CurbsidePickup |ContinueShopping |
+| RXAndDL  |		Yes				   |   Yes		|	Yes		   | 	-		   |	-			 |
+
+Then "SDD-SDDEndtoEnd-2" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-SDDEndtoEnd-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-SDDEndtoEnd-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | expedited                | expedited        	    |
+
+Then "SDD-SDDEndtoEnd-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SDDEndtoEnd-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-2" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-2  |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-3
+Scenario: Logged in User is able to add Rx Pickup,CL(overnight),DL items for Ship(overnight) and Pickup from Store.
+
+Given  "SDD-SDDEndtoEnd-3" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-3  |
+
+Given "SDD-SDDEndtoEnd-3" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | refillRx4   |
+
+And "SDD-SDDEndtoEnd-3" Customer Clears the Shopping Cart
+
+When  "SDD-SDDEndtoEnd-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx3 |
+
+And "SDD-SDDEndtoEnd-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-3" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-3" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web1 |
+
+Then "SDD-SDDEndtoEnd-3" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-3" Customer Goes to the Shopping Cart
+
+Then "SDD-SDDEndtoEnd-3" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | ProductInformation1 |
+
+Then "SDD-SDDEndtoEnd-3" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetaisl1   |
+
+Then "SDD-SDDEndtoEnd-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-SDDEndtoEnd-3" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SDDEndtoEnd-3" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  PickUpDetails	 |
+
+Then "SDD-SDDEndtoEnd-3" Customer verifies the PickUp Window Details from Pickup Information page:
+|CartItems | PrescriptionUrgentMessage | StoreHours |PharamcyHours |CurbsidePickup |ContinueShopping |
+| RXAndDL  |		Yes				   |   Yes		|	Yes		   | 	-		   |	-			 |
+
+Then "SDD-SDDEndtoEnd-3" Customer selects rx pick up date and time and click on continue
+
+Then "SDD-SDDEndtoEnd-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-SDDEndtoEnd-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | overnight                | overnight        	    |
+
+Then "SDD-SDDEndtoEnd-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SDDEndtoEnd-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-3" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-3  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-4
+Scenario: Logged in User is able to add Rx Local Delivery,CL(overnight),DL items for Local Delivery and ship(expedited)
+
+Given  "SDD-SDDEndtoEnd-4" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-4  |
+
+Given "SDD-SDDEndtoEnd-4" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | refillRx4   |
+
+And "SDD-SDDEndtoEnd-4" Customer Clears the Shopping Cart
+
+When  "SDD-SDDEndtoEnd-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx3 |
+
+And "SDD-SDDEndtoEnd-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-4" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web1 |
+
+Then "SDD-SDDEndtoEnd-4" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-4" Customer Goes to the Shopping Cart
+
+Then "SDD-SDDEndtoEnd-4" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		         |
+| SDDData       | Product Details  | ProductInformation3 |
+
+Then "SDD-SDDEndtoEnd-4" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetails2   |
+
+Then "SDD-SDDEndtoEnd-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Doctor Information  |
+
+Then "SDD-SDDEndtoEnd-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SDDEndtoEnd-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-SDDEndtoEnd-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-SDDEndtoEnd-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | expedited                | overnight                |
+
+Then "SDD-SDDEndtoEnd-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SDDEndtoEnd-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-4" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-4  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SDDEndtoEnd-6
+Scenario: Logged in User is able to add Rx Ship,CL(overnight),DL items for Pickup and Ship(expedited)
+
+Given  "SDD-SDDEndtoEnd-6" Customer starts the scenario:
+| InputFileName | SheetName    | RowId      	    |
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-6  |
+
+Given "SDD-SDDEndtoEnd-6" Customer login to the walgreens.com:
+| InputFileName | SheetName  | RowId       |
+| CommonData    | login      | refillRx5   |
+
+And "SDD-SDDEndtoEnd-6" Customer Clears the Shopping Cart
+
+When  "SDD-SDDEndtoEnd-6" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId     |
+| CACData       | RefillRx  | retailRx5 |
+
+And "SDD-SDDEndtoEnd-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SDDEndtoEnd-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "SDD-SDDEndtoEnd-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web2 |
+
+Then "SDD-SDDEndtoEnd-6" Customer adds Daily Living items to the cart from search.
+
+And "SDD-SDDEndtoEnd-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | sdd_web5 |
+
+Then "SDD-SDDEndtoEnd-6" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SDDEndtoEnd-6" Customer Goes to the Shopping Cart
+
+Then "SDD-SDDEndtoEnd-6" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption |
+|ChangeStore  |
+
+Then "SDD-SDDEndtoEnd-6" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		   |
+| SDDData       | storedetails  | newstoredetails2 |
+
+Then "SDD-SDDEndtoEnd-6" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 		         |
+| SDDData       | Product Details  | ProductInformation1 |
+| SDDData       | Product Details  | ProductInformation2 |
+
+Then "SDD-SDDEndtoEnd-6" Customer verifies Items Subtotal section from Shopping Cart page:
+| InputFileName | SheetName   	  | RowId 			   |  
+| SDDData       | subTotaldetails | subtotaldetails2   |
+
+Then "SDD-SDDEndtoEnd-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| Pickup details	  |
+
+Then "SDD-SDDEndtoEnd-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SDDEndtoEnd-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage    |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  Shipping Information	|
+
+Then "SDD-SDDEndtoEnd-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "SDD-SDDEndtoEnd-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | expedited                | overnight                |
+
+Then "SDD-SDDEndtoEnd-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "SDD-SDDEndtoEnd-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "SDD-SDDEndtoEnd-6" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId      		|
+| QC-SDD        | SDDEndtoEnd  | SDD-SDDEndtoEnd-6  |
+

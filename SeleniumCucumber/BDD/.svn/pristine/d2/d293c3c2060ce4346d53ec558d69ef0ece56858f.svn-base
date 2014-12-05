@@ -1,0 +1,2118 @@
+@loyalty @loyaltyOrderReview
+Feature: All the scenarios in the feature are to validate the Loyalty Check Points within Order Review Page
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-01
+Scenario: Loyalty User who don't have points in account adds daily living loyalty products for Savings and finds Loyalty Summary Info on Order Review Page
+
+Given  "LTY-ORDRVW-01" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-01 |
+
+Given "LTY-ORDRVW-01" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-01" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-01" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-01" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-01" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+
+Then "LTY-ORDRVW-01" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-01" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "LTY-ORDRVW-01" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-01" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No                        |
+
+Then "LTY-ORDRVW-01" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-01 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-02
+Scenario: Loyalty User who don't have points in account adds daily living loyalty products for Bonus Points and finds Loyalty Summary Info on the Order Review Page
+
+Given  "LTY-ORDRVW-02" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-02 |
+
+Given "LTY-ORDRVW-02" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-02" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-02" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-02" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-02" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-02" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-ORDRVW-02" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-02" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "LTY-ORDRVW-02" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-02" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-02" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-02 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-03
+Scenario: Loyalty User who don't have points in account adds daily living loyalty products for Saving and Bonus points and finds Loyalty Summary Info on Order Review Page
+
+Given  "LTY-ORDRVW-03" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-03 |
+
+Given "LTY-ORDRVW-03" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-03" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-03" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-03" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-03" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-03" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-03" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-ORDRVW-03" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-03" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "LTY-ORDRVW-03" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-03" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-03" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-03 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-04
+Scenario: Loyalty User who have more points in account adds daily living loyalty savings product, burns one tier in Payment Options Page and finds earn savings Message on Order Review Page
+
+Given  "LTY-ORDRVW-04" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-04 |
+
+Given "LTY-ORDRVW-04" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-04" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-04" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-04" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-04" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-04" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+
+Then "LTY-ORDRVW-04" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-04" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+And "LTY-ORDRVW-04" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |		1 			|
+
+Then "LTY-ORDRVW-04" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-04" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No                        |
+
+Then "LTY-ORDRVW-04" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-04 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-05
+Scenario: Loyalty User who have more points in account adds daily living loyalty savings product,burns one tier in Payment Options Page and finds Burn amount Message on Order Review Page
+
+Given  "LTY-ORDRVW-05" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-05 |
+
+Given "LTY-ORDRVW-05" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-05" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-05" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-05" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-05" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-05" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+
+Then "LTY-ORDRVW-05" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-05" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+And "LTY-ORDRVW-05" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |	  1 		    |
+
+Then "LTY-ORDRVW-05" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-05" Customer finds Burn Amount in the Right Pane on the Order Review page:
+
+Then "LTY-ORDRVW-05" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-05 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-06
+Scenario: Loyalty User who have less points in account adds daily living loyalty products for Bonus Points and finds earn Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-06" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-06 |
+
+Given "LTY-ORDRVW-06" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-06" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-06" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-06" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-06" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-06" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-ORDRVW-06" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+
+Then "LTY-ORDRVW-06" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "LTY-ORDRVW-06" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-06" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-06" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-06 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-07
+Scenario: Loyalty User who don't have points in account adds CL product for Bonus Points and finds earn Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-07" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-07 |
+
+Given "LTY-ORDRVW-07" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-07" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-07" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-07" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-07" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-07" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-07" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-07" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-07" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+Then "LTY-ORDRVW-07" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-07" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-07" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-07 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-08
+Scenario: Loyalty User who have more points in account adds CL product for Bonus Points,burns one tier in Payment Options Page and finds no earn Bonus points Message on Order Review Page
+
+Given  "LTY-ORDRVW-08" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-08 |
+
+Given "LTY-ORDRVW-08" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-08" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-08" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-08" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-08" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-08" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-08" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-08" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-08" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+And "LTY-ORDRVW-08" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |1				    |
+
+Then "LTY-ORDRVW-08" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-08" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | No                        |
+
+Then "LTY-ORDRVW-08" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-08 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-09
+Scenario: Loyalty User who have more points in account adds CL product for Bonus Points,burns one tier in Payment Options Page and finds Burn amount Message on Order Review Page
+
+Given  "LTY-ORDRVW-09" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-09 |
+
+Given "LTY-ORDRVW-09" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-09" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-09" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-09" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-09" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-09" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-09" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-09" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-09" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-09" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+And "LTY-ORDRVW-09" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |		1 		    |
+
+Then "LTY-ORDRVW-09" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-09" Customer finds Burn Amount in the Right Pane on the Order Review page:
+
+Then "LTY-ORDRVW-09" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-09 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-10
+Scenario: Loyalty User who have less points in account adds CL product for Bonus Points and finds earn Savings and Bonus Points Messages on Order Review Page
+
+Given  "LTY-ORDRVW-10" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-10 |
+
+Given "LTY-ORDRVW-10" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Lessptloyaltyuser1 |
+
+And "LTY-ORDRVW-10" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl2   |
+
+Then "LTY-ORDRVW-10" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-10" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-10" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-10" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           -              |       standard           |
+
+Then "LTY-ORDRVW-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+
+And "LTY-ORDRVW-10" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-10" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-10 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-11
+Scenario: Loyalty User  adds  Rx item to Cart, select Pickup option and verifies Rx Loyalty Bonus Point message in the Order Review Page
+
+Given  "LTY-ORDRVW-11" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-11 |
+
+Given "LTY-ORDRVW-11" Customer login to the walgreens.com:
+| InputFileName | SheetName 				   | RowId      	 |
+| LoyaltyLogin  | loyaltyOrderReviewLogin      | loyaltyuser1    |
+
+And "LTY-ORDRVW-11" Customer Clears the Shopping Cart
+
+When  "LTY-ORDRVW-11" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-11" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "LTY-ORDRVW-11" Customer selects rx pick up date and time and click on continue
+
+And "LTY-ORDRVW-11" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |RxPointsMessage|
+| No                   | No                        |  Yes	       |
+
+Then "LTY-ORDRVW-11" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-11 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-12
+Scenario: Loyalty User  adds  Rx item to Cart, select Shipping option and verifies that no Rx Loyalty earn Bonus Point message in the Order Review Page
+
+Given  "LTY-ORDRVW-12" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-12 |
+
+Given "LTY-ORDRVW-12" Customer login to the walgreens.com:
+| InputFileName | SheetName 				   | RowId    	   	 |
+| LoyaltyLogin  | loyaltyOrderReviewLogin      | loyaltyuser1    |
+
+And "LTY-ORDRVW-12" Customer Clears the Shopping Cart
+
+When  "LTY-ORDRVW-12" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-12" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        |           -              |       -	 	            |
+
+Then "LTY-ORDRVW-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-12" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |RxPointsMessage|
+| No                   | No                        |  No	       |
+
+Then "LTY-ORDRVW-12" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-12 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-13
+Scenario: Loyalty User who don't have points in account adds SS and CL products to cart for Savings and finds earn Loyalty Savings Message in the Order Review Page
+
+Given  "LTY-ORDRVW-13" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-13 |
+
+Given "LTY-ORDRVW-13" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-13" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-13" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-13" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-13" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-13" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-ORDRVW-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-13" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No		                   |
+
+Then "LTY-ORDRVW-13" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-13 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-14
+Scenario: Loyalty User who have more points in account adds SS and CL products to cart for Savings & points and finds earn Loyalty Savings and Points Messages in the Order Review Page
+
+Given  "LTY-ORDRVW-14" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-14 |
+
+Given "LTY-ORDRVW-14" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId       	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-14" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-14" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-14" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-14" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-14" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-14" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-14" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-14" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-ORDRVW-14" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-14" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-14" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-14 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-15
+Scenario: Loyalty User who have more points in account adds SS and CL products to cart for Savings & points , burns 1 tier in Payment Options Page and finds only earn Loyalty Savings Message in the Order Review Page
+
+Given  "LTY-ORDRVW-15" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-15 |
+
+Given "LTY-ORDRVW-15" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-15" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-15" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-15" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-15" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-15" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+And "LTY-ORDRVW-15" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |	1				|
+
+Then "LTY-ORDRVW-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-15" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No                        |
+
+Then "LTY-ORDRVW-15" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-15 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-16
+Scenario: Loyalty User who have more points in account adds SS and CL products to cart for Savings & points , burns 1 tier in Payment Options Page and finds Burn amount Message on Order Review Page
+
+Given  "LTY-ORDRVW-16" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-16 |
+
+Given "LTY-ORDRVW-16" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-16" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-16" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-16" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-16" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-16" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+And "LTY-ORDRVW-16" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		Yes            | -                         |	-	  	 |1				    |
+
+Then "LTY-ORDRVW-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-16" Customer finds Burn Amount in the Right Pane on the Order Review page:
+
+Then "LTY-ORDRVW-16" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-16 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-17
+Scenario: Loyalty User who have less points in account adds SS and CL products to cart for Points and finds Loyalty earn Bonus Point Message on Order Review Page
+
+Given  "LTY-ORDRVW-17" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-17 |
+
+Given "LTY-ORDRVW-17" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | Lessptloyaltyuser1 |
+
+And "LTY-ORDRVW-17" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  		 |
+| CommonData    | search    | loyaltybonuspoints1|
+
+Then "LTY-ORDRVW-17" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-17" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "LTY-ORDRVW-17" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-17" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       standard           |
+
+Then "LTY-ORDRVW-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+And "LTY-ORDRVW-17" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-17" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-17 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-18
+Scenario: Loyalty User who don't have points in his account adds Rx & SS item to Cart and  finds Loyalty Savings and Bonus Point Messages on the Order Review Page
+
+Given  "LTY-ORDRVW-18" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-18 |
+
+Given "LTY-ORDRVW-18" Customer login to the walgreens.com:
+| InputFileName | SheetName  			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-18" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-18" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-18" Customer adds Daily Living items to the cart from search.
+
+When "LTY-ORDRVW-18" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-18" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | standard                 | -                        |
+
+Then "LTY-ORDRVW-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-18" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-18" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-18 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-19
+Scenario: Loyalty User who have more points in his account adds Rx & SS item to Cart and  finds Loyalty Savings Message on the Order Review Page
+
+Given  "LTY-ORDRVW-19" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-19 |
+
+Given "LTY-ORDRVW-19" Customer login to the walgreens.com:
+| InputFileName | SheetName  			     | RowId       		  |
+| LoyaltyLogin  | loyaltyOrderReviewLogin    | Moreptloyaltyuser1 |
+
+And "LTY-ORDRVW-19" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-19" Customer adds Daily Living items to the cart from search.
+
+When "LTY-ORDRVW-19" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-19" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | standard                 | -                        |
+
+Then "LTY-ORDRVW-19" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-19" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | No                        |
+
+Then "LTY-ORDRVW-19" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-19 |
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-20
+Scenario: Loyalty User who have Less points in his account adds Rx & SS item to Cart and finds earn Bonus Point Message on the Order Review Page
+
+Given  "LTY-ORDRVW-20" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-20 |
+
+Given "LTY-ORDRVW-20" Customer login to the walgreens.com:
+| InputFileName | SheetName  			     | RowId       		  |
+| LoyaltyLogin  | loyaltyOrderReviewLogin 	 | Lessptloyaltyuser1 |
+
+And "LTY-ORDRVW-20" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-20" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	 		  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-20" Customer adds Daily Living items to the cart from search.
+
+When "LTY-ORDRVW-20" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-20" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-20" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | standard                 | -                        |
+
+Then "LTY-ORDRVW-20" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+And "LTY-ORDRVW-20" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-20" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-20 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-21
+Scenario: Loyalty User who don't have  points in his account adds Rx & CL item to Cart and finds earn Bonus Point Message on the Order Review Page
+
+Given  "LTY-ORDRVW-21" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-21 |
+
+Given "LTY-ORDRVW-21" Customer login to the walgreens.com:
+| InputFileName | SheetName  			     | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin 	 | loyaltyuser1 |
+
+And "LTY-ORDRVW-21" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-21" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-21" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-21" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+Then "LTY-ORDRVW-21" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-21" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "LTY-ORDRVW-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-21" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | standard                 |
+
+Then "LTY-ORDRVW-21" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-21" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-21" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-21 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-22
+Scenario: Loyalty User who have more points in his account adds Rx & CL item to Cart and finds earn Bonus Point Message on the Order Review Page
+
+Given  "LTY-ORDRVW-22" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-22 |
+
+Given "LTY-ORDRVW-22" Customer login to the walgreens.com:
+| InputFileName | SheetName  			     | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin 	 | loyaltyuser1 |
+
+And "LTY-ORDRVW-22" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-22" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-22" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-22" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-22" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+
+Then "LTY-ORDRVW-22" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-22" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-22" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-22" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | standard                 |
+
+Then "LTY-ORDRVW-22" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-22" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | Yes                       |
+
+Then "LTY-ORDRVW-22" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-22 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-23
+Scenario: Loyalty User who have Less points in his account adds Rx & CL item to Cart and finds earn Savings and Bonus Point Messages on the Order Review Page
+
+Given  "LTY-ORDRVW-23" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-23 |
+
+Given "LTY-ORDRVW-23" Customer login to the walgreens.com:
+| InputFileName | SheetName  			     | RowId       		  |
+| LoyaltyLogin  | loyaltyOrderReviewLogin    | Lessptloyaltyuser1 |
+
+And "LTY-ORDRVW-23" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-23" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl2   |
+
+Then "LTY-ORDRVW-23" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-23" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-23" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+
+Then "LTY-ORDRVW-23" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-23" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-23" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-23" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | standard                 |
+
+Then "LTY-ORDRVW-23" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |
+| NewCreditCard | -              | -                     | -                  | CACData         | CreditCard  | cc1     |
+
+And "LTY-ORDRVW-23" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-23" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-23 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-24
+Scenario: Loyalty User adds SS,Rx & CL item to Cart and finds earn Savings and Bonus Point Messages on the Order Review Page
+
+Given  "LTY-ORDRVW-24" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-24 |
+
+Given "LTY-ORDRVW-24" Customer login to the walgreens.com:
+| InputFileName | SheetName 				 | RowId       |
+| LoyaltyLogin  | loyaltyOrderReviewLogin    | loyaltyuser1|
+
+And "LTY-ORDRVW-24" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-24" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-24" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-24" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-24" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-24" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+Then "LTY-ORDRVW-24" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-24" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-24" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-24" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | standard                 | standard                 |
+
+Then "LTY-ORDRVW-24" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-24" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-24" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-24 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-25
+Scenario: Loyalty User adds SS,PSC Card,Rx & CL item to Cart and finds earn Savings and Bonus Point Messages on the Order Review Page
+
+Given  "LTY-ORDRVW-25" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-25 |
+
+Given "LTY-ORDRVW-25" Customer login to the walgreens.com:
+| InputFileName | SheetName 				 | RowId       |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1|
+
+And "LTY-ORDRVW-25" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-25" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-25" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-25" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+And "LTY-ORDRVW-25" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "LTY-ORDRVW-25" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "LTY-ORDRVW-25" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then "LTY-ORDRVW-25" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes                         |
+
+Then "LTY-ORDRVW-25" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+
+Then "LTY-ORDRVW-25" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-25" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-25" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-25" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | standard                 | standard                 |
+
+Then "LTY-ORDRVW-25" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-25" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  | Yes                       |
+
+Then "LTY-ORDRVW-25" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-25 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-26
+Scenario: Non-Loyalty User adds SS items to Cart and verifies no Loyalty Savings and Bonus Points Messages on the Order Review page
+
+Given  "LTY-ORDRVW-26" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-26 |
+
+Given "LTY-ORDRVW-26" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId    	   	  |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1   |
+
+And "LTY-ORDRVW-26" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-26" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-26" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    		      |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-26" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-26" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-26" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-ORDRVW-26" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-26" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		          | standard                 | -		                |
+
+Then "LTY-ORDRVW-26" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-26" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | No                        |
+
+Then "LTY-ORDRVW-26" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-26 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-27
+Scenario: Non-Loyalty User adds CL item to Cart and verifies No Loyalty Bonus Points or savings Message in Order Review Page
+
+Given  "LTY-ORDRVW-27" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-27 |
+
+Given "LTY-ORDRVW-27" Customer login to the walgreens.com:
+| InputFileName | SheetName					 | RowId    	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin 	 | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-27" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-27" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-27" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-27" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information  |
+
+Then "LTY-ORDRVW-27" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-27" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-27" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-27" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		          | -		                 | standard                 |
+
+Then "LTY-ORDRVW-27" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-27" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   | No                        |
+
+Then "LTY-ORDRVW-27" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-27 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-28
+Scenario: Non-Loyalty User  adds  Rx item to Cart, select Pickup option and verifies that No Rx Loyalty Bonus Point message in the Order Review Page
+
+Given  "LTY-ORDRVW-28" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-28 |
+
+Given "LTY-ORDRVW-28" Customer login to the walgreens.com:
+| InputFileName | SheetName 					| RowId    	   	  |
+| LoyaltyLogin  | loyaltyOrderReviewLogin       | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-28" Customer Clears the Shopping Cart
+
+When  "LTY-ORDRVW-28" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-28" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|PickUpInStore |Pickup Location      |
+
+Then "LTY-ORDRVW-28" Customer selects rx pick up date and time and click on continue
+
+And "LTY-ORDRVW-28" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |RxPointsMessage|
+| No                   | No                        |  No 	       |
+
+Then "LTY-ORDRVW-28" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-28 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-29
+Scenario: Non-Loyalty User  adds  Rx item to Cart , selects Shipping option and verifies that No Rx Loyalty Bonus Points Message is displaying in the Order Review Page
+
+Given  "LTY-ORDRVW-29" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-29 |
+
+Given "LTY-ORDRVW-29" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId    	   	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1    |
+
+
+And "LTY-ORDRVW-29" Customer Clears the Shopping Cart
+
+When  "LTY-ORDRVW-29" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-29" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-29" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-29" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard        | -                        | -   	 	                |
+
+Then "LTY-ORDRVW-29" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-29" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |RxPointsMessage|
+| No                   |     No                    |  No		   |
+
+Then "LTY-ORDRVW-29" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-29 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-30
+Scenario: Non-Loyalty User adds CL & SS items to Cart and verifies  No Loyalty Savings or Bouns Points Message on the Loyalty Summary Box in Order Review Page
+
+Given  "LTY-ORDRVW-30" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-30 |
+
+Given "LTY-ORDRVW-30" Customer login to the walgreens.com:
+| InputFileName | SheetName 			     | RowId    	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-30" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-30" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-30" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-30" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-30" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information  |
+
+Then "LTY-ORDRVW-30" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-30" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-30" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-30" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -		          | standard                 | standard			        |
+
+Then "LTY-ORDRVW-30" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-30" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   |     No                    | 
+
+Then "LTY-ORDRVW-30" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-30 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-31
+Scenario: Non-Loyalty User adds RX & SS items to Cart and verifies No Loyalty Bonus Points Message in Order Review Page
+
+Given  "LTY-ORDRVW-31" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-31 |
+
+Given "LTY-ORDRVW-31" Customer login to the walgreens.com:
+| InputFileName | SheetName				  | RowId    	   	|
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-31" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-31" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			          |
+| CommonData    | search    | loyaltybutnosavingorpoints1 |
+
+Then "LTY-ORDRVW-31" Customer adds Daily Living items to the cart from search.
+
+When  "LTY-ORDRVW-31" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-31" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Shipping Information |
+
+Then "LTY-ORDRVW-31" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-31" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard	      | standard                 |      -    		        |
+
+Then "LTY-ORDRVW-31" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-31" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   |     No                    | 
+
+Then "LTY-ORDRVW-31" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-31 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-32
+Scenario: Non-Loyalty User adds RX & CL items to Cart and verifies No Loyalty Savings or Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-32" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-32 |
+
+Given "LTY-ORDRVW-32" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId    		|
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-32" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-32" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-32" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-32" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-32" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+Then "LTY-ORDRVW-32" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-32" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-32" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-32" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard	      | -		                 |     standard		        |
+
+Then "LTY-ORDRVW-32" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-32" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   |     No                    | 
+
+Then "LTY-ORDRVW-32" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-32 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-33
+Scenario: Non-Loyalty User adds SS,RX & CL items to Cart and verifies No Loyalty Savings or Bonus Points Message on the Order Review Page
+
+Given  "LTY-ORDRVW-33" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-33 |
+
+Given "LTY-ORDRVW-33" Customer login to the walgreens.com:
+| InputFileName | SheetName 		      | RowId           |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1 |
+
+And "LTY-ORDRVW-33" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-33" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			          |
+| CommonData    | search    | loyaltybutnosavingorpoints1 |
+
+Then "LTY-ORDRVW-33" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-33" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-33" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-33" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "LTY-ORDRVW-33" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+Then "LTY-ORDRVW-33" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-33" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-33" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-33" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard	      | standard		         |     standard		        |
+
+Then "LTY-ORDRVW-33" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-33" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   |     No                    | 
+
+Then "LTY-ORDRVW-33" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-33 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-34
+Scenario: Non-Loyalty User adds PSC CARD,SS,RX & CL items to Cart and verifies No Loyalty Savings or Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-34" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-34 |
+
+Given "LTY-ORDRVW-34" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId    	   	   |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | nonloyaltyuser1    |
+
+And "LTY-ORDRVW-34" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-34" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  		  |
+| CommonData    | search    | loyaltysave1				  |
+
+Then "LTY-ORDRVW-34" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-34" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-34" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+When  "LTY-ORDRVW-34" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+And "LTY-ORDRVW-34" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId |
+| CommonData 	 | search    | psc1  |
+
+Then "LTY-ORDRVW-34" Customer clicks on Join savings club button on the Prescriptions savings club page. 
+
+Then "LTY-ORDRVW-34" Customer selects Enrollment Type and click on continue:
+| EnrollmentType |UserType	  |
+| Individual     | Pharmacy	  |
+
+Then "LTY-ORDRVW-34" Customer chooses the appropriate option from the PSC Configuration page:
+| EditPersonalInformation | ChangeMemershipType|AddFamilyMember | AcceptsTermsAndConditionsAndAddtocart |
+| -                       | -                  | -              |			Yes            			    |
+
+Then "LTY-ORDRVW-34" Customer selects the delivery option and clicks on proceed to checkout button:
+|DeliveryOption|ExpectedTargetPage   |
+|ShipToYou     |Doctor Information   |
+
+
+Then "LTY-ORDRVW-34" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-34" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-34" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-34" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| standard	      | standard		         |     standard		        |
+
+Then "LTY-ORDRVW-34" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-34" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No                   |     No                    | 
+
+Then "LTY-ORDRVW-34" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-34 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-35
+Scenario: Guest User adds  SS items to Cart , login through shopping cart and and verifies Loyalty Savings and Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-35" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-35 |
+
+And "LTY-ORDRVW-35" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-35" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-35" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-35" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-35" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-35" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-35" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-ORDRVW-35" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName | SheetName | RowId           |
+| -                  | Yes    | -        | CommonData    | login     | loyaltyuser1	   |
+
+Then "LTY-ORDRVW-35" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-35" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "LTY-ORDRVW-35" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-35" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  |    Yes		               |
+
+Then "LTY-ORDRVW-35" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-35 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-36
+Scenario: Guest User adds  CL & SS items to Cart ,login through shopping cart and verifies Loyalty Savings and Bonus Points Message in the Order Review Page
+
+Given  "LTY-ORDRVW-36" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-36 |
+
+And "LTY-ORDRVW-36" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-36" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-36" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-36" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-36" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-36" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-36" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-ORDRVW-36" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName   | SheetName 					| RowId           |
+| -                  | Yes    | -        |  LoyaltyLogin   | loyaltyOrderReviewLogin | loyaltyuser1	  |
+
+Then "LTY-ORDRVW-36" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-36" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-36" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-36" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     standard		        |
+
+Then "LTY-ORDRVW-36" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-36" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  |    Yes		               |
+
+Then "LTY-ORDRVW-36" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-36 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-37
+Scenario: Guest User adds  CL item to Cart,login through shopping cart and verifies  Loyalty Bonus Point Message in the Order Review Page
+
+Given  "LTY-ORDRVW-37" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-37 |
+
+And "LTY-ORDRVW-37" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-37" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "LTY-ORDRVW-37" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "LTY-ORDRVW-37" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-37" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| -					   |
+
+Then "LTY-ORDRVW-37" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register | InputFileName   | SheetName 					| RowId           |
+| -                  | Yes    | -        |   LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1	  |
+
+Then "LTY-ORDRVW-37" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "LTY-ORDRVW-37" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+
+Then "LTY-ORDRVW-37" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-37" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | -				         |     standard		        |
+
+Then "LTY-ORDRVW-37" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-37" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| No	               |    Yes		               |
+
+Then "LTY-ORDRVW-37" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-37 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@LTY-ORDRVW-38
+Scenario: Loyalty customer adds daily living loyalty product for Savings and Bonus Points and a BOGO product and finds Loyalty Info in the Order Review page
+
+Given  "LTY-ORDRVW-38" Customer starts the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-38 |
+
+Given "LTY-ORDRVW-38" Customer login to the walgreens.com:
+| InputFileName | SheetName 			  | RowId        |
+| LoyaltyLogin  | loyaltyOrderReviewLogin | loyaltyuser1 |
+
+And "LTY-ORDRVW-38" Customer Clears the Shopping Cart
+
+And "LTY-ORDRVW-38" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "LTY-ORDRVW-38" Customer adds Daily Living items to the cart from search.
+
+And "LTY-ORDRVW-38" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   			  |
+| CommonData    | search    | loyaltybonuspoints1 |
+
+Then "LTY-ORDRVW-38" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-38" Customer Goes to the Shopping Cart
+
+And "LTY-ORDRVW-38" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltybogo1 |
+
+Then "LTY-ORDRVW-38" Customer adds Daily Living items to the cart from search.
+
+Then "LTY-ORDRVW-38" Customer Goes to the Shopping Cart
+
+Then "LTY-ORDRVW-38" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltybogo1 |
+
+Then "LTY-ORDRVW-38" Customer Increases the quantity of the BOGO product by 1:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | loyaltybogo1 |
+
+Then "LTY-ORDRVW-38" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "LTY-ORDRVW-38" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "LTY-ORDRVW-38" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     	   -		        |
+
+Then "LTY-ORDRVW-38" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+And "LTY-ORDRVW-38" Customer finds Loyalty Information in the Order Summary Box in the Order Review page:
+| LoyaltySavingMessage | LoyaltyBonusPointsMessage |
+| Yes                  |    Yes		               |
+
+Then "LTY-ORDRVW-38" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId         |
+| QC-LTY        | ORDRVW    | LTY-ORDRVW-38 |

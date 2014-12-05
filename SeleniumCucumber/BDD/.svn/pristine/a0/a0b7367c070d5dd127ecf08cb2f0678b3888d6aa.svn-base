@@ -1,0 +1,141 @@
+@pharmacy @SingleClickRefillFamilyMember
+Feature:  Verify Single click Refill order for Family member
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SingleClickFamily-1
+Scenario: Verify Single click Refill order for Primary member
+
+Given "RX-SingleClickFamily-1" Customer starts the scenario:
+| InputFileName  | SheetName 	        | RowId      	         |
+| QC-RX   		 | SingleClickFamily    | RX-SingleClickFamily-1 |
+
+Given "RX-SingleClickFamily-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId              |
+| CommonData  	| login   	| Singleclickfamily1 |
+
+Then "RX-SingleClickFamily-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId       		  |ClickObjectOverlay|TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFromAccount1    |yes			 	 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFastOvlyClose	  |No				 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFromAccount1    |yes			 	 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFastOvlyClose	  |No				 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFromAccountOvly |Yes				 |Yes				 |
+
+And "RX-SingleClickFamily-1" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|RxPosition|
+| 1               |1		 |
+
+Then "RX-SingleClickFamily-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId       		 |ClickObjectOverlay|TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | ChangeStore          |yes   			|Yes				 |
+
+Then "RX-SingleClickFamily-1" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |SingleClickChangeStore|ErrorValidation|
+| CommonData    | StoreDetails  | storeselection1 |Yes					 |yes            |
+
+And "RX-SingleClickFamily-1" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|RxPosition|
+| 1               |1		 |
+
+Then "RX-SingleClickFamily-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId       |ClickObjectOverlay|TargetOverlay	  |
+| PharmacyHomePageLinkVerification         | Authenticated        | SubmitOrder |yes               |yes               |
+
+Then "RX-SingleClickFamily-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	        | RowId     	         |
+| QC-RX   		 | SingleClickFamily    | RX-SingleClickFamily-1 |
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-SingleClickFamily-2
+Scenario: Verify the presence and functionality of Confirmation message and change store after selecting the family member
+
+Given "RX-SingleClickFamily-2" Customer starts the scenario:
+| InputFileName  | SheetName 	        | RowId      	         |
+| QC-RX   		 | SingleClickFamily    | RX-SingleClickFamily-2 |
+
+Given "RX-SingleClickFamily-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId              |
+| CommonData  	| login   	| Singleclickfamily1 |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId           	  |ClickObjectOverlay|TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFromAccount1    |yes			 	 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFastOvlyClose	  |No				 |No				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillFromAccountOvly |Yes				 |Yes				 |
+
+Then "RX-SingleClickFamily-2" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName 					  | SheetName        | RowId 	     			|ClickObjectOverlay|
+| 	PharmacyHomePageLinkVerification  | ObjectValidation | FamilyMember             |Yes               |
+
+And "RX-SingleClickFamily-2" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|RxPosition|
+| 1               |3		 |
+
+Then "RX-SingleClickFamily-2" Customer selects a family member:
+| FamilyMemberOption    |2  |
+
+Then "RX-SingleClickFamily-2" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName 					  | SheetName        | RowId 	     			|
+| 	PharmacyHomePageLinkVerification  | ObjectValidation | ConfirmationMessage      |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | Submit  				|yes   					|Yes				 |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillMorePrescriptions |yes    				|Yes				 |
+
+And "RX-SingleClickFamily-2" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|RxPosition|
+| 1               |1		 |
+
+Then "RX-SingleClickFamily-2" Customer selects a family member:
+| FamilyMemberOption    |2  |
+
+Then "RX-SingleClickFamily-2" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName 					  | SheetName        | RowId 	     			|
+| 	PharmacyHomePageLinkVerification  | ObjectValidation | ConfirmationMessage      |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | ChangeStore             |yes    				|Yes				 |
+
+Then "RX-SingleClickFamily-2" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |SingleClickChangeStore|ErrorValidation|
+| CommonData    | StoreDetails  | storeselection1 |Yes					 |No             |
+
+Then "RX-SingleClickFamily-2" Customer validates Default Selected Option and links availability in the Page:
+| InputFileName 					  | SheetName        | RowId 	     		 |
+| 	PharmacyHomePageLinkVerification  | ObjectValidation | ConfirmationMessage1  |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | FamilyMember1			| yes   				|yes                 |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |TargetOverlay	  |
+| PharmacyHomePageLinkVerification         | Authenticated        | NoButton  				| yes   				|Yes			  |	
+
+And "RX-SingleClickFamily-2" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|RxPosition|
+| 1               |1	 |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId       |ClickObjectOverlay|TargetOverlay	  |
+| PharmacyHomePageLinkVerification         | Authenticated        | SubmitOrder |yes               |yes               |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId          	        | ClickObjectOverlay	|TargetOverlay	  |
+| PharmacyHomePageLinkVerification         | Authenticated        | RefillMorePrescriptions |yes    				|yes			  |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |TargetOverlay		 |
+| PharmacyHomePageLinkVerification         | Authenticated        | FamilyMember2			| yes   				|yes                 |
+
+Then "RX-SingleClickFamily-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName            | RowId    				| ClickObjectOverlay    |
+| PharmacyHomePageLinkVerification         | Authenticated        | FullRxView				| yes   				|
+
+Then "RX-SingleClickFamily-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	        | RowId     	         |
+| QC-RX   		 | SingleClickFamily    | RX-SingleClickFamily-2 |
+
+#-----------------------------------------------------------------------------------------------------------

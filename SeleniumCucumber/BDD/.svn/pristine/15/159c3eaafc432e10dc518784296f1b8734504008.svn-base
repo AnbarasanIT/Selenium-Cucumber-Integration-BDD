@@ -1,0 +1,202 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class FamilyPrescriptionsLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add adult from family Prescriptions
+     * 
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date -4-Mar-13
+     ************************************************************* 
+     */
+    public static void addAdult(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PharmacyHealth_LNK = "//li[@CLASS='menu_top pharmacyNojs']~XPATH";
+	String FamilyPrescriptions_LNK = "li>a[href*='managefamilyaccounts']~CSS";
+	String Firstname_TXT = "//input[@id='firstname_myacc']~XPATH";
+	String LastName_TXT = "//input[@id='lastname_myacc']~XPATH";
+	String DobMonth_TXT = "//select[@title='Month']~XPATH";
+	String DobDay_TXT = "//select[@title='Day']~XPATH";
+	String DobYear_TXT = "//select[@title='Year']~XPATH";
+	String Email_TXT = "//input[@id='emailAddress_myacc']~XPATH";
+	String ReTypeEMailID_TXT = "//input[@id='remail_myacc']~XPATH";
+	String Continue_IMG = "//input[@title='Continue']~XPATH";
+	String Confirm_IMG="//input[@title='Confirm']~XPATH";
+	String CancelInvitation_LNK="//strong[contains(text(),'Cancel Invitation')]~XPATH";
+	String Message_LNK="//a[contains(@class,'fontStrong')] [contains(text(),'Family Prescriptions Account')]~XPATH";
+	String Accept_Decling_LNK="//a[contains(text(),'Please either accept or decline this invitation')]~XPATH";
+	String Authorization_DIV="//h1[contains(text(),'Authorization')]~XPATH";
+	String Signature_TXT="//input[@id='txt_pass']~XPATH";
+	String Accept_BTN="//input[@title='Accept']~XPATH";
+	String Authorized="//strong[contains(text(),'Authorization Complete')]~XPATH";
+	String Remove_LNK="//p[contains(text(),'Full Access')]/a[contains(text(),'(Remove)')]";
+	WebElement PrescTable=null;
+	String Table_DIV="//div[@id='exChangeDataContent']~XPATH']";
+	String RemoveMember_IMG="//input[@title='Remove Family Member']~XPATH";
+	String MemberRemoved_DIV="//strong[contains(text(),'Family Member Removed')]";
+	String CancelInvitation_INPUT="//input[contains(@title,'Cancel Invitation')]~XPATH";
+	String YourAccount_LNK="a[title*='Your Account']~CSS";
+	String Messages_LNK = "a[title='Messages']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String UserType=dataMap.get("UserType").get(0);
+	    if (UserType.equalsIgnoreCase("RemoveAdult"))
+	    {
+		// Memmber information table and Remove link should be present in the page. Same time
+		if (isElementPresentVerification(Remove_LNK, browser)) 
+		{
+		    if (isElementPresentVerification(Table_DIV, browser)) // TAble property is visible even if there is no member
+		    {
+			PrescTable =browser.findElement(By.xpath("//div[@id='exChangeDataContent']"));
+			List<WebElement> Remove = PrescTable.findElements(By.xpath("//p[contains(text(),'Full Access')]/a[contains(text(),'(Remove)')]"));
+			for (int num=0;num<Remove.size();num++)
+			{
+			    Remove.get(num).click();
+			    switchToOverlay(browser);
+			    if (!isElementPresentVerifyClick(RemoveMember_IMG, browser))
+			    {
+				throw new Exception("Not able to click Remove member button");
+			    }
+			    switchToDefault(browser);
+			    if (!isElementPresentVerification(MemberRemoved_DIV, browser))
+			    {
+				messagesMap.put("Remove Adult", "Member Removed message not displayed");
+				status = WARNING;
+			    }
+
+			}		    
+		    }
+		    else
+		    {
+			messagesMap.put("Remove Adult", "Unable to Location Member info Table Check the object Property");
+			status = WARNING;
+		    }
+		}else if(isElementPresentVerification(CancelInvitation_LNK, browser)){
+		    if(!isElementPresentVerifyClick(CancelInvitation_LNK, browser))
+		    {
+			throw new Exception("Not able to click Cancel Invitation link");
+		    }
+		    switchToOverlay(browser);
+		    if(!isElementPresentVerifyClick(CancelInvitation_INPUT, browser))
+		    {
+			throw new Exception("Not able to click Cancel Invitation button");
+		    }
+		    switchToDefault(browser);
+		}
+
+
+	    }
+	    if (UserType.equalsIgnoreCase("Admin"))
+	    {
+		// performHoverClickAction(getElementByProperty(PharmacyHealth_LNK,
+		// browser), FamilyPrescriptions_LNK, browser);
+		String[] DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB").split(":"); // Split
+		String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email");
+		if (!clearAndEnterText(Firstname_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName"), browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in first name field");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(LastName_TXT, getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName"), browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in last name field");
+		    status = WARNING;
+		}
+		// Enter Date of birth
+		new Select(getElementByProperty(DobMonth_TXT, browser)).selectByValue(DOB[0]);
+		new Select(getElementByProperty(DobDay_TXT, browser)).selectByValue(DOB[1]);
+		new Select(getElementByProperty(DobYear_TXT, browser)).selectByValue(DOB[2]);
+		// Type Email Address
+		if (!clearAndEnterText(Email_TXT, UserName, browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in E-Mail field");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(ReTypeEMailID_TXT, UserName, browser)) {
+		    messagesMap.put("Unable to enter text", "Unable to enter text in Retype E-Mail field");
+		    status = WARNING;
+		}
+		// Click Continue button
+		if (!isElementPresentVerifyClick(Continue_IMG, browser)) {
+		    throw new Exception("Not able to click continue button");
+		}
+		//Click Confirm button in Review Page
+		if (!isElementPresentVerifyClick(Confirm_IMG, browser)) {
+		    throw new Exception("Not able to click continue button");
+		}
+		if (!isElementPresentVerification(CancelInvitation_LNK, browser))
+		{
+		    messagesMap.put("Add Adult", "Add Adult information entry failed ");
+		    status = WARNING;
+		}
+	    }
+	    // Scenario to click invitation message after admin has sent invitation
+	    if (UserType.equalsIgnoreCase("member"))
+	    {
+		String Password = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Password");
+		// # SARAVANAN M-AUG-21-2013 - Toclik on the Messages link in the Your account link
+		if (performHoverClickAction(getElementByProperty(YourAccount_LNK, browser), Messages_LNK, browser)) {
+		    if(!isElementPresentVerifyClick(Message_LNK, browser)){
+			throw new Exception("Not able to click Invitation Message button");
+		    }
+		}
+		// Should be in message page
+		if(!isElementPresentVerifyClick(Accept_Decling_LNK,browser))
+		{
+		    throw new Exception("Not able to click either accept or decline link");
+		}
+		// Enter Digital Signature and click Accept
+		if (!clearAndEnterText(Signature_TXT, Password, browser))
+		{
+		    throw new Exception("Not able to Enter Password in Signature Field");
+		}
+		if (!isElementPresentVerifyClick(Accept_BTN, browser))
+		{
+		    throw new Exception("Not able to Click accept button");
+		}
+		if (!isElementPresentVerification(Authorized, browser))
+		{
+		    messagesMap.put("Add Adult_Member", "AAuthorization Complete message not displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (UserType.equalsIgnoreCase("Cancel"))// ADDED BY YGNASH - 17JUN2013
+	    {
+		if(!isElementPresentVerifyClick(CancelInvitation_LNK, browser))
+		{
+		    throw new Exception("Not able to click Cancel Invitation link");
+		}
+		switchToOverlay(browser);
+		if(!isElementPresentVerifyClick(CancelInvitation_INPUT, browser))
+		{
+		    throw new Exception("Not able to click Cancel Invitation button");
+		}
+
+	    }
+
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

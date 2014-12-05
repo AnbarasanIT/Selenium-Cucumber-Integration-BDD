@@ -1,0 +1,86 @@
+@dailyliving @CACScenarios
+Feature: Verify the UI of chek out flow pages
+
+#----------------------------------------------------------------------------------------------------
+
+@SS-CACScenarios-1
+Scenario: Logged in user performs SS product check out and validates redeemed points in Review order page and order summary page
+
+Given  "SS-CACScenarios-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId              |
+| QC-SS	        | CACScenarios	         | SS-CACScenarios-1  |
+
+Given "SS-CACScenarios-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         		 |
+| CommonData  	 | login     | LoyaltyPointsUser	 |
+
+And "SS-CACScenarios-1" Customer Clears the Shopping Cart
+
+Then "SS-CACScenarios-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	    |
+| CommonData    | search    | PoBoxProduct  |
+
+Then "SS-CACScenarios-1" Customer adds Daily Living items to the cart from search.
+
+Then "SS-CACScenarios-1" Customer Goes to the Shopping Cart
+
+And "SS-CACScenarios-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       |TargetOverlay|
+| 	CSLR         | LinkNavigation    |EstimatedShipping |No			  |
+| 	CSLR         | LinkNavigation    |ShippingDetails	|Yes		  |
+| 	CSLR         | LinkNavigation    |CloseButton		|No			  |
+
+Then "SS-CACScenarios-1" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			      |
+| SDDData       | Product Details  | ProductInformation18 |
+
+And "SS-CACScenarios-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       |
+|	CSLR		 | LinkNavigation	 |PointsInSC		|
+
+Then "SS-CACScenarios-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SS-CACScenarios-1" Customer validates PO Box address in shipping info page:
+
+Then "SS-CACScenarios-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   -    |wag_srinivanni@yahoo.com  | 8471234567   |  No	       |
+
+Then "SS-CACScenarios-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+And "SS-CACScenarios-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId       	|
+|	CSLR		 | LinkNavigation	 |RedemptionDropDown	|
+
+Then "SS-CACScenarios-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|RedeemPtsOption|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			|1				|
+
+And "SS-CACScenarios-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "SS-CACScenarios-1" Customer validates the applied rewards in various pages:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "SS-CACScenarios-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "SS-CACScenarios-1" Customer validates the applied rewards in various pages:
+| InputFileName  | 	SheetName 		 | 		RowId     	|
+|	CSLR		 | LinkNavigation	 |OrderReview		|
+
+Then "SS-CACScenarios-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-CACScenarios-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		 	   | RowId         	   |
+| QC-SS	        | CACScenarios			   | SS-CACScenarios-1 |
+#----------------------------------------------------------------------------------

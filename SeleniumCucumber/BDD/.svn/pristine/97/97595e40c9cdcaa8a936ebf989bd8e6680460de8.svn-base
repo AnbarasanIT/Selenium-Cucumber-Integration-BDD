@@ -1,0 +1,504 @@
+@pharmacy @RefillPrescriptionFaster
+Feature: All the scenarios in the feature are for demo purpose only
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-1
+Scenario: Verifying that Refill prescription faster overlay is displayed and fucntionality of New to online pharmacy link for Anonymous user
+
+Given "RX-RefillPrescriptionFaster-1" Customer starts the scenario:
+| InputFileName  | SheetName                   | RowId      	                |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-1   |
+
+Then "RX-RefillPrescriptionFaster-1" Customer clicks on an object and validates the expected results:
+| InputFileName		                | SheetName	  | RowId                             	| ClickObjectOverlay  |TargetOverlay |
+| PharmacyHomePageLinkVerification  | Anonymous   | RefillfromAccountWagHomePage	    |no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | Anonymous    | NewToOnlinePharmacy	     		 	| Yes       		  |no		 	 |	
+| PharmacyHomePageLinkVerification | Anonymous    | RefillfromAccountRxHomePage      	|no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | Anonymous    | NewToOnlinePharmacy	     		 	| Yes       		  |no		 	 |
+| PharmacyHomePageLinkVerification | Anonymous    | RefillfromAccountinExpressPage   	|no   			      |Yes			 | 
+| PharmacyHomePageLinkVerification | Anonymous    | NewToOnlinePharmacy	     		 	| Yes       		  |no		 	 |
+| PharmacyHomePageLinkVerification | Anonymous    | RefillfromAccountinSpecialtyRxPage  |no   			      |yes			 |
+	
+
+Then "RX-RefillPrescriptionFaster-1" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |	
+| QC-RX   		 | RefillPrescriptionFaster | RX-RefillPrescriptionFaster-1 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-2
+Scenario: Verify that Refill prescription faster overlay is displayed for light user
+
+Given  "RX-RefillPrescriptionFaster-2" Customer starts the scenario:
+| InputFileName  | SheetName           | RowId      	        |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-2 |
+
+Given "RX-RefillPrescriptionFaster-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterlightuser	 |Global      |
+
+Then "RX-RefillPrescriptionFaster-2" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	| RowId                                 | ClickObjectOverlay  |TargetOverlay |
+| PharmacyHomePageLinkVerification | LightReg   | RefillfromAccountWagHomePage	        |no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | LightReg   | UpdatedNowinRefillRxFasterOverlay     | Yes       		  |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg   | RefillfromAccountRxHomePage           |no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | LightReg   | UpdatedNowinRefillRxFasterOverlay     | Yes       		  |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg   | RefillfromAccountinExpressPage        |no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | LightReg   | UpdatedNowinRefillRxFasterOverlay     | Yes       		  |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg   | RefillfromAccountinSpecialtyRxPage    |no   			      |Yes			 |
+| PharmacyHomePageLinkVerification | LightReg   | UpdatedNowinRefillRxFasterOverlay     | Yes       		  |no		 	 |
+
+Then "RX-RefillPrescriptionFaster-2" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-2" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster | RX-RefillPrescriptionFaster-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-3
+Scenario: Verify that Refill prescription faster overlay is displayed for UnAuthenticated user
+
+Given  "RX-RefillPrescriptionFaster-3" Customer starts the scenario:
+| InputFileName  | SheetName           | RowId      	        |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-3 |
+
+When "RX-RefillPrescriptionFaster-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                          |SourcePage  |
+| CommonData  	| login   	| RefillFasterUnauthenticated	 |Global     |
+
+Then "RX-RefillPrescriptionFaster-3" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId                             | ClickObjectOverlay  |TargetOverlay  |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountWagHomePage	   | no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountRxHomePage       | no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountinExpressPage    | no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountinSpecialtyRxPage| no   			     |yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountTransferRxPage   | no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes       		     |no		 	 |
+| PharmacyHomePageLinkVerification | LightReg          | RefillfromAccountNewRxRequestPage | no   			     |Yes			 |
+| PharmacyHomePageLinkVerification | UnAuthenticated   | UpdatedNowinRefillRxFasterOverlay | Yes      		     |no		 	 |
+
+Then "RX-RefillPrescriptionFaster-3" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-3" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster | RX-RefillPrescriptionFaster-3 |
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-4
+Scenario: Verify that Refill prescription faster overlay is displayed and functionality of full prescription view link presents in the bottom of the overlay for Authenticated user 
+
+Given  "RX-RefillPrescriptionFaster-4" Customer starts the scenario:
+| InputFileName  | SheetName           | RowId      	        |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-4 |
+
+When "RX-RefillPrescriptionFaster-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                      |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Global      |
+
+Then "RX-RefillPrescriptionFaster-4" Customer clicks on an object and validates the expected results:
+| InputFileName		                | SheetName	             | RowId                              | ClickObjectOverlay   |TargetOverlay  |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountinSpecialtyRxPage |no 				     |Yes			 |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountRxHomePage        |yes   			     |Yes			 |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountinExpressPage     |yes  				 |Yes			 |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountTransferRxPage    |yes  				 |Yes			 |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountWagHomePage	  	  |yes   			     |Yes			 |
+
+Then "RX-RefillPrescriptionFaster-4" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName         | RowId 	                      | Overlay  | ClickObjectOverlay   |
+| PharmacyLinkVerification         | Authenticated     | FullPrescriptionViewinBottom | no       | yes  				|
+
+Then "RX-RefillPrescriptionFaster-4" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-4" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster | RX-RefillPrescriptionFaster-4 |
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-RefillPrescriptionFaster-5
+Scenario: Verify the display of restriction message on selection of 18 prescription and functionality of full prescription view link presents in the top of the refill prescription faster overlay
+for authenticated user.
+
+Given  "RX-RefillPrescriptionFaster-5" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-5 |
+
+And "RX-RefillPrescriptionFaster-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId       		         |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Global  |
+
+Then "RX-RefillPrescriptionFaster-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName           | RowId 	         |  TargetOverlay  |
+| PharmacyHomePageLinkVerification         | Authenticated       | RefillFromAccount | yes   |
+
+And "RX-RefillPrescriptionFaster-5" Customer selects prescriptions in the refill prescription faster overlay:
+| NoofPrescription|
+| 18  |
+
+Then "RX-RefillPrescriptionFaster-5" Customer verifies the display of Restriction message on selection of prescriptions:
+
+Then "RX-RefillPrescriptionFaster-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName         | RowId 	                      | Overlay  | ClickObjectOverlay   |
+| PharmacyLinkVerification         | Authenticated     | FullPrescriptionViewinBottom | no       | yes  				|
+
+Then "RX-RefillPrescriptionFaster-5" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-5" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-5 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-6
+Scenario: Verifying that the Light user is able to sign in through Refill Prescriptions Faster Overlay from Wag home, Rx home, Express refill, Specialty Rx pages
+
+Given  "RX-RefillPrescriptionFaster-6" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-6 |
+
+And "RX-RefillPrescriptionFaster-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterlightuser	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-6" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-6" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName     | RowId 	           | Overlay  |
+| PharmacyHomePageLinkVerification | Anonymous     | PharmacyHomePage2 | no       |
+
+And "RX-RefillPrescriptionFaster-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterlightuser	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-6" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-6" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay  |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no 			    |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumber|  no 			    |
+
+And "RX-RefillPrescriptionFaster-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId  			     |SourcePage  |
+| CommonData  	| login   	| RefillFasterlightuser	 |Overlay 	  |
+
+Then "RX-RefillPrescriptionFaster-6" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-6" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId         		   | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumberSRX  |  no  			    |
+
+And "RX-RefillPrescriptionFaster-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId   				   |SourcePage   |
+| CommonData  	| login   	| RefillFasterlightuser	   |Overlay 	 |
+
+Then "RX-RefillPrescriptionFaster-6" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-6" Customer finished testing the scenario:
+| InputFileName  | SheetName				 | RowId  				    	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-6 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-RefillPrescriptionFaster-7
+Scenario: Verifying that the Unauthenticated user is able to sign in through Refill Prescriptions Faster Overlay from Wag home, Rx home, Express refill, Specialty Rx pages
+
+Given  "RX-RefillPrescriptionFaster-7" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-7 |
+
+And "RX-RefillPrescriptionFaster-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterUnauthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-7" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-7" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName     | RowId 	           |
+| PharmacyHomePageLinkVerification | Anonymous     | PharmacyHomePage2 |
+
+And "RX-RefillPrescriptionFaster-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 		 |SourcePage  |
+| CommonData  	| login   	| RefillFasterUnauthenticated	 |Overlay	  |
+
+Then "RX-RefillPrescriptionFaster-7" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-7" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumber|  no     |
+
+And "RX-RefillPrescriptionFaster-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterUnauthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-7" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-7" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+
+And "RX-RefillPrescriptionFaster-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterUnauthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-7" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-7" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-7 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-8
+Scenario: Verifying that the Unauthenticated user is able to sign in through Refill Prescriptions Faster Overlay from Wag home, Rx home, Express refill, Specialty Rx pages
+
+Given  "RX-RefillPrescriptionFaster-8" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-8 |
+
+And "RX-RefillPrescriptionFaster-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 	 |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Overlay 	  |
+
+Then "RX-RefillPrescriptionFaster-8" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-8" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName     | RowId 	           | Overlay  |
+| PharmacyHomePageLinkVerification | Anonymous     | PharmacyHomePage2 | no       |
+
+And "RX-RefillPrescriptionFaster-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-8" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-8" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumber|  no     |
+
+And "RX-RefillPrescriptionFaster-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-8" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-8" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+
+And "RX-RefillPrescriptionFaster-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticated	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-8" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-8" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-8 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-RefillPrescriptionFaster-9
+Scenario: Verifying that the Authenticated user with no prescription is able to sign in through Refill Prescriptions Faster Overlay from Wag home, Rx home, Express refill, Specialty Rx pages
+
+Given  "RX-RefillPrescriptionFaster-9" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-9 |
+
+And "RX-RefillPrescriptionFaster-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                				  |SourcePage   |
+| CommonData  	| login   	| RefillFasterAuthenticatedwithNoRx	  |Overlay 		|
+
+Then "RX-RefillPrescriptionFaster-9" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-9" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName     | RowId 	           | Overlay  |
+| PharmacyHomePageLinkVerification | Anonymous     | PharmacyHomePage2 | no       |
+
+And "RX-RefillPrescriptionFaster-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticatedwithNoRx	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-9" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-9" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumber|  no     |
+
+And "RX-RefillPrescriptionFaster-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticatedwithNoRx	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-9" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-9" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+| PharmacyHomePageLinkVerification | Anonymous         |Specialty Pharmacy|  no     |
+
+And "RX-RefillPrescriptionFaster-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |SourcePage  |
+| CommonData  	| login   	| RefillFasterAuthenticatedwithNoRx	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-9" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-9" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-9 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-RefillPrescriptionFaster-10
+Scenario: Verifying that the Unauthenticated user is able to sign in through Refill Prescriptions Faster Overlay from Wag home, Rx home, Express refill
+
+Given  "RX-RefillPrescriptionFaster-10" Customer starts the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-10 |
+
+And "RX-RefillPrescriptionFaster-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |SourcePage  |
+| Pharmacy  	| login   	| Unmatcheduser1	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-10" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-10" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName     | RowId 	           | Overlay  |
+| PharmacyHomePageLinkVerification | Anonymous     | PharmacyHomePage2 | no       |
+
+And "RX-RefillPrescriptionFaster-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |SourcePage  |
+| Pharmacy  	| login   	| Unmatcheduser1	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-10" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-10" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+| PharmacyHomePageLinkVerification | Anonymous         |RefillWithRxnumber|  no     |
+
+And "RX-RefillPrescriptionFaster-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |SourcePage  |
+| Pharmacy  	| login   	| Unmatcheduser1	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-10" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-10" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	       | RowId            | ClickObjectOverlay |
+| PharmacyHomePageLinkVerification | Anonymous         |PharmacyHomePage2 |  no     |
+| PharmacyHomePageLinkVerification | Anonymous         |Specialty Pharmacy|  no     |
+
+And "RX-RefillPrescriptionFaster-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |SourcePage  |
+| Pharmacy  	| login   	| Unmatcheduser1	 |Overlay  |
+
+Then "RX-RefillPrescriptionFaster-10" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-10" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-10 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@RX-RefillPrescriptionFaster-11
+Scenario: Verify that Refill from account link navigates to Manage prescription page for authenticated user with invalid prescriptions
+
+Given  "RX-RefillPrescriptionFaster-11" Customer starts the scenario:
+| InputFileName  | SheetName           | RowId      	        |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-11 |
+
+When "RX-RefillPrescriptionFaster-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId              	|SourcePage  |
+| CommonData  	| login   	| AuthenwithInvalidRx	|Global 	 |
+
+Then "RX-RefillPrescriptionFaster-11" Customer clicks on an object and validates the expected results:
+| InputFileName		               | SheetName	            | RowId                            			| ClickObjectOverlay|
+| PharmacyHomePageLinkVerification | Authenticated          | RefillfromAccountWagHomePageforinvalidRx	| no     |
+| PharmacyHomePageLinkVerification | Authenticated          | RefillfromAccountRxHomePageforinvalidRx   | no     |
+
+Then "RX-RefillPrescriptionFaster-11" Customer logout from walgreens:
+|Source |
+|Global |
+
+Then "RX-RefillPrescriptionFaster-11" Customer finished testing the scenario:
+| InputFileName  | SheetName | RowId      	 |
+| QC-RX   		 | RefillPrescriptionFaster | RX-RefillPrescriptionFaster-11 |
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+@RX-RefillPrescriptionFaster-12
+Scenario: Verify the sorting functionality in the Refill prescription faster overlay for Authenticated user 
+
+Given  "RX-RefillPrescriptionFaster-12" Customer starts the scenario:
+| InputFileName  | SheetName           		  | RowId      	                   |
+| QC-RX   		 | RefillPrescriptionFaster   | RX-RefillPrescriptionFaster-12 |
+
+When "RX-RefillPrescriptionFaster-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId         | 
+| CommonData  	| login   	| Refillfast	|
+
+Then "RX-RefillPrescriptionFaster-12" Customer clicks on an object and validates the expected results:
+| InputFileName		                | SheetName	             | RowId                              | ClickObjectOverlay   |TargetOverlay  |
+| PharmacyHomePageLinkVerification  | Authenticated          | RefillfromAccountinExpressPage     |no   			     |Yes			 |
+
+And "RX-RefillPrescriptionFaster-12" Customer validates sorting of the refillfast overlay columns:
+|NoofTimesToClickTableHeader| ColumnToValidate 		| OrderType  |
+|1			    			| LastFillDate	   		| Descending |
+|1			    			| LastFillDate     		| Ascending  |
+|1			    			| Prescription Name     | Ascending  |
+|1			    			| Prescription Name    	| Descending |
+#|1			    			| Refills Left    	   	| Ascending  |
+#|1			    			| Refills Left       	| Descending |
+
+Then "RX-RefillPrescriptionFaster-12" Customer finished testing the scenario:
+| InputFileName  | SheetName                 | RowId      	                  |
+| QC-RX   		 | RefillPrescriptionFaster  | RX-RefillPrescriptionFaster-12 |
+#--------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,462 @@
+@pharmacy @ManageFamilyMember
+Feature:  Customer adds the family member(s) to his profile
+#----------------------------------------------------------------------------------
+
+@RX-ManageFamilyMember-01
+Scenario: Customer verifies the zero family member state
+
+Given  "RX-ManageFamilyMember-01" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			|
+| QC-RX	        | ManageFamilyMember 	 | RX-ManageFamilyMember-01 |
+
+Given "RX-ManageFamilyMember-01" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId        			|
+| Pharmacy  	 | login       | ZeroStateFamilyuser1	|
+
+Then "RX-ManageFamilyMember-01" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       	 |
+| Pharmacy  	 | FamilyMember     | ZeroStateUser	 |
+
+Then "RX-ManageFamilyMember-01" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-01" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	    	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-01 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-02
+Scenario: Customer adds an adult family member to the account by accepting the invitation from Mail then delinks the member
+
+Given "RX-ManageFamilyMember-02" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-02 	|
+
+Then "RX-ManageFamilyMember-02" Customer login to the Yahoo.com:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	 |
+
+And "RX-ManageFamilyMember-02" Customer deletes all the emails from the Inbox.
+
+Given "RX-ManageFamilyMember-02" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser1	 |
+
+Then "RX-ManageFamilyMember-02" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultFormCancel	 |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	 |
+
+Then "RX-ManageFamilyMember-02" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-02" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Yahoomail	|
+
+And "RX-ManageFamilyMember-02" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	 |
+
+Given "RX-ManageFamilyMember-02" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       	   		  |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	  |
+
+And "RX-ManageFamilyMember-02" Customer accepts or declines the join family member invitation:
+| InputFileName  | SheetName 		| RowId       	   		  |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	  |
+
+Then "RX-ManageFamilyMember-02" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-02" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser1	 |
+
+And "RX-ManageFamilyMember-02" Customer verifies the presence of linked family member in the family member toggle:
+| InputFileName  | SheetName 		| RowId       			 |AddMember |
+| Pharmacy  	 | FamilyMember     | AddAdultFamilyMember	 |Yes		|
+
+Then "RX-ManageFamilyMember-02" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | AdminDelinksAdultMember	 |
+
+Then "RX-ManageFamilyMember-02" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-02" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-02 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-03
+Scenario: Customer adds a child family member to the account then delink the child from account and does the Age validation
+
+Given  "RX-ManageFamilyMember-03" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-03 	|
+
+Given "RX-ManageFamilyMember-03" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser2	 |
+
+Then "RX-ManageFamilyMember-03" Customer links or delinks a child family member to profile:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | ChildFamilyMemberLink		 |
+
+And "RX-ManageFamilyMember-03" Customer verifies the presence of linked family member in the family member toggle:
+| InputFileName  | SheetName 		| RowId       			 |AddMember |
+| Pharmacy  	 | FamilyMember     | ChildFamilyMemberLink	 |Yes		|
+
+Then "RX-ManageFamilyMember-03" Customer links or delinks a child family member to profile:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | ChildFamilyMemberDelink	 |
+| Pharmacy  	 | FamilyMember     | ChildAgeValidation		 |
+
+Then "RX-ManageFamilyMember-03" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-03" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-03 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-04
+Scenario: Customer adds a pet family member to the account then verifies the presence of added member in the family member toggle then delinks the pet member
+
+Given  "RX-ManageFamilyMember-04" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-04 	|
+
+Given "RX-ManageFamilyMember-04" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser3	 |
+
+Then "RX-ManageFamilyMember-04" Customer links or delinks a pet family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | PetFamilyMemberLink	 |
+
+And "RX-ManageFamilyMember-04" Customer verifies the presence of linked family member in the family member toggle:
+| InputFileName  | SheetName 		| RowId       			 |AddMember |
+| Pharmacy  	 | FamilyMember     | PetFamilyMemberLink	 |Yes		|
+
+Then "RX-ManageFamilyMember-04" Customer links or delinks a pet family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | PetFamilyMemberDelink	 |
+
+Then "RX-ManageFamilyMember-04" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-04" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-04 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-05
+Scenario: Customer declines the family member invitation from message and verifies the authorization failed message
+
+Given "RX-ManageFamilyMember-05" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-05 	|
+
+Given "RX-ManageFamilyMember-05" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser4	 |
+
+Then "RX-ManageFamilyMember-05" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | AddAdultDeclineFromMsg	 |
+
+Then "RX-ManageFamilyMember-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-05" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       	  			   |
+| Pharmacy  	 | FamilyMember     | AddAdultDeclineFromMsg	   |
+
+And "RX-ManageFamilyMember-05" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | AddAdultDeclineFromMsg	 |
+
+And "RX-ManageFamilyMember-05" Customer accepts or declines the join family member invitation:
+| InputFileName  | SheetName 		| RowId       	    		 |
+| Pharmacy  	 | FamilyMember     | AddAdultDeclineFromMsg	 |
+
+Then "RX-ManageFamilyMember-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-05" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser4	 |
+
+Then "RX-ManageFamilyMember-05" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | DeclinedInvitation |
+
+Then "RX-ManageFamilyMember-05" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-05" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-05 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-06
+Scenario: Customer accepts the family member invitation from message and delinks the member from account then verifies the removal notification mail
+
+Given "RX-ManageFamilyMember-06" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-06 	|
+
+Given "RX-ManageFamilyMember-06" Customer login to the Yahoo.com:
+| InputFileName  | SheetName		 | RowId       				  |
+| Pharmacy  	 | FamilyMember      | RemovedByFamilyMemberMail  |
+
+And "RX-ManageFamilyMember-06" Customer deletes all the emails from the Inbox.
+
+Given "RX-ManageFamilyMember-06" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser4	 |
+
+Then "RX-ManageFamilyMember-06" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsg	 |
+
+Then "RX-ManageFamilyMember-06" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-06" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       		     |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsg	 |
+
+And "RX-ManageFamilyMember-06" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsg	 |
+
+And "RX-ManageFamilyMember-06" Customer accepts or declines the join family member invitation:
+| InputFileName  | SheetName 		| RowId       		     |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsg	 |
+
+Then "RX-ManageFamilyMember-06" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AdultDelinkByMember	 |
+
+Then "RX-ManageFamilyMember-06" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-06" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Yahoomail	|
+
+And "RX-ManageFamilyMember-06" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | RemovedByFamilyMemberMail	 |
+
+Then "RX-ManageFamilyMember-06" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-06 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-07
+Scenario: Customer adds a child family member to the account who has email ID and accepts the invitation then delinks the member
+
+Given  "RX-ManageFamilyMember-07" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-07 	|
+
+Then "RX-ManageFamilyMember-07" Customer login to the Yahoo.com:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+And "RX-ManageFamilyMember-07" Customer deletes all the emails from the Inbox.
+
+Given "RX-ManageFamilyMember-07" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser5	 |
+
+Then "RX-ManageFamilyMember-07" Customer links or delinks a child family member to profile:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+Then "RX-ManageFamilyMember-07" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-07" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Yahoomail	|
+
+And "RX-ManageFamilyMember-07" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+Given "RX-ManageFamilyMember-07" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+And "RX-ManageFamilyMember-07" Customer accepts or declines the join family member invitation:
+| InputFileName  | SheetName 		| RowId       	     |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+Then "RX-ManageFamilyMember-07" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-07" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       	 |
+| Pharmacy  	 | login     		| Familyuser5	 |
+
+Then "RX-ManageFamilyMember-07" Customer links or delinks a child family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailIDDelink	 |
+
+Then "RX-ManageFamilyMember-07" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-07" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | ChildWithMailID	 |
+
+And "RX-ManageFamilyMember-07" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       				 |
+| Pharmacy  	 | FamilyMember     | RemoveFamilyMemberMessage	 |
+
+Then "RX-ManageFamilyMember-07" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-07" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-07 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-08
+Scenario: Customer adds an adult family member who has no walgreens account to the account and delinks the linked family member
+
+Given "RX-ManageFamilyMember-08" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-08 	|
+
+Given "RX-ManageFamilyMember-08" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser1	 |
+
+Then "RX-ManageFamilyMember-08" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultWithNoWagAcc	 |
+
+Then "RX-ManageFamilyMember-08" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-08" Customer login to the Yahoo.com:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultWithNoWagAcc	 |
+
+And "RX-ManageFamilyMember-08" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultWithNoWagAcc	 |
+
+Given "RX-ManageFamilyMember-08" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser1	 |
+
+Then "RX-ManageFamilyMember-08" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       					 |
+| Pharmacy  	 | FamilyMember     | AddAdultWithNoWagAccDelink	 |
+
+Then "RX-ManageFamilyMember-08" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-08" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-08 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-09
+Scenario: Customer adds an adult member and cancelled the invitation in order to verifies the Authorization error message
+
+Given "RX-ManageFamilyMember-09" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-09 	|
+
+Given "RX-ManageFamilyMember-09" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser4	 |
+
+Then "RX-ManageFamilyMember-09" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsg	 |
+
+Then "RX-ManageFamilyMember-09" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       		 |
+| Pharmacy  	 | FamilyMember     | CancelInvitation	 |
+
+Then "RX-ManageFamilyMember-09" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Given "RX-ManageFamilyMember-09" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		| RowId      	 					|
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsgAndCancel	|
+
+And "RX-ManageFamilyMember-09" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId    	  	 					 |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsgAndCancel	 |
+
+And "RX-ManageFamilyMember-09" Customer accepts or declines the join family member invitation:
+| InputFileName  | SheetName 		| RowId       		 			     |
+| Pharmacy  	 | FamilyMember     | AddAdultAcceptFromMsgAndCancel	 |
+
+Then "RX-ManageFamilyMember-09" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-09 |
+#----------------------------------------------------------------------------------
+@RX-ManageFamilyMember-10
+Scenario: Customer adds an adult family member who has registered as lite user in walgreens account to the account and delinks the linked family member
+
+Given "RX-ManageFamilyMember-10" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         		 	|
+| QC-RX	        | ManageFamilyMember 	| RX-ManageFamilyMember-10 	|
+
+Given "RX-ManageFamilyMember-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser5	 |
+
+Then "RX-ManageFamilyMember-10" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | LightUserAdultLink	 |
+
+Then "RX-ManageFamilyMember-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-10" Customer login to the Yahoo.com:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | LightUserAdultLink	 |
+
+And "RX-ManageFamilyMember-10" Customer verifies add or remove family member notification:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | LightUserAdultLink	 |
+
+Given "RX-ManageFamilyMember-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| Pharmacy  	 | login     | Familyuser5	 |
+
+Then "RX-ManageFamilyMember-10" Customer links or delinks an adult family member to profile:
+| InputFileName  | SheetName 		| RowId       			 |
+| Pharmacy  	 | FamilyMember     | LightUserAdultDelink	 |
+
+Then "RX-ManageFamilyMember-10" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-ManageFamilyMember-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	     | RowId      	 	     	|
+| QC-RX 	   	| ManageFamilyMember | RX-ManageFamilyMember-10 |
+#----------------------------------------------------------------------------------

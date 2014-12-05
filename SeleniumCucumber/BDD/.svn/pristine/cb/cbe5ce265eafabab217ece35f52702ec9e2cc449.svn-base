@@ -1,0 +1,166 @@
+@registration @walkscreensuggestionvalidations
+Feature: All the scenarios in the feature are verfication of screenname suggestions
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-WALKSCREEN-1
+Scenario: Verify the UI validations of the screenname suggestion for a new user through walk landing page
+
+Given  "CSLR-WALKSCREEN-1" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId             |
+| QC-CSLR	     | WALKSCREEN	 | CSLR-WALKSCREEN-1 |
+
+Then "CSLR-WALKSCREEN-1" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     					|
+| 	CSLR    	  |LinkNavigation  | WalkRegisterLink 			|
+| 	CSLR    	  |LinkNavigation  | RegisterButtoninWalkPage 	|
+
+Then "CSLR-WALKSCREEN-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      		  |Submit |SaveUserPersonalInfo|
+|-                            | CreateNew            | 60011   | Random	 | Random    | Random  | Random   |   Yes    |   CSLR		 | PersonalInfo	| ScreenNameuserInfo1 |   -   |    Yes			   |
+
+Then "CSLR-WALKSCREEN-1" Customer verifies screen name suggestions:
+| InputFileName   | SheetName 	   | RowId   		 |
+|	 CSLR   	  | ScreenNameData | AnonymousUser1  |
+
+Then "CSLR-WALKSCREEN-1" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     	 				|ClickObjectOverlay  |TargetOverlay  |
+| 	CSLR    	  |LinkNavigation  | GenderMale	     			|		-			 |	   -		 |
+| 	CSLR    	  |LinkNavigation  | Submit						|		-			 |	   -		 |
+| 	CSLR    	  |LinkNavigation  | CloseButtoninStepsOverlay	|		-			 |	   -		 |
+
+Then "CSLR-WALKSCREEN-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId              |
+| QC-CSLR	 	 | WALKSCREEN	  	   | CSLR-WALKSCREEN-1  |
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-WALKSCREEN-2
+Scenario: Verify the UI validations of the screenname suggestion for a light user through steps landing page
+
+Given  "CSLR-WALKSCREEN-2" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId                             |
+| QC-CSLR	     | WALKSCREEN			 | CSLR-WALKSCREEN-2				 |
+
+And "CSLR-WALKSCREEN-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	  |
+| HomepageLinks  | Homepage  | Global Register|
+
+Then "CSLR-WALKSCREEN-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | RowId      		       |saveUserNameAndPasswordInDataSheet |SaveUserPersonalInfo |
+|-                            | MaybeLater           | -       | -			 | -     	 | -       | -        |Yes       |   CSLR        | PersonalInfo | LightUserScreenNameInfo1 |			Yes					   |		Yes	  		 |
+
+Then "CSLR-WALKSCREEN-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-2" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	    | RowId     	 |ClickObjectOverlay |TargetOverlay  |
+|		 CSLR     | LinkNavigation	| RegisterNowTab |-					 |- 		     |
+
+Then "CSLR-WALKSCREEN-2" Customer login through the dynamic login section and validates destination page:
+| InputFileName | SheetName       | RowId         	  |
+| 		CSLR	| ScreenNameData  | StepsLightUser1	  |
+
+Then "CSLR-WALKSCREEN-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone   | DOB-Month | DOB-Day | DOB-Year | GuestUser| InputFileName | SheetName    | 	RowId    				 |SaveUserPersonalInfo |Submit |
+|-                            | CreateNew            | 60031   | Random	 | Random  	 | Random  | Random   |-	     |   CSLR        | PersonalInfo	| LightUserScreenNameInfo1	 |     Yes			   |  -	   |
+
+Then "CSLR-WALKSCREEN-2" Customer verifies screen name suggestions:
+| InputFileName   | SheetName 	   | RowId   		  |
+|	 CSLR   	  | ScreenNameData | StepsLightUser1  |
+
+Then "CSLR-WALKSCREEN-2" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     	 				|
+| 	CSLR   		  |LinkNavigation  | GenderMale	 				|
+| 	CSLR    	  |LinkNavigation  | Submit		 				|
+| 	CSLR    	  |LinkNavigation  | CloseButtoninStepsOverlay	|
+
+Then "CSLR-WALKSCREEN-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId               |
+| QC-CSLR	 	 | WALKSCREEN	  	   | CSLR-WALKSCREEN-2   |
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-WALKSCREEN-3
+Scenario: Verify the UI validations of the screenname suggestion for a Rx user through steps landing page
+
+Given  "CSLR-WALKSCREEN-3" Customer starts the scenario:
+| InputFileName  | SheetName 	 | RowId              |
+| QC-CSLR	     | WALKSCREEN	 | CSLR-WALKSCREEN-3  |
+
+Given "CSLR-WALKSCREEN-3" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId    		 |SaveUserNameFlag |SaveUserPersonalInfo |
+| Registration  | RxRegistration | NonLoyaltyRxUser1 |  Yes			   |		Yes		     |
+
+Then "CSLR-WALKSCREEN-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-3" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	    | RowId     	 |ClickObjectOverlay |TargetOverlay  |
+|		 CSLR     | LinkNavigation	| RegisterNowTab |-					 |- 		     |
+
+Then "CSLR-WALKSCREEN-3" Customer login through the dynamic login section and validates destination page:
+| InputFileName | SheetName   	 | RowId             |
+| Registration	| RxRegistration | NonLoyaltyRxUser1 |
+
+Then "CSLR-WALKSCREEN-3" Customer verifies screen name suggestions:
+| InputFileName   | SheetName 	   | RowId     	       |
+|	 CSLR   	  | ScreenNameData | NonLoyaltyRxUser1 |
+
+Then "CSLR-WALKSCREEN-3" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     	 				|
+| 	CSLR    	  |LinkNavigation  | Submit		 				|
+| 	CSLR    	  |LinkNavigation  | CloseButtoninStepsOverlay	|
+
+Then "CSLR-WALKSCREEN-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId               |
+| QC-CSLR	 	 | WALKSCREEN	  	   | CSLR-WALKSCREEN-3   |
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-WALKSCREEN-4
+Scenario: Verify the UI validations of the screenname suggestion for a Rx loyalty user through steps landing page
+
+Given  "CSLR-WALKSCREEN-4" Customer starts the scenario:
+| InputFileName  | SheetName 	  | RowId               |
+| QC-CSLR	     | WALKSCREEN	  | CSLR-WALKSCREEN-4   |
+
+Given "CSLR-WALKSCREEN-4" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 	 | RowId    		 |SaveUserNameFlag |SaveUserPersonalInfo |
+| Registration  | RxRegistration | LoyaltyRxUser1    |  Yes			   |		Yes		     |
+
+Then "CSLR-WALKSCREEN-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-4" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	    | RowId     	 |ClickObjectOverlay |TargetOverlay  |
+|		 CSLR     | LinkNavigation	| RegisterNowTab |-					 |- 		     |
+
+Then "CSLR-WALKSCREEN-4" Customer login through the dynamic login section and validates destination page:
+| InputFileName | SheetName   	 | RowId             |
+| Registration	| RxRegistration | LoyaltyRxUser1    |
+
+Then "CSLR-WALKSCREEN-4" Customer verifies screen name suggestions:
+| InputFileName   | SheetName 	   | RowId     	       |
+|	 CSLR   	  | ScreenNameData | LoyaltyRxUser1    |
+
+Then "CSLR-WALKSCREEN-4" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     	 				|
+| 	CSLR    	  |LinkNavigation  | Submit		 				|
+| 	CSLR    	  |LinkNavigation  | CloseButtoninStepsOverlay	|
+
+Then "CSLR-WALKSCREEN-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-WALKSCREEN-4" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId                           |
+| QC-CSLR	 	 | WALKSCREEN	  	   | CSLR-WALKSCREEN-4				 |
+#-----------------------------------------------------------------------------------------------------------------------------

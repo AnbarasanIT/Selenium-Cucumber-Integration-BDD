@@ -1,0 +1,720 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.personalinfo;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class ManageCommunicationPreferencesLibrary extends CommonLibrary {
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is to either signup or cancel for Refill
+	 *          Reminders.
+	 * @author - Siva Santhi Reddy
+	 * @Created - 17-Dec-2012
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void setupRefillReminders(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String YourAccount_LNK = "a[title='Your Account']~CSS";
+		// String PersonalSettings_TAB =
+		// "//a[contains(text(),'Personal Settings')]~XPATH";
+		// String CommunicationPreferences_LNK = "a[id='communcation']";
+		String Signup_BTN = "input[alt='Sign up']~CSS";
+		String Submit_BTN = "input[alt='Submit']~CSS";
+		String StopRefillReminders_LNK = "//a[contains(text(),'Stop prescription refill reminder emails')]~XPATH";
+		String Yes_BTN = "input[alt='Yes']~CSS";
+		String SuccessMsg_ELM = "//div[contains(@class,'success')]/p~XPATH";
+		String SignedinText_ELM = "//p[contains(text(),'refill reminders by email and learn')]~XPATH";
+		String NotSignedinText_ELM = "//p[contains(text(),'Use our free online service')]~XPATH";
+		String Status_ELM = "//p[contains(text(),'Status:')]~XPATH";
+		String Details_ELM = "//p[contains(text(),'Details:')]~XPATH";
+		String Actions_ELM = "//p[contains(text(),'Action:')]~XPATH";
+		String RefillRemindersHeader_ELM = "//h2[contains(text(),'Refill Reminders')]~XPATH";
+		Map<String, String> messagesMap = null;
+		String CommunicationPreference_URL = "youraccount/default.jsp#show_communcation";
+		String SuccessMessage = null, RefillRemindersStatus = null, RefillRemindersectionUI = null, RRSectionUITextMsg = null;
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			RefillRemindersStatus = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RefillRemindersStatus");
+			RefillRemindersectionUI = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RefillRemindersectionUI");
+			SuccessMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SuccessMessage");
+			RRSectionUITextMsg = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UIMessage");
+			if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+				throw new Exception("Not able to click on YOur Account link");
+			}
+			/*
+			 * if
+			 * (!performHoverClickAction(getElementByProperty(PersonalSettings_TAB
+			 * , browser), CommunicationPreferences_LNK, browser)) { throw new
+			 * Exception("Not able to click on Communication Preference Tab"); }
+			 */
+			// used as a temporory solution till Change Mousehover action issue
+			// resloved
+			String CommunicationPreferencesURL = EcommTestRunner.config.getString("walgreensURL") + CommunicationPreference_URL;
+			getUrl(browser, CommunicationPreferencesURL);
+
+			// we are verifying proper element in the destination page to make
+			// sure page was loaded.
+			if (!isElementPresentVerification(RefillRemindersHeader_ELM, browser)) {
+				messagesMap.put("Communication Preferences", "Page is not loaded in given threshold time");
+				status = WARNING;
+			}
+			if (RefillRemindersStatus.equalsIgnoreCase("Signup")) {
+				// click on Sign Up button
+				if (!isElementPresentVerifyClick(Signup_BTN, browser)) {
+					throw new Exception("Not able to click on Signup button");
+				}
+				switchToOverlay(browser);
+				// click on submit button in the overlay
+				if (!isElementPresentVerifyClick(Submit_BTN, browser)) {
+					throw new Exception("Not able to click on Submit button in the overlay");
+				}
+				switchToDefault(browser);
+				// verifying success message with atual message
+				if (!getElementByProperty(SuccessMsg_ELM, browser).getText().equals(SuccessMessage)) {
+					messagesMap.put("Set up Success", "Set up success message is wrongly getting displayed");
+					status = WARNING;
+				}
+			} else if (RefillRemindersStatus.equalsIgnoreCase("Cancel")) {
+				// click on Stop Refill Reminders Link
+				if (!isElementPresentVerifyClick(StopRefillReminders_LNK, browser)) {
+					throw new Exception("Not able to click on Cancel Rx Refill Reminders Link");
+				}
+				switchToOverlay(browser);
+				// click yes button in the overlay
+				if (!isElementPresentVerifyClick(Yes_BTN, browser)) {
+					throw new Exception("Not able to click on Yes button in the Overlay");
+				}
+				switchToDefault(browser);
+				// verifying success message with atual message
+				if (!getElementByProperty(SuccessMsg_ELM, browser).getText().trim().equals(SuccessMessage)) {
+					messagesMap.put("Stop Refill Rx setup messge", "Stop Rx Refill Reminders message is wrongly getting displayed");
+					status = WARNING;
+				}
+			}
+			if (RefillRemindersectionUI.equalsIgnoreCase("NotSignedupUser")) {
+				// Verifying UI text in Refill Reminder section for Not signedup
+				// user
+				if (!getElementByProperty(NotSignedinText_ELM, browser).getText().equals(RRSectionUITextMsg)) {
+					messagesMap.put("Text Message is wrongly getting displayed", "Text Message is wrongly getting displayed");
+					status = WARNING;
+				}
+			} else if (RefillRemindersectionUI.equalsIgnoreCase("SignedupUser")) {
+				// Verifying UI text in Refill Reminder section for signedup
+				// user
+				if (!getElementByProperty(SignedinText_ELM, browser).getText().trim().equals(RRSectionUITextMsg)) {
+					messagesMap.put("Singed Up User Text", "Singed Up Text message is wrongly displayed");
+					status = WARNING;
+				}
+				// verifying Status Lable
+				if (!isElementPresentVerification(Status_ELM, browser)) {
+					messagesMap.put("Status Lable", "Status Lable is missing");
+					status = WARNING;
+				}
+				// verifying Details Lable
+				if (!isElementPresentVerification(Details_ELM, browser)) {
+					messagesMap.put("Details Lable", "Details Lable is missing");
+					status = WARNING;
+				}
+				// verifying Actions Lable
+				if (!isElementPresentVerification(Actions_ELM, browser)) {
+					messagesMap.put("Actions Lable", "Actions Lable is missing");
+					status = WARNING;
+				}
+			}
+
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method used to Update Health Center Email Preferences in
+	 *          Communication Preference Page
+	 * @author - Siva Santhi Reddy
+	 * @Created - 18-Dec-2012
+	 * @Modified By -Siva
+	 * @Modified Date -18-JUN-2013
+	 ************************************************************* 
+	 */
+	public static void updateHealthEmailPreferences(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String YourAccount_LNK = "a[title='Your Account']~CSS";
+		String SaveChanges_BTN = "input#medUpdate~CSS";
+		String DisbaledSaveChanges_BTN = "//input[@id='medUpdate'][@disabled='disabled']~XPATH";
+		String WatchListUpdate_CHK = "input#updatesOption1~CSS";
+		String ExpertRealtedUpdate_CHK = "input#updatesOption2~CSS";
+		String TrackerUpdateReminders_CHK = "input#updatesOption3~CSS";
+		String WatchListUpdateType_LST = "select#sel1~CSS";
+		String SuccessMessage_ELM = "//*[contains(text(),'Communication Preferences were successfully saved.')]~XPATH";
+		String ErrorMessage_ELM = "//p[contains(text(),'We are sorry')]~XPATH";
+		String CommunicationPreference_URL = "/youraccount/default.jsp#show_communcation";
+		int msgFlag = 0;
+		Map<String, String> messagesMap = null;
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+				throw new Exception("Not able to click on YOur Account link");
+			}
+			String CommunicationPreferencesURL = EcommTestRunner.config.getString("walgreensURL") + CommunicationPreference_URL;
+			getUrl(browser, CommunicationPreferencesURL);
+			// we are verifying proper element in the destination page to make
+			// sure page was loaded.
+			if (!isElementPresentVerification(WatchListUpdate_CHK, browser)) {
+				messagesMap.put("Communication Preferences", "Page is not loaded in given threshold time");
+				status = WARNING;
+			}
+			// by default Save Changes button should be disabled
+			if (!isElementPresentVerification(DisbaledSaveChanges_BTN, browser)) {
+				messagesMap.put("watch List drop down", "Should be disbaled");
+				status = WARNING;
+			}
+			// if Watch List Upate checkbox is checked then Watch List Type drop
+			// should be enabled and vice versa.
+			if (getElementByProperty(WatchListUpdate_CHK, browser).isSelected()) {
+				if (!getElementByProperty(WatchListUpdateType_LST, browser).isEnabled()) {
+					messagesMap.put("watch List drop down", "Should be Enabled");
+					status = WARNING;
+				}
+			} else {
+				if (getElementByProperty(WatchListUpdateType_LST, browser).isEnabled()) {
+					messagesMap.put("watch List drop down", "Should be Disabled");
+					status = WARNING;
+				}
+			}
+
+			// *****************************************************************************
+			// RAM - 07/05/2013 - DESELECT ALL THE OPTIONS BEFORE GOING IN FOR
+			// OPTIONS
+			checkBoxSelection(browser, WatchListUpdate_CHK, "DESELECT");
+			checkBoxSelection(browser, ExpertRealtedUpdate_CHK, "DESELECT");
+			checkBoxSelection(browser, TrackerUpdateReminders_CHK, "DESELECT");
+
+			// *****************************************************************************
+
+			do {
+				if (dataMap.get("WatchListUpdate").get(0).equalsIgnoreCase("Yes")) {
+					// click on Watch List Update Checkbox
+					if (!checkBoxSelection(browser, WatchListUpdate_CHK, "SELECT")) {
+						throw new Exception("Not able to click on WatchList Updates Check box");
+					}
+					// selecting the Watch List Update Type from the Drop down
+					if (dataMap.get("WatchListUpdateType").get(0).equalsIgnoreCase("Once a day")) {
+						new Select(getElementByProperty(WatchListUpdateType_LST, browser)).selectByIndex(0);
+					} else if (dataMap.get("WatchListUpdateType").get(0).equalsIgnoreCase("As they happen")) {
+						new Select(getElementByProperty(WatchListUpdateType_LST, browser)).selectByIndex(1);
+					}
+				} else if (dataMap.get("WatchListUpdate").get(0).equalsIgnoreCase("No")) {
+					if (!checkBoxSelection(browser, WatchListUpdate_CHK, "DESELECT")) {
+						throw new Exception("Not able to Uncheck the WatchList Updates Check box");
+					}
+				}
+				if (dataMap.get("ExpertRelatedUpdates").get(0).equalsIgnoreCase("Yes")) {
+					// click on Tracker Expert Relate Checkbox
+					if (!checkBoxSelection(browser, ExpertRealtedUpdate_CHK, "SELECT")) {
+						throw new Exception("Not able click on Expert Realted Updates check box");
+					}
+				} else if (dataMap.get("ExpertRelatedUpdates").get(0).equalsIgnoreCase("No")) {
+					if (!checkBoxSelection(browser, ExpertRealtedUpdate_CHK, "DESELECT")) {
+						throw new Exception("Not able to Uncheck the Expert Realted Updates check box");
+					}
+				}
+				if (dataMap.get("TackerUpdateReminders").get(0).equalsIgnoreCase("Yes")) {
+					// Check Tracker Update Reminder Checkbox
+					if (!checkBoxSelection(browser, TrackerUpdateReminders_CHK, "SELECT")) {
+						throw new Exception("Not able to click on Tracker Update Reminders Section");
+					}
+				} else if (dataMap.get("TackerUpdateReminders").get(0).equalsIgnoreCase("No")) {
+					// UnCheck Tracker Update Reminder Checkbox
+					if (!checkBoxSelection(browser, TrackerUpdateReminders_CHK, "DESELECT")) {
+						throw new Exception("Not able to Uncheck the Tracker Update Reminders Section");
+					}
+				}
+				// click on save changes button
+				if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+					throw new Exception("Not able to click on Savechanges Button");
+				}
+				msgFlag++;
+			} while ((getElementByProperty(ErrorMessage_ELM, browser) != null) && msgFlag <= 5);
+
+			// verifying Success Message
+			if (!isElementPresentVerification(SuccessMessage_ELM, browser)) {
+				messagesMap.put("Save Changes Message", "Save changes Success Message is not being displayed");
+				status = WARNING;
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method used to Verify Presence/ non presence of a Email
+	 *          Preference in Communication Preference Page. Also updates a
+	 *          Email Preference and checks the Value reflected in DB or Not.
+	 * @author - Thanigaivelan G
+	 * @Created - 05-Mar-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void verifyEmailPreferences(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String YourAccount_LNK = "a[title='Your Account']~CSS";
+//		String PersonalSettings_TAB ="//a[contains(text(),'Personal Settings')]~XPATH";
+//		String CommunicationPreferences_LNK = "a[id='communcation']";
+		String CommunicationPreferences_H="//h2[contains(text(),'Manage Your Communication Preferences')]";
+		String StepscommunityUpdates_TXT = "//p[contains(text(),'Steps Community Updates:')]~XPATH";
+		String EditButton_IMG = "a>img[title='Edit Email Subscription']~CSS";
+		String StepsupdateOnEdit_TXT = "//strong[contains(text(),'Steps with Balance Rewards Community Updates')]~XPATH";
+		String StepsPreference_CHK = "input[id='walksocialInd']~CSS";
+		String StepsTextOnEdit_TXT = "//p[contains(text(),'Receive email notifications')]~XPATH";
+		String CommunicationPreference_URL = "/youraccount/default.jsp#show_communcation";
+		String SaveChanges_BTN = "//div[3]/input[@name='Submit']~XPATH";
+		String SuccessMSG_ELM = "//*[contains(text(),'Changes Saved')]";
+		String StepsUpdateResult_ELM = "//div[@id='email_subscription_module']/div[2]/div[23]~XPATH";
+		int WaitIncrementer=0;
+
+		Map<String, String> messagesMap = null;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+				throw new Exception("Not able to click on YOur Account link");
+			}
+			/*
+			 * if
+			 * (!performHoverClickAction(getElementByProperty(PersonalSettings_TAB
+			 * , browser), CommunicationPreferences_LNK, browser)) { throw new
+			 * Exception("Not able to click on Communication Preference Tab"); }
+			 */
+			// used as a temporory solution till Change Mousehover action issue
+			// resloved
+			String CommunicationPreferencesURL = EcommTestRunner.config.getString("walgreensURL") + CommunicationPreference_URL;
+			getUrl(browser, CommunicationPreferencesURL);
+
+			do{
+				Thread.sleep(3000);
+				System.out.println("WaitIncrementer="+WaitIncrementer);
+				WaitIncrementer++;
+			}while(!isElementPresentVerification(CommunicationPreferences_H, browser) && WaitIncrementer<=7);
+
+			String emailPrefType = dataMap.get("EmailPreference").get(0);
+			String verifyPresence = dataMap.get("VerifyPresence").get(0);
+
+			// Checks the Preference type
+			if (emailPrefType.equalsIgnoreCase("StepsCommunity")) {
+				if ("YES".equalsIgnoreCase(verifyPresence)) {
+					// verifies the Steps community update text
+					if (!isElementPresentVerification(StepscommunityUpdates_TXT, browser)) {
+						messagesMap.put("Verifying Steps community Updates", "Steps community Updates preference is not displayed");
+						status = WARNING;
+					}
+
+					// Click Edit button and validates the Steps community
+					// updates text presence
+					if (!isElementPresentVerifyClick(EditButton_IMG, browser))
+						throw new Exception("Not able to Click the Edit button");
+
+					if (!(isElementPresentVerification(StepsupdateOnEdit_TXT, browser) && isElementPresentVerification(StepsPreference_CHK, browser) && isElementPresentVerification(
+							StepsTextOnEdit_TXT, browser))) {
+						messagesMap.put("Verifying Steps community Updates", "Steps community Updates preference Texts are not displayed");
+						status = WARNING;
+					}
+
+					if (dataMap.containsKey("UpdatePreference") && dataMap.get("UpdatePreference").get(0) != null && dataMap.get("UpdatePreference").get(0).equalsIgnoreCase("YES")) {
+						// And If the check box is selected, then De-select the
+						// check box and clicks save changes.
+						if (getElementByProperty(StepsPreference_CHK, browser).isSelected()) {
+							checkBoxSelection(browser, StepsPreference_CHK, "DeSelect");
+							// Since we are opt outing for steps preference,
+							// updates the Value in DB as "N".
+							// This Excel sheet will verify the DB values
+							TestDataDBManager.putTestData(dataMap.get("InputFileName2").get(0), dataMap.get("SheetName2").get(0), dataMap.get("RowId2").get(0), dataMap.get("ColumnId2").get(0), "N");
+
+							// Clicking Save changes button
+							if (!isElementPresentVerifyClick(SaveChanges_BTN, browser))
+								throw new Exception("Unable to Click Save Changes button");
+
+							// Verifying the Success message
+							if (!isElementPresentVerification(SuccessMSG_ELM, browser)) {
+								messagesMap.put("Email Preference Changes", "Email preference change success message is not displayed.");
+								status = WARNING;
+							}
+
+							// Verifying the Result Display in the Email
+							// Preference section
+							if (isElementPresentVerification(StepsUpdateResult_ELM, browser)) {
+								if (!(getElementByProperty(StepsUpdateResult_ELM, browser).getText().equalsIgnoreCase("No"))) {
+									messagesMap.put("Email Preference Changes", "Email preference change is not updated.");
+									status = WARNING;
+								}
+							}
+						} else {
+							checkBoxSelection(browser, StepsPreference_CHK, "Select");
+							// Since we are opt outing for steps preference,
+							// updates the Value in DB as "Y".
+							// This Excel sheet will verify the DB values
+							TestDataDBManager.putTestData(dataMap.get("InputFileName2").get(0), dataMap.get("SheetName2").get(0), dataMap.get("RowId2").get(0), dataMap.get("ColumnId2").get(0), "Y");
+
+							// Clicking Save changes button
+							if (!isElementPresentVerifyClick(SaveChanges_BTN, browser))
+								throw new Exception("Unable to Click Save Changes button");
+
+							// Verifying the Success message
+							if (!isElementPresentVerification(SuccessMSG_ELM, browser)) {
+								messagesMap.put("Email Preference Changes", "Email preference change success message is not displayed.");
+								status = WARNING;
+							}
+
+							// Verifying the Result Display in the Email
+							// Preference section
+							if (isElementPresentVerification(StepsUpdateResult_ELM, browser)) {
+								if (!(getElementByProperty(StepsUpdateResult_ELM, browser).getText().equalsIgnoreCase("Yes"))) {
+									messagesMap.put("Email Preference Changes", "Email preference change is not updated.");
+									status = WARNING;
+								}
+							}
+						}
+					}
+				} else if ("No".equalsIgnoreCase(verifyPresence)) {
+					// Verifies the Non presence of the Steps community updates
+					// preference [Both on Normal mode and Edit mode]
+					if (isElementPresentVerification(StepscommunityUpdates_TXT, browser)) {
+						messagesMap.put("Verifying Steps community Updates Not present", "Steps community Updates preference is displayed");
+						status = WARNING;
+					}
+					if (!isElementPresentVerifyClick(EditButton_IMG, browser)){
+						throw new Exception("Not able to Click the Edit button");
+					}
+
+					if ((isElementPresentVerification(StepsupdateOnEdit_TXT, browser) && isElementPresentVerification(StepsPreference_CHK, browser) && isElementPresentVerification(
+							StepsTextOnEdit_TXT, browser))) {
+						messagesMap.put("Verifying Steps community Updates Not present", "Steps community Updates preference Texts are displayed");
+						status = WARNING;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - Method verify the Prescription ready text alerts
+	 * @author - SARAVANAN M
+	 * @Created - 12-JUNE-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void verifyRxReadyTextAlerts(EventFiringWebDriver browser, StepBean stepBean) {
+		String status = PASS;
+		String SaveChanges_BTN = "input[title='Save Changes']~CSS";
+		String ReceiveAlertYES_RDO = "input#receiveTextMessageYes~CSS";
+		String ReceiveAlertNO_RDO = "input#receiveTextMessageNo~CSS";
+		String YesMessage_LBL = "//strong[contains(text(),'Changes to your text message preferences were successfully saved.')]~XPATH";
+		String NoMessage_LBL = "//strong[contains(text(),'You will no longer receive Prescription Text Alerts.')]~XPATH";
+		boolean YesVerification = false;
+		boolean NoVerification = false;
+
+		Map<String, String> messagesMap = null;
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			if (!isElementPresentVerification(SaveChanges_BTN, browser)) {
+				messagesMap.put("Communication Preferences -Text Message Alert", "Unable to find the Save changes section");
+				status = WARNING;
+			}
+
+			while (!(YesVerification && NoVerification)) {
+				if (!YesVerification) {
+					if (getElementByProperty(ReceiveAlertNO_RDO, browser).isDisplayed() && getElementByProperty(ReceiveAlertNO_RDO, browser).isSelected()) {
+						if (isElementPresentVerifyClick(ReceiveAlertYES_RDO, browser)) {
+							if (isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+								if (!isElementPresentVerification(YesMessage_LBL, browser)) {
+									messagesMap.put("Communication Preferences -Text Message Alert", "Unable to choose 'Yes' option for Text Alerts");
+									status = WARNING;
+								}
+							}
+							YesVerification = true;
+						}
+					}
+				}
+				if (!NoVerification) {
+					if (getElementByProperty(ReceiveAlertYES_RDO, browser).isDisplayed() && getElementByProperty(ReceiveAlertYES_RDO, browser).isSelected()) {
+						if (isElementPresentVerifyClick(ReceiveAlertNO_RDO, browser)) {
+							if (isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+								if (!isElementPresentVerification(NoMessage_LBL, browser)) {
+									messagesMap.put("Communication Preferences -Text Message Alert", "Unable to choose 'No' option for Text Alerts");
+									status = WARNING;
+								}
+							}
+							NoVerification = true;
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**********************************************************************************************************************************************/
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method used to Updated Your Pharmacy Preference Section
+	 *          in Communication Preference Page
+	 * @author - Siva Santhi Reddy
+	 * @Created - 17-Dec-2012
+	 * @Modified By -SARAVANAN M
+	 * @Modified Date -15-July-2013
+	 ************************************************************* 
+	 */
+	public static void changeYourRxPreferences(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String YourAccount_LNK = "a[title='Your Account']~CSS";
+		String PersonalSettings_TAB = "//a[contains(text(),'Personal Settings')]~XPATH";
+		String CommunicationPreferences_LNK = "a[id='communcation']~CSS";
+		String PharmacyEmailPref_TXT = "//h2[contains(text(),'Pharmacy Email Preferences')]~XPATH";
+		String SaveChanges_BTN = "//input[@id='pharmUpdate']~XPATH";
+		String WouldYouLikeToReceive_CHK = "input[id='PharmEmailPref']~CSS";
+		String PHIInformation_CHK = "input[id='PharmEmailPref_sub']~CSS";
+		String SaveChangesConfirmationMsg_ELM = "//*[contains(text(),'Changes to Your Pharmacy Email Preferences were successfully saved.')]~XPATH";
+		String CompleteReg_LNK = "a[title='complete your Pharmacy registration']~CSS";
+		String VerificationPage_TXT = "//h1[contains(text(),'Last Step: Verify Your Identity')]~XPATH";
+		String UserType = null, RxStatusMail = null, RxPreferences = null;
+		Map<String, String> messagesMap = null;
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+
+			int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+			for (int i = 0; i < totalRowCount; i++) {
+
+				UserType = dataMap.get("UserType").get(i);
+				RxStatusMail = dataMap.get("RxStatusMail").get(i);
+				RxPreferences = dataMap.get("RxPreferences").get(i);
+
+				if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+					throw new Exception("Not able to click on Your Account link");
+				}
+				if (!performHoverClickAction(getElementByProperty(PersonalSettings_TAB, browser), CommunicationPreferences_LNK, browser)) {
+					throw new Exception("Not able to click on Communication Preference Tab");
+				}
+				// we are verifying proper element in the destination page to
+				// make
+				// sure page was loaded.
+				if (!isElementPresentVerification(PharmacyEmailPref_TXT, browser)) {
+					messagesMap.put("Communication Preferences", "Page is not loaded in given threshold time");
+					status = WARNING;
+				}
+				/**
+				 ************************************************************* 
+				 * @Modified By -Nandhini
+				 * @Modified Date -11-July2013
+				 * @purpose- For the new requirement in CSA-2238
+				 *************************************************************/
+				if (UserType.equalsIgnoreCase("Unauthenticated")) {
+					getElementByProperty(CompleteReg_LNK, browser).click();
+					isElementPresentVerification(VerificationPage_TXT, browser);
+					isElementPresentVerifyClick(YourAccount_LNK, browser);
+					performHoverClickAction(getElementByProperty(PersonalSettings_TAB, browser), CommunicationPreferences_LNK, browser);
+				}
+
+				// Modified - SARAVANAN M - JULY 15th -Reduced LOC
+				if (!RxPreferences.equals("-")) {
+
+					checkBoxSelection(browser, WouldYouLikeToReceive_CHK, "SELECT");
+
+					if (RxPreferences.equalsIgnoreCase("Yes")) {
+						checkBoxSelection(browser, PHIInformation_CHK, "SELECT");
+					} else {
+						checkBoxSelection(browser, PHIInformation_CHK, "DESELECT");
+					}
+					if (RxStatusMail.equalsIgnoreCase("Yes")) {
+						checkBoxSelection(browser, WouldYouLikeToReceive_CHK, "SELECT");
+					} else {
+						checkBoxSelection(browser, WouldYouLikeToReceive_CHK, "DESELECT");
+					}
+
+					// click on save changes button
+					if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+						throw new Exception("Not able to click on Save Changes Button");
+					}
+					// verify Save changes Success Message
+					if (!isElementPresentVerification(SaveChangesConfirmationMsg_ELM, browser)) {
+						messagesMap.put("Save changes Message", "Save changes Success message is not getting displayed");
+						status = WARNING;
+					}
+				}
+			}
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+	/**
+	 ************************************************************* 
+	 * @Purpose - This method is update Email Subscription Values from
+	 *          Communication Preference page
+	 * @author - Siva Santhi Reddy P
+	 * @Created - 29-AUG-2013
+	 * @Modified By -
+	 * @Modified Date -
+	 ************************************************************* 
+	 */
+	public static void updateEmailSubscriptions(EventFiringWebDriver browser, ScenarioBean scenariobean, StepBean stepBean, Map<String, List<String>> dataMap) {
+		String status = PASS;
+		String YourAccount_LNK = "a[title='Your Account']~CSS";
+		String EditButton_IMG = "//img[@title='Edit Email Subscription']~XPATH";
+		String ManageCommunicationPreferencesHeader_ELM = "//h2[contains(text(),'Manage Your Communication Preferences')]~XPATH";
+		String StoreWideSavingsAndPromotions_CHK = "//input[@id='storespecialemail']~XPATH";
+		String OnlineDealsAndExclusives_CHK = "//input[@id='shoppingweekly']~XPATH";
+		String HealthAndWellnessNewsletters_CHK = "//input[@id='newsletter']~XPATH";
+		String WalgreensPhotoNewAndOffers_CHK = "//input[@id='photoInd']~XPATH";
+		String DiabetesNewsletters_CHK = "//input[@id='diabetesInd']~XPATH";
+		String HealthCareClinicAndSpecialOffers_CHK = "//input[@id='healthCareInd1' or @id='healthCareInd']~XPATH";
+		String SaveChanges_BTN = "//form[@name='editemail']/div[3]/div[3]/input[@title='Save Changes']~XPATH";
+		String SuccessMSG_ELM = "//*[contains(text(),'Changes Saved')]";
+		String CommunicationPreference_URL = "/youraccount/default.jsp#show_communcation";
+		Map<String, String> messagesMap = null;
+
+		try {
+			if (messagesMap == null) {
+				messagesMap = new HashMap<String, String>();
+				stepBean.setStepStatusMessages(messagesMap);
+			}
+			if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+				throw new Exception("Not able to click on YOur Account link");
+			}
+			String CommunicationPreferencesURL = EcommTestRunner.config.getString("walgreensURL") + CommunicationPreference_URL;
+			getUrl(browser, CommunicationPreferencesURL);
+			if (!isElementPresentVerification(ManageCommunicationPreferencesHeader_ELM, browser)) {
+				messagesMap.put("Mange Communication Preference Header not found", "Page is not loaded in time");
+				status = WARNING;
+			}
+			if (!isElementPresentVerifyClick(EditButton_IMG, browser)) {
+				throw new Exception("Not able to click on Edit Button");
+			}
+			if (dataMap.get("StoreWideSavings").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, StoreWideSavingsAndPromotions_CHK, "SELECT")) {
+					throw new Exception("Not able to Select Store wide Savings and Promotions Check box");
+				}
+			} else if (dataMap.get("StoreWideSavings").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, StoreWideSavingsAndPromotions_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect Store wide Savings and Promotions Check box");
+				}
+			}
+			if (dataMap.get("OnlineDealsAndExclusives").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, OnlineDealsAndExclusives_CHK, "SELECT")) {
+					throw new Exception("Not able to Select Online Deals And Exclusives Check box");
+				}
+			} else if (dataMap.get("OnlineDealsAndExclusives").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, OnlineDealsAndExclusives_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect Store wide Savings and Promotions Check box");
+				}
+			}
+			if (dataMap.get("HealthAndWellnessNewsletters").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, HealthAndWellnessNewsletters_CHK, "SELECT")) {
+					throw new Exception("Not able to Select HealthAndWellnessNews Letters Check box");
+				}
+			} else if (dataMap.get("HealthAndWellnessNewsletters").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, HealthAndWellnessNewsletters_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect HealthAndWellnessNews Letters Check box");
+				}
+			}
+			if (dataMap.get("WalgreensPhotoNewAndOffers").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, WalgreensPhotoNewAndOffers_CHK, "SELECT")) {
+					throw new Exception("Not able to Select Walgreens Photo New and Offers Check box");
+				}
+			} else if (dataMap.get("WalgreensPhotoNewAndOffers").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, WalgreensPhotoNewAndOffers_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect Walgreens Photo New and Offers Check box");
+				}
+			}
+			if (dataMap.get("DiabetesNewsletters").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, DiabetesNewsletters_CHK, "SELECT")) {
+					throw new Exception("Not able to Select DiabetesNewsLetters Check box");
+				}
+			} else if (dataMap.get("DiabetesNewsletters").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, DiabetesNewsletters_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect DiabetesNewsLetters Check box");
+				}
+			}
+			if (dataMap.get("HealthCareClinicAndSpecialOffers").get(0).equalsIgnoreCase("Yes")) {
+				if (!checkBoxSelection(browser, HealthCareClinicAndSpecialOffers_CHK, "SELECT")) {
+					throw new Exception("Not able to Select HealthCareClinicAndSpecialOffers Check box");
+				}
+			} else if (dataMap.get("HealthCareClinicAndSpecialOffers").get(0).equalsIgnoreCase("No")) {
+				if (!checkBoxSelection(browser, HealthCareClinicAndSpecialOffers_CHK, "DESELECT")) {
+					throw new Exception("Not able to DeSelect HealthCareClinicAndSpecialOffers Check box");
+				}
+			}
+			if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+				throw new Exception("Not able to click on Save Changes Button");
+			}
+			if (!isElementPresentVerification(SuccessMSG_ELM, browser)) {
+				messagesMap.put("Changes Success Message", "Not able to find the message");
+				status = WARNING;
+			}
+
+		} catch (Exception e) {
+			status = FAIL;
+			messagesMap.put("An Exception Occured:", e.getMessage());
+			LogIt(e, null, stepBean);
+		} finally {
+			stepBean.setStepStatus(status);
+		}
+	}
+
+}

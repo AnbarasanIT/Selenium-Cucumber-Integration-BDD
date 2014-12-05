@@ -1,0 +1,57 @@
+package walgreens.ecom.batch.framework.poc;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+public class FirewallTest {
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+	// Remote Desiger Desktop
+	int startPort = 1635;
+	int endPort = 1635;
+	String remoteAddress = "10.237.136.50";
+
+	/* WASManger
+	Port: 7680, 7980
+	Name:    snbdap03.walgreens.com
+	Address:  10.238.160.16*/
+	
+	/*Name:    uecdb1-scan.walgreens.com
+	Addresses:  172.20.7.214, 172.20.7.215, 172.20.7.216*/
+	
+	/*Name:    secoda1-scan.walgreens.com
+	Addresses:  172.20.7.207
+	          172.20.7.204*/
+
+	connectionTest(remoteAddress, startPort, endPort);
+    }
+
+    public static void connectionTest(String remoteAddress, int startPort, int endPort) {
+	boolean portAvailable = false;
+	int delay = 1000; // 1 s
+	Socket socket = null;
+	for (int i = startPort; i <= endPort; i++) {
+	    try {
+		socket = new Socket();
+		socket.connect(new InetSocketAddress(remoteAddress, startPort), delay);
+		portAvailable = socket.isConnected();
+		socket.close();
+		socket = null;
+		System.out.println("Connection Possible: " + startPort + " = " + portAvailable);
+	    } catch (Exception e) {
+		portAvailable = false;
+		System.out.println("Connection Not Possible: " + startPort + " = " + portAvailable);
+		try {
+		} catch (Exception ex) {
+		    ex.printStackTrace();
+		}
+	    }
+	    portAvailable = false;
+	    startPort++;
+	}
+    }
+
+}

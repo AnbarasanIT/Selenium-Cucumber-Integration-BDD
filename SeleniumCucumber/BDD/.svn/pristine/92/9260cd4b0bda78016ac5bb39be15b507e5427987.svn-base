@@ -1,0 +1,322 @@
+@checkout @pharmacyCheckout @SpecialtyRx
+Feature: All the scenarios in the feature are to validate the Specialty and Specialty mixed Cart
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-Splty1-1
+Scenario: Specialty User Adds only Specialty to cart and does checkout
+
+Given  "CAC-Splty1-1" Customer starts the scenario:
+| InputFileName | SheetName | RowId          |
+| QC-CAC        | Splty1    | CAC-Splty1-1   |
+
+Given "CAC-Splty1-1" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId    	       |
+| CommonData      | login       | MailPlanUser2    |
+
+And "CAC-Splty1-1" Customer Clears the Shopping Cart
+
+When  "CAC-Splty1-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |
+| CACData       | RefillRx  | SpecialtyRx9  |
+| CACData       | RefillRx  | SpecialtyRx10 |
+
+And "CAC-Splty1-1" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx9  | No 			 |
+| CACData       | RefillRx  | SpecialtyRx10 |   -	         |
+
+Then "CAC-Splty1-1" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage    |
+| -				 | Shipping Information  |
+
+Then "CAC-Splty1-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-Splty1-1" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date  |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx9  | 	Verify		   |  27  |  June	 |  2014     |   Yes		 |
+| CACData       | RefillRx  | SpecialtyRx10 | 	- 	   		   | -	  |    -	 | 	-	     |		-		 |
+
+
+Then "CAC-Splty1-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "CAC-Splty1-1" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	   |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRx9 |  No		  |			No			  |		No			|
+
+Then "CAC-Splty1-1" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	 |
+| QC-CAC        | Splty1    | CAC-Splty1-1   |
+
+#-----------------------------------------------------------------------------------------------------------
+@CAC-Splty1-2 
+Scenario: Specialty User Adds Specialty and RX pick up to cart and does checkout
+
+Given  "CAC-Splty1-2" Customer starts the scenario:
+| InputFileName | SheetName | RowId          |
+| QC-CAC        | Splty1    | CAC-Splty1-2   |
+
+Given "CAC-Splty1-2" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId   		|
+| CommonData      | login       | MailPlanUser2 |
+
+And "CAC-Splty1-2" Customer Clears the Shopping Cart
+
+When "CAC-Splty1-2" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | autorefillRx3  |
+| CACData       | RefillRx  | SpecialtyRx9   |
+
+And "CAC-Splty1-2" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx9  | Yes 			 |
+
+Then "CAC-Splty1-2" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage |
+| -			     | Pickup Location    |
+
+Then "CAC-Splty1-2" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-Splty1-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-Splty1-2" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date   |  Month     |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx9  | 	-			   |  30   | August	    |    2013   |   Yes		    |
+
+Then "CAC-Splty1-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+And "CAC-Splty1-2" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	    |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRx9  |  No		  |			No			  |		No			|
+
+Then "CAC-Splty1-2" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	 |
+| QC-CAC        | Splty1    | CAC-Splty1-2   |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-Splty1-3 
+Scenario: Specialty User Adds Specialty and SS and does checkout
+
+Given  "CAC-Splty1-3" Customer starts the scenario:
+| InputFileName | SheetName | RowId          |
+| QC-CAC        | Splty1    | CAC-Splty1-3   |
+
+Given "CAC-Splty1-3" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId   	    |
+| CommonData      | login       | SpecialtyUser |
+
+And "CAC-Splty1-3" Customer Clears the Shopping Cart
+
+And "CAC-Splty1-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId                         |
+| CommonData    | search    | loyaltybutnosavingorpoints1   |
+
+Then "CAC-Splty1-3" Customer adds Daily Living items to the cart from search.
+
+When  "CAC-Splty1-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |
+| CACData       | RefillRx  | SpecialtyRx5  |
+
+And "CAC-Splty1-3" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx5  | No 			 |
+
+Then "CAC-Splty1-3" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage    |
+| -				 | Shipping Information  |
+
+Then "CAC-Splty1-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-Splty1-3" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date       |  Month  |  Year |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5  | 	Verify		   |  Default  | 	-	 |  -    |   -		     |
+
+Then "CAC-Splty1-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+And "CAC-Splty1-3" Customer Verifies the Note message about Specialty Rx in the Payment Options Page:
+
+Then "CAC-Splty1-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-Splty1-3" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "CAC-Splty1-3" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	     |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRx5   |  Yes		    |			Yes			|		Yes		  |
+
+Then "CAC-Splty1-3" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	 |
+| QC-CAC        | Splty1    | CAC-Splty1-3   |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-Splty1-4
+Scenario: Specialty User Adds Specialty and CL to cart and does checkout
+
+Given  "CAC-Splty1-4" Customer starts the scenario:
+| InputFileName | SheetName | RowId          |
+| QC-CAC        | Splty1    | CAC-Splty1-4   |
+
+Given "CAC-Splty1-4" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId   		|
+| CommonData      | login       | MailPlanUser2 |
+
+And "CAC-Splty1-4" Customer Clears the Shopping Cart
+
+When  "CAC-Splty1-4" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	    |
+| CACData       | RefillRx  | SpecialtyRx9  |
+
+And "CAC-Splty1-4" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx9  | No 			 |
+
+And "CAC-Splty1-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-Splty1-4" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+
+Then "CAC-Splty1-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "CAC-Splty1-4" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-Splty1-4" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-Splty1-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-Splty1-4" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date  	   |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx9  | 	-      		  |  Default   | -		  |    -	  |   -			  |
+
+Then "CAC-Splty1-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | 	-   	             | standard			        |
+
+And "CAC-Splty1-4" Customer Verifies the Note message about Specialty Rx in the Payment Options Page:
+
+Then "CAC-Splty1-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-Splty1-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "CAC-Splty1-4" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	    |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRx9  |  Yes		  |			Yes			  |		Yes			|
+
+Then "CAC-Splty1-4" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	 |
+| QC-CAC        | Splty1    | CAC-Splty1-4   |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CAC-Splty1-5 
+Scenario: Specialty User Adds Specialty ,RX pick up , SS and CL to cart and does checkout
+
+Given  "CAC-Splty1-5" Customer starts the scenario:
+| InputFileName | SheetName | RowId          |
+| QC-CAC        | Splty1    | CAC-Splty1-5   |
+
+Given "CAC-Splty1-5" Customer login to the walgreens.com:
+| InputFileName   | SheetName   | RowId  	    |
+| CommonData      | login       | SpecialtyUser |
+
+And "CAC-Splty1-5" Customer Clears the Shopping Cart
+
+When  "CAC-Splty1-5" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   	     |
+| CACData       | RefillRx  | retailRX200    |
+| CACData       | RefillRx  | SpecialtyRx5  |
+
+And "CAC-Splty1-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CAC-Splty1-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "CAC-Splty1-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId                       |
+| CommonData    | search    | loyaltybutnosavingorpoints1 |
+
+Then "CAC-Splty1-5" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-Splty1-5" Customer Goes to the Shopping Cart
+
+And "CAC-Splty1-5" Customer validates Specialty Information in the shopping cart page:
+| InputFileName | SheetName | RowId   	    |ShipAlertMessage |
+| CACData       | RefillRx  | SpecialtyRx5  | Yes 			 |
+
+Then "CAC-Splty1-5" Customer selects the delivery option and clicks on proceed to checkout button:
+| DeliveryOption | ExpectedTargetPage |
+| -			     | Pickup Location    |
+
+Then "CAC-Splty1-5" Customer selects rx pick up date and time and click on continue
+
+Then "CAC-Splty1-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "CAC-Splty1-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "CAC-Splty1-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+And "CAC-Splty1-5" Customer validates Specialty Rx Info and selects delivery date in Shipping Method Page:
+| InputFileName | SheetName | RowId   	    | DatePickerLogic  |Date  	   |  Month   |  Year     |ContinueButton |
+| CACData       | RefillRx  | SpecialtyRx5  | 	-			   |  Default   | -		  |    -	  |   -			  |
+
+Then "CAC-Splty1-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | 	standard             | standard			        |
+
+And "CAC-Splty1-5" Customer Verifies the Note message about Specialty Rx in the Payment Options Page:
+
+Then "CAC-Splty1-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CAC-Splty1-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+And "CAC-Splty1-5" Customer validates Specialty Rx Info in the Order Confirmation page:
+| InputFileName | SheetName | RowId   	    |PaymentSection|SpecialtyPaymentNoteMsg| OrderSummaryBox |
+| CACData       | RefillRx  | SpecialtyRx5  |  Yes		  |			Yes			  |		Yes			|
+
+Then "CAC-Splty1-5" Customer finished testing the scenario:
+| InputFileName | SheetName | RowId      	 |
+| QC-CAC        | Splty1    | CAC-Splty1-5   |

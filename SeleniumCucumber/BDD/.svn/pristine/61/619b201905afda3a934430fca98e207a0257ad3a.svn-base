@@ -1,0 +1,1525 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CheckoutLoyaltyLibrary extends CheckoutLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Indicators (Loyalty Icons &
+     *          Membersave Text Message) for the required products in Shopping
+     *          Cart
+     * @author - Siva
+     * @Created - 9-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -21-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyIndicators(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoyaltyIcon = "//img[@alt='tolonoe logo']";
+	int NoofRows = 0, i = 0, j = 0, Flag = 0;
+	String ProductName = null;
+	String MemberSaveTextMsgOne = null;
+	String MemberSaveTextMsgTwo = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    MemberSaveTextMsgOne = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgOne", "Message");
+	    MemberSaveTextMsgTwo = getTestData("CommonData", "loyaltyinfo", "MemberSaveTextMsgTwo", "Message");
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int counter = 0; counter < totalRowCount; counter++) {
+		if (messagesMap == null) {
+		    messagesMap = new HashMap<String, String>();
+		    stepBean.setStepStatusMessages(messagesMap);
+		}
+		ProductName = getTestData(dataMap.get("InputFileName").get(counter), dataMap.get("SheetName").get(counter), dataMap.get("RowId").get(counter), "Keyword2");
+		NoofRows = browser.findElements(By.linkText("Remove")).size();
+		for (i = 0; i < NoofRows; i++) {
+		    j = i + 2;// Product division value started with 2 so adding
+		    // the value.
+		    String ProductDetailsInfoBox = "//form[@method='post']/div[3]/div[" + j + "]/div~XPATH";
+		    if (getElementByProperty(ProductDetailsInfoBox, browser) != null) {
+			if (getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(ProductName)) {
+			    Flag = Flag + 1;
+			    if (dataMap.get("LoyaltyIcon").get(counter).equalsIgnoreCase("Yes")) {
+				if (getChildElementPropertyFromParent(getElementByProperty(ProductDetailsInfoBox, browser), LoyaltyIcon, "XPATH") == null) {
+				    messagesMap.put("Loyalty Icon", "object is missing");
+				    status = WARNING;
+				}
+			    } else if (dataMap.get("LoyaltyIcon").get(counter).equalsIgnoreCase("No")) {
+				List<WebElement> ImageElements = getElementByProperty(ProductDetailsInfoBox, browser).findElements(By.tagName("img"));
+				for (int Count = 0; Count < ImageElements.size(); Count++) {
+				    if (ImageElements.get(Count).getAttribute("alt").contains("tolonoe logo")) {
+					messagesMap.put("Loyalty Icon", "object Should not be displayed");
+					status = WARNING;
+					break;
+				    }
+				}
+			    }
+			    if (dataMap.get("MemberSaveMoreText").get(counter).equalsIgnoreCase("Yes")) {
+				if (!getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(MemberSaveTextMsgOne)
+					|| !getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(MemberSaveTextMsgTwo)) {
+				    messagesMap.put("Member Save More Text", "object(Text message) is missing");
+				    status = WARNING;
+				}
+			    } else if (dataMap.get("MemberSaveMoreText").get(counter).equalsIgnoreCase("No")) {
+				if (getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(MemberSaveTextMsgOne)
+					|| getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(MemberSaveTextMsgTwo)) {
+				    messagesMap.put("Member Save More Text", "object(Text message) should not be displyed");
+				    status = WARNING;
+				}
+			    }
+			    break;
+			}
+		    } else {
+			messagesMap.put("Product WebElement", "Not able to find the required Product Divison in Cart");
+			status = WARNING;
+		    }
+		}
+		if (Flag == 0) {
+		    messagesMap.put("Required Product in Cart", "Not able to find the required Product in Cart");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Summary box elements(for Non-loyalty
+     *          User) in the Shopping Cart Page
+     * @author - Siva
+     * @Created - 29-Aug-13
+     * @Modified By - Siva
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinSummaryBox(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String JoinNowButton = "input[value='Join Now']~CSS";
+	String ActivateButton = "input[value='Activate Now']~CSS";
+	String BalanceRewardLogo = "//img[@alt='reward' or @alt='balance rewards logo']~XPATH";
+	String LoyaltySavingsMsg = "//div[contains(text(),'save')]~XPATH";
+	String LoyaltyBonusPtMsg = "//div[contains(text(),'earn')]~XPATH";
+	String SeeTermsAndconditions_TXT = "//p[contains(text(),'See terms and conditions for full details.')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("BalanceRewardsLogo").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(BalanceRewardLogo, browser)) {
+		    messagesMap.put("Balance Rewards Logo", "object is missing");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(SeeTermsAndconditions_TXT, browser)) {
+		    messagesMap.put("See Terms and Conditions Message", "See Terms and Conditions message is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("BalanceRewardsLogo").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(BalanceRewardLogo, browser)) {
+		    if (getElementByProperty(BalanceRewardLogo, browser).isDisplayed()) {
+			messagesMap.put("Balance Rewards Logo", "object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("JoinNowButtonPresent").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(JoinNowButton, browser)) {
+		    messagesMap.put("Join Now Button", "object is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("JoinNowButtonPresent").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(JoinNowButton, browser)) {
+		    if (getElementByProperty(JoinNowButton, browser).isDisplayed()) {
+			messagesMap.put("Join Now Button", "object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("ActivateButtonPresent").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(ActivateButton, browser)) {
+		    messagesMap.put("Active Now Button", "object is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("ActivateButtonPresent").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(ActivateButton, browser)) {
+		    if (getElementByProperty(ActivateButton, browser).isDisplayed()) {
+			messagesMap.put("Activate Now Button", "object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(LoyaltySavingsMsg, browser)) {
+		    if (getElementByProperty(LoyaltySavingsMsg, browser).getText().split(" ")[1] == "$0") {
+			messagesMap.put("Loyalty savings", "Savings are displaying as Zero(0)");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Loyalty Savings Object", "Savings Message is missing");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltySavingsMsg, browser)) {
+		    messagesMap.put("Loyalty savings Message", "Savings Message should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    if (getElementByProperty(LoyaltyBonusPtMsg, browser).getText().split(" ")[1] == "0") {
+			messagesMap.put("Loyalty Bonus Points", "Bonus Points are displaying as Zero(0)");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Loyalty Bonus Points Message", "Bonus Points Message is not displaying");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points Message", "Bonus Points Message should not be  displayed");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information in Order Summary box (For
+     *          Loyalty Users,Loyalty savngs price and BOnus Points)in Shopping
+     *          Cart when SDD is ON AND OFF.
+     * @author - Siva
+     * @Created - 11-Aug-12
+     * @Modified By -Siva
+     * @Modified Date -27-MAR-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinOrderSummaryBox(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoyaltySavingsMsg = "//*[contains(text(),'Rewards savings:')or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltySavingsAmount = "//div[contains(@class,'eligibleShipping')]/div[2]/div[1]/span[2]~XPATH";
+	String LoyaltySavingsAmount_SDD_ON_ELM = "//div[contains(@class,'cartPageLoyaltysection')]/div[2]/p[2]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'eligible for:')]~XPATH";
+	String BalanceRewardsLogo_IMG = "img[title='balance rewards logo']~CSS";
+	int DivisionValue = 1;
+	int ptagvalue = 2;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltySavingsMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    LoyaltySavingsAmount = LoyaltySavingsAmount_SDD_ON_ELM;
+		}
+		if (!isElementPresentVerification(LoyaltySavingsAmount, browser)) {
+		    messagesMap.put("SavingsAmount", "Not able to find the Savings amount Element");
+		    status = WARNING;
+		} else if (getElementByProperty(LoyaltySavingsAmount, browser).getText().equals("$0")) {
+		    messagesMap.put("SavingsAmount", "Savings amount is displaying as Zero($0)");
+		    status = WARNING;
+		}
+		DivisionValue = DivisionValue + 2;
+		ptagvalue = ptagvalue + 2;
+		// 2 Divisions only difference between Savings and Points p
+		// tags.
+	    }
+
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltySavingsMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "LoyaltySavingsMsg should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("LoyaltyBonusPointsMessage", "Bonus Points object is not getting displayed");
+		    status = WARNING;
+		}
+		String LoyaltyBonusPoints = "//div[contains(@class,'eligibleShipping')]/div[2]/div[" + DivisionValue + "]/span[2]~XPATH";
+		String LoyaltyBonusPoints_SDD_ON_ELM = "//div[contains(@class,'cartPageLoyaltysection')]/div[2]/p[" + ptagvalue + "]~XPATH";
+
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    LoyaltyBonusPoints = LoyaltyBonusPoints_SDD_ON_ELM;
+		}
+		if (!isElementPresentVerification(LoyaltyBonusPoints, browser)) {
+		    messagesMap.put("LoyaltyBonusPointsMessage", "Not able to find the Bonus Points(Value) Element");
+		    status = WARNING;
+		}
+		if (getElementByProperty(LoyaltyBonusPoints, browser).getText().equals("0")) {
+		    messagesMap.put("LoyaltyBonusPointsMessage", "Bonus Points are displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("LoyaltyBonusPointsMessage", "Bonus Points object should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(BalanceRewardsLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Icon in Order Summary Section", "Logo is missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Shipping Info
+     *          page
+     * @author - Siva
+     * @Created - 15-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -20-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinShippingInfoPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//div[@id='shipping_info']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[@id='refreshPmtDtlsByAjaxCall']/div[2]/div[2]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		    status = WARNING;
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		System.err.println("count is:" + StrongTagElements.size());
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Shipping Method
+     *          page
+     * @author - Siva
+     * @Created - 15-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -20-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinShippingMethodPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//div[@id='shipping_info']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[@id='refreshPmtDtlsByAjaxCall']/div[2]/div[2]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		    status = WARNING;
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Pament Options
+     *          page when SDD is ON and OFF
+     * @author - Siva
+     * @Created - 15-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -20-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinPaymentOptionsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//*[@class='mrgTop20px']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[@id='refreshPmtDtlsByAjaxCall']/div[2]/div[2]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Order Review page
+     *          when SDD is ON and OFF
+     * @author - Siva
+     * @Created - 15-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -20-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinreviewOrderPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//*[@class='mrgTop20px']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[@id='refreshPmtDtlsByAjaxCall']/div[2]/div[2]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		    status = WARNING;
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Order
+     *          Confirmation page when SDD is ON and OFF
+     * @author - Siva
+     * @Created - 15-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -20-MAY-13
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinOrderConfirmationPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//*[@class='mrgTop20px']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[@id='refreshPmtDtlsByAjaxCall']/div[2]/div[2]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		    status = WARNING;
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Information (For Loyalty
+     *          Users,Loyalty savngs price and BOnus Points)in Picku Location
+     *          page when SDD is ON and OFF
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -20-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyingLoyaltyInfoinPickupLocationPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String RewardSavingMsg = "//*[contains(text(),'Rewards savings:') or contains(text(),'Rewards Savings:')]~XPATH";
+	String LoyaltyBonusPtMsg = "//*[contains(text(),'Eligible points:') or contains(text(),'Eligible Points:')]~XPATH";
+	String Loyaltycontainer = "//*[@class='mrgTop20px']/div[2]/div[2]~XPATH";
+	String LoyaltyContainer_SDD_DIV = "//div[contains(@class,'Loyalty')]~XPATH";
+	String LoyaltyLogo_IMG = "//img[@title='balance rewards logo' or @alt='Balance Rewards']~XPATH";
+	String RxBonusPointMessage = "//*[contains(text(),'points for every prescription')]~XPATH";
+	int i = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		Loyaltycontainer = LoyaltyContainer_SDD_DIV;
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "$0") {
+		    messagesMap.put("Saving Amount", "Savings Amount is Displaying as Zero");
+		    status = WARNING;
+		}
+		i = i + 1;
+	    } else if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(RewardSavingMsg, browser)) {
+		    messagesMap.put("LoyaltySavingMessage", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "object is missing");
+		    status = WARNING;
+		}
+		List<WebElement> StrongTagElements = getElementByProperty(Loyaltycontainer, browser).findElements(By.tagName("strong"));
+		if (StrongTagElements.get(i).getText() == "0") {
+		    messagesMap.put("Loyalty Bonus Points", "Displaying as Zero(0)");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBonusPtMsg, browser)) {
+		    messagesMap.put("Loyalty Bonus Points", "Object Should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("RxPointsMessage") != null && !dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("-")) {
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+			messagesMap.put("Loyalty Logo", "Logo is Missing");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object is missing");
+			status = WARNING;
+		    }
+		    if (!getElementByProperty(RxBonusPointMessage, browser).getText().split(" ")[3].equals("500")) {
+			messagesMap.put("Rx Bonus Points", "500 Bonus Points are not getting displayed");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("RxPointsMessage").get(0).equalsIgnoreCase("No")) {
+		    if (isElementPresentVerification(RxBonusPointMessage, browser)) {
+			messagesMap.put("Rx Bonus Points", "Object should not be displayed");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (dataMap.get("LoyaltySavingMessage").get(0).equalsIgnoreCase("Yes") || dataMap.get("LoyaltyBonusPointsMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    messagesMap.put("Loyalty Logo", "Logo is Missing");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Redemption Section and selecting
+     *          required amount(1-tier or 2-tier...) from the Redemption
+     *          Drop/down box when SDD is ON and OFF
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -27-JUN-2013
+     ************************************************************* 
+     */
+    public static void verifyandSelectamountinRedemptionSection(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewardsLogo = "//*[@alt='Tolonoe Awards' or @alt='Balance Rewards']~XPATH";
+	String SelectPoints_LST = "select#selectedAwardId~CSS";
+	String SeeRedemptionTerms_LNK = "//a[contains(text(),'See Redemption Terms')]~XPATH";
+	String LearnMore_SDD_ON_LNK = "//a[contains(text(),'Learn more')]~XPATH";
+	String YourRewardsBalance_ELM = "//*[contains(text(),'Your rewards balance:') or contains(text(),'You currently have:')]~XPATH";
+	String Whynot_LNK = "a[title*='Why not?']~CSS";
+	String RedemptionTermsHeader = "//*[contains(text(),'Redemption Terms Details')]~XPATH";
+	String OverlayClose = "a#overlayClose~CSS";
+	String WhynotOverlayHeader = "//*[contains(text(),'I redeem my Balance')]~XPATH";
+	String RedemptionNote_TXT = "//div[@class='th_652']/div/p[2]~XPATH";
+	String RedemptionNote_SDD_ON_ELM = "//li[contains(text(),'Points can')]~XPATH";
+	String RedemptionValue = null;
+	String TotalPrice_ELM = "//div[@class='totalPrc']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("RedemptionSection").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(BalanceRewardsLogo, browser)) {
+		    messagesMap.put("Balance Rewards Logo", "Object is Missing in Redemption section");
+		    status = WARNING;
+		}
+		if (!getElementByProperty(SelectPoints_LST, browser).isEnabled()) {
+		    messagesMap.put("Redeemption DropDown", "Drop Down is not displaying/Enabled");
+		    status = WARNING;
+		}
+		if (SDDFlag.equalsIgnoreCase("ON")) {
+		    if (!isElementPresentVerification(LearnMore_SDD_ON_LNK, browser)) {
+			messagesMap.put("Learn More link", "Object is missing");
+			status = WARNING;
+		    }
+		} else {
+		    if (!isElementPresentVerification(SeeRedemptionTerms_LNK, browser)) {
+			messagesMap.put("See Redemption Terms link", "Object is missing");
+			status = WARNING;
+		    }
+		}
+		if (!isElementPresentVerification(YourRewardsBalance_ELM, browser)) {
+		    messagesMap.put("Your Rewards Balance Points Element", "Object is missing");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(Whynot_LNK, browser)) {
+		    messagesMap.put("WHY NOT? link", "Link should not be displayed");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("RedemptionSection").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(BalanceRewardsLogo, browser)) {
+		    messagesMap.put("Balance Rewards Logo", "Object should not be displayed");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(SelectPoints_LST, browser)) {
+		    messagesMap.put("Redeemption DropDown", "Drop Down should not be displayed");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(SeeRedemptionTerms_LNK, browser)) {
+		    messagesMap.put("See Redemption Terms link", "Link should not be displayed");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(YourRewardsBalance_ELM, browser)) {
+		    messagesMap.put("Your Rewards Balance Points Element", "Object should not be displayed");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(Whynot_LNK, browser)) {
+		    messagesMap.put("WHY NOT? link", "Link should not be displayed");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("RedemptionSection").get(0).equalsIgnoreCase("Disabled")) {
+		if (!isElementPresentVerification(BalanceRewardsLogo, browser)) {
+		    messagesMap.put("Balance Rewards Logo", "Object is Missing in Redemption section");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(YourRewardsBalance_ELM, browser)) {
+		    messagesMap.put("Your Rewards Balance Points Element", "Object should not be displayed");
+		    status = WARNING;
+		}
+		if (getElementByProperty(SelectPoints_LST, browser).isEnabled()) {
+		    messagesMap.put("Redeemption DropDown", "Drop Down Should be disabled");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(Whynot_LNK, browser)) {
+		    messagesMap.put("WHY NOT? link", "Link is missing");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(SeeRedemptionTerms_LNK, browser)) {
+		    messagesMap.put("See Redemption Terms link", "Link should not be displayed");
+		    status = WARNING;
+		}
+	    }
+	    if (dataMap.get("SeeRedemptionTermsLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(SeeRedemptionTerms_LNK, browser)) {
+		    throw new Exception("Not able to click on See Redemption Terms link");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(RedemptionTermsHeader, browser)) {
+		    messagesMap.put("See Redemption Terms Overlay Header", "Header is displaying Wrongly for See Redemption Terms Overlay");
+		    status = WARNING;
+		}
+		getElementByProperty(OverlayClose, browser).click();
+		browser.switchTo().defaultContent();
+	    }
+	    if (dataMap.get("WhynotLink").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Whynot_LNK, browser)) {
+		    throw new Exception("Not able to click on Why not? link");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(WhynotOverlayHeader, browser)) {
+		    messagesMap.put("Why Not Overlay Header", "Header is displaying Wrongly for Why not redeem points overlay");
+		    status = WARNING;
+		}
+		getElementByProperty(OverlayClose, browser).click();
+		browser.switchTo().defaultContent();
+	    }
+	    if (!dataMap.get("RedeemptiomAmount").get(0).equalsIgnoreCase("-")) {
+		// order total passing in payment----HASAN--03/June/2013
+		Map<String, String> sharedProperties = CommonLibrary.getScenario(stepBean.getStepScenarioId()).getSharedStepProperties();
+		String Availabletotal = (getElementByProperty(TotalPrice_ELM, browser).getText().replace("$", "").trim());
+		sharedProperties.put("Availabletotal", Availabletotal);
+		new Select(getElementByProperty(SelectPoints_LST, browser)).selectByIndex(Integer.parseInt(dataMap.get("RedeemptiomAmount").get(0)));
+		RedemptionValue = new Select(getElementByProperty(SelectPoints_LST, browser)).getFirstSelectedOption().getText();
+		sharedProperties.put("redemptionValue", RedemptionValue);
+		String AVailablePoints = (getElementByProperty(YourRewardsBalance_ELM, browser).getText().split(" ")[3].replace(",", ""));
+		sharedProperties.put("AVailablePoints", AVailablePoints);
+	    }
+	    if (dataMap.get("OrderRedemptionNoteMsg") != null) {
+		if (dataMap.get("OrderRedemptionNoteMsg").get(0).equalsIgnoreCase("Yes")) {
+		    String NoteMessage = getTestData("CommonData", "GenaralInfo", "PmtOptPageRedemptionNote", "Message");
+		    if (SDDFlag.equalsIgnoreCase("ON")) {
+			NoteMessage = getTestData("CommonData", "GenaralInfo", "PmtOptPageRedemptionNote_SDD_ON", "Message");
+			RedemptionNote_TXT = RedemptionNote_SDD_ON_ELM;
+		    }
+		    String NoteMessageinApplication = getElementByProperty(RedemptionNote_TXT, browser).getText();
+		    if (!NoteMessageinApplication.equals(NoteMessage)) {
+			messagesMap.put("Redemption note message", "Note Message displaying wrongly");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Order total Redmption tier match, it verifies
+     *          the Redemption drop/down box values with the Order Total when
+     *          SDD is OFF and ON
+     * @author - Siva
+     * @Created -
+     * @Modified By - Siva
+     * @Modified Date -21-JUN-12
+     ************************************************************* 
+     */
+    public static void verifyorderTotalRedemptiontierMatch(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String SelectPoints_LST = "select#selectedAwardId~CSS";
+	String YourRewardsBalance_ELM = "//*[contains(text(),'Your rewards balance:') or contains(text(),'You currently have:')]~XPATH";
+	String OrderSummarybox = "//div[@class='innerrightcontainer']~XPATH";
+	String TotalPrice_ELM = "//div[@class='totalPrc']~XPATH";
+	float OrderTotal = 0;
+	int RewardBalancept = 0;
+	int PossibleSavingsfromAvailablepts = 0;
+	int LastbutoneAmountValueinDropdown = 0, LastAmountValueinDropdown = 0;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		OrderTotal = new Float(getElementByProperty(TotalPrice_ELM, browser).getText().replace("$", "").trim());
+	    } else {
+		List<WebElement> H4TagsinOrderSummaryBox = getElementByProperty(OrderSummarybox, browser).findElements(By.tagName("h4"));
+		OrderTotal = new Float(H4TagsinOrderSummaryBox.get(H4TagsinOrderSummaryBox.size() - 1).getText().replace("$", ""));
+	    }
+	    RewardBalancept = Integer.parseInt(getElementByProperty(YourRewardsBalance_ELM, browser).getText().split(" ")[3].replace(",", ""));
+	    List<WebElement> OptionsinSelectPointsList = new Select(getElementByProperty(SelectPoints_LST, browser)).getOptions();
+	    PossibleSavingsfromAvailablepts = RewardBalancept / 1000;
+	    if (OptionsinSelectPointsList.size() == 2) {
+		LastbutoneAmountValueinDropdown = Integer.parseInt(OptionsinSelectPointsList.get(OptionsinSelectPointsList.size() - 2).getText().split("\\$")[1].split("(")[0]);
+	    } else {
+		LastbutoneAmountValueinDropdown = Integer.parseInt(OptionsinSelectPointsList.get(OptionsinSelectPointsList.size() - 2).getText().split("\\$")[1]);
+	    }
+	    LastAmountValueinDropdown = Integer.parseInt(OptionsinSelectPointsList.get(OptionsinSelectPointsList.size() - 1).getText().split("\\$")[1]);
+
+	    if (PossibleSavingsfromAvailablepts <= OrderTotal) {
+		if (!(PossibleSavingsfromAvailablepts > LastbutoneAmountValueinDropdown && PossibleSavingsfromAvailablepts >= LastAmountValueinDropdown)) {
+		    messagesMap.put("Expected Cutoff Amount", "Expected Cutoff Amount is displaying More or Less than the Expected amount");
+		    status = WARNING;
+		    // throw new
+		    // Exception("Expected Cutoff Amount is not displaying. It is displaying More or Less than the Expected amount");
+		}
+	    } else {
+		if (OrderTotal > 50) {
+		    if (OrderTotal < LastAmountValueinDropdown) {
+			messagesMap.put("Balance Rewards Value", "Balance Rewards is displaying more than $50 in the drop down");
+			status = WARNING;
+			// throw new
+			// Exception("Balance Rewards is displaying more than $50 in the drop down");
+		    }
+		} else {
+		    if (!(OrderTotal > LastbutoneAmountValueinDropdown && OrderTotal <= LastAmountValueinDropdown)) {
+			messagesMap.put("Expected Cutoff Amount", "Expected Cutoff Amount is displaying More or Less than the Expected amount");
+			status = WARNING;
+			// throw new
+			// Exception("Expected Cutoff Amount is not displaying. It is displaying More or Less than the Expected amount");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalt Burn amount in Order Review Page when
+     *          SDD is ON AND OFF
+     * @author - Siva
+     * @Created -
+     * @Modified By -Hasan
+     * @Modified Date -03-JUNE-2013
+     ************************************************************* 
+     */
+    public static void verifyBurnAmountinOrderReviewPage(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String BurnAmountMessage = "//*[contains(text(),'Rewards applied:')]~XPATH";
+	String RewardsAmoount_ELM = "//p[contains(@class,'RtotalPrc')]~XPATH";
+	String TotalPriceReviewOrder_ELM = "//div[@class='totalPrc']~XPATH";
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	Map<String, String> sharedProperties = null;
+	String redemptionValue = null, Availabletotal = null, orderreviewtotal = null;
+	long DisplayedPoints = 0, DisplayedAmount = 0;
+	long ExpectedBurnPoints = 0, ExpectedBurnAmount = 0;
+	float fltOrderreviewtotal = 0, orderpaymenttemp = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("redemptionValue"))) {
+			    redemptionValue = sharedProperties.get("redemptionValue");
+			}
+			// order check in order review ----HASAN--03/June/2013
+			if (StringUtils.isNotBlank(sharedProperties.get("Availabletotal"))) {
+			    Availabletotal = sharedProperties.get("Availabletotal");
+			}
+		    }
+		}
+	    }
+	    ExpectedBurnPoints = Integer.parseInt(redemptionValue.split("points")[0].replaceAll(" ", ""));
+	    ExpectedBurnAmount = Integer.parseInt(redemptionValue.split("\\$")[1]);
+	    if (!isElementPresentVerification(BurnAmountMessage, browser)) {
+		messagesMap.put("Burn Amount Message", "Not able to find the Burn Amount Message");
+		status = WARNING;
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		DisplayedPoints = Integer.parseInt(getElementByProperty(BurnAmountMessage, browser).getText().split("\n")[1].split(" ")[0].replace(",", "").trim());
+		DisplayedAmount = Integer.parseInt(getElementByProperty(RewardsAmoount_ELM, browser).getText().split("\\$")[1].split("\\.")[0].trim());
+	    } else {
+		DisplayedPoints = Integer
+			.parseInt((getElementByProperty(BurnAmountMessage, browser).getText().split("pts")[0].split(":")[1].replace(",", "").replaceAll(" ", "")).replaceAll("\n", ""));
+		DisplayedAmount = Integer.parseInt(getElementByProperty(BurnAmountMessage, browser).getText().split("\\$")[1].split("\\.")[0]);
+	    }
+	    if ((ExpectedBurnPoints != (DisplayedPoints))) {
+		messagesMap.put("Burn Points", "Burn Points are getting displayed wrongly");
+		status = WARNING;
+	    }
+	    if ((ExpectedBurnAmount != (DisplayedAmount))) {
+		messagesMap.put("Burn Amount", "Burn Amount is getting displayed wrongly");
+		status = WARNING;
+	    }
+	    // order check in order review ----HASAN--03/June/2013
+	    orderreviewtotal = getElementByProperty(TotalPriceReviewOrder_ELM, browser).getText().replace("$", "").trim();
+	    fltOrderreviewtotal = Float.parseFloat(orderreviewtotal);
+	    orderpaymenttemp = Float.parseFloat(Availabletotal);
+	    orderpaymenttemp = (float) (orderpaymenttemp - ExpectedBurnAmount);
+	    // String orderpaymentStringtemp = String.valueOf(orderpaymenttemp);
+	    if (fltOrderreviewtotal != orderpaymenttemp) {
+		messagesMap.put("Order total", "order total is not reduced as redemption amount in review order.");
+		status = WARNING;
+	    }
+
+	    System.err.println("fltOrderreviewtotal:" + fltOrderreviewtotal);
+	    System.err.println("orderpaymenttemp:" + orderpaymenttemp);
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Banner in Order Confirmation Page and
+     *          selecting required Option if needed( JoinNow/Active butons)
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -28-MAR-2013
+     ************************************************************* 
+     */
+    public static void verifyLoyaltyBannerinConfirmationpage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoyaltyBanner_DIV = "//div[contains(@class,'loyaltyBannerCls') or contains(@class,'lgtblue')]~XPATH";
+	String LoyaltyLogo = "//img[@title='Balance Rewards Logo' or @alt='Balance Awards']~XPATH";
+	String JoinNow_BTN = "//a[contains(text(),'Join Now')]~XPATH";
+	String ActivateNow_BTN = "//a[contains(text(),'Activate Now')]~XPATH";
+	String LearnMoreLink = "a[title*='Learn More']~CSS";
+	String JoinBalanceRewards_Header = "//h1[contains(text(),'Join Balance')]~XPATH";
+	String ActivateBalanceRewards_Header = "//h1[contains(text(),'Activate Balance')]~XPATH";
+	String SigninPageMsg_ELM = "//p[contains(text(),'order to manage your membership')]~XPATH";
+	String LearnmoreOverlay_Header = "//p[contains(text(),'Join today')]~XPATH";
+	String close_BTN = "a#back~CSS";
+	String EarnBonuspointMsgContainer = "//div[contains(@class,'lgtblue')]/div[3]/div~XPATH";
+	String EarnBonusPointMesgContainer_SDD_ON_ELM = "//div[@class='rewardtextRx']~XPATH";
+	String SeeTermsandConditions_LNK = "//a[contains(@title,'See terms and conditions')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		EarnBonuspointMsgContainer = EarnBonusPointMesgContainer_SDD_ON_ELM;
+	    }
+	    String EarnBonuspointMsgforRx = getTestData("CommonData", "GenaralInfo", "RxPointMessage", "Message");
+	    if (dataMap.get("LtyBanner").get(0).equalsIgnoreCase("DLBanner")) {
+		if (!isElementPresentVerification(LoyaltyLogo, browser)) {
+		    messagesMap.put("Loyalty Logo", "Loyalty Logo is not displyaying in the Loyalty Banner section");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(JoinNow_BTN, browser)) {
+		    messagesMap.put("Join Now Button", "Join Now Button is not displyaying in the Loyalty Banner section");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(LearnMoreLink, browser)) {
+		    messagesMap.put("Learn More Link", "Learn More link is not displyaying in the Loyalty Banner section");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(ActivateNow_BTN, browser)) {
+		    messagesMap.put("Activate Now button", "Activate Now button should not be displayed");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(EarnBonuspointMsgContainer, browser)) {
+		    messagesMap.put("Rx Bonus Point Element", "Rx Bonus Point Element should not be displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(SeeTermsandConditions_LNK, browser)) {
+		    messagesMap.put("See Terms and Conditions Link", "Not able to find the See Terms and Conditions Link");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LtyBanner").get(0).equalsIgnoreCase("RxBanner")) {
+
+		if (!isElementPresentVerification(LoyaltyLogo, browser)) {
+		    messagesMap.put("Loyalty Logo", "Loyalty Logo is not displyaying in the Loyalty Banner section");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(JoinNow_BTN, browser)) {
+		    messagesMap.put("Join Now Button", "Join Now Button is not displyaying in the Loyalty Banner section");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(ActivateNow_BTN, browser)) {
+		    messagesMap.put("Activate Now button", "Activate Now button should be displayed");
+		    status = WARNING;
+		}
+
+		if (!getElementByProperty(EarnBonuspointMsgContainer, browser).getText().contains(EarnBonuspointMsgforRx)) {
+		    messagesMap.put("Rx Bonus Point Element", "Rx Bonus Point Element is not getting displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(SeeTermsandConditions_LNK, browser)) {
+		    messagesMap.put("See Terms and Conditions Link", "Not able to find the See Terms and Conditions Link");
+		    status = WARNING;
+		}
+	    } else if (dataMap.get("LtyBanner").get(0).equalsIgnoreCase("No")) {
+		if (isElementPresentVerification(LoyaltyBanner_DIV, browser)) {
+		    messagesMap.put("Loyalty Banner", "Loyalty Banner Container should not be displayed");
+		    status = WARNING;
+		}
+
+	    }
+	    if (dataMap.get("JoinNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(JoinNow_BTN, browser)) {
+		    throw new Exception("not able to find Join Now button");
+		}
+		if (!(isElementPresentVerification(JoinBalanceRewards_Header, browser) || isElementPresentVerification(SigninPageMsg_ELM, browser))) {
+		    throw new Exception("Join Balance Rewards Page Header  or sign in Page is not getting displayed");
+		}
+	    }
+	    if (dataMap.get("ActivateNow").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ActivateNow_BTN, browser)) {
+		    throw new Exception("not able to find Actiavte Now button");
+		}
+		if (!isElementPresentVerification(ActivateBalanceRewards_Header, browser)) {
+		    throw new Exception("Activate Balance Rewards Page Header  or sign in Page is not getting displayed");
+		}
+	    }
+	    if (dataMap.get("LearnMore").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(LearnMoreLink, browser)) {
+		    throw new Exception("Not able to find Learn More Link");
+		}
+		switchToOverlay(browser);
+		if (!isElementPresentVerification(LearnmoreOverlay_Header, browser)) {
+		    messagesMap.put("Learn more overlay header", "Not able to find the Header of learn more overlay");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(close_BTN, browser)) {
+		    throw new Exception("Not able to find Close button");
+		}
+		switchToDefault(browser);
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Redemption amount in Order
+     *          Confirmation Page when SDD is ON and OFF
+     * @author - Siva
+     * @Created -
+     * @Modified By -Hasan
+     * @Modified Date -03-JUNE-2013
+     ************************************************************* 
+     */
+    public static void verifyBurnAmountinOrderConfirmationPage(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String BurnAmountMessage = "//*[contains(text(),'Rewards applied:')]~XPATH";
+	String RewardsAmoount_ELM = "//p[contains(@class,'RtotalPrc')]~XPATH";
+	String TotalPriceOrderConf_ELM = "//div[@class='totalPrc']~XPATH";
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	Map<String, String> sharedProperties = null;
+	String redemptionValue = null, Availabletotal = null;
+	Map<String, String> messagesMap = null;
+	long DisplayedPoints = 0, DisplayedAmount = 0;
+	long ExpectedBurnPoints = 0, ExpectedBurnAmount = 0;
+	float fltorderconftotal = 0, orderpaymenttemp = 0;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("redemptionValue"))) {
+			    redemptionValue = sharedProperties.get("redemptionValue");
+			}
+			// ----HASAN--03/June/2013
+			if (StringUtils.isNotBlank(sharedProperties.get("Availabletotal"))) {
+			    Availabletotal = sharedProperties.get("Availabletotal");
+
+			}
+		    }
+		}
+	    }
+	    ExpectedBurnPoints = Integer.parseInt(redemptionValue.split("points")[0].replaceAll(" ", ""));
+	    ExpectedBurnAmount = Integer.parseInt(redemptionValue.split("\\$")[1]);
+	    if (!isElementPresentVerification(BurnAmountMessage, browser)) {
+		messagesMap.put("Burn Amount Message", "Not able to find the Burn Amount Message");
+		status = WARNING;
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		DisplayedPoints = Integer.parseInt(getElementByProperty(BurnAmountMessage, browser).getText().split("\n")[1].split(" ")[0].replace(",", "").trim());
+		DisplayedAmount = Integer.parseInt(getElementByProperty(RewardsAmoount_ELM, browser).getText().split("\\$")[1].split("\\.")[0].trim());
+	    } else {
+		DisplayedPoints = Integer
+			.parseInt((getElementByProperty(BurnAmountMessage, browser).getText().split("pts")[0].split(":")[1].replace(",", "").replaceAll(" ", "")).replaceAll("\n", ""));
+		DisplayedAmount = Integer.parseInt(getElementByProperty(BurnAmountMessage, browser).getText().split("\\$")[1].split("\\.")[0]);
+	    }
+	    if ((ExpectedBurnPoints != (DisplayedPoints))) {
+		messagesMap.put("Burn Points", "Burn Points are getting displayed wrongly");
+		status = WARNING;
+	    }
+	    if ((ExpectedBurnAmount != (DisplayedAmount))) {
+		messagesMap.put("Burn Amount", "Burn Amount is getting displayed wrongly");
+		status = WARNING;
+	    }
+	    // order check in order confiramtion ----HASAN--03/June/2013
+	    String orderconftotal = getElementByProperty(TotalPriceOrderConf_ELM, browser).getText().replace("$", "").trim();
+	    fltorderconftotal = Float.parseFloat(orderconftotal);
+	    orderpaymenttemp = Float.parseFloat(Availabletotal);
+	    orderpaymenttemp = (float) (orderpaymenttemp - ExpectedBurnAmount);
+	    if (fltorderconftotal != orderpaymenttemp) {
+		messagesMap.put("Order total", "order total is not reduced as redemption amount in review order.");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Loyalty Redemption Points detected after
+     *          placing the order form My account Page when SDD is ON and OFF
+     * @author - Siva
+     * @Created -
+     * @Modified By -Siva
+     * @Modified Date -31-MAY-2013
+     ************************************************************* 
+     */
+    public static void verifyBurnAmountfromAccount(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String BurnAmountMessage = "//*[contains(text(),'Rewards applied:')]~XPATH";
+	String YourAccountLink = "a[title='Your Account']~CSS";
+	String LoyaltyPoints_DIVISION = "div.font_points_avail_size~CSS";
+	String stepScenarioId = null;
+	ScenarioBean scenarioBean = null;
+	Map<String, String> sharedProperties = null;
+	String AvailablePoints = null;
+	long CurrentAvailablePoints = 0;
+	long ExpectedPoints = 0;
+	long DisplayedPoints = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (StringUtils.isNotBlank(stepBean.getStepScenarioId())) {
+		stepScenarioId = stepBean.getStepScenarioId();
+		if (EcommTestRunner.registeredScenariosMap.get(stepScenarioId) != null) {
+		    scenarioBean = EcommTestRunner.registeredScenariosMap.get(stepScenarioId);
+		    if (scenarioBean.getSharedStepProperties() != null) {
+			sharedProperties = scenarioBean.getSharedStepProperties();
+			if (StringUtils.isNotBlank(sharedProperties.get("AVailablePoints"))) {
+			    AvailablePoints = sharedProperties.get("AVailablePoints");
+
+			}
+		    }
+		}
+	    }
+	    if (!isElementPresentVerification(BurnAmountMessage, browser)) {
+		messagesMap.put("Burn Amount Message", "Not able to find the Burn Amount Message");
+		status = WARNING;
+	    }
+	    if (SDDFlag.equalsIgnoreCase("ON")) {
+		DisplayedPoints = Integer.parseInt(getElementByProperty(BurnAmountMessage, browser).getText().split("\n")[1].split(" ")[0].replace(",", "").trim());
+
+	    } else {
+		DisplayedPoints = Integer
+			.parseInt((getElementByProperty(BurnAmountMessage, browser).getText().split("pts")[0].split(":")[1].replace(",", "").replaceAll(" ", "")).replaceAll("\n", ""));
+	    }
+	    if (!isElementPresentVerifyClick(YourAccountLink, browser)) {
+		throw new Exception("Not able to find the Your Account Link");
+	    }
+	    ExpectedPoints = (Integer.parseInt(AvailablePoints)) - DisplayedPoints;
+	    CurrentAvailablePoints = Integer.parseInt(getElementByProperty(LoyaltyPoints_DIVISION, browser).getText().replace(",", "").replaceAll(" ", ""));
+	    if (ExpectedPoints != CurrentAvailablePoints) {
+		messagesMap.put("Reduced Points From Account", "Either Less or More Points are reduced from Accoun");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+}

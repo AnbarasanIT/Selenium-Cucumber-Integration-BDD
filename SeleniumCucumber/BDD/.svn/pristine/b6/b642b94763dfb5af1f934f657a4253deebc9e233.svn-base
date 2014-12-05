@@ -1,0 +1,233 @@
+@taxwareverification @taxware
+
+Feature: Verify if Sales Tax are as Expected for Products of different Shipping Address and different Quantities.
+
+#Test Cases Covered
+#******************
+# <--- Please put the test case id's from ALM --->
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+@Taxware-TaxwareScenario-1
+Scenario: Verifies Sales Tax for a product of 1 Quantity for Scenario 1 in Document given.
+
+Given  "Taxware-TaxwareScenario-1" Customer starts the scenario:
+| InputFileName   | SheetName  	          | RowId                      |
+| QC-Taxware      | TaxwareScenario       | Taxware-TaxwareScenario-1  |
+
+And "Taxware-TaxwareScenario-1" Customer Clears the Shopping Cart
+
+Then "Taxware-TaxwareScenario-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId   		   |
+| TaxwareData    | search    | taxwareProduct1 |
+
+Then "Taxware-TaxwareScenario-1" Customer adds Daily Living items to the cart from search.
+
+Then "Taxware-TaxwareScenario-1" Customer Goes to the Shopping Cart
+
+Then "Taxware-TaxwareScenario-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister	   |
+
+Then "Taxware-TaxwareScenario-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "Taxware-TaxwareScenario-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress         | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 801 AVE PONCE DE LEON | SAN JUAN  | 43    | 00907   |   3326 | pobreakout_001@yahoo.com | 8471234567   |  Yes	    |
+
+Then "Taxware-TaxwareScenario-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "Taxware-TaxwareScenario-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "Taxware-TaxwareScenario-1" Customer clicks on an object and validates the expected results:
+| InputFileName	  | SheetName        | RowId 	 	    |
+| TaxwareData     | PageNavigations  | TaxWareTax1      |
+
+# Customer submits the order
+#Then "Taxware-TaxwareScenario-1" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| Yes         | -                       | -                         | -                    | -                        |
+
+#Then "Taxware-TaxwareScenario-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName | SheetName | RowId     |
+#| TaxwareData   | OrderIds  |Taxware1   |
+
+Then "Taxware-TaxwareScenario-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	         | RowId                       |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-1   |
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+@Taxware-TaxwareScenario-2
+Scenario:Verifies Sales Tax for a product of a Updated Quantity for Scenario 1 in Document given.
+
+Given  "Taxware-TaxwareScenario-2" Customer starts the scenario:
+| InputFileName  | SheetName 	         | RowId                       |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-2   |
+
+And "Taxware-TaxwareScenario-2" Customer Clears the Shopping Cart
+
+Then "Taxware-TaxwareScenario-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId   		   |
+| TaxwareData    | search    | taxwareProduct1 |
+
+Then "Taxware-TaxwareScenario-2" Customer adds Daily Living items to the cart from search.
+
+Then "Taxware-TaxwareScenario-2" Customer Goes to the Shopping Cart
+
+Then "Taxware-TaxwareScenario-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName     | SheetName 	   | RowId 			      |
+| TaxwareData       | Product Details  | TaxWareProductInfo1  |
+
+Then "Taxware-TaxwareScenario-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister	   |
+
+Then "Taxware-TaxwareScenario-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "Taxware-TaxwareScenario-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress         | City      | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 801 AVE PONCE DE LEON | SAN JUAN  | 43    | 00907   |   3326 | pobreakout_001@yahoo.com | 8471234567   |  Yes	    |
+
+Then "Taxware-TaxwareScenario-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "Taxware-TaxwareScenario-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "Taxware-TaxwareScenario-2" Customer clicks on an object and validates the expected results:
+| InputFileName	 | SheetName        | RowId 	 	  |
+| TaxwareData    | PageNavigations  | TaxWareTax2     |
+
+# Customer submits the order
+#Then "Taxware-TaxwareScenario-2" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| Yes         | -                       | -                         | -                    | -                        |
+
+#Then "Taxware-TaxwareScenario-2" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName   | SheetName    | RowId     |
+#| TaxwareData     | OrderIds     |Taxware2   |
+
+Then "Taxware-TaxwareScenario-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	        | RowId                      |
+| QC-Taxware    | TaxwareScenario       | Taxware-TaxwareScenario-2  |
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+@Taxware-TaxwareScenario-3
+Scenario: Verifies Sales Tax for a product of 1 Quantity for Scenario 2 in Document given.
+
+Given  "Taxware-TaxwareScenario-3" Customer starts the scenario:
+| InputFileName  | SheetName 	         | RowId                      |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-3  |
+
+And "Taxware-TaxwareScenario-3" Customer Clears the Shopping Cart
+
+Then "Taxware-TaxwareScenario-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName  | SheetName | RowId   		   |
+| TaxwareData    | search    | taxwareProduct2 |
+
+Then "Taxware-TaxwareScenario-3" Customer adds Daily Living items to the cart from search.
+
+Then "Taxware-TaxwareScenario-3" Customer Goes to the Shopping Cart
+
+Then "Taxware-TaxwareScenario-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister	   |
+
+Then "Taxware-TaxwareScenario-3" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "Taxware-TaxwareScenario-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress    | City       | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 300 college ave  | ORANGEBURG | 45    | 29115   |   4427 | pobreakout_001@yahoo.com | 8471234567   |  Yes	    |
+
+Then "Taxware-TaxwareScenario-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "Taxware-TaxwareScenario-3" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "Taxware-TaxwareScenario-3" Customer clicks on an object and validates the expected results:
+| InputFileName	| SheetName        | RowId 	 	    |
+| TaxwareData   | PageNavigations  | TaxWareTax3     |
+
+# Customer submits the order
+#Then "Taxware-TaxwareScenario-3" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| Yes         | -                       | -                         | -                    | -                        |
+
+#Then "Taxware-TaxwareScenario-3" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName   | SheetName    | RowId     |
+#| TaxwareData     | OrderIds     |Taxware3   |
+
+Then "Taxware-TaxwareScenario-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	         | RowId                      |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-3  |
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+@Taxware-TaxwareScenario-4
+Scenario: Verifies Sales Tax for a product of  a Updated Quantity for Scenario 2 in Document given.
+
+Given  "Taxware-TaxwareScenario-4" Customer starts the scenario:
+| InputFileName  | SheetName 	         | RowId                      |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-4  |
+
+And "Taxware-TaxwareScenario-4" Customer Clears the Shopping Cart
+
+Then "Taxware-TaxwareScenario-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId   		  |
+| TaxwareData    | search    | taxwareProduct2 |
+
+Then "Taxware-TaxwareScenario-4" Customer adds Daily Living items to the cart from search.
+
+Then "Taxware-TaxwareScenario-4" Customer Goes to the Shopping Cart
+
+Then "Taxware-TaxwareScenario-4" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName     | SheetName 	   | RowId 			      |
+| TaxwareData       | Product Details  | TaxWareProductInfo2  |
+
+Then "Taxware-TaxwareScenario-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| SigninorRegister	   |
+
+Then "Taxware-TaxwareScenario-4" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "Taxware-TaxwareScenario-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName    | LastName    | StreetAddress    | City       | State | ZipCode |ZipExtn | EmailAddress             | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test Order   | Test Order  | 300 college ave  | ORANGEBURG | 45    | 29115   |   4427 | pobreakout_001@yahoo.com | 8471234567   |  Yes	    |
+
+Then "Taxware-TaxwareScenario-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "Taxware-TaxwareScenario-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| -		        | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard |
+
+Then "Taxware-TaxwareScenario-4" Customer clicks on an object and validates the expected results:
+| InputFileName	| SheetName        | RowId 	 	    |
+| TaxwareData   | PageNavigations  | TaxWareTax4     |
+
+# Customer submits the order
+#Then "Taxware-TaxwareScenario-4" Customer makes the selection from Review Order and Submit page:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| Yes         | -                       | -                         | -                    | -                        |
+
+#Then "Taxware-TaxwareScenario-4" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+#| InputFileName   | SheetName    | RowId     |
+#| TaxwareData     | OrderIds     |Taxware4   |
+
+Then "Taxware-TaxwareScenario-4" Customer finished testing the scenario:
+| InputFileName  | SheetName 	         | RowId                      |
+| QC-Taxware     | TaxwareScenario       | Taxware-TaxwareScenario-4  |
+#--------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,89 @@
+@checkout @DCFulfillment
+Feature: Customer is able to do Fulfillment for DC items
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@FULFILLMENT-DC-1
+Scenario: Logged in user place an order with DC item and does Fulfillment.
+
+Given  "FULFILLMENT-DC-1" Customer starts the scenario:
+| InputFileName    | SheetName 	| RowId     		 |
+| QC-FULFILLMENT   | DC			| FULFILLMENT-DC-1 	 |
+
+Given "FULFILLMENT-DC-1" Customer login to the walgreens.com:
+| InputFileName |  SheetName  | RowId    		|
+| CommonData    | login       | authenticated1  |
+
+And "FULFILLMENT-DC-1" Customer Clears the Shopping Cart
+
+And "FULFILLMENT-DC-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | DC1		   |
+
+Then "FULFILLMENT-DC-1" Customer adds Daily Living items to the cart from search.
+
+Then "FULFILLMENT-DC-1" Customer Goes to the Shopping Cart
+
+Then "FULFILLMENT-DC-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "FULFILLMENT-DC-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| shippingaddress     | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "FULFILLMENT-DC-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               |           standard       |       -			        |
+
+Then "FULFILLMENT-DC-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress | 
+| CreditCard	| -              | -                     | -                  | 
+
+Then "FULFILLMENT-DC-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "FULFILLMENT-DC-1" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     		  |
+| CheckoutOrderDetails  | OrderIds 	   |FULFILLMENT-DC-1  |
+
+Then "FULFILLMENT-DC-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  	 		|
+|  DataBase     | Query      | InitialOrderStatusQuery1 |
+
+Given "FULFILLMENT-DC-1" Customer login to feeds instance:
+
+Then "FULFILLMENT-DC-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "FULFILLMENT-DC-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  	 		 |
+|  DataBase     | Query      | PendingOrderStatusQuery1  |
+
+Then "FULFILLMENT-DC-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1       |
+| DYNADMIN      | FEEDS          | OrderIDInfo1           |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+ 
+Then "FULFILLMENT-DC-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  	 		 |
+|  DataBase     | Query      | PendingOrderStatusQuery1  |
+
+Then "FULFILLMENT-DC-1" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	     |
+| BatchData     | Fulfillment  | dcInboundFile1  |
+| BatchData     | Fulfillment  | dcOutboundFile1 |
+
+Then "FULFILLMENT-DC-1" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "FULFILLMENT-DC-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  	 		  |
+|  DataBase     | Query      | CompleteOrderStatusQuery1  |
+
+Then "FULFILLMENT-DC-1" Customer finished testing the scenario:
+| InputFileName    | SheetName 	| RowId     		 |
+| QC-FULFILLMENT   | DC			| FULFILLMENT-DC-1 	 |

@@ -1,0 +1,340 @@
+@pharmacy @PharmacyLeftNavigationLinksValidation
+Feature: Authenticated Customer validates Pharmacy related functionalities
+
+# Contains all Authenticated Rx functionality validation of QTP Migrated Scenarios
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-1
+Scenario: Authenticated user verifies the Pharmacy functionalities from Pharmacy home page
+
+Given  "RX-AuthRxValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-1 |
+
+Given "RX-AuthRxValidations-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | refillRx3 |
+
+Then "RX-AuthRxValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId      |
+| PharmacyLinkVerification  |Authenticated  | ALL 		 |
+
+
+Then "RX-AuthRxValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		   |
+| QC-RX	        | AuthRxValidations   | RX-AuthRxValidations-1 |
+#----------------------------------------------------------------------------------
+@RX-AuthRxValidations-2
+Scenario: Authenticated user verifies the Pharmacy functionalities from Pharmacy home page
+
+Given  "RX-AuthRxValidations-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-2 |
+
+Given "RX-AuthRxValidations-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| Pharmacy  	 | login     | AuthenticatedUser |
+
+Then "RX-AuthRxValidations-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	             |
+| PharmacyHomePageLinkVerification | Authenticated        | OnlinePharmacyTour_Home          |
+
+Then "RX-AuthRxValidations-2" Customer logout from walgreens:
+|Source|
+|Global|
+
+Then "RX-AuthRxValidations-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	           | RowId      	 	        |
+| QC-RX 	    | AuthRxValidations        | RX-AuthRxValidations-2	    |
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-1
+Scenario: Matched user verifies the Pharmacy link navigations from Pharmacy home page
+
+Given  "RX-UnAuthRxValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-1	|
+
+Given "RX-UnAuthRxValidations-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "RX-UnAuthRxValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	 		|
+| PharmacyLinkVerification  |UnAuthenticated  |Pharmacy 		     	 	|
+| PharmacyLinkVerification  |UnAuthenticated  |Family Prescriptions	 		|
+| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+Then "RX-UnAuthRxValidations-1" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType 			|FetchActivationFlag|
+| MATCHED			|-|
+
+Then "RX-UnAuthRxValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |Online Pharmacy Tour	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |Walgreens Mobile Tab	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |Explore Walgreens Mobile		|
+| PharmacyLinkVerification  |UnAuthenticated  |Drug Information        		|
+| PharmacyLinkVerification  |UnAuthenticated  |Prescription Savings Club	|
+| PharmacyLinkVerification  |UnAuthenticated  |Email Reminders         		|
+| PharmacyLinkVerification  |UnAuthenticated  |Auto Refill          	 	|
+| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+Then "RX-UnAuthRxValidations-1" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType 			|FetchActivationFlag|
+| MATCHED			|-|
+Then "RX-UnAuthRxValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	 		|
+| PharmacyLinkVerification  |UnAuthenticated  |Prescription History 		|
+| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+Then "RX-UnAuthRxValidations-1" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType 			|FetchActivationFlag|
+| MATCHED			|-|
+
+Then "RX-UnAuthRxValidations-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-1	|
+#-----------------------------------------------------------------------------------------------------------
+
+@RX-UnAuthRxValidations-4
+Scenario: Verify Matched User is navigated to Verify Your identity Page with Online and Phone Tabs if he clicks AutoRefills,Refill Rxs from Order Refill Tab 
+in Online Rx tour Page and Order Status link Rx widget.
+
+Given  "RX-UnAuthRxValidations-4" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-4	|
+
+Given "RX-UnAuthRxValidations-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "RX-UnAuthRxValidations-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	         |
+| PharmacyLinkVerification  |UnAuthenticated  |Pharmacy 		     	     |
+#| PharmacyLinkVerification |UnAuthenticated  |Online Pharmacy Tour   	     |
+#| PharmacyLinkVerification |UnAuthenticated  |Order Refills Tab    	 	 |
+#| PharmacyLinkVerification |UnAuthenticated  |RefillPrescriptions in Rx Tour|
+#| PharmacyLinkVerification |UnAuthenticated  |Pharmacy						 |
+#| PharmacyLinkVerification |UnAuthenticated  |Online Pharmacy Tour   	     |
+#| PharmacyLinkVerification |UnAuthenticated  |Order Refills Tab    	 	 |
+#| PharmacyLinkVerification  |UnAuthenticated |Automatic Refills in Rx Tour	 |
+#| PharmacyLinkVerification  |UnAuthenticated |Pharmacy						 |
+| PharmacyLinkVerification  |UnAuthenticated  |OrderStatus					 |
+
+Then "RX-UnAuthRxValidations-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-4" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-4	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-LightRxValidations-1
+Scenario: Light user verifies the Pharmacy functionalities from Pharmacy home page
+
+Given  "RX-LightRxValidations-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		   |
+| QC-RX	        | LightRxValidations | RX-LightRxValidations-1 |
+
+Given "RX-LightRxValidations-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId       		   |
+| CommonData  	 | login     | LightValidationUser |
+
+Then "RX-LightRxValidations-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId      |
+| PharmacyLinkVerification  |LightReg   | ALL 		 |
+
+Then "RX-LightRxValidations-1" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-LightRxValidations-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		  | RowId         		    |
+| QC-RX	        | LightRxValidations  | RX-LightRxValidations-1 |
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-5
+Scenario: Anonymous user verifies the Pharmacy Home page link navigations from Pharmacy Home Page. 
+
+Given  "RX-AnonymousRxValidations-5" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId         			        |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-5	|
+
+Then "RX-AnonymousRxValidations-5" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	  |
+| PharmacyLinkVerification		   | Anonymous        	  | All       |
+
+Then "RX-AnonymousRxValidations-5" Customer finished testing the scenario:
+| InputFileName | SheetName 			   | RowId         			        |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-5	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-2
+Scenario: Verify Matched User is navigated to Verify Your identity Page with Online and Phone Tabs if he clicks Track Your Records button in Immunization Page
+
+Given  "RX-UnAuthRxValidations-2" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-2	|
+
+Given "RX-UnAuthRxValidations-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "RX-UnAuthRxValidations-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	  | RowId              	 		 	 |
+| PharmacyLinkVerification  |UnAuthenticated  |Pharmacy 		     	 		 |
+| PharmacyLinkVerification  |UnAuthenticated  |ImmunizationServices       	 	 |
+| PharmacyLinkVerification  |UnAuthenticated  |Review your immunization records  |
+
+Then "RX-UnAuthRxValidations-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-2" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-2	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-AnonymousRxValidations-8
+Scenario: Anonymous User Creates an account from Family Prescriptions page
+
+Given  "RX-AnonymousRxValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 			   | RowId         			        |
+| QC-RX	        | AnonymousRxValidations   | RX-AnonymousRxValidations-8	|
+
+Then "RX-AnonymousRxValidations-8" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	   |
+| PharmacyHomePageLinkVerification | Anonymous            | FamilyPrecriptions     |
+| PharmacyHomePageLinkVerification | Anonymous            | RegisterNow            |
+
+And "RX-AnonymousRxValidations-8" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	  |
+| Registration  | RxRegistration | Rxpharma3  |
+
+Then "RX-AnonymousRxValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	                | RowId      	 	                    |
+| QC-RX 	    | AnonymousRxValidations        | RX-AnonymousRxValidations-8	        |
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-24
+Scenario: UnMatched user verifies the Pharmacy Link Navigations from Pharmacy home page
+
+Given  "RX-UnAuthRxValidations-24" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-24	|
+
+Given "RX-UnAuthRxValidations-24" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "RX-UnAuthRxValidations-24" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                | SheetName              | RowId 	        	        |TargetOverlay|ClickObjectOverlay|
+| PharmacyLinkVerification  		|UnAuthenticated  		 |Email Reminders         		|-|-|
+| PharmacyLinkVerification  		|UnAuthenticated  		 |Family Prescriptions	 		|-|-|
+| PharmacyLinkVerification  		|UnAuthenticated  		 |StoreLocator_PharmacyHours 	|-|-|
+| PharmacyLinkVerification  		|UnAuthenticated  		 |Prescription Savings Club		|-|-|
+| PharmacyHomePageLinkVerification | UnAuthenticated         | RefillPrescriptions          |Yes		   |-				  |
+| PharmacyHomePageLinkVerification | UnAuthenticated         | UpdateNow			        |No		       |Yes				  |
+
+
+#Then "RX-UnAuthRxValidations-24" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+#| UserType 			|
+#| UNMATCHED			|
+
+#Then "RX-UnAuthRxValidations-24" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName 	  | RowId              	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |PrintPrescriptionRecords		|
+#| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+#Then "RX-UnAuthRxValidations-24" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+#| UserType 			|
+#| UNMATCHED			|
+
+#Then "RX-UnAuthRxValidations-24" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName 	  | RowId              	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |Auto Refill          	 	|
+#| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+#Then "RX-UnAuthRxValidations-24" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+#| UserType 			|
+#| UNMATCHED			|
+
+#Then "RX-UnAuthRxValidations-24" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName 	  | RowId              	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |Prescription History 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |CompleteRegistration			|
+
+#Then "RX-UnAuthRxValidations-24" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+#| UserType 			|
+#| UNMATCHED			|
+
+#Then "RX-UnAuthRxValidations-24" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName 	  | RowId              	 		|
+#| PharmacyLinkVerification  |UnAuthenticated  |ImmunizationServices			|
+#| PharmacyLinkVerification  |UnAuthenticated  |GetAgeSpecificRecommendations|
+#| PharmacyLinkVerification  |UnAuthenticated  |TrackYourRecords				|
+
+#Then "RX-UnAuthRxValidations-24" Customer logout from walgreens:
+#| Source  |
+#| Global  |
+
+Then "RX-UnAuthRxValidations-24" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-24	|
+#-----------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-20
+Scenario: Rx Authenticated User is able to navigate to New Rx Page & Refill Hub from Drug Info Page by clicking on Request New Prescription and Refill Prescriptions
+Buttons respectively.
+
+Given  "RX-AuthRxValidations-20" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-20	|
+
+Given "RX-AuthRxValidations-20" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | newRx1	 |
+
+Then "RX-AuthRxValidations-20" Customer clicks on an object and validates the expected results:
+| InputFileName	   	          | SheetName         | RowId 	         			|
+| PharmacyLinkVerification    |  Authenticated    |DrugInformation   			|
+| PharmacyLinkVerification    |  Authenticated    |BaseDrugLink		 			|
+| PharmacyLinkVerification    |  Authenticated    |SecondaryDrugLink 			|
+| PharmacyLinkVerification    |  Authenticated    |NewRxButton		 			|
+| PharmacyLinkVerification    |  Authenticated    |DrugInformation  			|
+| PharmacyLinkVerification    |  Authenticated    |BaseDrugLink				    |
+| PharmacyLinkVerification    |  Authenticated    |SecondaryDrugLink 			|
+| PharmacyLinkVerification    |  Authenticated    |RefillRxButtoninDrugInfoPage |
+| PharmacyLinkVerification    |  Authenticated    |PrescriptionHistoryLink      |
+
+Then "RX-AuthRxValidations-20" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-20" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-20	|
+
+#-----------------------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-26
+Scenario: Rx UnAuthenticated User is able to navigate to verify Your Identify Page when he clicks on Complete Registration button from Prescription History 540 landing Page.
+
+Given  "RX-UnAuthRxValidations-26" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-26	|
+
+Given "RX-UnAuthRxValidations-26" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		 |
+| CommonData  	 | login     | unauthenticated1	 |
+
+Then "RX-UnAuthRxValidations-26" Customer clicks on an object and validates the expected results:
+| InputFileName	   	          | SheetName         | RowId 	         			|
+| PharmacyLinkVerification    |  UnAuthenticated  |Prescription History			|
+| PharmacyLinkVerification    |  UnAuthenticated  |CompleteRegistration  		|
+
+Then "RX-UnAuthRxValidations-26" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-26" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-26	|

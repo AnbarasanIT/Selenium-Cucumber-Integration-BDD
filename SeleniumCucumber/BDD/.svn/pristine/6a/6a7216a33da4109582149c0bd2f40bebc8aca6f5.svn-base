@@ -1,0 +1,105 @@
+@pharmacy @HepatitisService
+
+Feature: Scenarios in the feature are for HepatitisServiceCheckBoxVerification
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+@RX-HepatitisService-1
+Scenario: Verifying the preselection of the Hepatitis service checkbox
+
+Given  "RX-HepatitisService-1" Customer starts the scenario:
+| InputFileName | SheetName 		   | RowId                  |
+| QC-RX	        | HepatitisService     | RX-HepatitisService-1  |
+
+And "RX-HepatitisService-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName            | RowId 	        	|
+| PharmacyHomePageLinkVerification | Anonymous            | HepatitisServices   |
+
+Then "RX-HepatitisService-1" Customer verifies whether the checkbox is preselected or not:
+| InputFileName	   	               | SheetName            | RowId 	        	|
+| PharmacyHomePageLinkVerification | ServiceName          | HepatitisSupport    |
+
+Then "RX-HepatitisService-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		 | RowId              	  |
+| QC-RX	        | HepatitisService   | RX-HepatitisService-1  |
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+@RX-HepatitisService-2
+Scenario: Verifying the functionality of the link of pharmact chat button for Loyalty & Non Loyalty member.
+
+Given "RX-HepatitisService-2" Customer starts the scenario:
+| InputFileName  | SheetName         | RowId      	         |
+| QC-RX   		 | HepatitisService  | RX-HepatitisService-2 |
+
+When "RX-HepatitisService-2" Customer login to the walgreens com:
+| InputFileName | SheetName 		| RowId      	|
+| CommonData    | Login             | nonloyaltyuser1 |
+
+And "RX-HepatitisService-2" Customer clicks on an object and validates the expected results:
+| InputFileName                  | SheetName     | RowId      	    	                |
+|PharmacyHomePageLinkVerification| Authenticated | PharmacyChatLoyaltyAuthenticated  |
+
+Then "RX-HepatitisService-2" Customer logout from walgreens:
+|Source |
+|Global |
+
+When "RX-HepatitisService-2" Customer login to the walgreens com:
+| InputFileName | SheetName         | RowId      	             |
+|Pharmacy       | HepatitisService  | AuthenticatedLoyaltyMember |
+
+And "RX-HepatitisService-2" Customer clicks on an object and validates the expected results:
+| InputFileName                  | SheetName     | RowId      	                    |
+|PharmacyHomePageLinkVerification| Authenticated | PharmacyChatLoyaltyAuthenticated |
+
+Then "RX-HepatitisService-2" Customer finished testing the scenario:
+| InputFileName  | SheetName         | RowId      	 		 |
+| QC-RX   		 | HepatitisService  | RX-HepatitisService-2 |
+
+#----------------------------------------------------------------------------------------------------------------------
+@RX-HepatitisService-3
+Scenario: Verification of external domain links from hepatitis landing page.
+
+Given "RX-HepatitisService-3" Customer starts the scenario:
+| InputFileName  | SheetName         | RowId      	         |
+| QC-RX   		 | HepatitisService  | RX-HepatitisService-3 |
+
+And "RX-HepatitisService-3" Customer clicks on an object and validates the expected page URL in new window:
+| InputFileName | SheetName        | RowId      	                        |
+|Pharmacy       | HepatitisService | AmericanLiverFoundation                |
+|Pharmacy       | HepatitisService | Hepatitis A      					    |
+|Pharmacy       | HepatitisService | Hepatitis B      					    |
+|Pharmacy       | HepatitisService | Hepatitis C      					    |
+|Pharmacy       | HepatitisService | Disease Control and Prevention         |
+|Pharmacy       | HepatitisService | Immunization action coalition          |
+|Pharmacy       | HepatitisService | Learn more on Hepatitis testing options|
+|Pharmacy       | HepatitisService | Buy from our online shop               |
+
+Then "RX-HepatitisService-3" Customer finished testing the scenario:
+| InputFileName  | SheetName         | RowId  		    	 |
+| QC-RX   		 | HepatitisService  | RX-HepatitisService-3 |
+#----------------------------------------------------------------------------------------------------------------------
+@RX-PetMedications-1
+Scenario: Customer Verifies the Pet medication Landingpage Link Validations
+
+Given "RX-PetMedications-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | PetMedications         | RX-PetMedications-1        |
+
+Then "RX-PetMedications-1" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | PetMeds 	|
+
+And "RX-PetMedications-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       | SheetName            | RowId 	     	 |
+| PharmacyLinkVerification | Authenticated        | ShopNow          |
+
+Then "RX-PetMedications-1" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | PetMeds 	|
+
+And "RX-PetMedications-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	       | SheetName            | RowId 	        |
+| PharmacyLinkVerification | Authenticated        | LearnMore       |
+
+Then "RX-PetMedications-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | PetMedications         | RX-PetMedications-1          |
+#---------------------------------------------------------------------------------------------------------

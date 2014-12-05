@@ -1,0 +1,950 @@
+package walgreens.ecom.batch.automation.library.checkout;
+
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class CheckoutDailyLivingLibrary extends CheckoutLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to Adds or Pre-Orders the Searched Daily living
+     *          Item to Cart and come back to Search Resutls Page
+     * @author - Imran
+     * @Created - 25-Mar-12
+     * @Modified By - Ygnash
+     * @Modified Date -02-Sep-13
+     ************************************************************* 
+     */
+    public static void searchandAddDailyLivingItemsToTheCart(EventFiringWebDriver browser, StepBean stepBean) {
+   	String status = PASS;
+   	String OverlayContinueShopping_BTN = "//*[@id='back']~XPATH";
+   	String PreOrder_BTN = "//img[@alt='PreOrder']~XPATH";
+   	String Two_Ways_OverLay_Close = "//a[@id='div2ways2shopClose']~XPATH";
+   	String ProductName_LNK="div[class*='product-name']>a~CSS";
+   	// String ProductName_LNK = "//a[contains(text(),'American Health')]~XPATH";
+   	String VPDAddToCart_BTN="//a[@id='add-to-cart-button']~XPATH";
+   	Map<String, String> messagesMap = null;
+   	try {
+   	    if (messagesMap == null) {
+   		messagesMap = new HashMap<String, String>();
+   		stepBean.setStepStatusMessages(messagesMap);
+   	    }
+   		if (isElementPresentVerification(Two_Ways_OverLay_Close, browser)&& getElementByProperty(Two_Ways_OverLay_Close, browser).isDisplayed()) {
+   		    getElementByProperty(Two_Ways_OverLay_Close, browser).click();
+   		}
+   	    if(!isElementPresentVerifyClick(ProductName_LNK, browser))
+   	    {
+   		throw new Exception("Not able to Click on Product Name Link");
+   	    }
+   	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+   	    // Checks for Add to Cart button Adds Item to Cart
+   	    if (isElementPresentVerification(VPDAddToCart_BTN, browser)) {
+   		getElementByProperty(VPDAddToCart_BTN, browser).click();
+   	    }
+   	    // Else Checks for Pre-Order Button And adds to Cart
+   	    else if (isElementPresentVerification(PreOrder_BTN, browser)) {
+   		//getElementByProperty(PreOrder_BTN, browser).sendKeys(Keys.RETURN);
+   		getElementByProperty(PreOrder_BTN, browser).click();
+   	    } 
+   	    // Switch to Overlay and clicks Continue shopping Button
+   	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+   	    switchToOverlay(browser);
+   	    if (!isElementPresentVerifyClick(OverlayContinueShopping_BTN, browser)) {
+   		throw new Exception("Not able to find and/or click on Continue Shopping Button");
+   	    }
+   	    switchToDefault(browser);
+   	} catch (Exception e) {
+   	    status = FAIL;
+   	    messagesMap.put("An Exception Occured:", e.getMessage());
+   	    LogIt(e, null, stepBean);
+   	} finally {
+   	    stepBean.setStepStatus(status);
+   	}
+       }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is to Increase the Product Quantity by one in
+     *          Shopping Cart
+     * @author - Siva
+     * @Created - 12-June-12
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void increaseProductQuantity(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String quantityfield = "//input[@alt='Quantity']";
+	String ProductName = null;
+	int NoofRows = 0, j, Flag = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ProductName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword2");// used
+	    NoofRows = browser.findElements(By.linkText("Remove")).size();
+
+	    for (int i = 0; i < NoofRows; i++) {
+
+		j = i + 2;// Product division value started with 2 so adding the
+		// value.
+		String ProductDetailsInfoBox = "//form[@method='post']/div[3]/div[" + j + "]/div~XPATH";
+		if (getElementByProperty(ProductDetailsInfoBox, browser) != null) {
+
+		    if (getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(ProductName)) {
+
+			Flag = Flag + 1;
+			String TextValue = getElementByProperty(ProductDetailsInfoBox, browser).findElement(By.xpath(quantityfield)).getAttribute("value");
+			getElementByProperty(ProductDetailsInfoBox, browser).findElement(By.xpath(quantityfield)).clear();
+			String UpdatedValue = new Integer(Integer.parseInt(TextValue) + 1).toString();
+			getElementByProperty(ProductDetailsInfoBox, browser).findElement(By.xpath(quantityfield)).sendKeys(UpdatedValue);
+			break;
+		    }
+
+		}
+	    }
+	    if (Flag == 0) {
+		messagesMap.put("Required Product", "Requied Product Not found to Increase the Quantity");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the pricing configuration mean
+     *          Regular price or Sale price or Loyalty Price of the Products in
+     *          Shopping Cart
+     * @author - Siva
+     * @Created - 10-Aug-12
+     * @Modified By - Siva
+     * @Modified Date -5-Nov-12
+     ************************************************************* 
+     */
+    public static void verifyingPricingConfigurationinCart(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CLRegularPrice_ELM = "//div[contains(@class,'txtRtalign')]/p/strong";
+	String CLProduct_DIV = "//div[contains(@class,'greycontentbox')]";
+	String ShoppingCart_DIV = "div#full_902~CSS";
+	String SSproduct_DIV = "//div[@name='lineitem']";
+	String RegularPrice_ELM = "//div[contains(@class,'iemrgRt')]/p";
+	String SaleorLoyaltyPrice_ELM = "//span[contains(@class,'lit_red')]/strong";
+	String CLProducts_DIV = "//div[contains(@class,'mrgTop20px')][1]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		if (!dataMap.get("CLproduct").get(i).equalsIgnoreCase("-")) {
+		    String CLproduct = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("CLproduct").get(i), "Keyword2");
+		    if (!getElementByProperty(CLProducts_DIV, browser).getText().contains("Contact Lenses")) {
+			CLProducts_DIV = "//div[contains(@class,'mrgTop20px')][2]";
+		    }
+		    List<WebElement> CLProductDivisions = getElementByProperty(CLProducts_DIV, browser).findElements(By.xpath(CLProduct_DIV));
+		    for (int counter = 0; counter < CLProductDivisions.size(); counter++) {
+			if (CLProductDivisions.get(counter).getText().contains(CLproduct)) {
+			    if (CLProductDivisions.get(counter).findElement(By.xpath(CLRegularPrice_ELM)) == null) {
+				messagesMap.put("Regular Price for CL item", "Not able to identify the Regular Price for the " + (counter + 1) + "-CL product");
+				status = WARNING;
+				// throw new
+				// Exception("Not able to identify the Regular Price for the "
+				// + (counter + 1) + "-CL product");
+			    }
+			}
+
+		    }
+		}
+		if (!dataMap.get("LoyaltyProduct").get(i).equals("-") || !dataMap.get("NonLoyaltyProduct").get(i).equals("-")) {
+		    if (browser.findElement(By.xpath(SSproduct_DIV)) != null) {
+			List<WebElement> SSproductsDivsinCart = getElementByProperty(ShoppingCart_DIV, browser).findElements(By.xpath(SSproduct_DIV));
+			for (int counter = 0; counter < SSproductsDivsinCart.size(); counter++) {
+			    if (!dataMap.get("NonLoyaltyProduct").get(i).equals("-")) {
+				String nonLoyaltyProduct = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("NonLoyaltyProduct").get(i), "Keyword2");
+				String nonLoylatyProductPriceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("NonLoyaltyProduct").get(i),
+					"PriceType");
+				if (SSproductsDivsinCart.get(counter).getText().contains(nonLoyaltyProduct)) {
+				    if (nonLoylatyProductPriceType.equalsIgnoreCase("Regular")) {
+					if (SSproductsDivsinCart.get(counter).findElement(By.xpath(RegularPrice_ELM)) == null) {
+					    messagesMap.put("Regular Price", "not able to identify the Regular Price for the Product:" + nonLoyaltyProduct);
+					    status = WARNING;
+					    // throw new
+					    // Exception("not able to identify the Regular Price for the Product:"
+					    // + nonLoyaltyProduct);
+					}
+				    } else if (nonLoylatyProductPriceType.equalsIgnoreCase("Sale")) {
+					if (SSproductsDivsinCart.get(counter).findElement(By.xpath(SaleorLoyaltyPrice_ELM)) == null) {
+					    messagesMap.put("Sale Price", "not able to identify the Sale Price for the Product:" + nonLoyaltyProduct);
+					    status = WARNING;
+					    // throw new
+					    // Exception("not able to identify the Sale Price for the Product:"
+					    // + nonLoyaltyProduct);
+					}
+				    }
+				}
+			    }
+			    if (!dataMap.get("LoyaltyProduct").get(i).equals("-")) {
+				String LoyaltyProduct = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("LoyaltyProduct").get(i), "Keyword2");
+				if (SSproductsDivsinCart.get(counter).getText().contains(LoyaltyProduct)) {
+				    if (dataMap.get("UserType").get(i).equalsIgnoreCase("nonloyalty")) {
+					if (SSproductsDivsinCart.get(counter).findElement(By.xpath(RegularPrice_ELM)) == null) {
+					    messagesMap.put("Regular Price", "not able to identify the Regular Price for the Product:" + LoyaltyProduct);
+					    status = WARNING;
+					    // throw new
+					    // Exception("not able to identify the Regular Price for the Product:"
+					    // + LoyaltyProduct);
+					}
+				    } else if (dataMap.get("UserType").get(i).equalsIgnoreCase("Loyalty")) {
+					if (SSproductsDivsinCart.get(counter).findElement(By.xpath(SaleorLoyaltyPrice_ELM)) == null) {
+					    messagesMap.put("Sale Price", "not able to identify the Sale Price for the Product:" + LoyaltyProduct);
+					    status = WARNING;
+					    // throw new
+					    // Exception("not able to identify the Sale Price for the Product:"
+					    // + LoyaltyProduct);
+					}
+
+				    } else {
+					messagesMap.put("UserType-Input", "Please Enter the Proper UserType input");
+					status = WARNING;
+					// throw new
+					// Exception("Please Enter the Proper UserType");
+				    }
+				}
+			    }
+			}
+
+		    } else {
+			messagesMap.put("SS item in Cart", "Not able to find the SS products in the cart");
+			status = WARNING;
+			// throw new
+			// Exception("Not able to find the SS products in the cart");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to choose a Color/Size variation product and
+     *          Adds it to cart or shopping list
+     * @author - Ygnash
+     * @Created - 11-Jan-13
+     * @Modified By -SARAVANAN M
+     * @Modified Date -May-13-2013
+     ************************************************************* 
+     */
+    public static void addVariationProductToCartOrShoppingList(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ChooseOption_BTN = "img[title='Choose Options']~CSS";
+	String ColorDropDown_LST = "select[id='colorId']~CSS";
+	String SizeDropDown_LST = "select[id='sizeId']~CSS";
+	String AddToCart_BTN = "a[title='Add to Cart']~CSS";
+	String AddToCartSL_BTN = "input[alt='Add to Cart']~CSS";
+	String OverlayContinueShopping_BTN = "img[title='Continue Shopping']~CSS";
+	String AddToShoppingList_BTN = "a#save-to-shopping-list-button~CSS";
+	String SignInPg_HEADER = "//h1[contains(text(),'Sign In')]~XPATH";
+	String ShoppingList_HEADER = "//h1[contains(text(),'Shopping List')]~XPATH";
+	String OverlayClose_ELM = "a[id='overlayClose']~CSS";
+	String ShoppingList_LNK = "a[title='Shopping List']~CSS";
+	String ChoosenColor, ChoosenSize = null;
+	List<WebElement> Color = null;
+	List<WebElement> Size = null;
+	// String ViewYourCart_LNK =
+	// "//strong[contains(text(),'View your Cart')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String ExpectedPage = dataMap.get("ExpectedPage").get(0);
+	    String AddItem = dataMap.get("AddItem").get(0);
+	    String ItemType = dataMap.get("ItemType").get(0);
+	    String UIvalidation = dataMap.get("UIvalidation").get(0);
+
+	    // Based on the Product type Selects the size or color for the
+	    // Particular product in VPD page
+	    if (ItemType.equalsIgnoreCase("Color")) {
+		Color = new Select(getElementByProperty(ColorDropDown_LST, browser)).getOptions();
+		for (int i = 1; i < Color.size(); i++) {
+		    if (!Color.get(i).getText().equals("Not Available")) {
+			new Select(getElementByProperty(ColorDropDown_LST, browser)).selectByIndex(i);
+			ChoosenColor = Color.get(i).getText().trim();
+			TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Color", ChoosenColor);
+			break;
+		    }
+		}
+	    } else if (ItemType.equalsIgnoreCase("Size")) {
+		Size = new Select(getElementByProperty(SizeDropDown_LST, browser)).getOptions();
+		for (int i = 1; i < Size.size(); i++) {
+		    if (!Size.get(i).getText().equals("Not Available")) {
+			new Select(getElementByProperty(SizeDropDown_LST, browser)).selectByIndex(i);
+			ChoosenSize = Size.get(i).getText().trim();
+			TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Size", ChoosenSize);
+			break;
+		    }
+
+		}
+	    } else if (ItemType.equalsIgnoreCase("ColorAndSize")) {
+		Color = new Select(getElementByProperty(ColorDropDown_LST, browser)).getOptions();
+		for (int i = 1; i < Color.size(); i++) {
+		    if (!Color.get(i).getText().equals("Not Available")) {
+			new Select(getElementByProperty(ColorDropDown_LST, browser)).selectByIndex(i);
+			ChoosenColor = Color.get(i).getText().trim();
+			TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Color", ChoosenColor);
+			break;
+		    }
+		}
+		Size = new Select(getElementByProperty(SizeDropDown_LST, browser)).getOptions();
+		for (int i = 1; i < Size.size(); i++) {
+		    if (!Size.get(i).getText().equals("Not Available")) {
+			new Select(getElementByProperty(SizeDropDown_LST, browser)).selectByIndex(i);
+			ChoosenSize = Size.get(i).getText().trim();
+			TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Size", ChoosenSize);
+			break;
+		    }
+		}
+	    }
+	    // ADDS item to cart
+	    if (AddItem.equalsIgnoreCase("Cart")) {
+		if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+		    throw new Exception("Not able to click Add to Cart button");
+		}
+		System.err.println("Entered");
+		switchToOverlay(browser);
+		Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		if (!isElementPresentVerifyClick(OverlayContinueShopping_BTN, browser)) {
+		    throw new Exception("Not able to find and/or click on Continue Shopping Button");
+		}
+		switchToDefault(browser);
+		System.err.println("Entered=3");
+	    }
+	    // Add Item to Shopping List
+	    else if (AddItem.equalsIgnoreCase("ShoppingList")) {
+		if (!isElementPresentVerifyClick(AddToShoppingList_BTN, browser)) {
+		    throw new Exception("Not able to click Add to ShoppingList button");
+		}
+		if (ExpectedPage.equalsIgnoreCase("SignIn")) {
+		    if (!isElementPresentVerification(SignInPg_HEADER, browser)) {
+			messagesMap.put("Add variation product to Shopping List", "Sign In Page Not Found for Guest User");
+			status = WARNING;
+		    }
+		} else if (ExpectedPage.equalsIgnoreCase("ShoppingList")) {
+		    // switchToOverlay(browser);
+		    if (!isElementPresentVerification(OverlayClose_ELM, browser)) {
+			Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		    }
+		    if (!isElementPresentVerifyClick(OverlayClose_ELM, browser)) {
+			throw new Exception("Close shopping list overlay");
+		    }
+		    // switchToDefault(browser);
+		    if (!isElementPresentVerifyClick(ShoppingList_LNK, browser)) {
+			throw new Exception("Shopping List Link");
+		    }
+		    if (!isElementPresentVerification(ShoppingList_HEADER, browser) || !isElementPresentVerification(AddToCartSL_BTN, browser)) {
+			messagesMap.put("Add variation product to Shopping List", "Product not added to shopping list");
+			status = WARNING;
+		    }
+		}
+	    }
+	    // UI validation can be appended when required
+	    // SIMEON - 9/27/13 - Added validations -------------------------
+	    if (UIvalidation.equalsIgnoreCase("Color")) {
+		// Do nothing
+	    } else if (UIvalidation.equalsIgnoreCase("NA")) {
+		CommonLibrary.selectByVisibleText(ColorDropDown_LST, "Chapel", browser);
+		Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		String AddToCart_DIS = "//input[@id='add-to-cart-button'][contains(@class,'Disabled')]~XPATH";
+		if (!isElementPresentVerification(AddToCart_DIS, browser)) {
+		    messagesMap.put("Verify disabled add to cart button", "Disabled Add to cart button is not displayed");
+		    status = WARNING;
+		}
+	    } else if (UIvalidation.equalsIgnoreCase("NC")) {
+		CommonLibrary.selectByVisibleText(ColorDropDown_LST, "Magenta Motion 330", browser);
+		Thread.sleep(OBJECT_WAIT_THRESHOLD);
+		String AddToCart_DIS = "//input[@id='add-to-cart-button'][contains(@class,'Disabled')]~XPATH";
+		if (!isElementPresentVerification(AddToCart_DIS, browser)) {
+		    messagesMap.put("Verify disabled add to cart button", "Disabled Add to cart button is not displayed");
+		    status = WARNING;
+		}
+	    }
+	    // ------------------------------------
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method navigates to quicklook overlay and adds product to
+     *          cart from overlay if required
+     * @author - Mohana Janakavalli K
+     * @Created - 12 Apr 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addToCartfromQuickLookOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap)
+    {
+	String status = PASS;
+	String AddToCartOverlay_BUTTON = "//input[@alt='Add to Cart']~XPATH";
+	String AddToShoppingList_BUTTON = "img[title='Add To Shopping List']~CSS";
+	String ChooseOptions_BUTTON = "img[alt='View Colors']~CSS";
+	String ContinueShopping_BUTTON = "img[alt='Continue Shopping']~CSS";
+	String ViewyourCart_LNK = "//strong[contains(text(),'View your Cart')]~XPATH";
+	String ShoppingCart_TXT = "//h2[contains(text(),'Shopping Cart')]~XPATH";
+	String SearchResultsPage_TXT = "//h1[contains(text(),'Search Results')]~XPATH";
+	String QuickLookArea_DIV = "img[class='quick-image mouseover_on']~CSS";
+	String QuicklookProductImage_IMG = "//div[@id='quickview']/div/div/a/img~XPATH";
+	String QuicklookProductTitle_ELM = "//div[@id='detail']/h1/a[contains(@class,'SearchLinkBold')]~XPATH";
+	String QuicklookProductSizeCount_ELM = "//p[contains(@class,'szcnt')]~XPATH";
+	String QuicklookProductPrice_ELM = "//div[2]/div[2]/div/p[@class='Rprice']~XPATH";
+	String QuicklookProductRating_ELM = "//div[2]/div[@class='reviewSnippet']/div/div/img~XPATH";
+	String QuicklookProductDetails_LNK = "//a[contains(text(), 'View full product details')]~XPATH";
+	String QuicklookFSAIcon_IMG = "img[alt='What is FSA?']~CSS";
+	String FindAtAStore_LNK = "//a[@title='Find at a store']~XPATH";
+	String FindAtAStoreOverlay_DIV = "//div[@id='wOverlay']~XPATH";
+	String BackToQL_LNK = "//a[@id='quickClose']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ClickOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ClickOption");
+	    String ViewCart = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ViewCart");
+	    String ContinueShopping = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ContinueShopping");
+	    String ExpectedTargetPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedTargetPage");
+	    String UIValidations = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UIValidations");
+
+	    getElementByProperty(QuickLookArea_DIV, browser).click();
+	    switchToOverlay(browser);
+
+	    if (UIValidations.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(QuicklookProductImage_IMG, browser)) {
+		    messagesMap.put("QuickLook overlay Product Image", "Product image not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookProductTitle_ELM, browser)) {
+		    messagesMap.put("QuickLook overlay Product Title", "Product title not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookProductPrice_ELM, browser)) {
+		    messagesMap.put("QuickLook overlay Product Price", "Product price not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookProductSizeCount_ELM, browser)) {
+		    messagesMap.put("QuickLook overlay Product Size and Count", "Product size and count not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookProductRating_ELM, browser)) {
+		    messagesMap.put("QuickLook overlay Product Ratings", "Product rating not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookProductDetails_LNK, browser)) {
+		    messagesMap.put("QuickLook overlay View Product Details", "View Full products details link not displayed");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerification(QuicklookFSAIcon_IMG, browser)) {
+		    messagesMap.put("QuickLook overlay FSA Icon", "FSA Icon displayed");
+		    status = WARNING;
+		}
+		// SIMEON - 10/30/13 - Was preventing click on Add to Cart ----------
+//		if (!isElementPresentVerifyClick(FindAtAStore_LNK, browser)) {
+//		    switchToOverlay(browser);
+//		    if (!isElementPresentVerification(FindAtAStoreOverlay_DIV, browser)) {
+//			messagesMap.put("Find At A Store Overlay", "Find At A Store Overlay is not displayed");
+//			status = WARNING;
+//		    }
+//		}
+		if (!isElementPresentVerification(FindAtAStore_LNK, browser)) {
+		    messagesMap.put("Quicklook overlay Find at a Store link", "Find at a store link is not present");
+		    status = WARNING;
+		}
+		// -------------------------------------------------
+
+	    }
+	    if (ClickOption.equalsIgnoreCase("AddtoCart")) {
+		if (!isElementPresentVerifyClick(AddToCartOverlay_BUTTON, browser)) {
+		    throw new Exception("Not able to click add to cart button");
+		}
+
+	    } else if (ClickOption.equalsIgnoreCase("AddtoShoppingList")) {
+		if (!isElementPresentVerifyClick(AddToShoppingList_BUTTON, browser)) {
+		    throw new Exception("Not able to click save to shopping list button");
+		}
+	    } else if (ClickOption.equalsIgnoreCase("ChooseOptions")) {
+		if (!isElementPresentVerifyClick(ChooseOptions_BUTTON, browser)) {
+		    throw new Exception("Not able to click choose options button");
+		}
+	    }
+	    if (ViewCart.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ViewyourCart_LNK, browser)) {
+		    throw new Exception("Not able to click view your cart link");
+		}
+	    } else if (ContinueShopping.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ContinueShopping_BUTTON, browser)) {
+		    throw new Exception("Not able to click continue shopping button");
+		}
+	    }
+	    if (ExpectedTargetPage.equalsIgnoreCase("ShoppingCart")) {
+		if (!isElementPresentVerification(ShoppingCart_TXT, browser)) {
+		    messagesMap.put("Expected Target page", "Page is not navigated to Shopping cart Page");
+		    status = WARNING;
+		}
+	    } else if (ExpectedTargetPage.equalsIgnoreCase("SearchResults")) {
+		if (!isElementPresentVerification(SearchResultsPage_TXT, browser)) {
+		    messagesMap.put("Expected Target page", "Page is not navigated to Shopping cart Page");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to Update the quantity and adding to Cart From
+     *          VPD Page
+     * @author - Siva Santhi Reddy P
+     * @Created - 26-FEB-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updateQuantityAndadditemtoCartFromVPDPage(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap)
+
+    {
+	String status = PASS;
+	String AddtoCart_BTN = "img[alt='Add to Cart']~CSS";
+	String OverlayClose_BTN = "a[id='overlayClose']~CSS";
+	String Quantity_TXT = "input[id='txtQuantity']~CSS";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!dataMap.get("Quantity").get(0).equals("-")) {
+		if (!clearAndEnterText(Quantity_TXT, dataMap.get("Quantity").get(0), browser)) {
+		    messagesMap.put("Quanity", "Not able to Enter Quantity");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(AddtoCart_BTN, browser)) {
+		throw new Exception("Not able to Click on Add to cart Button");
+	    }
+	    if (!isElementPresentVerification(Overlay_FRM, browser)) {
+		throw new Exception("Add to Cart button is not Working.Product Added Overy is not displaying");
+	    }
+	    if (!isElementPresentVerifyClick(OverlayClose_BTN, browser)) {
+		throw new Exception("Not able to click on Overlay close Button");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to add Qualifying BOGO product from shopping for the
+     *          Eligible BOGO product in Cart
+     * @author - Siva
+     * @Created - 29-Aug-12
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addQualifyingBOGOProduct(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String SelectQaulifyingItem_LNK = "//a[contains(text(),'Select qualifying item')]";
+	String SelectThisItem_BTN = "input.attr_submit_enbl~CSS";
+	String ProductName = null;
+	int NoofRows = 0, j, Flag = 0;
+	String ShoppingCart_ELM = "//h1[contains(text(),'Shopping Cart')]~XPATH";
+	String QualifyingItem = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ProductName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword2");
+	    QualifyingItem = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "QualifyingItem");
+	    NoofRows = browser.findElements(By.linkText("Remove")).size();
+	    for (int i = 0; i < NoofRows; i++) {
+		j = i + 2;// Product division value started with 2 so adding the
+		// value.
+		String ProductDetailsInfoBox = "//form[@method='post']/div[3]/div[" + j + "]~XPATH";
+		if (getElementByProperty(ProductDetailsInfoBox, browser) != null) {
+		    if (getElementByProperty(ProductDetailsInfoBox, browser).getText().contains(ProductName)) {
+			Flag = Flag + 1;
+			getElementByProperty(ProductDetailsInfoBox, browser).findElement(By.xpath(SelectQaulifyingItem_LNK)).click();
+			if (QualifyingItem != null && !QualifyingItem.equals("-")) {
+			    List<WebElement> SelectItemButtons = browser.findElements(By.xpath("//input[@alt='Select Item']"));
+			    for (int k = 0; k < SelectItemButtons.size(); k++) {
+				if (SelectItemButtons.get(k).getAttribute("value").equalsIgnoreCase(QualifyingItem)) {
+				    SelectItemButtons.get(k).click();
+				    break;
+				}
+			    }
+			} else {
+			    getElementByProperty(SelectThisItem_BTN, browser).click();
+			}
+			break;
+		    } else
+			continue;
+		} else
+		    throw new Exception("NOt able to find the product details section");
+	    }
+	    if (Flag == 0) {
+		throw new Exception("Required Product not found to add the Qualify BOGO Product");
+	    }
+	    if (!isElementPresentVerification(ShoppingCart_ELM, browser)) {
+		throw new Exception("Shopping Cart Page is not getting displayed after adding Qualified BOGO Product");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate available Tabs in the Quick look Overay.
+     * @author - Siva
+     * @Created - 22-APR-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateTabsinQuickLookOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String QuickLookArea_DIV = "a.quick-look~CSS";
+	String Description_TAB = "a[id='descTab1']~CSS";
+	String DescriptionTabActiveState_ELM = "a[title='Description - Tab - Active']~CSS";
+	String Shipping_TAB = "a[id='shipTab1']~CSS";
+	String ShippingTabActiveState_ELM = "a[title='Shipping - Tab - Active']~CSS";
+	String Warnings_TAB = "a[id='warningsTab1']~CSS";
+	String WarningTabActivateState_ELM = "a[title='Warnings - Tab - Active']~CSS";
+	String Ingreditents_TAB = "a[id='ingreditentsTab1']~CSS";
+	String IngreditentsActiveState_ELM = "a[title='Ingredients - Tab - Active']~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (dataMap.get("QuickLookoverlay").get(0).equalsIgnoreCase("Yes")) {
+		if (dataMap.get("Shipping").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Shipping_TAB, browser)) {
+			throw new Exception("Not able to click on Shipping Tab");
+		    }
+		    if (!isElementPresentVerification(ShippingTabActiveState_ELM, browser)) {
+			messagesMap.put("Shipping Tab", "Tab content is not displayed after Clicking Shipping Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Description").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Description_TAB, browser)) {
+			throw new Exception("Not able to click on Description Tab");
+		    }
+		    if (!isElementPresentVerification(DescriptionTabActiveState_ELM, browser)) {
+			messagesMap.put("Description Tab", "Tab content is not displayed after Clicking Description Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Warnings").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Warnings_TAB, browser)) {
+			throw new Exception("Not able to click on Warnings Tab");
+		    }
+		    if (!isElementPresentVerification(WarningTabActivateState_ELM, browser)) {
+			messagesMap.put("Warnings Tab", "Tab content is not displayed after Clicking Warnings Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Ingredients").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Ingreditents_TAB, browser)) {
+			throw new Exception("Not able to click on Ingredients Tab");
+		    }
+		    if (!isElementPresentVerification(IngreditentsActiveState_ELM, browser)) {
+			messagesMap.put("Ingredients Tab", "Tab content is not displayed after Clicking Ingredients Tab");
+			status = WARNING;
+		    }
+		}
+	    } else if (dataMap.get("ProductDetailsPage").get(0).equalsIgnoreCase("Yes")) {
+		if (dataMap.get("Shipping").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Shipping_TAB, browser)) {
+			throw new Exception("Not able to click on Shipping Tab");
+		    }
+		    if (!isElementPresentVerification(ShippingTabActiveState_ELM, browser)) {
+			messagesMap.put("Shipping Tab", "Tab content is not displayed after Clicking Shipping Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Description").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Description_TAB, browser)) {
+			throw new Exception("Not able to click on Description Tab");
+		    }
+		    if (!isElementPresentVerification(DescriptionTabActiveState_ELM, browser)) {
+			messagesMap.put("Description Tab", "Tab content is not displayed after Clicking Description Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Warnings").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Warnings_TAB, browser)) {
+			throw new Exception("Not able to click on Warnings Tab");
+		    }
+		    if (!isElementPresentVerification(WarningTabActivateState_ELM, browser)) {
+			messagesMap.put("Warnings Tab", "Tab content is not displayed after Clicking Warnings Tab");
+			status = WARNING;
+		    }
+		}
+		if (dataMap.get("Ingredients").get(0).equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(Ingreditents_TAB, browser)) {
+			throw new Exception("Not able to click on Ingredients Tab");
+		    }
+		    if (!isElementPresentVerification(IngreditentsActiveState_ELM, browser)) {
+			messagesMap.put("Ingredients Tab", "Tab content is not displayed after Clicking Ingredients Tab");
+			status = WARNING;
+		    }
+		}
+	    }
+	    switchToDefault(browser);
+
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify the order details in the Order status and
+     *          history page
+     * @author - Saravanan M
+     * @Created - 02-MAY-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyOrderDetailsOrderStatusAndHistoryPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String OrderStatusAndHistoryPageURL = "/youraccount/orderstatus/frags/order-status-history_fg.jsp";
+	int OrderQuantity = 0;
+	String OrderStatus = null;
+	String OrderID = null;
+	int totalNoOfProducts = 0;
+	String ShippingMethod = null;
+	String ShippingMethod_LBL = "//div[contains(text(),'Shipping - ABC')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+
+		for (int order = 1; order <= 1; order++) {
+		    OrderID = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderID_" + order);
+		    getUrl(browser, EcommTestRunner.config.getString("walgreensURL") + OrderStatusAndHistoryPageURL);
+		    if (!OrderID.equals(null)) {
+			if (!isElementPresentVerifyClick("//a[contains(@href,'" + OrderID + "')]", browser)) {
+			    throw new Exception("The Order ID=" + OrderID + " is not found");
+			}
+			if (dataMap.get("OrderType") != null && dataMap.get("OrderQuantity") != null && dataMap.get("OrderStatus") != null && dataMap.get("ShippingMethod") != null) {
+			    OrderQuantity = Integer.parseInt(dataMap.get("OrderQuantity").get(i).trim());
+			    OrderStatus = dataMap.get("OrderStatus").get(i).trim();
+			    ShippingMethod = dataMap.get("ShippingMethod").get(i).trim();
+
+			    if (dataMap.get("OrderType").get(i).toString().trim().equalsIgnoreCase("DL") || dataMap.get("OrderType").get(i).toString().trim().equalsIgnoreCase("CL")) {
+
+				if (!isElementPresentVerification(ShippingMethod_LBL.replace("ABC", ShippingMethod), browser)) {
+				    messagesMap.put("Shipping Method", "Shipping Method is not " + ShippingMethod);
+				    status = WARNING;
+				}
+
+				for (int j = 1; j <= OrderQuantity; j++) {
+				    if (getElementByProperty("//div[5]/div[" + j + "]/div[4]/p", browser) != null) {
+					System.out.println("Order Status=" + getElementByProperty("//div[5]/div[" + j + "]/div[4]/p", browser).getText());
+					if (!getElementByProperty("//div[5]/div[" + j + "]/div[4]/p", browser).getText().contains(OrderStatus)) {
+					    messagesMap.put("Order Status", "Order Status is not " + OrderStatus);
+					    status = WARNING;
+					}
+				    }
+				    if (isElementPresentVerification("//div[5]/div[" + j + "]/div[2]/p[contains(text(),'pk')]", browser))
+					totalNoOfProducts = totalNoOfProducts
+						+ Integer.parseInt(getElementByProperty("//div[5]/div[" + j + "]/div[2]/p[contains(text(),'pk')]", browser).getText().split(" ")[0]);
+				}
+
+				if (totalNoOfProducts != OrderQuantity) {
+				    messagesMap.put("Order Quantity", "Order Quantity is not balanced");
+				    status = WARNING;
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************* 
+     * @Purpose - Method to validate PO box address in shipping information page.
+     * @author - Rukmani RM
+     * @Created - 21-OCT-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validatePOBoxAddress(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String ShippingInformation_TXT = "//p[contains(text(),'Shipping Information')]~XPATH";
+	String ChangeAddress_BTN = "[class='shipToAddrSection'] input[title='Change Address']~CSS";
+	String AddressSection_TXT = "//div[@id='addressCardSection']~XPATH";
+	boolean POBox = false;
+	
+	//String Address = dataMap.get("Address").get(0);
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+		    if (isElementPresentVerification(ShippingInformation_TXT, browser)) {
+			System.out.println("here");
+			if (!isElementPresentVerifyClick(ChangeAddress_BTN, browser)) {
+				throw new Exception("Not able to click on Change Address");
+			}
+			
+		    }
+		   List<WebElement> Addresses= getElementByProperty(AddressSection_TXT, browser).findElements(By.xpath("//div[@class='addressCard']"));
+		   for(int j=0; j<Addresses.size(); j++){
+		       System.out.println("Addresses:"+Addresses.get(j).getText());
+		       if(Addresses.get(j).getText().contains("PO Box")){
+			   POBox = true;
+			   //Addresses.get(j).findElement(By.xpath("//input[@title='Select address']")).click();
+			   break;
+		       }
+		       if(POBox = false){
+			   throw new Exception("Not able to find PO Box Address");
+		       }
+		   }
+		
+		
+	} catch (Exception e) {
+	    status = WARNING;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Sample for Adaptive POC
+     * @author - Ram
+     * @Created - 
+     * @Modified By - 
+     * @Modified Date 
+     ************************************************************* 
+     */
+    public static void gotoVPDPage(EventFiringWebDriver browser, StepBean stepBean) {
+   	String status = PASS;
+   	String ProductName_LNK="a[id*='prod6158103']~CSS";
+   	String VPDViewDetails_BTN="//article//a~XPATH";
+   	String VPDAddToCart_BTN="a[id*='add-to-cart']~CSS";
+   	//String VPDAddToCart_BTN="//*[contains(text,'Quantity')]~XPATH";
+   	Map<String, String> messagesMap = null;
+   	try {
+   	    if (messagesMap == null) {
+   		messagesMap = new HashMap<String, String>();
+   		stepBean.setStepStatusMessages(messagesMap);
+   	    }
+
+   	    if(!isElementPresentVerifyClick(ProductName_LNK, browser))
+   	    {
+   		throw new Exception("Not able to Click on Product");
+   	    }
+   	    
+   	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+   	    
+   	    if(!isElementPresentVerifyClick(VPDViewDetails_BTN, browser))
+   	    {
+   		throw new Exception("Not able to view product details");
+   	    }
+   	    
+   	    if (!isElementPresentVerification(VPDAddToCart_BTN, browser))
+	    {
+   		throw new Exception("Product details page not displayed");
+   	    }
+
+   	} catch (Exception e) {
+   	    status = FAIL;
+   	    messagesMap.put("An Exception Occured:", e.getMessage());
+   	    LogIt(e, null, stepBean);
+   	} finally {
+   	    stepBean.setStepStatus(status);
+   	}
+       }
+}

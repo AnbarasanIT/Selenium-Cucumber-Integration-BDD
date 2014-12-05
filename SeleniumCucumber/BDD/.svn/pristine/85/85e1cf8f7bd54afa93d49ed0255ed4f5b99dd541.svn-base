@@ -1,0 +1,2517 @@
+package walgreens.ecom.batch.automation.library.csc;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class CSCCustomerValidationLibrary extends CSCCommonLibrary {
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Search Customer in CSC
+     * @author - Ygnash
+     * @Created -
+     * @Modified By -SARAVANAN M
+     * @Modified Date -19-AUG-2013
+     ************************************************************* 
+     */
+    public static void cscCustomerSearch(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CommerceTab_ELM = "a[id='commerceTabLink']~CSS";
+	String CustomerTab_ELM = "a[id='customersTabLink']~CSS";
+	// String UserName_TXT =
+	// "input[name='/atg/svc/agent/profile/AdvCustomerSearch.searchAttributes[0].values[0]']~CSS";
+	String UserName_TXT = "//dd[contains(@class,'login')]/input";
+	String Search_BTN = "input[id='searchButton']~CSS";
+	String SelectCustomer_LNK = "a[title = 'Select Customer']~CSS";
+	// for testing purpose the use name is hard coded
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String SelectCustomer = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SelectCustomer");
+
+	    if (!waitTillPageLoad(CustomerTab_ELM, browser)) {
+		throw new Exception("Not able to find Commerce Tab");
+	    }
+
+	    //	    if (!isElementPresentVerifyClick(CommerceTab_ELM, browser)) {
+	    //		throw new Exception("Not able to click on Commerce Tab");
+	    //	    }
+
+	    if (!isElementPresentVerifyClick(CustomerTab_ELM, browser)) {
+		throw new Exception("Not able to click on Customer Tab");
+	    }
+
+	    if (waitTillPageLoad(UserName_TXT, browser)) {
+		if (!clearAndEnterText(UserName_TXT, UserName, browser)) {
+		    messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+		    status = WARNING;
+		}
+	    } else {
+		if (isElementPresentVerifyClick(CustomerTab_ELM, browser)) {
+		    if (!clearAndEnterText(UserName_TXT, UserName, browser)) {
+			messagesMap.put("User name", "Not able to Enter user name in the Text Field.");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click on Search Button");
+	    }
+
+	    if (SelectCustomer.equalsIgnoreCase("Yes")) {
+		if (waitTillPageLoad(SelectCustomer_LNK, browser)) {
+		    if (isElementPresentVerifyClick(SelectCustomer_LNK, browser)) {
+			if (!isElementPresentVerifyClick("//a[contains(text(),'" + UserName.trim() + "')]", browser)) {
+			    messagesMap.put("User name", "Searched user is not found");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Search Item in CSC
+     * @author - Ygnash
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void cscSearchProduct(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String CommerceTab_ELM = "a[id='commerceTabLink']~CSS";
+	String ProductCatalogTab_ELM = "li.current.first~CSS";
+	String ProductCatalog_LNK = "[id='catalogMenuWidget']~CSS";
+	String ProductID_TXT = "[id='productID']~CSS";
+	String Search_BTN = "[id='searchButton']~CSS";
+	// Hard coded for testing purpose
+	String ProductID = "prod6025032";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(CommerceTab_ELM, browser)) {
+		throw new Exception("Not able to click on Commerce Tab");
+	    }
+	    if (!isElementPresentVerifyClick(ProductCatalog_LNK, browser)) {
+		throw new Exception("Not able to click on Product Catalog Link");
+	    }
+	    Thread.sleep(2000);
+	    if (!isElementPresentVerifyClick(ProductCatalogTab_ELM, browser)) {
+		throw new Exception("Not able to click on Product Catalog Tab");
+	    }
+	    if (!clearAndEnterText(ProductID_TXT, ProductID, browser)) {
+		messagesMap.put("Product Id", "Not able to Enter Product ID in the Text Field.");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click on Search button");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Search Activation caode and authenticate a RX user
+     *          in CSC
+     * @author - Ygnash
+     * @Created -
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void cscRxCustomerAuthentication(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+//	String PharmacyTab_ELM = "a[id='walgreensPharmacyTabLink']~CSS";
+//	String RxActivationSearch_LNK = "//a[3][contains(text(),'Rx Activation Search')]~XPATH";
+	String PharmacyTab_ELM = "//div[contains(text(),'Pharmacy')]~XPATH";
+	String RxActivationSearch_LNK = "//ul/li[3]/a[contains(text(),'Rx Activation Search')]~XPATH";
+	String ActivationCode_TXT = "input[id='key']~CSS";
+	String Search_BTN = "input[value='Search']~CSS";
+	String Phone_RADIO = "input[name='rdPhone']~CSS";
+	String Name_RADIO = "input[name='rdName']~CSS";
+	String DOB_RADIO = "input[name='rdDOB']~CSS";
+	String Activate_BTN = "input[value='  ACTIVATE  ']~CSS";
+	// hard coded for testing purpose
+	String ActivationCode = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(PharmacyTab_ELM, browser)) {
+		throw new Exception("Not able to click on Pharmacy Tab");
+	    }
+	    Thread.sleep(10000);
+	    if (!isElementPresentVerifyClick(RxActivationSearch_LNK, browser)) {
+		throw new Exception("Not able to click Rx Activation Search link");
+	    }
+
+	    ActivationCode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserActivationCode");
+	    if (!clearAndEnterText(ActivationCode_TXT, ActivationCode, browser)) {
+		messagesMap.put("Product Id", "Not able to Enter ActivationCode in the Text Field.");
+		status = WARNING;
+	    }
+	    Thread.sleep(5000);
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click Rx Activation Search Button");
+	    }
+	    Thread.sleep(5000);
+	    if (!isElementPresentVerifyClick(Phone_RADIO, browser)) {
+		throw new Exception("Not able to click Phone Radio Button");
+	    }
+	    if (!isElementPresentVerifyClick(Name_RADIO, browser)) {
+		throw new Exception("Not able to click Name Radio Button");
+	    }
+	    if (!isElementPresentVerifyClick(DOB_RADIO, browser)) {
+		throw new Exception("Not able to Click DOB Radio Button");
+	    }
+	    if (!isElementPresentVerifyClick(Activate_BTN, browser)) {
+		throw new Exception("Not able to Click Activate Button");
+	    }
+	    Thread.sleep(10000);
+	    browser.switchTo().alert().accept();
+	    Thread.sleep(10000);
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to create user in CSC
+     * @author - SARAVANAN M
+     * @Created -16-AUG-2013
+     * @Modified By -Ygnash
+     * @Modified Date -Oct-17-2013
+     ************************************************************* 
+     */
+    public static void createNewCustomer(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CreateNewCustomer_LNK = "//a[contains(text(),'Create New Customer')]~XPATH";
+	String FirstName_TXT = "input#cpFirstName~CSS";
+	String MiddleInitial_TXT = "input#middleName~CSS";
+	String LastName_TXT = "input#cpLastName~CSS";
+	String PhoneNumber_TXT = "input#cpPhone~CSS";
+	String DOB_TXT = "input#cpBirthDate~CSS";
+	String Email_TXT = "input#cpEmail~CSS";
+	String UserName_TXT = "input#cpLogin~CSS";
+	String ZipCode_TXT = "input#cpZipCode~CSS";
+	String State_LST = "select#cpState~CSS";
+	String City_TXT = "input#cpCity~CSS";
+	String AddressLine1_TXT = "input#cpAddress1~CSS";
+	String AddressLine2_TXT = "input#cpAddress2~CSS";
+	String Gender_LST = "select#cpGender~CSS";
+	String CreateAcc_CHK = "input[name='saveOnUpdate']~CSS";
+	String CreateLoyalty_CHK = "input#addLoyaltyAccount~CSS";
+	String Save_BTN = "input#update~CSS";
+	String CreateNew_BTN = "input#cancel_and_create_new~CSS";
+	String Customer_TAB = "//a[@id='customersTabLink']~XPATH";
+	String BalanceRewardMembershipID_ELM = "//b[contains(text(),'Rewards Member ID')]~XPATH";
+	String DeLinkBalanceReward_BTN = "input[value='De-link Balance Rewards']~CSS";
+	String CustomerInfoFirstName_TXT = "input[id=firstName]~CSS";
+	String CustomerInfoLastName_TXT = "input[id=lastName]~CSS";
+	String CustomerInfoCity_TXT = "input[name$='city']~CSS";
+	String CustomerInfoEmail_TXT = "input[id=email]~CSS";
+	String CustomerInfoGender_LST = "select[name$='sex']~CSS";
+	String CustomerInfoState_LST = "select[name='state']~CSS";
+	String valState = "";
+	String CustomerInformation_LNK = "//*[contains(@class,'first')][contains(text(),'Customer Information')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String Email = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Email");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    String Initial = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Initial");
+	    String DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    String AddressLine1 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddressLine1");
+	    String AddressLine2 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddressLine2");
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String UserName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserName");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String Gender = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Gender");
+	    String Loyalty = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Loyalty");
+	    String SaveUsername = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SaveUsername");
+
+	    if (FirstName.equalsIgnoreCase("Random")) {
+		FirstName = randomNameGenerator();
+	    }
+
+	    if (LastName.equalsIgnoreCase("Random")) {
+		LastName = randomNameGenerator();
+	    }
+
+	    if (DOB.equalsIgnoreCase("Random")) {
+		DOB = randomDOBGenerator().replace(":", "/");
+	    }
+
+	    if (PhoneNumber.equalsIgnoreCase("Random")) {
+		PhoneNumber = randomPhoneNumberGenerator();
+	    }
+
+	    if (UserName.equalsIgnoreCase("Random")) {
+		UserName = ("wag_" + FirstName + "." + LastName + "@testebiz.com").toLowerCase();
+
+		if (SaveUsername.equalsIgnoreCase("Yes")) {
+		    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserNameCreated", UserName);
+		}
+	    }
+
+	    if (Email.equalsIgnoreCase("Random")) {
+		Email = UserName;
+	    }
+	    // Added the below code to ensure application is in Customer Page
+	    // before clicking create new user link
+	    // OCT-17-2013 - Ygnash
+	    if (!isElementPresentVerifyClick(Customer_TAB, browser)) {
+		throw new Exception("Not able to click on Customer Tab");
+	    }
+
+	    if (!isElementPresentVerifyClick(CreateNewCustomer_LNK, browser)) {
+		throw new Exception("Not able to click on Create New Customer link");
+	    }
+
+	    // Ram - 11/7/13 - Making sure the customer information page loads
+
+	    isElementPresentVerifyClick(CustomerInformation_LNK, browser);
+
+	    if (Loyalty.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(CreateLoyalty_CHK, browser)) {
+		    throw new Exception("Unable to select Create loyalty Checkbox");
+		}
+	    }
+
+	    waitTillPageLoad(UserName_TXT, browser);
+
+	    if (!FirstName.equals("-")) {
+		if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+		    throw new Exception("Unable to enter First name");
+		}
+	    }
+
+	    if (!LastName.equals("-")) {
+		if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+		    throw new Exception("Unable to enter Last name");
+		}
+	    }
+
+	    if (!UserName.equals("-")) {
+		if (!clearAndEnterText(UserName_TXT, UserName, browser)) {
+		    throw new Exception("Unable to enter User name");
+		}
+	    }
+
+	    if (!AddressLine1.equals("-")) {
+		if (!clearAndEnterText(AddressLine1_TXT, AddressLine1, browser)) {
+		    throw new Exception("Unable to enter AddressLine1");
+		}
+	    }
+
+	    if (!AddressLine2.equals("-")) {
+		if (!clearAndEnterText(AddressLine2_TXT, AddressLine2, browser)) {
+		    throw new Exception("Unable to enter AddressLine2");
+		}
+	    }
+
+	    if (!Email.equals("-")) {
+		if (!clearAndEnterText(Email_TXT, Email, browser)) {
+		    throw new Exception("Unable to enter Email");
+		}
+	    }
+
+	    if (!City.equals("-")) {
+		if (!clearAndEnterText(City_TXT, City, browser)) {
+		    throw new Exception("Unable to enter Initial");
+		}
+	    }
+
+	    if (!Initial.equals("-")) {
+		if (!clearAndEnterText(MiddleInitial_TXT, Initial, browser)) {
+		    throw new Exception("Unable to enter Initial");
+		}
+	    }
+
+	    if (!Gender.equals("-")) {
+		new Select(getElementByProperty(Gender_LST, browser)).selectByVisibleText(Gender);
+	    }
+
+	    if (!State.equals("-")) {// IL - Illinois //
+		new Select(getElementByProperty(State_LST, browser)).selectByIndex(Integer.parseInt(State));
+		valState = new Select(getElementByProperty(State_LST, browser)).getFirstSelectedOption().getText();
+	    }
+
+	    if (Loyalty.equalsIgnoreCase("Yes")) {
+		if (!DOB.equals("-")) {
+		    if (!clearAndEnterText(DOB_TXT, DOB, browser)) {
+			throw new Exception("Unable to enter DOB");
+		    }
+		}
+
+		if (!PhoneNumber.equals("-")) {
+		    if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+			throw new Exception("Unable to enter Phone Number");
+		    }
+		}
+
+		if (!Zipcode.equals("-")) {
+		    if (!clearAndEnterText(ZipCode_TXT, Zipcode, browser)) {
+			throw new Exception("Unable to enter zipcode");
+		    }
+		}
+	    }
+
+	    if (!getElementByProperty(CreateAcc_CHK, browser).isSelected()) {
+		getElementByProperty(CreateAcc_CHK, browser).click();
+	    }
+	    if (isElementPresentVerifyClick(Save_BTN, browser)) {
+		String SuccessMessage = "//li/span[contains(text(),'User " + FirstName + " " + LastName + " created')]~XPATH";
+		Thread.sleep(10000);
+
+		if (!isElementPresentVerification(SuccessMessage, browser)) {
+		    throw new Exception("Unable to create new customer");
+		}
+		// Validates the inputs given while registering is same as the
+		// information in Customer information page - Added by Ygnash
+		if (dataMap.containsKey("ValidateUserInfo") && dataMap.get("ValidateUserInfo").get(0).equalsIgnoreCase("Yes")) {
+		    // First Name
+		    if (!getElementByProperty(CustomerInfoFirstName_TXT, browser).getAttribute("value").equalsIgnoreCase(FirstName)) {
+			messagesMap.put("User Registration", "First name value is not same");
+			status = WARNING;
+		    }
+		    // Last Name
+		    if (!getElementByProperty(CustomerInfoLastName_TXT, browser).getAttribute("value").equalsIgnoreCase(LastName)) {
+			messagesMap.put("User Registration", "Last name value is not same");
+			status = WARNING;
+		    }
+		    // City
+		    if (!getElementByProperty(CustomerInfoCity_TXT, browser).getAttribute("value").equalsIgnoreCase(City)) {
+			messagesMap.put("User Registration", "First name value is not same");
+			status = WARNING;
+		    }
+		    // Email
+		    if (!getElementByProperty(CustomerInfoEmail_TXT, browser).getAttribute("value").equalsIgnoreCase(Email)) {
+			messagesMap.put("User Registration", "Email value is not same");
+			status = WARNING;
+		    }
+		    // Gender
+		    if (!getElementByProperty(CustomerInfoGender_LST, browser).getAttribute("value").equalsIgnoreCase(Gender)) {
+			messagesMap.put("User Registration", "Gender value is not same");
+			status = WARNING;
+		    }
+		    // State
+		    if (!valState.contains(getElementByProperty(CustomerInfoState_LST, browser).getAttribute("value"))) {
+			messagesMap.put("User Registration", "State value is not same");
+			status = WARNING;
+		    }
+
+		}
+	    }
+
+	    if (Loyalty.equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerifyClick(CreateNew_BTN, browser)) {
+		    Thread.sleep(10000);
+		    String BRSuccessMessage = "//li/span[contains(text(),'Balance Rewards profile created successfully.')]";
+		    if (!isElementPresentVerification(BRSuccessMessage, browser)) {
+			throw new Exception("Unable to create new Loyalty account for this user");
+		    }
+		    // Added additional valitations fot Loyalty User Creation
+		    // Oct-17-2013 - Ygnash
+		    if (!isElementPresentVerification(BalanceRewardMembershipID_ELM, browser)) {
+			throw new Exception("Balance Reward membership Id element is not found");
+		    }
+		    if (!isElementPresentVerification(DeLinkBalanceReward_BTN, browser)) {
+			throw new Exception("DeLink Balance Reward Button is not Found");
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to get the current BR Points of the user and compare
+     * @author - SARAVANAN M
+     * @Created -19-AUG-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void getBRPointsAndCompare(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LoyaltyLogo_IMG = "div>img[src*='logo_balancerewards']~CSS";
+	String BalanceRewardsHeader_H = "//h3/span[contains(text(),'Rewards Information')]~XPATH";
+	String BRPoints_LBL = "//div[contains(@class,'coreCustomerInfo')]/div/div~XPATH";
+	String CustomerInformation_LNK = "//li[contains(text(),'Customer Information')]~XPATH";
+	String CurrentPoints = null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String BRPoints = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "BRPoints");
+		String GetPoints = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "GetPoints");
+		String DiffInPoints = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DiffInPoints");
+		String ComparePoints = dataMap.get("ComparePoints").get(i);
+
+		if (!isElementPresentVerification(LoyaltyLogo_IMG, browser)) {
+		    throw new Exception("Unable to get BR Points.User is not a loyalty user.");
+		}
+
+		if (isElementPresentVerification(CustomerInformation_LNK, browser)) {
+		    getElementByProperty(CustomerInformation_LNK, browser).click();
+		}
+
+		if (waitTillPageLoad(BalanceRewardsHeader_H, browser)) {
+		    if (GetPoints.equalsIgnoreCase("Yes")) {
+			if (isElementPresentVerification(BalanceRewardsHeader_H, browser)) {
+			    CurrentPoints = (getElementByProperty(BRPoints_LBL, browser).getText()).split(" ")[4].replace("pts", "");
+
+			    if (CurrentPoints.contains(",")) {
+				CurrentPoints = CurrentPoints.replaceAll(",", "");
+			    }
+			    if (CurrentPoints.contains(".")) {
+				CurrentPoints = CurrentPoints.split(".")[0];
+			    }
+
+			    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "BRPoints", CurrentPoints);
+			}
+		    }
+		}
+
+		if (ComparePoints.equalsIgnoreCase("Yes")) {
+
+		    if (DiffInPoints.equalsIgnoreCase("getFromAnotherSheet")) {
+
+			String valueFilename = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "valueFilename");
+			String valueSheetName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "valueSheetName");
+			String valueRowName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "valueRowName");
+			String valueColumnName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "valueColumnName");
+			DiffInPoints = getTestData(valueFilename, valueSheetName, valueRowName, valueColumnName).trim();
+		    }
+		    float PrevPoints = Float.parseFloat(BRPoints);
+		    int CurrPoints = Integer.parseInt(CurrentPoints);
+		    int PointsDifference = Integer.parseInt(DiffInPoints);
+		    String PointsDiffCalMtd = dataMap.get("PointsDiffType").get(i);
+		    if (PointsDiffCalMtd.equalsIgnoreCase("Earn")) {
+			if (CurrPoints - PrevPoints != PointsDifference) {
+			    throw new Exception("Points are not earned");
+			}
+		    } else if (PointsDiffCalMtd.equalsIgnoreCase("Return")) {
+			if (PrevPoints - CurrPoints != PointsDifference) {
+			    throw new Exception("Points are not redeemed/Returned");
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To add a product to shopping cart using WIC Id
+     * @author - Angeline Snekha A
+     * @Created -19 Aug 2013
+     * @Modified By -Siva
+     * @Modified Date -07-NOV-2013
+     ************************************************************* 
+     */
+    public static void addProductByWICId(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String CommerceTab_LNK = "a[id=commerceTabLink]~CSS";
+	String ProductCatalog_LNK = "span[id='catalogMenuWidget']~CSS";
+	String AddProductByID_LNK = "//li[contains(text(),'Add Product By ID')]~XPATH";
+	String WICId_TXT = "input[id='atg_commerce_csr_catalog_skuId1']~CSS";
+	String AddProducttable_TABLE = "//table/tbody~XPATH";
+	String AddToCart_BTN = "input[value='Add to Cart']~CSS";
+	String ShoppingCartProductTable_TABLE = "//table[2] [@summary='item details']~XPATH";
+	String Quantity_TXT = "input[id='atg_commerce_csr_catalog_qty1']~CSS";
+	String ProductWICId = null, Quantity = null, OrderType = null, fulfillmentType = null;
+	String Right = null, Left = null, Power = null, Basecurve = null, Diameter = null, Cylinder = null, Addition = null, Axis = null, Color = null, Qty = null;
+	String ProductTable;
+	String LeftLense_CHECKBOX = "input[name='lCheckBox']~CSS";
+	String RightLense_CHECKBOX = "input[name='rCheckBox']~CSS";
+	String RPower_LST = "select[name='rPower']~CSS";
+	String RBasecurve_LST = "select[name='rBasecurve']~CSS";
+	String RCylinder_LST = "select[name='rCylinder']~CSS";
+	String RAxis_LST = "select[name='rAxis']~CSS";
+	String RDiameter_LST = "select[name='rDiameter']~CSS";
+	String LPower_LST = "select[name='lPower']~CSS";
+	String LBasecurve_LST = "select[name='lBasecurve']~CSS";
+	String LCylinder_LST = "select[name='lCylinder']~CSS";
+	String LAxis_LST = "select[name='lAxis']~CSS";
+	String LDiameter_LST = "select[name='lDiameter']~CSS";
+	String ContinueToShipping_BTN = "//input[@value='Continue to Shipping']~XPATH";
+	String ShippingAddress_H = "//h3[contains(text(),'Shipping Address')]~XPATH";
+	String ContinueToPickupOptions_BTN = "input[value*='Continue to pickup options']~CSS";
+	String PickupHeader_H = "//h3[contains(text(),'Pickup Options')]~XPATH";
+	String Continue_BTN = "input[value*='Continue']~CSS";
+	String Billing_H = "//h3[contains(text(),'Billing')]~XPATH";
+	String ProductsTable = "//table[2][@summary='item details']/tbody";
+	String CLLeftQuantity_TXT = "//input[@name='lQty']~XPATH";
+	String CLRightQuantity_TXT = "//input[@name='rQty']~XPATH";
+	WebElement FulfillmentTypeRadiobutton = null;
+	boolean isfullfillmentOptionSelected = false;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		ProductWICId = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "WICId");
+		Quantity = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Quantity");
+		OrderType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderType");
+		// value should be either 'Ship' or 'WP'
+		fulfillmentType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "fulfillmentType");
+		Thread.sleep(2000);
+		if (!isElementPresentVerification(WICId_TXT, browser)) {
+		    if (isElementPresentVerification(CommerceTab_LNK, browser)) {
+			if (!isElementPresentVerifyClick(CommerceTab_LNK, browser)) {
+			    throw new Exception("Not able to click Commerce Link");
+			}
+		    }
+		    if (waitTillPageLoad(ProductCatalog_LNK, browser)) {
+			if (!isElementPresentVerifyClick(ProductCatalog_LNK, browser)) {
+			    throw new Exception("Not able to click Product Catalog Link");
+			}
+		    }
+		    if (!isElementPresentVerification(WICId_TXT, browser)) {
+			if(waitTillPageLoad(AddProductByID_LNK, browser)){
+			    if (!isElementPresentVerifyClick(AddProductByID_LNK, browser)) {
+				throw new Exception("Not able to click Add Product By ID Link");
+			    }
+			}
+		    }
+		}
+		if (OrderType.equalsIgnoreCase("CLOrder")) {
+		    Right = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Right");
+		    Left = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Left");
+		    Power = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Power");
+		    Basecurve = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Basecurve");
+		    Diameter = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Diameter");
+		    Cylinder = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Cylinder");
+
+		    if (!clearAndEnterText(WICId_TXT, ProductWICId, browser)) {
+			messagesMap.put("WIC ID", "Not able to enter WIC Id to search for a product");
+			status = WARNING;
+		    }
+		    getElementByProperty(WICId_TXT, browser).sendKeys(Keys.TAB);
+		    waitTillPageLoad(RightLense_CHECKBOX, browser);
+		    if (Right.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(RightLense_CHECKBOX, browser)) {
+			    throw new Exception("Not able to select Right lense Checkbox");
+			}
+			if (isElementPresentVerification(RPower_LST, browser)) {
+			    new Select(getElementByProperty(RPower_LST, browser)).selectByIndex(Integer.parseInt(Power));
+			}
+			if (isElementPresentVerification(RBasecurve_LST, browser)) {
+			    new Select(getElementByProperty(RBasecurve_LST, browser)).selectByIndex(Integer.parseInt(Basecurve));
+			}
+			if (isElementPresentVerification(RDiameter_LST, browser)) {
+			    new Select(getElementByProperty(RDiameter_LST, browser)).selectByIndex(Integer.parseInt(Diameter));
+			}
+			if (isElementPresentVerification(RCylinder_LST, browser)) {
+			    new Select(getElementByProperty(RCylinder_LST, browser)).selectByIndex(Integer.parseInt(Cylinder));
+			}
+			if (isElementPresentVerification(RAxis_LST, browser)) {
+			    new Select(getElementByProperty(RAxis_LST, browser)).selectByIndex(Integer.parseInt(Axis));
+			}
+			if (Quantity != null && !Quantity.equals("-")) {
+			    if (!clearAndEnterText(CLRightQuantity_TXT, Quantity, browser)) {
+				messagesMap.put("Right Quantity", "Not able to enter quantity in Right Eye");
+				status = WARNING;
+			    }
+			}
+		    }
+		    if (Left.equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(LeftLense_CHECKBOX, browser)) {
+			    throw new Exception("Not able to select Left lense Checkbox");
+			}
+			if (isElementPresentVerification(LPower_LST, browser)) {
+			    new Select(getElementByProperty(LPower_LST, browser)).selectByIndex(Integer.parseInt(Power));
+			}
+			if (isElementPresentVerification(LBasecurve_LST, browser)) {
+			    new Select(getElementByProperty(LBasecurve_LST, browser)).selectByIndex(Integer.parseInt(Basecurve));
+			}
+			if (isElementPresentVerification(LDiameter_LST, browser)) {
+			    new Select(getElementByProperty(LDiameter_LST, browser)).selectByIndex(Integer.parseInt(Diameter));
+			}
+			if (isElementPresentVerification(LCylinder_LST, browser)) {
+			    new Select(getElementByProperty(LCylinder_LST, browser)).selectByIndex(Integer.parseInt(Cylinder));
+			}
+			if (isElementPresentVerification(LAxis_LST, browser)) {
+			    new Select(getElementByProperty(LAxis_LST, browser)).selectByIndex(Integer.parseInt(Axis));
+			}
+			if (Quantity != null && !Quantity.equals("-")) {
+			    if (!clearAndEnterText(CLLeftQuantity_TXT, Quantity, browser)) {
+				messagesMap.put("Left Quantity", "Not able to enter quantity in left Eye");
+				status = WARNING;
+			    }
+			}
+		    }
+		    if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+			throw new Exception("Not able to click Add To Cart button");
+		    }
+		} else {
+		    if (!clearAndEnterText(WICId_TXT, ProductWICId, browser)) {
+			messagesMap.put("WIC ID", "Not able to enter WIC Id to search for a product");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(Quantity_TXT, Quantity, browser)) {
+			messagesMap.put("Quantity", "Not able to enter Quantity for a product");
+			status = WARNING;
+		    }
+		    ProductTable = getElementByProperty(AddProducttable_TABLE, browser).getText();
+		    if (ProductTable.contains("Out of Stock")) {
+			throw new Exception("Product(" + ProductWICId + ") is Out Of Stock");
+		    } else {
+			if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+			    throw new Exception("Not able to click Add To Cart button");
+			}
+		    }
+
+		    if (!waitTillPageLoad(ShoppingCartProductTable_TABLE, browser)) {
+			messagesMap.put("Add to cart", "Product not added to shopping cart:"+ProductWICId);
+			status = WARNING;
+		    }
+		}
+		if (fulfillmentType != null && !fulfillmentType.equals("-")) {
+		    Thread.sleep(5000);
+		    WebElement table=getElementByProperty(ProductsTable, browser);
+		    List<WebElement> tableRows = table.findElements(By.tagName("tr"));
+		    for (int count = 0; count < tableRows.size(); count++) {
+			// FulfillmentTypeRadiobutton
+			if (tableRows.get(count).getText().contains(ProductWICId)) {
+			    List<WebElement> inputTagElements = tableRows.get(count).findElements(By.tagName("input"));
+			    for (int innercount = 0; innercount < inputTagElements.size(); innercount++) {
+				if (inputTagElements.get(innercount).getAttribute("value").equalsIgnoreCase(fulfillmentType)) {
+				    FulfillmentTypeRadiobutton = inputTagElements.get(innercount);
+				    break;
+				}
+			    }
+			    if (FulfillmentTypeRadiobutton != null) {
+				FulfillmentTypeRadiobutton.click();
+				Thread.sleep(5000);
+				isfullfillmentOptionSelected = true;
+			    } else {
+				throw new Exception("Given fulfillment type Option is not available for given product");
+			    }
+			    break;
+			}
+		    }
+		    if (!isfullfillmentOptionSelected) {
+			throw new Exception("Fulfillment Option was not selected");
+		    }
+		}
+		if (dataMap.containsKey("ContinueToShipping") && (dataMap.get("ContinueToShipping").get(i)).equalsIgnoreCase("Yes")) {
+		    if (waitTillPageLoad(ContinueToShipping_BTN, browser)) {
+			if (isElementPresentVerifyClick(ContinueToShipping_BTN, browser)) {
+			    if (!waitTillPageLoad(ShippingAddress_H, browser)) {
+				throw new Exception("Unable to navigate to Shipping Address page");
+			    }
+			}
+		    }
+		}
+		if (dataMap.containsKey("isPickupOnly") && (dataMap.get("isPickupOnly").get(i)).equalsIgnoreCase("Yes")) {
+		    if (waitTillPageLoad(ContinueToPickupOptions_BTN, browser)) {
+			if (isElementPresentVerifyClick(ContinueToPickupOptions_BTN, browser)) {
+			    if (!waitTillPageLoad(PickupHeader_H, browser)) {
+				throw new Exception("Unable to navigate to Pickup Options page");
+			    }
+
+			    if (isElementPresentVerifyClick(Continue_BTN, browser)) {
+				if (!waitTillPageLoad(Billing_H, browser)) {
+				    throw new Exception("Unable to navigate to Billing page");
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To select the shipping method
+     * @author - SARAVANAN M
+     * @Created -19 Aug 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectShippingMethod(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String ShippingMtd_H = "//h3[contains(text(),'Shipping Method')]~XPATH";
+	String Standard_RDO = "input[id*='Standard']~CSS";
+	String Expedited_RDO = "input[id*='ExpeditedRadio']~CSS";
+	String Overnight_RDO = "input[id*='OvernightRadio']~CSS";
+	String ContinueToBilling_BTN = "input[value='Continue to Billing']~CSS";
+	String ContinueToPrescriber_BTN = "input[value='Continue to Prescriber']~CSS";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String ShippingMethod = dataMap.get("ShippingMethod").get(0);
+	    String ContinueToBilling = dataMap.get("ContinueToBilling").get(0);
+	    String SelectPrescriber = dataMap.get("SelectPrescriber").get(0);
+
+	    if (!isElementPresentVerification(ShippingMtd_H, browser)) {
+		throw new Exception("Unable to found the Shipping Method page");
+	    }
+
+	    if (ShippingMethod.equalsIgnoreCase("Standard")) {
+		if (!isElementPresentVerifyClick(Standard_RDO, browser)) {
+		    throw new Exception("Unable to select Standard shipping method");
+		}
+	    } else if (ShippingMethod.equalsIgnoreCase("Expedited")) {
+		if (!isElementPresentVerifyClick(Expedited_RDO, browser)) {
+		    throw new Exception("Unable to select Expedited shipping method");
+		}
+	    } else if (ShippingMethod.equalsIgnoreCase("Overnight")) {
+		if (!isElementPresentVerifyClick(Overnight_RDO, browser)) {
+		    throw new Exception("Unable to select Overnight shipping method");
+		}
+	    }
+
+	    if (ContinueToBilling.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ContinueToBilling_BTN, browser)) {
+		    throw new Exception("Unable to Click on 'Continue to Billing' button");
+		}
+	    }
+
+	    if (SelectPrescriber.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ContinueToPrescriber_BTN, browser)) {
+		    throw new Exception("Unable to Click on 'Select Prescriber' button");
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Enter the payment information
+     * @author - SARAVANAN M
+     * @Created -19 Aug 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void enterPaymentInfo(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String BillingPage_H = "//h3[contains(text(),'Billing')]~XPATH";
+	String BillingAddress_TBLH = "//th[contains(text(),'Billing Address')]~XPATH";
+	String ContinueToOrderReview_BTN = "input[value='Continue to Order Review']~CSS";
+	String AddNewCC_LNK = "//div[contains(text(),'Add New Credit Card')]~XPATH";
+	String CCType_TXT = "input[id*='creditCardType']~CSS";
+	String CCNumber_TXT = "input[id*='creditCardNumber']~CSS";
+	String CCExpMonth_TXT = "input[id*='expirationMonth']~CSS";
+	String CCExpYear_TXT = "input[id*='expirationYear']~CSS";
+	String SaveCCToProfile_CHK = "input[name*='copyToProfile']~CSS";
+	String AddCreditCard_BTN = "input[value='Add Credit Card']~CSS";
+	String NoPaymentGroup_LBL = "//td[contains(text(),'No Payment Groups defined.')]~XPATH";
+	String RedeemPointsOption_LST = "//select[@id='selectAmount']~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String AddNewCreditCard = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddNewCreditCard");
+	    String CardType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CardType");
+	    String CardNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CardNumber");
+	    String ExpiryMonth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpiryMonth");
+	    String ExpiryYear = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpiryYear");
+	    String SaveCardInfToProfile = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SaveCardInfToProfile");
+
+	    if (!waitTillPageLoad(BillingPage_H, browser)) {
+		throw new Exception("Unable to found the Billing info page");
+	    }
+
+	    if (dataMap.containsKey("RedeemPointsOption") && !dataMap.get("RedeemPointsOption").get(0).equals("-")) {
+		new Select(getElementByProperty(RedeemPointsOption_LST, browser)).selectByIndex(Integer.parseInt(dataMap.get("RedeemPointsOption").get(0)));
+	    }
+
+	    if (isElementPresentVerification(NoPaymentGroup_LBL, browser) || AddNewCreditCard.equalsIgnoreCase("Yes")) {
+		if (AddNewCreditCard.equalsIgnoreCase("Yes")) {
+		    if (isElementPresentVerifyClick(AddNewCC_LNK, browser)) {
+			if (!clearAndEnterText(CCType_TXT, CardType, browser)) {
+			    messagesMap.put("Card Type", "Not able to enter Card Type");
+			    status = WARNING;
+			}
+			if (!clearAndEnterText(CCNumber_TXT, CardNumber, browser)) {
+			    messagesMap.put("Card Number", "Not able to enter Card Number");
+			    status = WARNING;
+			}
+			if (!clearAndEnterText(CCExpMonth_TXT, ExpiryMonth, browser)) {
+			    messagesMap.put("Card Expiry Month", "Not able to enter Card Expiry Month");
+			    status = WARNING;
+			}
+			if (!clearAndEnterText(CCExpYear_TXT, ExpiryYear, browser)) {
+			    messagesMap.put("Card Expiry Year", "Not able to enter Card Expiry Year");
+			    status = WARNING;
+			}
+
+			if (SaveCardInfToProfile.equalsIgnoreCase("Yes")) {
+			    do {
+				getElementByProperty(SaveCCToProfile_CHK, browser).click();
+			    } while (!getElementByProperty(SaveCCToProfile_CHK, browser).isSelected());
+			}
+
+			if (!isElementPresentVerifyClick(AddCreditCard_BTN, browser)) {
+			    throw new Exception("Unable to Click on Add Credit Card button");
+			}
+		    }
+		}
+	    }
+	    if (isElementPresentVerification(BillingAddress_TBLH, browser)) {
+		if (!isElementPresentVerifyClick(ContinueToOrderReview_BTN, browser)) {
+		    throw new Exception("Unable to navigate to Order Review page");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To select existing shipping address or add new shipping
+     *          address or change the existing shipping address
+     * @author - Angeline Snekha A
+     * @Created -20 Aug 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectShippingaddress(EventFiringWebDriver browser, ScenarioBean scenario, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String ShippingAddressType = null, AddressLine1 = null, City = null, State = null, PhoneNumber = null, Zipcode = null, UpdatedPhoneNumber = null, Address = null;
+	String ShipToThisAddress_BTN = "//input[@value='Ship to this Address']~XPATH";
+	String ShippingMethodHeader_ELM = "//h3[contains(text(),'Shipping Method')]~XPATH";
+	String AddressLine1_TXT = "input[id='singleShippingAddressForm_address1']~CSS";
+	String City_TXT = "input[id='singleShippingAddressForm_city']~CSS";
+	String State_TXT = "input[id='singleShippingAddressForm_state']~CSS";
+	String PhoneNumber_TXT = "input[id='singleShippingAddressForm_phoneNumber']~CSS";
+	String Zipcode_TXT = "input[id='singleShippingAddressForm_postalCode']~CSS";
+	String AddAddress_BTN = "input[value='Add Address']~CSS";
+	String AddNewShippingAddress_LNK = "//div[contains(text(),'Add New Shipping Address')]~XPATH";
+	String Addreeses_DIV = "//div[contains(@class,'addressView')]";
+	String GoToShoppingCart_LNK = "//a[contains(text(),'Go to Shopping Cart')]~XPATH";
+	String ContinueShipping_BTN = "input[value='Continue to Shipping']~CSS";
+	String MultipleCounties_H= "//h3[contains(text(),'Multiple Counties')]~XPATH";
+	String ContinueBilling_LNK="//a[contains(text(),'Continue Billing')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    ShippingAddressType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShippingAddressType");
+	    AddressLine1 = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StreetAddress");
+	    City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+
+	    if (PhoneNumber.equalsIgnoreCase("Random")) {
+		PhoneNumber = randomPhoneNumberGenerator();
+	    }
+	    if (ShippingAddressType.equalsIgnoreCase("Existing")) {
+		if (!isElementPresentVerifyClick(ShipToThisAddress_BTN, browser)) {
+		    throw new Exception("Not able to click Ship To This Address");
+		}
+		Thread.sleep(2000);
+		if(isElementPresentVerification(MultipleCounties_H, browser)){
+		    if(!isElementPresentVerifyClick(ContinueBilling_LNK, browser)){
+			messagesMap.put("Multiple Counties","Unable to select the County Address");
+			status = WARNING;
+		    }
+		}
+
+		if (!waitTillPageLoad(ShippingMethodHeader_ELM, browser)) {
+		    throw new Exception("Not able to navigate to Shipping mehod page");
+		}
+	    } else {
+		if (ShippingAddressType.equalsIgnoreCase("ChangeAddress")) {
+		    if (!isElementPresentVerifyClick(AddNewShippingAddress_LNK, browser)) {
+			throw new Exception("Not able to click Add new shipping address link");
+		    }
+		}
+
+		if (!clearAndEnterText(AddressLine1_TXT, AddressLine1, browser)) {
+		    messagesMap.put("Address Line 1", "Not able to enter address");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(City_TXT, City, browser)) {
+		    messagesMap.put("City", "Not able to enter City");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(State_TXT, State, browser)) {
+		    messagesMap.put("State", "Not able to enter state");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+		    messagesMap.put("PhoneNumber", "Not able to enter PhoneNumber");
+		    status = WARNING;
+		}
+		if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to enter Zipcode");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(AddAddress_BTN, browser)) {
+		    throw new Exception("Not able to add new address");
+		}
+
+		UpdatedPhoneNumber = "(" + PhoneNumber.substring(0, 3) + ") " + PhoneNumber.substring(3, 6) + "-" + PhoneNumber.substring(6, 10);
+
+		// To view the newly added shipping address
+		getElementByProperty(GoToShoppingCart_LNK, browser).click();
+		getElementByProperty(ContinueShipping_BTN, browser).click();
+
+		List<WebElement> ShippingAddresses = browser.findElements(By.xpath(Addreeses_DIV));
+		int NoOfAddresses = ShippingAddresses.size() + 1;
+		for (int count = 1; count <= NoOfAddresses; count++) {
+		    Address = getElementByProperty(Addreeses_DIV + "[" + count + "]", browser).getText();
+		    // To select the newly added shipping address,locating it
+		    // with the phone number
+		    if (Address.contains(UpdatedPhoneNumber)) {
+			if (!isElementPresentVerifyClick(Addreeses_DIV + "[" + count + "]" + ShipToThisAddress_BTN, browser)) {
+			    throw new Exception("Not able to click Ship to this address button");
+			}
+			break;
+		    }
+		}
+		if (!waitTillPageLoad(ShippingMethodHeader_ELM, browser)) {
+		    throw new Exception("Not able to navigate to Shipping mehod page");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to submit the order and get the order number
+     * @author - SARAVANAN M
+     * @Created -20 Aug 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void submitCSCOrder(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String OrderReviewPage_H = "//h3[contains(text(),'Order Review')]~XPATH";
+	String SubmitOrder_BTN = "input[value='Submit Order']~CSS";
+	String OrderConfirmationPage_H = "//h3[contains(text(),'Order Confirmation')]~XPATH";
+	String OrderNumber_LBL = "//div[contains(@id,'ConfirmOrder')]//li[contains(text(),'confirmation number')]~XPATH";
+	String FulfillmentOption_TBLH = "//th[contains(text(),'Fulfillment Method')]~XPATH";
+	String OrderReviewTBL = "//table[contains(@class,'innerTable')]/thead/tr";
+	String CLHeader_TBLH = "//th[contains(text(),'Power')]~XPATH";
+	String Customer_LNK = "//li[2]/div[@id='customerLink']/a~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String getFulfillMtd = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "getFulfillMtd");
+
+	    if (!waitTillPageLoad(OrderReviewPage_H, browser)) {
+		throw new Exception("Unable to found the Order Review page");
+	    }
+
+	    if (getFulfillMtd.equalsIgnoreCase("Yes")) {
+		String FulfillmentMtd = "";
+		if (isElementPresentVerification(FulfillmentOption_TBLH, browser)) {
+		    int count = 0;
+		    boolean isRowFound = false;
+
+		    int Inc = 0;
+		    // Getting Total number of Item Details tables
+		    int tablesCount = browser.findElements(By.xpath("//table[@summary='item details']")).size();
+		    // getting the tables which have fulfillment method(this is
+		    // applicable only for DC and CH orders. For CL order by
+		    // default its Ship to customer)
+		    do {
+			Inc++;
+		    } while (!isElementPresentVerification("//table[@summary='item details'][" + Inc + "]" + FulfillmentOption_TBLH, browser) && Inc <= tablesCount);
+		    // Finding out the the fulfillment column number in order to
+		    // access it
+		    do {
+			count++;
+			if (getElementByProperty("//table[@summary='item details'][" + Inc + "]//th[" + count + "]", browser).getText().contains("Fulfillment Method")) {
+			    isRowFound = true;
+			    break;
+			}
+		    } while (isElementPresentVerification(OrderReviewTBL + "/th[" + count + "]", browser) && !isRowFound);
+		    // Getting the fulfillment method from the exact table which
+		    // have fulfillment method
+		    if (count > 0 && Inc > 0) {
+			FulfillmentMtd = getElementByProperty("//table[@summary='item details'][" + Inc + "]/tbody/tr/td[" + count + "]", browser).getText().trim();
+		    } else {
+			throw new Exception("Unable to get Fulfillment method");
+		    }
+		} else {
+		    // For CL by default the Fulfillment method is
+		    // "Ship to Customer"
+		    if (isElementPresentVerifyClick(CLHeader_TBLH, browser)) {
+			FulfillmentMtd = "Ship to Customer";
+		    }
+		}
+		TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FulfillmentMethod", FulfillmentMtd);
+	    }
+
+	    if (isElementPresentVerifyClick(SubmitOrder_BTN, browser)) {
+
+		if (!waitTillPageLoad(OrderConfirmationPage_H, browser)) {
+		    throw new Exception("Unable to navigate to Order Confirmation page");
+		}
+	    }
+
+	    String OrderNumber = getElementByProperty(OrderNumber_LBL, browser).getText().split("is")[1].trim();
+	    System.out.println("Order number="+OrderNumber);
+	    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumber", OrderNumber);
+
+	    if (dataMap.containsKey("SelectCustomer") && dataMap.get("SelectCustomer").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(Customer_LNK, browser)) {
+		    throw new Exception("Unable to Select the Customer");
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Search and select a placed Order
+     * @author - Ygnash S
+     * @Created -18 Oct 2013
+     * @Modified By -Thangaraj R
+     * @Modified Date -13 Nov 2013
+     ************************************************************* 
+     */
+    public static void searchAndSelectCSCOrder(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Commerce_TAB = "//a[@id='commerceTabLink']~XPATH";
+	String OrderID_TXT = "//input[@id='fulfillment']~XPATH";
+	String UserName_TXT = "input[id='login']~CSS";
+	String Search_BTN = "//input[@name='basicSearch']~XPATH";
+	String WorkOn_LNK = "//a[contains(text(),'Work on')]~XPATH";
+	String Orders_LNK = "//button/span[contains(text(),'Orders')]~XPATH";
+	// String SearchOrder_LNK =
+	// "//tr[@id='searchForOrder']/td[contains(text(),'Search for Order')]~XPATH";
+	String SearchOrder_LNK = "tr#searchForOrder~CSS";
+	String NewSearch_LNK = "//a[contains(text(),'New Search')]~XPATH";
+	String MatchingOrders_TXT = "//div[contains(text(),'matching orders')]~XPATH";
+	String CancelOrder_BTN = "a[id='orderCancel']~CSS";
+	String ConfirmCancelOrder_FRM = "//span[contains(text(),'Confirm Cancel Order')]~XPATH";
+	String Yes_BTN = "input[name='cancelOrderOK']~CSS";
+	String EditShoppingCart_LNK = "//a[contains(text(),'Edit Shopping Cart')]~XPATH";
+	String ShoppingCart_ELM = "//h3[contains(text(),'Shopping Cart')]~XPATH";
+	String StartDate_TXT = "input[id='startDate']~CSS";
+	String EndDate_TXT = "input[id='endDate']~CSS";
+	String FulfilmentMethod_LST = "select[id='fulfillmentMethod']~CSS";
+	String WebpickupOrderStatus_LST = "select[id='qsOrderStatus']~CSS";
+	String FName_TXT = "input[id='fName']~CSS";
+	String Email_TXT = "input[id='login']~CSS";
+	String AreaCode_TXT = "input[id='areaCd']~CSS";
+	String LName_TXT = "input[id='lName']~CSS";
+	String Phone_TXT = "input[id='phone']~CSS";
+	String PatientFName_TXT = "input[id='pfName']~CSS";
+	String PatientLName_TXT = "input[id='plName']~CSS";
+	String OrderNumber = null;
+	String ErrorMessage_ELM = "//span[contains(text(),'The action produced one or more errors.')]~XPATH";
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String SearchOrderBy = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SearchOrderBy");
+		String SelectOrder = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SelectOrder");
+
+		if (dataMap.containsKey("OrderId") && dataMap.get("OrderId").get(i).equalsIgnoreCase("Yes")) {
+		    OrderNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(0), "OrderID_1");
+		} else {
+		    OrderNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderNumber");
+		}
+
+		// Clicks the Customer Tab
+		if (!isElementPresentVerifyClick(Commerce_TAB, browser)) {
+		    throw new Exception("Not able to click on commerce Tab");
+		}
+
+		if (!isElementPresentVerification(OrderID_TXT, browser)) {
+
+		    if (!waitTillPageLoad(Orders_LNK, browser)) {
+			throw new Exception("Not able to find Orders Link");
+		    }
+		    if (!isElementPresentVerifyClick(Orders_LNK, browser)) {
+			throw new Exception("Not able to find Orders Link");
+		    }
+		    if (!waitTillPageLoad(SearchOrder_LNK, browser))
+			throw new Exception("Not able to find Search Order Link");
+
+		    if (!isElementPresentVerifyClick(SearchOrder_LNK, browser)) {
+			throw new Exception("Not able to find Search Order Link");
+		    }
+		}
+		Thread.sleep(2000);
+		if (!isElementPresentVerification(OrderID_TXT, browser)) {
+		    throw new Exception("Not able to find Order Search page");
+		}
+		// Clicks New Order Search Link to Start New Search.
+		if (!isElementPresentVerifyClick(NewSearch_LNK, browser)) {
+		    throw new Exception("Not able to find New Search Link");
+		}
+		// Searches Order by entering Order ID
+		if (SearchOrderBy.equalsIgnoreCase("OrderID")) {
+		    if (!waitTillPageLoad(OrderID_TXT, browser)) {
+			messagesMap.put("Order ID", "Not able to enter Order ID");
+			status = WARNING;
+		    } else {
+			getElementByProperty(OrderID_TXT, browser).clear();
+			getElementByProperty(OrderID_TXT, browser).sendKeys(OrderNumber);
+		    }
+		}
+		// Searches Order by entering UserName
+		if (SearchOrderBy.equalsIgnoreCase("UserName")) {
+		    String UserName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UserName");
+		    // getElementByProperty(UserName_TXT, browser).clear();
+		    // getElementByProperty(UserName_TXT,
+		    // browser).sendKeys(UserName);
+		    if (!waitTillPageLoad(UserName_TXT, browser)) {
+			messagesMap.put("User Name", "Not able to enter User Name");
+			status = WARNING;
+		    } else {
+			getElementByProperty(UserName_TXT, browser).clear();
+			getElementByProperty(UserName_TXT, browser).sendKeys(UserName);
+		    }
+		}
+		Thread.sleep(2000);
+		if (SearchOrderBy.equalsIgnoreCase("OrderType")) {
+		    String FulfillmentMethod = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FulfillmentMethod");
+		    String WebPickupOrderStatus = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "WebPickupOrderStatus");
+		    new Select(getElementByProperty(FulfilmentMethod_LST, browser)).selectByVisibleText(FulfillmentMethod);
+		    new Select(getElementByProperty(WebpickupOrderStatus_LST, browser)).selectByVisibleText(WebPickupOrderStatus);
+		    // Enters Current Date
+		    Calendar cal = Calendar.getInstance();
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		    String CurrentDate = dateFormat.format(cal.getTime());
+		    if (!clearAndEnterText(StartDate_TXT, CurrentDate, browser)) {
+			messagesMap.put("First Name", "Not able to enter Start Date");
+			status = WARNING;
+		    }
+		    Thread.sleep(2000);
+		    if (!clearAndEnterText(EndDate_TXT, CurrentDate, browser)) {
+			messagesMap.put("First Name", "Not able to enter End Date");
+			status = WARNING;
+		    }
+		}
+		else if (SearchOrderBy.equalsIgnoreCase("PatientInfo")) {
+		    String UserName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UserName");
+		    String FName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FName");
+		    String LName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LName");
+		    String Email = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Email");
+		    String AreaCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AreaCode");
+		    String PhoneNo = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PhoneNo");
+		    // Enters Profile Information
+		    if (!clearAndEnterText(FName_TXT, FName, browser)) {
+			messagesMap.put("First Name", "Not able to enter First Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(LName_TXT, LName, browser)) {
+			messagesMap.put("Last Name", "Not able to enter Last Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(Email_TXT, Email, browser)) {
+			messagesMap.put("Email", "Not able to enter Email Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(AreaCode_TXT, AreaCode, browser)) {
+			messagesMap.put("AreaCode", "Not able to enter Area Code");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(Phone_TXT, PhoneNo, browser)) {
+			messagesMap.put("Phone", "Not able to enter Phone No");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(UserName_TXT, UserName, browser)) {
+			messagesMap.put("UserName", "Not able to enter User Name");
+			status = WARNING;
+		    }
+		} else if (SearchOrderBy.equalsIgnoreCase("CLPatientInfo")){
+
+		    String PatientFName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientFName");
+		    String PatientLName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PatientLName");
+
+		    // Enters CL Patient Information
+
+		    if (!clearAndEnterText(PatientFName_TXT, PatientFName, browser)) {
+			messagesMap.put("PatientFirst Name", "Not able to enter Patient First Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(PatientLName_TXT, PatientLName, browser)) {
+			messagesMap.put("PatientLast Name", "Not able to enter Patient Last Name");
+			status = WARNING;
+		    }
+		}
+
+		if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		    throw new Exception("Not able to click on Search Button");
+		}
+		if (!isElementPresentVerification(MatchingOrders_TXT, browser)) {
+		    throw new Exception("Order Search Is not Successful");
+		}
+		if (SearchOrderBy.equalsIgnoreCase("OrderID")) {
+		    String SuccessMessage = "//a[contains(text(),'" + OrderNumber + "')]~XPATH";
+		    Thread.sleep(10000);
+
+		    if (!isElementPresentVerification(SuccessMessage, browser)) {
+			throw new Exception("Searched Order ID is not displayed");
+		    }
+		}
+
+		if (SelectOrder.equalsIgnoreCase("Yes")) {
+		    if (isElementPresentVerifyClick(WorkOn_LNK, browser)) {
+			String SuccessMessage = "//li/span[contains(text(),'" + OrderNumber + " is now the active order.')]~XPATH";
+			Thread.sleep(10000);
+			// Cancel Selected Order - Oct22-2013: Ygnash
+			if (dataMap.containsKey("CancelOrder") && dataMap.get("CancelOrder").get(i).equalsIgnoreCase("Yes")) {
+			    if (!isElementPresentVerifyClick(CancelOrder_BTN, browser)) {
+				throw new Exception("Cancel Order X button in header is not displayed");
+			    }
+			    if (isElementPresentVerification(ConfirmCancelOrder_FRM, browser)) {
+				if (isElementPresentVerifyClick(Yes_BTN, browser)) {
+				    SuccessMessage = "//li/span[contains(text(),'Order " + OrderNumber + " cancelled successfully')]~XPATH";
+				    Thread.sleep(10000);
+				    //Added by Angeline 13Nov2013
+				    if(dataMap.containsKey("ErrorValidation")&& dataMap.get("ErrorValidation").get(i).equalsIgnoreCase("Yes")){
+					if(!isElementPresentVerification(ErrorMessage_ELM, browser)){
+					    messagesMap.put("Error Message", "Error Message not found");
+					    status=WARNING;
+					}
+				    }else{
+					if (!isElementPresentVerification(SuccessMessage, browser)) {
+					    throw new Exception("Not Able to Select the Searched Order");
+					}
+				    }
+				}
+
+			    } else {
+				throw new Exception("Confirm Cancel Order Overlay is not displayed");
+			    }
+			}
+			// Edit Selected Order - 10/25/2013 Angeline
+			if (dataMap.containsKey("EditOrder") && dataMap.get("EditOrder").get(i).equalsIgnoreCase("Yes")) {
+			    if (!isElementPresentVerifyClick(EditShoppingCart_LNK, browser)) {
+				throw new Exception("ZNot able to find Edit Shopping Cart Link");
+			    }
+			    if (!isElementPresentVerification(ShoppingCart_ELM, browser)) {
+				messagesMap.put("Shopping Cart Page", "Not navigated to Shopping Cart page");
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To select Patient and Doctor's Information
+     * @author - Angeline Snekha A, SARAVANAN M
+     * @Created -28 Aug 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectPatientAndDoctor(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String PatientType = null, DoctorType = null, DOB = null, FirstName = null, LastName = null, StoreName = null;
+	String PrescriberSearch_H = "//h3[contains(text(),'Prescriber Search')]~XPATH";
+	String CreateNewPatient_RDO = "//input[@id='newPatientRadio']~XPATH";
+	String FirstName_TXT = "input[id='patFname']~CSS";
+	String LastName_TXT = "input[id='patLname']~CSS";
+	String DOB_TXT = "input[id='cpBirthDate']~CSS";
+	String AgeCheck_CHK = "input[id='ageCheck']~CSS";
+	String PatientDOB_TXT = "input[id='cpPatientBirthDate']~CSS";
+	String SelectExistingPatient_CHK = "input[id='existintPatientRadio']~CSS";
+	String StoreName_TXT = "input[name='storeName']~CSS";
+	String PrescriberSearch_BTN = "//input[@id='prescriberSearch']~XPATH";
+	String PrescriberSearchResults_H = "//h3[contains(text(),'Prescriber Search Results')]~XPATH";
+	String SelectPrescriber_BTN = "//input[@value='Select']~XPATH";
+	String BillingPage_H = "//h3[contains(text(),'Billing')]~XPATH";
+	String SelectPrescriber_LST = "//select[@id='prescriberDropdown']~XPATH";
+	String NewPrescriber_RDO = "//input[@id='newPrescriberRadio']~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    PatientType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PatientType");
+	    DoctorType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DoctorType");
+	    DOB = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DOB");
+	    FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    StoreName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreName");
+	    if (DOB.equalsIgnoreCase("Random")) {
+		DOB = randomDOBGenerator().replace(":", "/");
+	    }
+	    if (!waitTillPageLoad(PrescriberSearch_H, browser)) {
+		throw new Exception("Unable to find the prescriber search page");
+	    }
+
+	    if (!PatientType.equals("-") && PatientType != null) {
+		if (PatientType.equalsIgnoreCase("CreateNewPatient")) {
+		    if (!isElementPresentVerifyClick(CreateNewPatient_RDO, browser)) {
+			throw new Exception("Not able to select Create new patient Checkbox");
+		    }
+		    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+			messagesMap.put("First Name", "Not able to enter First Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+			messagesMap.put("First Name", "Not able to enter First Name");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(DOB_TXT, DOB, browser)) {
+			messagesMap.put("DOB", "Not able to enter DOB");
+			status = WARNING;
+		    }
+		    if (isElementPresentVerification(AgeCheck_CHK, browser)) {
+			if (!isElementPresentVerifyClick(AgeCheck_CHK, browser)) {
+			    throw new Exception("Not able to select Age checkbox");
+			}
+		    }
+		} else if (PatientType.equalsIgnoreCase("ExistingPatient")) {
+		    if (!isElementPresentVerifyClick(SelectExistingPatient_CHK, browser)) {
+			throw new Exception("Not able to select Existing Patient");
+		    }
+		    if (isElementPresentVerification(PatientDOB_TXT, browser)) {
+			if (!clearAndEnterText(DOB_TXT, DOB, browser)) {
+			    messagesMap.put("Patient DOB", "Not able to enter Patient's DOB");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+	    if (!DoctorType.equals("-") && DoctorType != null) {
+		if (DoctorType.equalsIgnoreCase("NewPrescriber")) {
+
+		    if (isElementPresentVerification(NewPrescriber_RDO, browser)) {
+			getElementByProperty(NewPrescriber_RDO, browser).click();
+		    }
+		    if (!clearAndEnterText(StoreName_TXT, StoreName, browser)) {
+			messagesMap.put("Store Name", "Not able to enter Store Name");
+			status = WARNING;
+		    }
+
+		    if (!isElementPresentVerifyClick(PrescriberSearch_BTN, browser)) {
+			throw new Exception("Unable to click on the Search button");
+		    }
+
+		    if (isElementPresentVerification(PrescriberSearchResults_H, browser)) {
+			getElementByProperty(SelectPrescriber_BTN, browser).click();
+			if (!waitTillPageLoad(BillingPage_H, browser)) {
+			    throw new Exception("Unable to select the prescriber");
+			}
+		    }
+		} else if (DoctorType.equalsIgnoreCase("ExistingPrescriber")) {
+		    if (isElementPresentVerification(SelectPrescriber_LST, browser)) {
+			String PrescriberName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExistingPrescriberName");
+			new Select(getElementByProperty(SelectPrescriber_LST, browser)).selectByVisibleText(PrescriberName);
+
+			if (isElementPresentVerifyClick(PrescriberSearch_BTN, browser)) {
+			    if (!waitTillPageLoad(BillingPage_H, browser)) {
+				throw new Exception("Unable to select the prescriber");
+			    }
+			}
+		    } else {
+			throw new Exception("The User doesn't have the Existing Prescriber record");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to release Pre-Order Item Order details from CSC
+     * @author - Siva Santhi Reddy
+     * @Created -16 SEP 2013
+     * @Modified By -Siva
+     * @Modified Date -20 SEP 2013
+     ************************************************************* 
+     */
+    public static void releasePreOrderItemFromCSC(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String OrderMaintanance_TAB = "//a[contains(text(),'Order Maintenance')]~XPATH";
+	String Queues_TAB = "//span[contains(text(), 'Queues')]~XPATH";
+	String PreOrder_LNK = "//table[contains(@id,'Menu')]//*[contains(text(),'Pre-Order')]~XPATH";
+	String PreOrderQueueHeader_ELM = "//h3[contains(text(),'Preorder Queue')]~XPATH";
+	String InputWic_TXT = "//input[@id='inputWIC']~XPATH";
+	String Search_BTN = "//input[@id='searchButton']~XPATH";
+	String OrderList_TABLE = "//table[2]/tbody~XPATH";
+	String ReleaseOrder_BTN = "//input[@value='Release Order']~XPATH";
+	String PreOrdeSuccessMessage_ELM = "//span[contains(text(),'The pre-order group has been successfully released.')]~XPATH";
+	String OrderNumber = null, WicID = null, OrderNumberFileName = null, OrderNumberSheetName = null, OrderNumberRowIdName = null, OrderNumberColumnName = null;
+	String WicIDFileName = null, WicIdSheetName = null, WicIdRowIdName = null, WicIdColumnName = null;
+	boolean isOrderIdFound = false;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    OrderNumberFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberFileName");
+	    OrderNumberSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberSheetName");
+	    OrderNumberRowIdName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberRowIdName");
+	    OrderNumberColumnName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberColumnName");
+
+	    WicIDFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WicIDFileName");
+	    WicIdSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WicIdSheetName");
+	    WicIdRowIdName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WicIdRowIdName");
+	    WicIdColumnName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "WicIdColumnName");
+
+	    OrderNumber = getTestData(OrderNumberFileName, OrderNumberSheetName, OrderNumberRowIdName, OrderNumberColumnName);
+	    WicID = getTestData(WicIDFileName, WicIdSheetName, WicIdRowIdName, WicIdColumnName);
+	    if (!isElementPresentVerifyClick(OrderMaintanance_TAB, browser)) {
+		throw new Exception("Not able to click on Order Maintanance Tab");
+	    }
+	    Thread.sleep(2000L);
+	    if (!isElementPresentVerifyClick(Queues_TAB, browser)) {
+		throw new Exception("Not able to click on QUEUES Tab");
+	    }
+	    Thread.sleep(2000L);
+	    if (!isElementPresentVerifyClick(PreOrder_LNK, browser)) {
+		throw new Exception("Not able to click on Pre Order Link");
+	    }
+	    Thread.sleep(5000L);
+	    if (!isElementPresentVerification(PreOrderQueueHeader_ELM, browser)) {
+		messagesMap.put("Pre-Order Queue Header", "Header is Missing.Might be Pre-Order page is not displayed");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(InputWic_TXT, WicID, browser)) {
+		messagesMap.put("WIC ID", "Not able to enter wic id");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click on Search Button");
+	    }
+	    String PreOrderNumber_LNK = "//*[contains(text(),'" + WicID + "')]";
+	    Thread.sleep(5000L);
+	    if (!isElementPresentVerifyClick(PreOrderNumber_LNK, browser)) {
+		throw new Exception("Not able to click on Pre Order Number Link");
+	    }
+	    Thread.sleep(8000L);
+	    List<WebElement> tableRows = getElementByProperty(OrderList_TABLE, browser).findElements(By.tagName("tr"));
+	    for (int rowCount = 0; rowCount < tableRows.size(); rowCount++) {
+		String tableRowText = tableRows.get(rowCount).getText();
+		if (tableRowText.contains(OrderNumber)) {
+		    isOrderIdFound = true;
+		    WebElement Checkbox = tableRows.get(rowCount).findElement(By.name("releaseOrder"));
+		    if (Checkbox != null) {
+			Checkbox.click();
+			break;
+		    } else {
+			throw new Exception("Not able to find the required check box");
+		    }
+		}
+	    }
+	    if (!isOrderIdFound) {
+		throw new Exception("Order ID is not foudn in the table");
+	    }
+	    if (!isElementPresentVerifyClick(ReleaseOrder_BTN, browser)) {
+		throw new Exception("Not able to click on Release Order Button");
+	    }
+	    Thread.sleep(3000L);
+	    browser.switchTo().alert().accept();
+	    Thread.sleep(8000L);
+	    if (!isElementPresentVerification(PreOrdeSuccessMessage_ELM, browser)) {
+		throw new Exception("Not able to verify Pre-Order Success Message");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to return the orders in CSC
+     * @author - SARAVANAN M
+     * @Created -03 OCT 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void orderReturnInCSC(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String ProcessReturn_LNK = "//a[contains(text(),'Process Return')]~XPATH";
+	String ReturnEntireOrder_CHK = "//input[@id='retEntireOrder']~XPATH";
+	String EntireOrderRetReason_LST = "//select[@id='orderReturnReason']~XPATH";
+	String UpdateReturnOrder_BTN = "//input[@id='retOrderUpdate']~XPATH";
+	String Commerce_TAB = "//a[@id='commerceTabLink']~XPATH";
+	String OrderID_TXT = "//input[@id='fulfillment']~XPATH";
+	String Search_BTN = "//input[@name='basicSearch']~XPATH";
+	String WorkOn_LNK = "//a[contains(text(),'Work on')]~XPATH";
+	String Orders_LNK = "//button/span[contains(text(),'Orders')]~XPATH";
+	String SearchOrder_LNK = "//tr[@id='searchForOrder']/td[contains(text(),'Search for Order')]~XPATH";
+	String StartProcessReturn_BTN = "//input[@id='StartReturnProcess']~XPATH";
+	String ReturnSummary_LBL = "//span[contains(text(),'Return Summary')]~XPATH";
+	String Next_BTN = "//input[@value='Next']~XPATH";
+	String CompleteReturn_H = "//h3[contains(text(),'Complete Return')]~XPATH";
+	String SubmitReturn_BTN = "//input[@value='Submit']~XPATH";
+	String ConfirmReturn_H = "//h3[contains(text(),'Confirm Return')]~XPATH";
+	String OrderTotal_LBL = "//table/tbody/tr[2]/td[@class='atg_numberValue']~XPATH";
+	String OrderTotalSummary_LBL = "//dd/span[contains(@class,'orderSummaryTotal')]~XPATH";
+	String TotalRefund_LBL = "//td/div[@id='csrReturnRefundTotal']~XPATH";
+	String TotalItemRefund_LBL = "//td/div[@id='csrReturnTotalItemRefund']~XPATH";
+	String ShippingRefund_TXT = "//td/input[@id='actualShippingRefund']~XPATH";
+	String OrderReturns_LNK = "//li[contains(text(),'Order Returns')]~XPATH";
+	String FullReturn_LNK = "//td[contains(text(),'Full return')]~XPATH";
+	String QuantityToReturn_LST = "//table/tbody/tr/td[2]/div[2]/select~XPATH";
+	String OrderView_LNK = "//li[contains(text(),'Order View')]~XPATH";
+	String ReturnFee_TXT="//input[@id='returnFee']~XPATH";
+	String SubTotal_LBL = "//div[@class='atg_commerce_csr_orderSummary']/dl[contains(@id,'orderSummaryData')]/dd~XPATH";
+	String OrderNumber = null, OrderReturnReason = null,CalcCreditDue="No", NoOfReturnOrders = null, SaveOrderDetails = null, OrderNumberFileName = null, isFulfilledHalf = "No", OrderNumberSheetName = null, OrderNumberRowIdName = null, OrderNumberColumnName = null, RetrieveColumnName = null, RetrieveRowID = null, RetrieveSheetName = null, RetrieveFileName = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    OrderNumberFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberFileName");
+	    OrderNumberSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberSheetName");
+	    OrderNumberRowIdName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberRowIdName");
+	    OrderNumberColumnName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberColumnName");
+	    OrderNumber = getTestData(OrderNumberFileName, OrderNumberSheetName, OrderNumberRowIdName, OrderNumberColumnName);
+	    NoOfReturnOrders = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NoOfReturnOrders");
+	    OrderReturnReason = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderReturnReason");
+	    SaveOrderDetails = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SaveOrderDetails");
+	    RetrieveFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RetrieveFileName");
+	    RetrieveSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RetrieveSheetName");
+	    RetrieveRowID = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RetrieveRowID");
+	    RetrieveColumnName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RetrieveColumnName");
+
+	    if (!isElementPresentVerification(OrderID_TXT, browser)) {
+		if (!isElementPresentVerifyClick(Commerce_TAB, browser)) {
+		    throw new Exception("Not able to click on commerce Tab");
+		}
+	    }
+
+	    if (OrderNumber != null) {
+		if (!isElementPresentVerification(OrderID_TXT, browser)) {
+		    if (isElementPresentVerifyClick(Orders_LNK, browser)) {
+			if (isElementPresentVerifyClick(SearchOrder_LNK, browser)) {
+			    if (!isElementPresentVerification(OrderID_TXT, browser)) {
+				throw new Exception("Not able to find Order Search page");
+			    }
+			}
+		    }
+		}
+
+		if (!waitTillPageLoad(OrderID_TXT, browser)) {
+		    messagesMap.put("Order ID", "Not able to enter Order ID");
+		    status = WARNING;
+		} else {
+		    getElementByProperty(OrderID_TXT, browser).clear();
+		    getElementByProperty(OrderID_TXT, browser).sendKeys(OrderNumber);
+		}
+		if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		    throw new Exception("Not able to click on Search Button");
+		}
+		if (!isElementPresentVerifyClick(WorkOn_LNK, browser)) {
+		    throw new Exception("Not able to click on Work On Link");
+		}
+
+		if (waitTillPageLoad(OrderReturns_LNK, browser)) {
+		    isElementPresentVerifyClick(OrderReturns_LNK, browser);
+		}
+
+		if (!(dataMap.containsKey("PickUpOnly") && dataMap.get("PickUpOnly").get(0).equalsIgnoreCase("Yes"))) {
+		    if (!waitTillPageLoad(ProcessReturn_LNK, browser)) {
+			if (!waitTillPageLoad(FullReturn_LNK, browser)) {
+			    throw new Exception("Unable process the order Return - Link not Found");
+			}
+		    }
+
+		    if (isElementPresentVerifyClick(ProcessReturn_LNK, browser) || isElementPresentVerifyClick(FullReturn_LNK, browser)) {
+			if (!waitTillPageLoad(ReturnEntireOrder_CHK, browser)) {
+			    throw new Exception("Unable found return entire order checkbox");
+			}
+			if (NoOfReturnOrders.equalsIgnoreCase("FULL")) {
+			    if (isElementPresentVerification(ReturnEntireOrder_CHK, browser) && !getElementByProperty(ReturnEntireOrder_CHK, browser).isSelected()) {
+				int i = 0;
+				do {
+				    getElementByProperty(ReturnEntireOrder_CHK, browser).click();
+				    i++;
+				} while (!getElementByProperty(ReturnEntireOrder_CHK, browser).isSelected() && i < 3);
+
+			    }
+			} else if (!NoOfReturnOrders.equals(null) && !NoOfReturnOrders.equals("-")) {
+			    new Select(getElementByProperty(QuantityToReturn_LST, browser)).selectByVisibleText(NoOfReturnOrders);
+			    isFulfilledHalf = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "isFulfilledHalf");
+			}
+
+			if (OrderReturnReason.equals("-") || OrderReturnReason.equals(null)) {
+			    new Select(getElementByProperty(EntireOrderRetReason_LST, browser)).selectByVisibleText("DAMAGED/DEFECTIVE");
+			} else {
+			    new Select(getElementByProperty(EntireOrderRetReason_LST, browser)).selectByVisibleText(OrderReturnReason);
+			}
+		    }
+
+		    if (!isElementPresentVerifyClick(UpdateReturnOrder_BTN, browser)) {
+			throw new Exception("Unable click on the Update button");
+		    }
+
+		    if (!isFulfilledHalf.equalsIgnoreCase("Yes")) {
+			String strOrderSummary = getElementByProperty(OrderTotalSummary_LBL, browser).getText().replace("$", "").trim();
+			String strRefundSummary = getElementByProperty(TotalRefund_LBL, browser).getText().replace("$", "").trim();
+
+			if (!(strOrderSummary.equals(strRefundSummary))) {
+
+			    Double OrderSummary = Double.parseDouble(strOrderSummary);
+			    Double RefundSummary = Double.parseDouble(strRefundSummary);
+			    Double difference = OrderSummary - RefundSummary;
+			    System.out.println("difference="+difference);
+			    if(difference<0){
+				difference = Math.round(Math.abs(difference) * 100.0) / 100.0;
+				String ShippingRefund = "$" + difference;
+				if (!clearAndEnterText(ReturnFee_TXT, ShippingRefund, browser)) {
+				    throw new Exception("Unable to enter shipping refund");
+				}
+			    }else{
+				difference = Math.round(difference * 100.0) / 100.0;
+				String ShippingRefund = "$" + difference;
+				if (!clearAndEnterText(ShippingRefund_TXT, ShippingRefund, browser)) {
+				    throw new Exception("Unable to enter shipping refund");
+				}
+			    }
+			}
+		    } else if (isFulfilledHalf.equalsIgnoreCase("Yes")) {
+			if(dataMap.containsKey("CalcCreditDue")){
+			    CalcCreditDue = dataMap.get("CalcCreditDue").get(0).trim();
+			}
+			if (!CalcCreditDue.equalsIgnoreCase("Yes")) {
+			    Double RefundTotal = Double.parseDouble(getElementByProperty(TotalItemRefund_LBL, browser).getText().replace("$", "").trim());
+			    Double SubTotal = Double.parseDouble(getElementByProperty(SubTotal_LBL, browser).getText().replace("$", "").trim());
+			    Double OrderSummary = Double.parseDouble(getElementByProperty(OrderTotalSummary_LBL, browser).getText().replace("$", "").trim());
+			    if (SubTotal != (RefundTotal * 2)) {
+				throw new Exception("Fulfillment is not happened properly");
+			    } else {
+				String creditDue = getElementByProperty(TotalRefund_LBL, browser).getText().replace("$", "").trim();
+				double dueAmt = OrderSummary - Double.parseDouble(creditDue);
+				dueAmt = Math.round(dueAmt * 100.0) / 100.0;
+				TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "creditDue", Double.toString(dueAmt));
+			    }
+			} else {
+			    String RefundSummaryCreditDue = getElementByProperty(TotalRefund_LBL, browser).getText().replace("$", "").trim();
+			    String PrevCreditDue = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "creditDue");
+			    Double PrevCredit = Math.round(Double.parseDouble(PrevCreditDue) * 100.0) / 100.0;
+			    PrevCreditDue = Double.toString(PrevCredit);
+			    if (!RefundSummaryCreditDue.equalsIgnoreCase(PrevCreditDue)) {
+				throw new Exception("Fulfillment is not happened properly for remaining products");
+			    }
+			}
+		    }
+
+		    if (waitTillPageLoad(StartProcessReturn_BTN, browser)) {
+			getElementByProperty(StartProcessReturn_BTN, browser).click();
+			waitTillPageLoad(ReturnSummary_LBL, browser);
+			if (isElementPresentVerifyClick(Next_BTN, browser)) {
+			    if (waitTillPageLoad(CompleteReturn_H, browser)) {
+				if (SaveOrderDetails.equalsIgnoreCase("Yes")) {
+				    String AmountDebited = getElementByProperty(OrderTotal_LBL, browser).getText().trim().replace("$", "");
+				    TestDataDBManager.putTestData(RetrieveFileName, RetrieveSheetName, RetrieveRowID, RetrieveColumnName, AmountDebited);
+				}
+
+				if (!isElementPresentVerifyClick(SubmitReturn_BTN, browser)) {
+				    throw new Exception("Unable to click on the Submit button in the Complete Return page");
+				}
+			    }
+			}
+		    } else {
+			throw new Exception("Unable Return ther Order - Process Return button (start) is not found");
+		    }
+
+		    if (!waitTillPageLoad(ConfirmReturn_H, browser)) {
+			throw new Exception("Unable Return ther Order - Confirmation is not displayed");
+		    }
+		} else {
+		    Thread.sleep(3000);
+		    if (isElementPresentVerification(ProcessReturn_LNK, browser) || isElementPresentVerification(FullReturn_LNK, browser)) {
+			throw new Exception("Process Return link is displayed for Pickup order");
+		    }
+		}
+	    } else {
+		throw new Exception("Unable Return ther Order - The Order number is NULL");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to manually match customer in CSC
+     * @author - Ygnash S
+     * @Created -21 Oct 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void manuallyMatchCustomer(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Pharmacy_TAB = "a[id='walgreensPharmacyTabLink']~CSS";
+	String MatchRequestSearch_LNK = "//a[contains(text(),'Match Request Search')]~XPATH";
+	String Search_BTN = "button[id='searchButtonNode']~CSS";
+	String StartDate_TXT = "input[name='searchCreatedDate']~CSS";
+	String SelectCustomer_CHK = "input[name='close']~CSS";
+	String FirstName_TXT = "input[name$='matchRequest.firstName']~CSS";
+	String LastName_TXT = "input[name$='matchRequest.lastName']~CSS";
+	String Status_LST = "select[name$='matchRequest.status']~CSS";
+	String Lock_BTN = "button[id='lockButtonNode']~CSS";
+	String MemberID_LNK = "//tr/td[4]/a[contains(@href,'match')]~XPATH";
+	String RegFirstName_TXT = "input[name $='ICPlusCustListMN.firstName']~CSS";
+	String RegLastName_TXT = "input[name $='ICPlusCustListMN.lastName']~CSS";
+	String AreaCode_TXT = "input[name $='ICPlusCustListMN.primaryAreaCode']~CSS";
+	String PrimaryPhone_TXT = "input[name $='ICPlusCustListMN.primaryPhoneNumber']~CSS";
+	String RegSearch_BTN = "button[id='searchAgainRegButtonNode']~CSS";
+	String MatchRegister_BTN = "button[id='MatchRegisterButtonNotPossibleNode']~CSS";
+	String NoEntries_TXT = "//font[contains(text(),'There are no entries in Intercom Plus that match the search criteria')]~XPATH";
+	String NewRegister_BTN = "button[id='RegisterNewCustBtnNode']~CSS";
+	String MatchRegister_RDO = "//input[@type='radio']~XPATH";
+	String MatchRegistration_BTN = "button[id='MatchingRegPossiblebtnNode']~CSS";
+	String MatchRegistrationFinal_BTN = "button[id='matchRegistrationCBtnNode']~CSS";
+	String SuccessMessages_ELM = "//p[contains(text(),'This entry has been succesfully matched with an entry in Intercom Plus.')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    // Clicks the Pharmacy Tab
+	    if (!isElementPresentVerifyClick(Pharmacy_TAB, browser)) {
+		throw new Exception("Not able to click on Pharmacy Tab");
+	    }
+
+	    if (waitTillPageLoad(MatchRequestSearch_LNK, browser)) {
+		if (!isElementPresentVerifyClick(MatchRequestSearch_LNK, browser)) {
+		    throw new Exception("Not able to click on Match Request Search Link");
+		}
+	    }
+	    // Enters the user details and searches for the user and navigates
+	    // to match registration page
+	    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    new Select(getElementByProperty(Status_LST, browser)).selectByVisibleText("Open");
+	    // Enters Current Date
+	    Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	    String CurrentDate = dateFormat.format(cal.getTime());
+	    if (!clearAndEnterText(StartDate_TXT, CurrentDate, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click on Search Button");
+	    }
+	    if (!waitTillPageLoad(SelectCustomer_CHK, browser)) {
+		messagesMap.put("Manual Match", "Searched customer is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(SelectCustomer_CHK, browser)) {
+		throw new Exception("Not able to Select Match Request");
+	    }
+	    if (!isElementPresentVerifyClick(Lock_BTN, browser)) {
+		throw new Exception("Notable to Lock the Request");
+	    }
+	    if (!waitTillPageLoad(MemberID_LNK, browser)) {
+		messagesMap.put("Manual Match", "MemberID is not displayed as link");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(MemberID_LNK, browser)) {
+
+		throw new Exception("Not to click Member ID");
+	    }
+	    // Searches the user in Match Registration page and registers the
+	    // user in IC+
+	    if (!waitTillPageLoad(RegFirstName_TXT, browser)) {
+		messagesMap.put("Manual Match", "First name field in Match registration page is not displayed");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(RegFirstName_TXT, FirstName, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(RegLastName_TXT, LastName, browser)) {
+		messagesMap.put("Last Name", "Not able to enter Last Name");
+		status = WARNING;
+	    }
+	    String AreaCode = PhoneNumber.substring(0, 3);
+	    String PhoneNumber2 = PhoneNumber.substring(3, 10);
+	    if (!clearAndEnterText(AreaCode_TXT, AreaCode, browser)) {
+		messagesMap.put("Area Code", "Not able to enter Area Code");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PrimaryPhone_TXT, PhoneNumber2, browser)) {
+		messagesMap.put("Phone Number", "Not able to enter Phone Number");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(RegSearch_BTN, browser)) {
+		throw new Exception("Not able to click Search button");
+	    }
+	    if (waitTillPageLoad(NoEntries_TXT, browser)) {
+		if (!isElementPresentVerification(NoEntries_TXT, browser)) {
+		    messagesMap.put("Comment Missing", "Not able to find No entries Found Comment");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(MatchRegister_BTN, browser)) {
+		throw new Exception("Not able to click Register button in Match registration page ");
+	    }
+	    if (!isElementPresentVerifyClick(NewRegister_BTN, browser)) {
+		throw new Exception("Not able to click Register button in New Customer Registration page");
+	    }
+	    if (!waitTillPageLoad(RegFirstName_TXT, browser)) {
+		messagesMap.put("Manual Match", "First name field in Match registration page is not displayed");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(RegFirstName_TXT, FirstName, browser)) {
+		messagesMap.put("First Name", "Not able to enter First Name");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(AreaCode_TXT, AreaCode, browser)) {
+		messagesMap.put("Area Code", "Not able to enter Area Code");
+		status = WARNING;
+	    }
+	    if (!clearAndEnterText(PrimaryPhone_TXT, PhoneNumber2, browser)) {
+		messagesMap.put("Phone Number", "Not able to enter Phone Number");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(RegSearch_BTN, browser)) {
+		throw new Exception("Not able to click Search button");
+	    }
+	    if (!waitTillPageLoad(MatchRegister_RDO, browser)) {
+		messagesMap.put("Manual Match", "Match Register Radio Button not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(MatchRegister_RDO, browser)) {
+		throw new Exception("Not able to Select the Entry");
+	    }
+	    if (!isElementPresentVerifyClick(MatchRegistration_BTN, browser)) {
+		throw new Exception("Not able to click Match Registertion button");
+	    }
+	    if (!waitTillPageLoad(MatchRegistrationFinal_BTN, browser)) {
+		messagesMap.put("Manual Match", "First name field in Match registration page is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(MatchRegistrationFinal_BTN, browser)) {
+		throw new Exception("Not able to click Match Registertion button");
+	    }
+	    if (!waitTillPageLoad(SuccessMessages_ELM, browser)) {
+		messagesMap.put("Manual Match", "First name field in Match registration page is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerification(SuccessMessages_ELM, browser)) {
+		messagesMap.put("Success Message", "Success message not found");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select Store
+     * @author - Siva
+     * @Created -23 OCT 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void selectStore(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String SiteorStore_TAB = "//li[@id='wsSiteStore']/a~XPATH";
+	String Zipcode_TXT = "//input[@id='zipcode']~XPATH";
+	String SearchStore_BTN = "input#searchButton~CSS";
+	String Next_BTN = "a[value='next']~CSS";
+	String StoreLocatorResults_TABLE = "//div[contains(@id,'StoreLocatorResults')]/table/tbody/tr[2]/td/table/tbody";
+	String ShopThisStore_BTN = "//input[@value='Shop This Store']";
+	Map<String, String> messagesMap = null;
+	boolean isStoreFound = false, isNextDisplayed = false;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String Zipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Zipcode");
+	    String StoreNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StoreNumber");
+	    String City = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "City");
+	    String State = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "State");
+	    String SearchBy = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "SearchBy");
+
+	    Thread.sleep(5000);
+	    if (!isElementPresentVerifyClick(SiteorStore_TAB, browser)) {
+		throw new Exception("Not able to Click on Site or Store Tab");
+	    }
+
+	    if (!waitTillPageLoad(Zipcode_TXT, browser)) {
+		messagesMap.put("Search Store Page", "Page is not loaded on time");
+		status = WARNING;
+	    }
+
+	    if (SearchBy != null && SearchBy.equalsIgnoreCase("Zipcode")) {
+		if (!clearAndEnterText(Zipcode_TXT, Zipcode, browser)) {
+		    messagesMap.put("Zipcode", "Not able to Enter Zipcode");
+		    status = WARNING;
+		}
+	    }
+	    if (!isElementPresentVerifyClick(SearchStore_BTN, browser)) {
+		throw new Exception("Not able to click on Search Store Button");
+	    }
+	    Thread.sleep(6000);
+	    do {
+		WebElement TableBody = browser.findElement(By.xpath(StoreLocatorResults_TABLE));
+		List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+		int NoOfRows = TableRows.size();
+		for (int row = 0; row < NoOfRows; row++) {
+		    String CellText = null;
+		    WebElement ShopThisStoreButton = null;
+		    List<WebElement> TableColumns = TableRows.get(row).findElements(By.tagName("td"));
+		    for (int column = 0; column < TableColumns.size(); column++) {
+			CellText = TableColumns.get(column).getText();
+			if (CellText.contains(StoreNumber)) {
+			    isStoreFound = true;
+			    ShopThisStoreButton = browser.findElement(By.xpath("//table/tbody/tr[" + (row + 1) + "]/td[" + (column + 1) + "]/form/div[3]/input[@value='Shop This Store']"));
+			    if (ShopThisStoreButton != null) {
+				ShopThisStoreButton.click();
+				Thread.sleep(2000);
+			    } else {
+				throw new Exception("Not able to find Shop This Store button for given Store");
+			    }
+			    break;
+			}
+		    }
+		    if (isStoreFound) {
+			break;
+		    }
+		}
+		if (isElementPresentVerification(Next_BTN, browser)) {
+		    getElementByProperty(Next_BTN, browser).click();
+		    isNextDisplayed = true;
+		} else {
+		    isNextDisplayed = false;
+		}
+	    } while (isNextDisplayed && !isStoreFound);
+
+	    String StoreSelectedMessage = "//span[contains(text(),'Product availability is based on walgreens') and contains(text(),'" + StoreNumber + "')]";
+	    if (!isElementPresentVerification(StoreSelectedMessage, browser)) {
+		messagesMap.put("Store Selected Message", "Message is not getting displayed");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To Apply and Verify Promotions for Orders
+     * @author - Angeline
+     * @Created -13 Nov 2013
+     * @Modified By -SARAVANAN M
+     * @Modified Date - 21-NOV-2013
+     ************************************************************* 
+     */
+    public static void applyPromotionForOrders(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String CouponCode_TXT = "input[id='couponCode']~CSS";
+	String ClaimCoupon_BTN = "input[value='Claim']~CSS";
+	String SuccessMessage_ELM = "//li//span[contains(text(),'!!Promotion added to user successfully!!')]~XPATH";
+	String Promotionvalue = null;
+	String ErrorMessage_ELM = "//li//span[contains(text(),'The action produced one or more errors.')]~XPATH";
+	String Customer_LNK = "//li[2]/div[@id='customerLink']/a~XPATH";
+	String ActiveCoupons_LBL="//h3/span[contains(text(),'Active Coupons')]";
+	String Remove_LNK="//input[@value='Remove']";
+	String Promotions_TBL="//div[@class='promotions']/table/tbody";
+	String RemoveCouponSuccessMsg_LBL="//li//span[contains(text(),'!Promotion has been removed from profile.!')]";
+	String ShoppingCart_LNK="//a[contains(text(),'Shopping Cart')]";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		Promotionvalue = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PromotionalValue");
+
+		if(dataMap.containsKey("RmExistingCoupon") && dataMap.get("RmExistingCoupon").get(i).equalsIgnoreCase("Yes")){
+		    if (isElementPresentVerifyClick(Customer_LNK, browser)) {
+			if(waitTillPageLoad(ActiveCoupons_LBL, browser)){
+			    if(isElementPresentVerification(Promotions_TBL, browser)){
+				int NoOfPRows=getElementByProperty(Promotions_TBL, browser).findElements(By.tagName("tr")).size();
+				for(int ProwInc=1;ProwInc<=NoOfPRows;ProwInc++){
+				    if(getElementByProperty(Promotions_TBL+"/tr["+ProwInc+"]/td[1]", browser).getText().contains(Promotionvalue)){
+					if(isElementPresentVerifyClick(Promotions_TBL+"/tr["+ProwInc+"]/td[6]"+Remove_LNK, browser)){
+					    if(!waitTillPageLoad(RemoveCouponSuccessMsg_LBL, browser)){
+						throw new Exception("Unable to Remove the Coupon '"+Promotionvalue+"'");
+					    }
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		    if(!isElementPresentVerifyClick(ShoppingCart_LNK, browser)){
+			throw new Exception("Unable to move to shopping cart page");
+		    }
+		    Thread.sleep(2000);
+		}
+
+
+		if(waitTillPageLoad(CouponCode_TXT, browser)){
+		    if (!clearAndEnterText(CouponCode_TXT, Promotionvalue, browser)) {
+			messagesMap.put("Coupon Code", "Not able to enter coupon code");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(ClaimCoupon_BTN, browser)) {
+			throw new Exception("Not able to click Claim button");
+		    }
+		    if (dataMap.containsKey("ErrorValidations") && dataMap.get("ErrorValidations").get(i).equalsIgnoreCase("Yes")) {
+			if(!waitTillPageLoad(ErrorMessage_ELM, browser)){
+			    messagesMap.put("Error Message","Error message not found");
+			    status=WARNING;
+			}
+		    }else {
+			if(!waitTillPageLoad(SuccessMessage_ELM, browser)) {
+			    messagesMap.put("Success Message", "Coupon Applied Success Message not found");
+			    status = WARNING;
+			}
+		    }
+		    Thread.sleep(2000);
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to do the copy Order and update the quantity
+     * @author - SARAVANAN M
+     * @Created -04 NOV 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void copyOrder(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Commerce_TAB = "//a[@id='commerceTabLink']~XPATH";
+	String OrderID_TXT = "//input[@id='fulfillment']~XPATH";
+	String Search_BTN = "//input[@name='basicSearch']~XPATH";
+	String WorkOn_LNK = "//a[contains(text(),'Work on')]~XPATH";
+	String Orders_LNK = "//button/span[contains(text(),'Orders')]~XPATH";
+	String SearchOrder_LNK = "//tr[@id='searchForOrder']/td[contains(text(),'Search for Order')]~XPATH";
+	String CopyOrder_LNK = "//li/a[contains(text(),'Copy Order')]~XPATH";
+	String ShoppingCart_H = "//h3[contains(text(),'Shopping Cart')]~XPATH";
+	String Quantity_TXT = "//tr/td/input~XPATH";
+	String UpdateCart_BTN = "//input[@id='updatePriceButton']~XPATH";
+	String ShoppingCartItems_LBL = "//dd/span[contains(@id,'shoppingCartItems')][contains(text(),'ABC Items')]~XPATH";
+	String ContinueToShipping_BTN = "//input[@value='Continue to Shipping']~XPATH";
+	String ShippingAddress_H = "//h3[contains(text(),'Shipping Address')]~XPATH";
+	String ContinueToPickupOptions_BTN = "input[value*='Continue to pickup options']~CSS";
+	String PickupHeader_H = "//h3[contains(text(),'Pickup Options')]~XPATH";
+	String Continue_BTN = "input[value*='Continue']~CSS";
+	String Billing_H = "//h3[contains(text(),'Billing')]~XPATH";
+	String PickupOption_RDO="//input[@value='WP']~XPATH";
+	String OrderOverview_LNK="//li[contains(text(),'Order View')]~XPATH";
+
+	String OrderNumber = null, OrderNumberFileName = null, OrderNumberSheetName = null, OrderNumberRowIdName = null, OrderNumberColumnName = null, Quantity = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    OrderNumberFileName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberFileName");
+	    OrderNumberSheetName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberSheetName");
+	    OrderNumberRowIdName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberRowIdName");
+	    OrderNumberColumnName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumberColumnName");
+	    OrderNumber = getTestData(OrderNumberFileName, OrderNumberSheetName, OrderNumberRowIdName, OrderNumberColumnName);
+	    Quantity = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Quantity");
+
+	    if (!isElementPresentVerification(OrderID_TXT, browser)) {
+		if (!isElementPresentVerifyClick(Commerce_TAB, browser)) {
+		    throw new Exception("Not able to click on commerce Tab");
+		}
+	    }
+
+	    if (OrderNumber != null) {
+		if (!isElementPresentVerification(OrderID_TXT, browser)) {
+		    if (isElementPresentVerifyClick(Orders_LNK, browser)) {
+			if (isElementPresentVerifyClick(SearchOrder_LNK, browser)) {
+			    if (!isElementPresentVerification(OrderID_TXT, browser)) {
+				throw new Exception("Not able to find Order Search page");
+			    }
+			}
+		    }
+		}
+
+		if (!waitTillPageLoad(OrderID_TXT, browser)) {
+		    messagesMap.put("Order ID", "Not able to enter Order ID");
+		    status = WARNING;
+		} else {
+		    getElementByProperty(OrderID_TXT, browser).clear();
+		    getElementByProperty(OrderID_TXT, browser).sendKeys(OrderNumber);
+		}
+		if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		    throw new Exception("Not able to click on Search Button");
+		}
+		if (!isElementPresentVerifyClick(WorkOn_LNK, browser)) {
+		    throw new Exception("Not able to click on Work On Link");
+		}
+
+		if(!isElementPresentVerifyClick(OrderOverview_LNK, browser)){
+		    messagesMap.put("Order Over view Link","Unable to click on Order Overview link");  
+		    status = WARNING;
+		}
+
+		if (waitTillPageLoad(CopyOrder_LNK, browser)) {
+		    if (!isElementPresentVerifyClick(CopyOrder_LNK, browser)) {
+			throw new Exception("Not able to click on Copy Order Link");
+		    }
+		}
+
+		if (!waitTillPageLoad(ShoppingCart_H, browser)) {
+		    throw new Exception("Customer is not navigated to shopping cart page to continue the copy order");
+		}
+
+		if (!clearAndEnterText(Quantity_TXT, Quantity, browser)) {
+		    throw new Exception("Unable to update the quantity");
+		}
+
+		if (!isElementPresentVerifyClick(UpdateCart_BTN, browser)) {
+		    throw new Exception("Not able to click on Update Cart Link");
+		}
+
+		if (!waitTillPageLoad(ShoppingCartItems_LBL.replace("ABC", Quantity), browser)) {
+		    throw new Exception("Given quantity was not updated");
+		}
+
+		if(dataMap.containsKey("ChangeStore") && dataMap.get("ChangeStore").get(0).equalsIgnoreCase("Yes")){
+		    selectStore(browser, stepBean, dataMap);
+		}
+
+		if (dataMap.containsKey("isPickupOnly") && (dataMap.get("isPickupOnly").get(0)).equalsIgnoreCase("Yes")) {
+		    if(!isElementPresentVerifyClick(PickupOption_RDO, browser)){
+			throw new Exception("Unable to select pickup option");
+		    }
+
+		    if (waitTillPageLoad(ContinueToPickupOptions_BTN, browser)) {
+			if (isElementPresentVerifyClick(ContinueToPickupOptions_BTN, browser)) {
+			    if (!waitTillPageLoad(PickupHeader_H, browser)) {
+				throw new Exception("Unable to navigate to Pickup Options page");
+			    }
+			    if (isElementPresentVerifyClick(Continue_BTN, browser)) {
+				if (!waitTillPageLoad(Billing_H, browser)) {
+				    throw new Exception("Unable to navigate to Billing page");
+				}
+			    }
+			}
+		    }
+		}else{
+		    if (waitTillPageLoad(ContinueToShipping_BTN, browser)) {
+			if (isElementPresentVerifyClick(ContinueToShipping_BTN, browser)) {
+			    if (!waitTillPageLoad(ShippingAddress_H, browser)) {
+				throw new Exception("Unable to navigate to Shipping Address page");
+			    }
+			}
+		    }
+		}
+	    } else {
+		throw new Exception("Unable to find the order/ The order may be Null");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verify Pick up details and to enter required
+     *          information
+     * @author - SIVA SANTHI REDDY P
+     * @Created -12 NOV 2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyAndenterInfoinPickupOptionPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ContinutoPickupPage_BTN = "//input[@id='checkoutFooterNextButton']~XPATH";
+	String PickupOptionsHeader_BTN = "//h3[contains(text(),'Pickup Options')]~XPATH";
+	String PickupTime_ELM = "//strong[contains(@class,'time')]~XPATH";
+	String PickpDate_ELM = "//span[contains(@class,'date')]~XPATH";
+	String LastDate_ELM = "//span[contains(@class,'lastdate')]~XPATH";
+	String StoreHoursHeader_ELM = "//strong[contains(text(),'Store Hours')]~XPATH";
+	String EmailAddress_TXT = "input#email~CSS";
+	String PhoneNumber_TXT = "input#regphonenumber~CSS";
+	String textupdates_CHK = "input#textUpdates~CSS";
+	String DesignateYesorNo_CHK = "input#designatedYesNo~CSS";
+	String FirstName_TXT = "input#firstName~CSS";
+	String LastName_TXT = "input#lastname~CSS";
+	String Continue_BTN = "input#continue_btn~CSS";
+	String ShippingInfoHeader_ELM = "//h3[contains(text(),'Shipping Address')]~XPATH";
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String clickContinuetoPickupPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "clickContinuetoPickupPage");
+	    String EmailAddress = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "EmailAddress");
+	    String PhoneNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PhoneNumber");
+	    String TextUpdates = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "TextUpdates");
+	    String AllowDesignatePerson = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AllowDesignatePerson");
+	    String FirstName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FirstName");
+	    String LastName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LastName");
+	    String Targetpage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Targetpage");
+
+	    if (clickContinuetoPickupPage != null && clickContinuetoPickupPage.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(ContinutoPickupPage_BTN, browser)) {
+		    throw new Exception("Not able to click on Continu to Pick up Page button");
+		}
+		if (!waitTillPageLoad(PickupOptionsHeader_BTN, browser)) {
+		    messagesMap.put("Pickup Option page Header", "Header not found. May be page is not laded in time or object changed");
+		    status = WARNING;
+		}
+	    }
+	    String ElementsToverify[] = { PickupTime_ELM, PickpDate_ELM, LastDate_ELM, StoreHoursHeader_ELM };
+	    for (int count = 0; count < ElementsToverify.length; count++) {
+		if (!isElementPresentVerification(ElementsToverify[count], browser)) {
+		    messagesMap.put(ElementsToverify[count], "Object is Missing");
+		    status = WARNING;
+		}
+	    }
+	    if (EmailAddress != null && !EmailAddress.equals("-")) {
+		if (!clearAndEnterText(EmailAddress_TXT, EmailAddress, browser)) {
+		    messagesMap.put("Email Address", "Not able to Enter Email Address");
+		    status = WARNING;
+		}
+	    }
+	    if (PhoneNumber != null && !PhoneNumber.equals("-")) {
+		if (!clearAndEnterText(PhoneNumber_TXT, PhoneNumber, browser)) {
+		    messagesMap.put("Phone Number", "Not able to Enter Phone Number");
+		    status = WARNING;
+		}
+	    }
+	    if (TextUpdates != null && EmailAddress.equalsIgnoreCase("Yes")) {
+		if (!checkBoxSelection(browser, textupdates_CHK, "SELECT")) {
+		    messagesMap.put("Text Updates Check box", "Not able to select check box");
+		    status = WARNING;
+		}
+	    }
+	    if (AllowDesignatePerson != null && AllowDesignatePerson.equalsIgnoreCase("Yes")) {
+		if (!checkBoxSelection(browser, DesignateYesorNo_CHK, "SELECT")) {
+		    messagesMap.put("Allow Designate person Check box", "Not able to select check box");
+		    status = WARNING;
+		}
+		if (FirstName != null && !FirstName.equals("-")) {
+		    if (!clearAndEnterText(FirstName_TXT, FirstName, browser)) {
+			messagesMap.put("First Name", "Not able to Enter First Name");
+			status = WARNING;
+		    }
+		}
+		if (LastName != null && !LastName.equals("-")) {
+		    if (!clearAndEnterText(LastName_TXT, LastName, browser)) {
+			messagesMap.put("Last Name", "Not able to Enter Last Name");
+			status = WARNING;
+		    }
+		}
+	    }
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+		throw new Exception("Not able to click on Continue Button");
+	    }
+	    Thread.sleep(2000);
+	    if (Targetpage.equalsIgnoreCase("ShippingAddress")) {
+		if (!isElementPresentVerification(ShippingInfoHeader_ELM, browser)) {
+		    messagesMap.put("Destination page", "Page is not navigate to Shipping Info page");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

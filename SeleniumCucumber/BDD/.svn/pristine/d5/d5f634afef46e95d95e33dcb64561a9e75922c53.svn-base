@@ -1,0 +1,109 @@
+@pharmacy @EmailSubscriptionHealthCareClinic
+Feature: Validates the functionality of Healthcare Clinic News & Special Offers checkbox - Browser->Only chrome
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-EmailSubscription-1
+Scenario: Validates the functionality of Healthcare Clinic News & Special Offers checkbox for light user
+
+Given "RX-EmailSubscription-1" Customer starts the scenario:
+| InputFileName | SheetName          | RowId                  |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-1 |
+
+Given "RX-EmailSubscription-1" Customer login to the walgreens.com:
+| InputFileName | SheetName     | RowId            |
+| CommonData  	| login   		| Healthcarelight  |
+
+Then "RX-EmailSubscription-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               		   | SheetName       | RowId                         | ClickObjectinTab |
+| PharmacyHomePageLinkVerification         | LightReg        | HoverCommunicationPreferences |yes               |
+| PharmacyHomePageLinkVerification         | LightReg        | EditButton                    |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | HealthcareCheckbox            |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | SaveChangesButton             |no                |
+
+Then "RX-EmailSubscription-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery2   |
+
+Then "RX-EmailSubscription-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName       | RowId                         | ClickObjectinTab |
+| PharmacyHomePageLinkVerification         | LightReg        | EditButton                    |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | HealthcareCheckbox            |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | SaveChangesButton1            |no                |
+
+Then "RX-EmailSubscription-1" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery1   |
+
+Then "RX-EmailSubscription-1" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId            	   |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-1  |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-EmailSubscription-2
+Scenario: Validates the functionality of Healthcare Clinic News & Special Offers checkbox for unauthenticated user
+
+Given "RX-EmailSubscription-2" Customer starts the scenario:
+| InputFileName | SheetName          | RowId                  |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-2 |
+
+Given "RX-EmailSubscription-2" Customer login to the walgreens.com:
+| InputFileName | SheetName     | RowId            |
+| CommonData  	| login   		| Healthcareunauth |
+
+Then "RX-EmailSubscription-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	            	       | SheetName       | RowId                         | ClickObjectinTab |
+| PharmacyHomePageLinkVerification         | LightReg        | HoverCommunicationPreferences |yes               |
+| PharmacyHomePageLinkVerification         | LightReg        | EditButton                    |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | HealthcareCheckbox            |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | SaveChangesButton             |no                |
+
+Then "RX-EmailSubscription-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery4   |
+
+Then "RX-EmailSubscription-2" Customer clicks on an object and validates the expected results:
+| InputFileName	   	                       | SheetName       | RowId                         | ClickObjectinTab |
+| PharmacyHomePageLinkVerification         | LightReg        | EditButton                    |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | HealthcareCheckbox            |no                |
+| PharmacyHomePageLinkVerification         | LightReg        | SaveChangesButton1            |no                |
+
+Then "RX-EmailSubscription-2" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery3   |
+
+Then "RX-EmailSubscription-2" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                  |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-2 |
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@RX-EmailSubscription-3
+Scenario: Validates the functionality of Healthcare Clinic News & Special Offers checkbox for authenticated user
+
+Given "RX-EmailSubscription-3" Customer starts the scenario:
+| InputFileName | SheetName          | RowId                  |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-3 |
+
+Given "RX-EmailSubscription-3" Customer login to the walgreens.com:
+| InputFileName | SheetName     | RowId    |
+| CommonData  	| login   		| newRx1   |
+
+Then "RX-EmailSubscription-3" Customer updates Email Subscriptions from Communication Preferences Page:
+| StoreWideSavings | OnlineDealsAndExclusives | HealthAndWellnessNewsletters | WalgreensPhotoNewAndOffers | DiabetesNewsletters | HealthCareClinicAndSpecialOffers |
+| 		-		   |		-				  |			-					 |				-			  |			-			|		 Yes					   |
+
+Then "RX-EmailSubscription-3" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery6   |
+
+Then "RX-EmailSubscription-3" Customer updates Email Subscriptions from Communication Preferences Page:
+| StoreWideSavings | OnlineDealsAndExclusives | HealthAndWellnessNewsletters | WalgreensPhotoNewAndOffers | DiabetesNewsletters | HealthCareClinicAndSpecialOffers |
+| 		-		   |		-				  |			-					 |				-			  |			-			|		 No					       |
+
+Then "RX-EmailSubscription-3" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 	| RowId            |
+| DataBase      | Query         | EmailSubQuery5   |
+
+Then "RX-EmailSubscription-3" Customer finished testing the scenario:
+| InputFileName | SheetName          | RowId                  |
+| QC-RX         | EmailSubscription  | RX-EmailSubscription-3 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

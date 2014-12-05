@@ -1,0 +1,57 @@
+@checkout @ContactLensCheckout
+Feature: Customer is able to add Contact Lens items to the cart -- Logged In Customer
+
+#-----------------------------------------------------------------------------------------------------------
+@contactlens1
+Scenario: Customer buys contact lenses and ships to home address
+Given  "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl2   |
+
+Then "" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "" Customer Goes to the Shopping Cart
+
+Then "" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "" Customer enters doctor information for contact lens and then selects a prescriber:
+| StoreName | SelectPrescriber | DoctorFirstName | DoctorLastName | DoctorAddress   | DoctorCity | State | ZIPCode | PhoneAreaCode | PhoneNumber  | FaxAreaCode | FaxNumber |
+| test      | 3                | -               | -              | -               | -          | -     | -       | -             | -            | -           | -         |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+# Customer submits the order
+Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 

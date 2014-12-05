@@ -1,0 +1,60 @@
+package walgreens.ecom.batch.automation.stepdefinitions.dwar;
+
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.dwar.DWARCommonLibrary;
+import walgreens.ecom.batch.automation.library.dwar.DigitalOffersLibrary;
+import walgreens.ecom.batch.automation.library.pharmacy.appointmentscheduler.WalgreensAppointmentSchedulerLibrary;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.table.DataTable;
+
+public class DigitalOffersSteps {
+    @Given("^\"([^\"]*)\" Customer Verifies the clipping and unclipping functionality in the coupons hub page:$")
+    public void Customer_Verifies_the_clipping_and_unclipping_functionality_in_the_coupons_hub_page(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+
+	try {
+	    dataMap = CommonLibrary.getHorizontalData((arg2));
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customer Verifies the clipping and unclipping functionality in the coupons hub page:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    DigitalOffersLibrary.CouponsClipAndUnclipValidation(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+    @Then("^\"([^\"]*)\" Customers verifies the Auto Clip Functionality:$")
+    public void Customers_verifies_the_Auto_Clip_Functionality(String arg1, DataTable arg2) {
+	EventFiringWebDriver browser = null;
+	ScenarioBean scenario = null;
+	StepBean step = null;
+	Map<String, List<String>> dataMap = null;
+	try {
+	    dataMap = CommonLibrary.getHorizontalData(arg2);
+	    scenario = CommonLibrary.getScenario(arg1);
+	    step = new StepBean();
+	    step.setStepName("Customers verifies the Auto Clip Functionality:");
+	    scenario.getStepBeans().add(step);
+	    browser = CommonLibrary.getBrowser(Thread.currentThread().getId());
+	    DigitalOffersLibrary.AutoClipCouponValidation(browser, step, dataMap);
+	} catch (Exception e) {
+	    CommonLibrary.LogIt(e, null, step);
+	} finally {
+	    CommonLibrary.ReportIt(browser, scenario, step);
+	}
+    }
+
+}

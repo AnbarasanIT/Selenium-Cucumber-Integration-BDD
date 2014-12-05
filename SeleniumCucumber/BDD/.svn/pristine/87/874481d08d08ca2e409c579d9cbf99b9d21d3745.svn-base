@@ -1,0 +1,97 @@
+@checkout @DailyLivingCheckout
+Feature: Customer is able to add daily living items to the cart
+
+@dailyliving1
+Scenario: Customer buys daily living items and ships it to home address
+          using standard shipping and with a valid credit card on file
+
+Given  "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@dailyliving2
+Scenario: Customer buys daily living items and ships it to home address
+          using standard shipping and with a valid credit card on file
+
+Given  "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | dl1   |
+
+Then "" Customer adds Daily Living items to the cart from search.
+
+Then "" Customer Goes to the Shopping Cart
+
+Then "" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | standard                 | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+# Customer submits the order
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 
+
+#-----------------------------------------------------------------------------------------------------------
+@dailyliving3
+Scenario: Customer buys daily living items and ships it to new shipping address using expedited shipping
+Given  "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          |
+| CommonData    | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+And "" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | dl1   |
+
+Then "" Customer adds Daily Living items to the cart from search.
+
+Then "" Customer Goes to the Shopping Cart
+
+Then "" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| newshippingaddress  | no                  | 1                | Test      | User      | 104 wilmot rd  | Deerfield | 16    | 60015   | test@test.com | 123-147-1598 |
+
+
+Then "" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | expedited                | -                        |
+
+Then "" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+# Customer submits the order
+#Then "" Customer reviews the Order from Review Order and Submit page and make the selection:
+#| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+#| yes         | -                       | -                         | -                    | -                        | 

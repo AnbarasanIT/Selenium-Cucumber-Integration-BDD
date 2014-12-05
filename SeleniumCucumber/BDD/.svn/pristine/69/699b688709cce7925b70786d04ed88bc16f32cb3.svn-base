@@ -1,0 +1,248 @@
+@dailyliving @AddressNotFoundValidations
+Feature: Customer is able to do Address validations in Shipping information page
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-1
+Scenario: Guest User Address Validation for invalid Street US address
+
+Given  "CAC-ADDRESSNOTFOUND-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-1|
+
+And "CAC-ADDRESSNOTFOUND-1" Customer Clears the Shopping Cart
+
+And "CAC-ADDRESSNOTFOUND-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 111 willy rd   | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  Yes	     |
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-2
+Scenario: Guest User Address Validation for invalid City , State and Zip US Address
+
+Given  "CAC-ADDRESSNOTFOUND-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-2|
+
+And "CAC-ADDRESSNOTFOUND-2" Customer Clears the Shopping Cart
+
+And "CAC-ADDRESSNOTFOUND-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | Las Vegas | 2     | 99505   |   -    |testuser1@testebiz.com  | 8471234567   |  Yes	     |
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-2|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-3
+Scenario: Guest User Address Validation for PO Box Address , Change Shipping method Enter UT Wrong Address
+
+Given  "CAC-ADDRESSNOTFOUND-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-3|
+
+And "CAC-ADDRESSNOTFOUND-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| SigninorRegister		 |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City        | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | Po Box 1345    | vernon hils | 16    | 60096   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed | ChangeLink |
+| -      	      | standard		         |     -			        |	Yes		 |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | second    | Usertwo   | no 1234        | Fajardo	| 43    | 09653   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-3" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-3|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-4
+Scenario: Logged in User Address Validation for invalid Street US address
+
+Given  "CAC-ADDRESSNOTFOUND-4" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-4|
+
+Given "CAC-ADDRESSNOTFOUND-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | ClDobUser1   |
+
+And "CAC-ADDRESSNOTFOUND-4" Customer Clears the Shopping Cart
+
+And "CAC-ADDRESSNOTFOUND-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 111 willy rd   | DEERFIELD | 16    | 60015   |   -    |testuser1@testebiz.com | 8471234567   |  -           |
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-ADDRESSNOTFOUND-4" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-4|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-5
+Scenario: Logged in User Address Validation for invalid City and Zip US Address 
+
+Given  "CAC-ADDRESSNOTFOUND-5" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-5|
+
+Given "CAC-ADDRESSNOTFOUND-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | login     | ClDobUser1   |
+
+And "CAC-ADDRESSNOTFOUND-5" Customer Clears the Shopping Cart
+
+And "CAC-ADDRESSNOTFOUND-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | loyaltysave1 |
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | 104 wilmot rd  | Las Vegas |  2     | 99505  |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-ADDRESSNOTFOUND-5" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-5|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@CAC-ADDRESSNOTFOUND-6
+Scenario: Logged in User Address Validation for PO Box Address , Change Shipping method Enter UT Wrong Address
+
+Given  "CAC-ADDRESSNOTFOUND-6" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-6|
+
+Given "CAC-ADDRESSNOTFOUND-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId    	     |
+| CommonData    | login     | refillRx3      |
+
+And "CAC-ADDRESSNOTFOUND-6" Customer Clears the Shopping Cart
+
+And "CAC-ADDRESSNOTFOUND-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   |
+| CommonData    | search    | nonloyalty1  |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer adds Daily Living items to the cart from search.
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer Goes to the Shopping Cart
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City        | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Test      | Userone   | Po Box 1345    | vernon hils | 16    | 60096   |  -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed | ChangeLink |
+| -      	      | standard		         |     -			        |	Yes		 |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress           | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | second    | Usertwo   | no 1234        | Fajardo	| 43    | 09653   |   -    |testuser1@testebiz.com  | 8471234567   |  -		     |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CAC-ADDRESSNOTFOUND-6" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId      		   |
+| QC-CAC        | ADDRESSNOTFOUND	| CAC-ADDRESSNOTFOUND-6|

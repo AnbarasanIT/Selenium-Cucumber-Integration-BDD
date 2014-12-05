@@ -1,0 +1,124 @@
+@dailyliving @LoyaltyFulfilment
+Feature:To validate Loyalty Fulfilment scenarios.
+#----------------------------------------------------------------------------------
+@DL-LoyaltyFulfilment-01
+Scenario: To verfiy the SS Loyalty product fulfiment and check the order status in DB
+
+Given "DL-LoyaltyFulfilment-01" Customer starts the scenario: 
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| LoyaltyFulfilment	 | DL-LoyaltyFulfilment-01   |
+
+Given "DL-LoyaltyFulfilment-01" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      		|
+| CommonData    | login     | LoyaltyPointsUser	|
+
+And "DL-LoyaltyFulfilment-01" Customer Clears the Shopping Cart
+
+And "DL-LoyaltyFulfilment-01" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId 		|
+| CommonData    | search    | DCLoyalty  |
+
+Then "DL-LoyaltyFulfilment-01" Customer adds Daily Living items to the cart from search.
+
+Then "DL-LoyaltyFulfilment-01" Customer Goes to the Shopping Cart
+
+Then "DL-LoyaltyFulfilment-01" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-LoyaltyFulfilment-01" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress  | City      | State | ZipCode |ZipExtn | EmailAddress      | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   |   5121 |siva@testebiz.com | 8471234567    |  No	        |
+
+Then "DL-LoyaltyFulfilment-01" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+And "DL-LoyaltyFulfilment-01" Customer finds Redemption Option section and selects amount in the Payment Options page:
+| RedemptionSection    | SeeRedemptionTermsLink    | WhynotLink  |RedeemptiomAmount |
+| 		-              | -                         |	-	  	 |	1		        |
+
+Then "DL-LoyaltyFulfilment-01" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId 		  |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | MasterCard     | -			 |
+
+Then "DL-LoyaltyFulfilment-01" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-LoyaltyFulfilment-01" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName 		| SheetName    | RowId     			  	 |
+| CheckoutOrderDetails  | OrderIds   |DL-LoyaltyFulfilment-01  |
+
+Given "DL-LoyaltyFulfilment-01" Customer login to feeds instance:
+
+Then "DL-LoyaltyFulfilment-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName  | RowId   			  	 |
+| DYNADMIN      | FEEDS		 | OrderRepositoryCache  |
+
+Then "DL-LoyaltyFulfilment-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	      |
+|  DataBase     | DCFulfillment | DC_LTYOrderStatusquery1 |
+
+Then "DL-LoyaltyFulfilment-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	          |
+| DYNADMIN      | FEEDS          | FulfillmentPerformJob1 |
+
+Then "DL-LoyaltyFulfilment-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	       |
+|  DataBase     | DCFulfillment | DC_LTYOrderStatusquery2  |
+
+Then "DL-LoyaltyFulfilment-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	    	  |
+| DYNADMIN      | FEEDS          | OperaStatusFull1    	  |
+| DYNADMIN      | FEEDS          | DCLTYOrderIDInfo1      |
+| DYNADMIN      | FEEDS          | generateXMLAndTestjob1 |
+
+Then "DL-LoyaltyFulfilment-01" Customer ftp the file for the batch job:
+| InputFileName | SheetName      | RowId  	       |
+| BatchData     | DCFulfillment  | dcInboundFile1  |
+| BatchData     | DCFulfillment  | dcOutboundFile1 |
+
+Then "DL-LoyaltyFulfilment-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | processOrderXmls1  |
+
+Then "DL-LoyaltyFulfilment-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | DCFulfillment | DC_LTYOrderStatusquery3  |
+
+Then "DL-LoyaltyFulfilment-01" Customer updates Parameter values or runs required job from Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	      |
+| DYNADMIN      | FEEDS          | LoggingDebugTransactionBatchJobInfo1  |
+| DYNADMIN      | FEEDS          | LoggingInfoTransactionBatchJobInfo1  |
+| DYNADMIN      | FEEDS          | DC_LoyaltyEarnPoints  |
+
+Then "DL-LoyaltyFulfilment-01" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | MutlipleRowsQuery | DC_LTYRequestLog |
+
+Then "DL-LoyaltyFulfilment-01" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | DCFulfillment | DC_LTYTenderCode  		   |
+
+Then "DL-LoyaltyFulfilment-01" Customer finished testing the scenario:
+| InputFileName | SheetName  	 | RowId       		     |
+|	QC-DL		| LoyaltyFulfilment	 | DL-LoyaltyFulfilment-01   |
+
+#----------------------------------------------------------------------------------
+@DL-LoyaltyFulfilment-02
+Scenario: To verfiy the SS Loyalty product fulfiment and check the order status in DB
+
+Given "DL-LoyaltyFulfilment-02" Customer starts the scenario: 
+| InputFileName | SheetName  	     | RowId       		       |
+|	QC-DL		| LoyaltyFulfilment	 | DL-LoyaltyFulfilment-02 |  
+
+Then "DL-LoyaltyFulfilment-02" Customer runs the Required Query from the DB:
+| InputFileName | SheetName     | 		RowId      	        |
+|  DataBase     | DCFulfillment | DC_LTYTenderCode  		|
+
+Then "DL-LoyaltyFulfilment-02" Customer finished testing the scenario:
+| InputFileName | SheetName  	     | RowId       		         |
+|	QC-DL		| LoyaltyFulfilment	 | DL-LoyaltyFulfilment-02   |
+
+#----------------------------------------------------------------------------------

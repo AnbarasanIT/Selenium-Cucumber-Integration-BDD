@@ -1,0 +1,52 @@
+@checkout @pharmacyCheckout @RefillPrescriptionCheckout
+Feature: I want to verify that Customer can add Mail Plan Prescriptions to the cart
+
+#-----------------------------------------------------------------------------------------------------------
+
+@refill1
+Scenario: Customer adds Prescription for refill to cart from data sheet
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId          |
+| CommonData | login     | authenticated1 |
+
+And "" Customer Clears the Shopping Cart
+
+When  "" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId   |
+| CACData       | RefillRx  | mailRx1 |
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@refill2
+Scenario: Customer adds a Prescription for refill to cart
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName        | SheetName             | RowId             |
+| CommonData       | login                 | authenticated1    |
+
+And "" Customer Clears the Shopping Cart
+
+When  "" Customer adds a Prescription for refill to cart:
+| FamilyMemberOption  | isMailService | isNinetyDay | AutoRefill       | noOfSelections | StoreNo |
+| -                   | -            | -            | Auto Refill: OFF | 1              | -       |
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@refill3
+Scenario: Customer adds a Prescription for refill to cart
+Given "" Customer opens the browser
+
+Given "" Customer login to the walgreens.com:
+| InputFileName        | SheetName             | RowId             |
+| CommonData       | login                 | authenticated1    |
+
+And "" Customer Clears the Shopping Cart
+
+When  "" Customer adds a Prescription for refill to cart:
+| FamilyMemberOption | isMailService | isNinetyDay |AutoRefill | noOfSelections | StoreNo |
+| -                  | yes           | No          |No         | 1              | 32037   |

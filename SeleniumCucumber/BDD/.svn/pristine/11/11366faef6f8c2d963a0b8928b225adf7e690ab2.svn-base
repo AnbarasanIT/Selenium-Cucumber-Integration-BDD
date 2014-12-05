@@ -1,0 +1,62 @@
+@CrossSite @AccountHomeAndSubPagesValidations
+
+Feature:  Customer Verfies my account page and CSLR functionalities
+ 
+#-----------------------------------------------------------------------------------------
+@CF-ACCOUNTDASHBOARD-01
+Scenario: Customer is able to navigate to respecitve pages if he clicks  Refill Rxs, Rx History, Add Family Member,  Prescription Insurance form link account dash board Page
+
+Given "CF-ACCOUNTDASHBOARD-01" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-CF	        | ACCOUNTDASHBOARD	| CF-ACCOUNTDASHBOARD-01  |
+
+Given "CF-ACCOUNTDASHBOARD-01" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      |
+| Pharmacy  	 | login     | AdminUser1 |
+
+Then "CF-ACCOUNTDASHBOARD-01" Customer clicks on an object and validates the expected results:
+| InputFileName 	| SheetName 		| RowId              			  | ClickObjectinTab |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 	    	  |		-		   |
+| AccountDashboard  | LinkNavigation  	| GotoPharmacyHomePageLink		  |		-		   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 	    	  |		-		   |
+| AccountDashboard  | LinkNavigation  	| AddFamilyMemberLink			  |		-		   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 	    	  |		-		   |
+| AccountDashboard  | LinkNavigation  	| MyWalgreensStoreLink			  |		Yes		   |
+| AccountDashboard  | LinkNavigation  	| RefillRxsLink					  |		Yes		   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 	    	  |		-		   |
+| AccountDashboard  | LinkNavigation  	| PrescriptionHistoryLInk   	  |		Yes		   |
+| 		CSLR 	    | LinkNavigation  	| YourAccountLink	 	    	  |		-		   |
+| AccountDashboard  | LinkNavigation  	| PrescriptionInsuranceInfoLink   |		Yes		   |
+
+Then "CF-ACCOUNTDASHBOARD-01" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CF-ACCOUNTDASHBOARD-01" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-CF	        | ACCOUNTDASHBOARD	| CF-ACCOUNTDASHBOARD-01  |
+
+#-----------------------------------------------------------------------------------------
+@CF-ACCOUNTDASHBOARD-02
+Scenario: Customer verifies Rx user login and page validations of personal,sign in and security page
+
+Given "CF-ACCOUNTDASHBOARD-02" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	  |
+| QC-CF         | ACCOUNTDASHBOARD	| CF-ACCOUNTDASHBOARD-02   |
+
+Given "CF-ACCOUNTDASHBOARD-02" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId        |
+| CommonData  	 | login     | Rxuser1      |
+
+Given "CF-ACCOUNTDASHBOARD-02" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName  | SheetName    | RowId        |
+|AccountDashboard|SigninSecurity| ChangeSecurityQuestion |
+
+Then "CF-ACCOUNTDASHBOARD-02" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId         	 |
+| QC-CF         | ACCOUNTDASHBOARD	| CF-ACCOUNTDASHBOARD-02  |
+
+
+
+
+#-----------------------------------------------------------------------------------------

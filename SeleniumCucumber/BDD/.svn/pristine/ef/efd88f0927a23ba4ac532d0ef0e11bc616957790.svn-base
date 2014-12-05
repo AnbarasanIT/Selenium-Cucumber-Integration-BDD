@@ -1,0 +1,248 @@
+package walgreens.ecom.batch.automation.library.csc;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.BrowserFactory;
+import walgreens.ecom.batch.framework.common.beans.ScenarioBean;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class CSCCommonLibrary extends CommonLibrary {
+
+    public static void switchToCSCWindow(EventFiringWebDriver browser, ScenarioBean scenario, StepBean stepBean) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    Thread.sleep(10000);
+	    Iterator<String> windowIterator = browser.getWindowHandles().iterator();
+	    while (windowIterator.hasNext()) {
+		String windowHandle = windowIterator.next();
+		browser.switchTo().window(windowHandle);
+		System.out.println("Current URL="+browser.getCurrentUrl());
+		if (browser.getCurrentUrl().contains("agent/main.jsp")) {
+		    browser.manage().window().maximize();
+		    break;
+		}
+	    }
+	    BrowserFactory.setCSCBrowser(browser, Thread.currentThread().getId());
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    public static void switchToDefaultWindow(EventFiringWebDriver browser, ScenarioBean scenario, StepBean stepBean) {
+	String status = PASS;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    Iterator<String> windowIterator = browser.getWindowHandles().iterator();
+	    while (windowIterator.hasNext()) {
+		String windowHandle = windowIterator.next();
+		browser.switchTo().window(windowHandle);
+		if (browser.getCurrentUrl().contains("agent/login.jsp")) {
+		    break;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************************ 
+     * @Purpose - Method to Accept or Reject CL Order.
+     * @author - Siva Santhi Reddy
+     * @Created - 03 SEP 2013
+     * @Modified By - SARAVANAN M
+     * @Modified Date - SEP-4-2013
+     ************************************************************************ 
+     **/
+    public static void accpetorRejectCLOrder(EventFiringWebDriver browser, ScenarioBean scenarioBean, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Commerce_TAB = "//a[@id='commerceTabLink']~XPATH";
+	String OrderID_TXT = "//input[@id='fulfillment']~XPATH";
+	String Search_BTN = "//input[@name='basicSearch']~XPATH";
+	String WorkOn_LNK = "//a[contains(text(),'Work on')]~XPATH";
+	String ContactLens_LNK = "//a[contains(text(),'Contact Lenses')]~XPATH";
+	String Lock_BTN = "//input[@value='Lock']~XPATH";
+	String AcceptOrder_LST = "//select[contains(@name,'acceptOrderReason')]";
+	String Accept_BTN = "//input[@id='acceptButton']~XPATH";
+	String OrderAcceptedMessage_ELM = "//span[contains(text(),'Order has been accepted ')]~XPATH";
+	String Orders_LNK="//button/span[contains(text(),'Orders')]~XPATH";
+	String SearchOrder_LNK="//tr[@id='searchForOrder']/td[contains(text(),'Search for Order')]~XPATH";
+	String OrderView_LNK="//li[contains(text(),'Order View')]~XPATH";
+	String OrderID=null;
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // ADDDED- SARAVANAN M - SEP-3-2013
+	    if(dataMap.get("OrderNumber")!=null && dataMap.get("OrderNumber").get(0).equalsIgnoreCase("Yes")){
+		OrderID=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumber");
+	    }else{
+		OrderID = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderID_1");
+	    }
+
+	    String AccpetOrderType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AccpetOrderType");
+	    if (!isElementPresentVerifyClick(Commerce_TAB, browser)) {
+		throw new Exception("Not able to click on commerce Tab");
+	    }
+
+	    // ADDDED- SARAVANAN M - SEP-3-2013
+	    if(!isElementPresentVerification(OrderID_TXT, browser)){
+		if(isElementPresentVerifyClick(Orders_LNK, browser)){
+		    if(isElementPresentVerifyClick(SearchOrder_LNK, browser)){
+			if(!isElementPresentVerification(OrderID_TXT, browser)){
+			    throw new Exception("Not able to find Order Search page");
+			}
+		    }
+		}
+	    }
+	    Thread.sleep(OBJECT_WAIT_THRESHOLD);
+	    if (!clearAndEnterText(OrderID_TXT, OrderID, browser)) {
+		messagesMap.put("Order ID", "Not able to enter Order ID");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Search_BTN, browser)) {
+		throw new Exception("Not able to click on Search Button");
+	    }
+	    if (!isElementPresentVerifyClick(WorkOn_LNK, browser)) {
+		throw new Exception("Not able to click on Work On Link");
+	    }
+	    String OrderSelectedMessage_ELM = "//*[contains(text(),'" + OrderID + " is now the active order.')]~XPATH";
+	    if (!isElementPresentVerification(OrderSelectedMessage_ELM, browser)) {
+		messagesMap.put("Order Selected Message", "Message is Missing");
+	    }
+
+	    // ADDDED- SARAVANAN M - SEP-3-2013
+	    if(isElementPresentVerification(OrderView_LNK, browser)){
+		getElementByProperty(OrderView_LNK, browser).click();
+	    }
+
+	    if(waitTillPageLoad(ContactLens_LNK, browser)){
+		if (!isElementPresentVerifyClick(ContactLens_LNK, browser)) {
+		    throw new Exception("Not able to click on Contact Lens Link");
+		}
+	    }
+	    if(waitTillPageLoad(Lock_BTN, browser)){
+		if (!isElementPresentVerifyClick(Lock_BTN, browser)) {
+		    throw new Exception("Not able to click on Lock Button");
+		}
+	    }
+
+	    if (AccpetOrderType != null && !AccpetOrderType.equals("-")) {
+
+		// ADDDED- SARAVANAN M - SEP-4-2013
+		Thread.sleep(3000);
+		List<WebElement> OptionList=new Select(getElementByProperty(AcceptOrder_LST, browser)).getOptions();
+		int SelectOption=3;
+
+		for(int Option=1;Option<=OptionList.size();Option++){
+		    String Text=OptionList.get(Option).getText();
+		    System.out.println("OptionList.get(Option).getText()="+Text);
+		    if(Text.equalsIgnoreCase(AccpetOrderType)){
+			SelectOption=Option+1;
+			break;
+		    }
+		}
+		if(isElementPresentVerification(AcceptOrder_LST, browser)){
+		    if(!isElementPresentVerifyClick(AcceptOrder_LST+"//option["+SelectOption+"]", browser)){
+			messagesMap.put("Order Accept Type Selection", "Unable to find the given order acceptance reason");
+			status = WARNING;
+		    }
+		}
+
+		if (!isElementPresentVerifyClick(Accept_BTN, browser)) {
+		    throw new Exception("Not able to Click on Accept Button");
+		}
+		if (!isElementPresentVerification(OrderAcceptedMessage_ELM, browser)) {
+		    messagesMap.put("Order Accept Message", "Message is not getting displayed");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to wit for the particular object for specific time in CSC Environment
+     * @author - SARAVANAN M
+     * @Created - SEP-10-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static boolean waitTillPageLoad(String objectProperty, EventFiringWebDriver browser) {
+	boolean isPageLoaded=false;
+	int waitTime=3000;
+	int VerificationCount=7;
+	try {
+	    int Counter=0;
+	    String URL=EcommTestRunner.config.getString("cscURL");
+	    System.out.println("URL="+URL);
+	    if(URL.contains("int1")){
+		VerificationCount=20;
+	    }
+	    do{
+		Thread.sleep(waitTime);
+		if(isElementPresentVerification(objectProperty, browser)){
+		    isPageLoaded=true;
+		}
+		Counter++;
+	    }while(Counter<VerificationCount && !isPageLoaded);
+	} catch (Exception e) {
+	    LogIt(null, e.getMessage(), null);
+	}
+	return isPageLoaded;
+    }
+
+
+
+    //    public static boolean fluentWait( String objectProperty,  EventFiringWebDriver browser) {
+    //	try{
+    //	 Wait<EventFiringWebDriver> wait = new FluentWait<EventFiringWebDriver>(browser)
+    //		       .withTimeout(30, TimeUnit.SECONDS)
+    //		       .pollingEvery(5, TimeUnit.SECONDS)
+    //		       .ignoring(NoSuchElementException.class);
+    //	 
+    //	 wait.until(getElementByProperty(objectProperty, browser),);
+    //
+    //	}catch(Exception e){
+    //	    
+    //	}
+    //    }
+
+}

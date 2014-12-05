@@ -1,0 +1,622 @@
+@pharmacy @RefillHubSub
+Feature: All the scenarios in the feature are related Refill Hub check out and UI validation
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-1
+Scenario: Customer check out the auto refill rx from prescription details page by pick up at store 
+
+Given  "RX-RefillHubSub-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-1 	|
+
+Given "RX-RefillHubSub-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId      	  |
+| PharmacyLinkVerification  |RefillHubSub  | ALL       		  |
+| PharmacyLinkVerification  |RefillHubSub1 | RxSettings       |
+| PharmacyLinkVerification  |RefillHubSub1 | Cancel       	  |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   		 | RowId         |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Find out more |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Express Pay   |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | ExpressCancel |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Find out more |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Express Pay   |
+
+Then "RX-RefillHubSub-1" Customer verfies Express Pay details in Rx Settings page:
+| CardNumber 	   | SuccessMsg     | 
+| 4111111111111111 | Changes Saved: |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId 		|
+| PharmacyLinkVerification  |MyWagStore | Find out more |
+| PharmacyLinkVerification  |MyWagStore | My Walgreens Store |
+| PharmacyLinkVerification  |MyWagStore | Choose Store |
+
+Then "RX-RefillHubSub-1" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	   |
+| StoreLocator  |MakeMyStore  | RefillSubStore |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId 		|
+| PharmacyLinkVerification  |MyWagStore | Select Store 	|
+
+When  "RX-RefillHubSub-1" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId         |
+| CACData       | RefillRx  | RefillSubUser |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   		| RowId         |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Find out more |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Express Pay   |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | ExpressCancel |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Find out more |
+| PharmacyLinkVerification  |RefillHubSub_ExpRx | Express Pay   |
+
+Then "RX-RefillHubSub-1" Customer verfies Express Pay details in Rx Settings page:
+| CardNumber 	   | SuccessMsg     | 
+| 4111111111111111 | Changes Saved: |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId 		|
+| PharmacyLinkVerification  |MyWagStore | Find out more |
+| PharmacyLinkVerification  |MyWagStore | My Walgreens Store |
+| PharmacyLinkVerification  |MyWagStore | Choose Store |
+
+Then "RX-RefillHubSub-1" Customer searches for a store:
+| InputFileName | SheetName   | RowId     	   |
+| StoreLocator  |MakeMyStore  | RefillSubStore |
+
+Then "RX-RefillHubSub-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId 		|
+| PharmacyLinkVerification  |MyWagStore | Select Store 	|
+
+Then "RX-RefillHubSub-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-1" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	|
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-1|
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-2
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-2 	|
+
+Given "RX-RefillHubSub-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-2" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | EmailVerification | Set		 |
+
+Then "RX-RefillHubSub-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | EMailReminders 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-2" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | EmailVerification | Verify		 |
+
+Then "RX-RefillHubSub-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-2" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | EmailVerificationForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | EMailReminders 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-2" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | EmailVerificationForMember | Verify	  | 1 				   |
+
+#Then "RX-RefillHubSub-2" Customer logout from walgreens:
+#| Source  |
+#| Global  |
+
+Then "RX-RefillHubSub-2" Customer finished testing the scenario:
+| InputFileName  | SheetName     | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-2 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-3
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-3 	|
+
+Given "RX-RefillHubSub-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-3" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | EmailVerificationCancel | Set		 |
+
+Then "RX-RefillHubSub-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | EMailReminders 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-3" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | EmailVerificationCancel | Verify		 |
+
+Then "RX-RefillHubSub-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-3" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | EmailCancelForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-3" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | EMailReminders 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-3" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | EmailCancelForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-3" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-3 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-4
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-4" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-4 	|
+
+Given "RX-RefillHubSub-4" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-4" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | ExpressPayVerification | Set		 |
+
+Then "RX-RefillHubSub-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Express Pay 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-4" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | ExpressPayVerification | Verify		 |
+
+Then "RX-RefillHubSub-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-4" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | ExpressPayVerificationForMember | Set	 | 1				   |
+
+Then "RX-RefillHubSub-4" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Express Pay 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-4" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | ExpressPayVerificationForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-4" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-4 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-5
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-5" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-5 	|
+
+Given "RX-RefillHubSub-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-5" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | ExpressPayVerificationCancel | Set		 |
+
+Then "RX-RefillHubSub-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Express Pay 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-5" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | ExpressPayVerificationCancel | Verify		 |
+
+Then "RX-RefillHubSub-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-5" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | ExpressPayCancelForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-5" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Express Pay 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-5" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | ExpressPayCancelForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-5" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-5 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-6
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-6" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-6 	|
+
+Given "RX-RefillHubSub-6" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-6" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | MyWagStoreVerification | Set		 |
+
+Then "RX-RefillHubSub-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | My Walgreens Store 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-6" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | MyWagStoreVerification | Verify		 |
+
+Then "RX-RefillHubSub-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-6" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | MyWagStoreVerificationForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | My Walgreens Store 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-6" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | MyWagStoreVerificationForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-6" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-6 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-7
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-7" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-7 	|
+
+Given "RX-RefillHubSub-7" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-7" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | CapPrefVerification | Set		 |
+
+Then "RX-RefillHubSub-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cap Preference 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-7" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | CapPrefVerification | Verify		 |
+
+Then "RX-RefillHubSub-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-7" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | CapPrefVerificationForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-7" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cap Preference 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-7" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | CapPrefVerificationForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-7" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-7" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-7 |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-8
+Scenario: customer verifies AS IS state for all tabs in the Rx Setting section
+
+Given  "RX-RefillHubSub-8" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-8 	|
+
+Given "RX-RefillHubSub-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-8" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | CapPrefVerificationCancel | Set		 |
+
+Then "RX-RefillHubSub-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cap Preference 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-8" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   | StateOption |
+| CACData       |AsIsStateVerification | CapPrefVerificationCancel | Verify		 |
+
+Then "RX-RefillHubSub-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | ReturnToManageRx 	 |
+
+Then "RX-RefillHubSub-8" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | CapPrefCancelForMember | Set		  | 1				   |
+
+Then "RX-RefillHubSub-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   	| RowId  		 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Find out more 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cap Preference 	 |
+| PharmacyLinkVerification  |ReturnOrCancel | Cancel 	 |
+
+Then "RX-RefillHubSub-8" Customer verifies As Is State:
+| InputFileName | SheetName   		   | RowId  		   			| StateOption | FamilyMemberOption |
+| CACData       |AsIsStateVerification | CapPrefCancelForMember | Verify	  | 1 				   |
+
+Then "RX-RefillHubSub-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-RefillHubSub-8" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  	 |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-8 |
+
+#---------------------------------------------------------------------------------------------------------
+
+@RX-RefillHubSub-9
+Scenario: Customer validtes the UI and Navigation in the refill hub page 
+
+Given  "RX-RefillHubSub-9" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-9 	|
+
+Given "RX-RefillHubSub-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+And "RX-RefillHubSub-9" Customer navigates to refill prescriptions page through refill faster overlay from pharmacy page:
+
+Then "RX-RefillHubSub-9" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName    | RowId 	  						|
+| PharmacyLinkVerification  |RefillHubSub  | DefaultSorting					| 
+| PharmacyLinkVerification  |RefillHubSub  | NewRx 	  						| 
+| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+| PharmacyLinkVerification  |RefillHubSub  | TransferRx 	  				| 
+| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+| PharmacyLinkVerification  |RefillHubSub  | PrintRxRecords 	  			| 
+| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+| PharmacyLinkVerification  |RefillHubSub  | AutoRefills 	  				| 
+| PharmacyLinkVerification  |RefillHubSub  | ReturnToManageAutorefill       |
+
+And "RX-RefillHubSub-9" Customer validates sorting of the refillhub page columns:
+|NoofTimesToClickTableHeader| ColumnToValidate | OrderType  |
+|1			    			| LastFillDate	   | Descending |
+|1			    			| LastFillDate     | Ascending  |
+|1			    			| Prescription     | Ascending  |
+|1			    			| Prescription     | Descending |
+|1			    			| Next Fill    	   | Ascending  |
+|1			    			| Next Fill        | Descending |
+
+#Then "RX-RefillHubSub-9" Customer selects a family member:
+#| FamilyMemberOption    |2  |
+
+#Then "RX-RefillHubSub-9" Customer clicks on an object and validates the expected results:
+#| InputFileName 			| SheetName    | RowId 	  						|
+#| PharmacyLinkVerification  |Authenticated | Pharmacy 	  					|
+#| PharmacyLinkVerification  |RefillHubSub  | RefillFromAccount				|
+
+#Then "RX-RefillHubSub-9" Customer clicks on an object and validates the expected results:
+#| PharmacyLinkVerification  |RefillHubSub  | NewRx 	  						| 
+#| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+#| PharmacyLinkVerification  |RefillHubSub  | TransferRx 	  				| 
+#| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+#| PharmacyLinkVerification  |RefillHubSub  | PrintRxRecords 	  			| 
+#| PharmacyLinkVerification  |RefillHubSub  | ReturnToManagePrescriptions    |
+#| PharmacyLinkVerification  |RefillHubSub  | AutoRefills 	  				| 
+#| PharmacyLinkVerification  |RefillHubSub  | ReturnToManageAutorefill       |
+
+#Then "RX-RefillHubSub-9" Customer logout from walgreens:
+#| Source  |
+#| Global  |
+
+Then "RX-RefillHubSub-9" Customer finished testing the scenario:
+| InputFileName  | SheetName  	 | RowId      	 	    |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-9    |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-10
+Scenario: Customer validates Label Preferences and Cap Preferences Section for Admin User
+
+Given  "RX-RefillHubSub-10" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-10	|
+
+Given "RX-RefillHubSub-10" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-10" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName     | RowId 				|ClickObjectOverlay  |TargetOverlay |
+| PharmacyLinkVerification | CapPreferences   | RefillFromAccount	        |no   			      |no			 |
+| PharmacyLinkVerification  |CapPreferences | RxSettings 			|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | LargePrint 			|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | LabelPreSaveChanges 	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | RegularPrint 		|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | LabelPreSaveChanges 	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | CapPreferences 		|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | ChildSafetyCaps 		|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | CapPreSaveChanges 	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | EasyOpenCaps 	 	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | CapPreSaveChanges 	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | Cancel            	|no     |  no   |
+| PharmacyLinkVerification  |CapPreferences | ReturnToManagePrescription |no | no|
+
+Then "RX-RefillHubSub-10" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-10    |
+#---------------------------------------------------------------------------------------------------------
+@RX-RefillHubSub-11
+Scenario:Customer validates Label Preferences and Cap Preferences Section for Family Member
+
+Given  "RX-RefillHubSub-11" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		    |
+| QC-RX	    	| RefillHubSub      | RX-RefillHubSub-11	|
+
+Given "RX-RefillHubSub-11" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId		 | 
+| CommonData 	 | login     | RefillSubUser |
+
+Then "RX-RefillHubSub-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName     | RowId 				|
+| PharmacyLinkVerification  |CapPreferences | RefillFromAccount 	|
+
+Then "RX-RefillHubSub-11" Customer selects a family member:
+| FamilyMemberOption    |1  |
+
+Then "RX-RefillHubSub-11" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName     | RowId 				|
+| PharmacyLinkVerification  |CapPreferences | RxSettings 			|
+| PharmacyLinkVerification  |CapPreferences | LargePrint 			|
+| PharmacyLinkVerification  |CapPreferences | LabelPreSaveChanges 	|
+| PharmacyLinkVerification  |CapPreferences | RegularPrint 			|
+| PharmacyLinkVerification  |CapPreferences | LabelPreSaveChanges 	|
+| PharmacyLinkVerification  |CapPreferences | CapPreferences 		|
+| PharmacyLinkVerification  |CapPreferences | ChildSafetyCaps 		|
+| PharmacyLinkVerification  |CapPreferences | CapPreSaveChanges 	|
+| PharmacyLinkVerification  |CapPreferences | EasyOpenCaps 	 		|
+| PharmacyLinkVerification  |CapPreferences | CapPreSaveChanges 	|
+| PharmacyLinkVerification  |CapPreferences | Cancel            	|
+| PharmacyLinkVerification  |CapPreferences | ReturnToManagePrescription |
+
+Then "RX-RefillHubSub-11" Customer finished testing the scenario:
+| InputFileName  | SheetName  | RowId      	 	  |
+| QC-RX   		 | RefillHubSub  | RX-RefillHubSub-11    |
+#---------------------------------------------------------------------------------------------------------

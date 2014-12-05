@@ -1,0 +1,1732 @@
+package walgreens.ecom.batch.automation.library.pharmacy.homepage;
+
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.seleniumemulation.WaitForPageToLoad;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import com.thoughtworks.selenium.Wait.WaitTimedOutException;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class CommonPharmacyLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - Validate Print prescriptions records display(Get Records)
+     *          functionality
+     * @author - Fyrose
+     * @Created -
+     * @Modified By -SARAVANAN M
+     * @Modified Date -29-JUNE-2013
+     ************************************************************* 
+     */
+    public static void printPrescriptionRecordsValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PharmacyTab_LNK = "//a[@title='Pharmacy & Health']~XPATH";
+	String PrintPrescriptionRecord_LNK = "//ul/li[3]/a[@title = 'Print Prescription Records']~XPATH";
+	String PrintPrescriptionRecordPage_HEADER = "h1[contains(text(),'Print Prescription Records')]~XPATH";
+	String RXhistoryPage_DIV = "//div/div[@align='center']/p~XPATH";
+	String GoBack_LNK = "//a/strong[contains(text(),'back')]~XPATH";
+	String RXstartdate_TXT = "//input[@id='startDatepicker']~XPATH";
+	String RXendDate_TXT = "//input[@id='endDatepicker']~XPATH";
+	String GetRecords_IMG = "//input[@id='getRec']~XPATH";
+	String Print_IMG = "//img[@title='Print']~XPATH";
+	String PrintPrescritionsRecords_ELM = "//h1[contains(text(),'Print Prescription Records')]~XPATH";
+	String StartDateError_LBL = "//p[contains(text(),'Please enter a start date.')]~XPATH";
+	String EndDateError_LBL = "//p[contains(text(),'Please enter an end date.')]~XPATH";
+	String ErrorHeader_LBL = "//p[contains(text(),'We have detected')]~XPATH";
+	String[] PPRUIArr = { "a[title='View prescription history']~CSS", "//strong[contains(text(),'Request Written Prescription Records')]~XPATH",
+		"//p[contains(text(),'Call us at 217-554-8949 with any questions. We')][contains(text(),'re here to help.')]~XPATH", "//p[contains(text(),'Custodian of Records')]~XPATH",
+		"//p[contains(text(),'Search your online prescription records. Records older than 15 months may be incomplete.')]~XPATH",
+	"//p[contains(text(),'re glad to send you a complete paper record of your Walgreens prescriptions within the past 10 years. It')]~XPATH" };
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String Startdate = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "StartDate");
+	    String GetRecords = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "GetRecords");
+	    String ExpectedTargetPage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpectedTargetPage");
+	    String GoBack = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "GoBack");
+	    if (isElementPresentVerifyClick(PharmacyTab_LNK, browser)) {
+		if (!isElementPresentVerifyClick(PrintPrescriptionRecord_LNK, browser)) {
+		    throw new Exception("print prescription record link is not found");
+		}
+	    }
+	    if (isElementPresentVerification(PrintPrescriptionRecordPage_HEADER, browser)) {
+		messagesMap.put("Expected page", "Print prescription page is not displayed");
+		status = WARNING;
+	    }
+	    // # Added SARAVANAN M -28-JUNE-2013- UI validation for the Print
+	    // Prescription Records Form page
+	    if (dataMap.containsKey("UIValidation") && dataMap.get("UIValidation").get(0).equalsIgnoreCase("Yes")) {
+
+		for (int arrInc = 0; arrInc < PPRUIArr.length; arrInc++) {
+		    if (!isElementPresentVerification(PPRUIArr[arrInc], browser)) {
+			messagesMap.put("Print Rx form page UI validations", PPRUIArr[arrInc] + " Object is not present");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    // # Added SARAVANAN M -28-JUNE-2013- Error validation for the date
+	    // fields
+	    if (dataMap.containsKey("ErrorValidation") && dataMap.get("ErrorValidation").get(0).equalsIgnoreCase("Yes")) {
+		getElementByProperty(RXstartdate_TXT, browser).clear();
+		getElementByProperty(RXendDate_TXT, browser).clear();
+		if (isElementPresentVerifyClick(GetRecords_IMG, browser)) {
+		    if (!(isElementPresentVerification(StartDateError_LBL, browser) && isElementPresentVerification(EndDateError_LBL, browser) && isElementPresentVerification(ErrorHeader_LBL, browser))) {
+			messagesMap.put("Date Field Error Validation", "Error messages are not/wrongly displayed for the date fields");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	    // # Added SARAVANAN M -28-JUNE-2013- Calender Verification
+	    if (dataMap.containsKey("CalenderVerification") && dataMap.get("CalenderVerification").get(0).equalsIgnoreCase("Yes")) {
+		String datePickerDiv_ELM = "//div[contains(@class,'ui-datepicker-header')]~XPATH";
+		String datePickerHeader_ELM = "div[class*='datepicker-title']~CSS";
+		String datePickerPrev_LNK = "a[title='Prev']~CSS";
+		String datePickerNext_LNK = "a[title='Next']~CSS";
+		int previousMonthFlag = 0;
+		// Getting Current Date
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("d/MMMM/yyyy");
+		String CurrentDate = dateFormat.format(cal.getTime());
+		// Converting Current date to date format
+		Date givenDate = dateFormat.parse(CurrentDate);
+		// Creating Gregorian Calendar instance
+		Calendar CalendarInstance = new GregorianCalendar();
+		// Adding given date to calendar
+		CalendarInstance.setTime(givenDate);
+		CalendarInstance.add(Calendar.DATE, -1);
+		String YesterDay = dateFormat.format(CalendarInstance.getTime());
+		Calendar LimitedDate = new GregorianCalendar();
+		LimitedDate.setTime(givenDate);
+		LimitedDate.add(Calendar.YEAR, -3);
+		LimitedDate.add(Calendar.DATE, -1);
+		String BeyondDatelimit = dateFormat.format(LimitedDate.getTime());
+
+		String[] currentDateArr = CurrentDate.split("/");
+		String[] beyondDateArr = BeyondDatelimit.split("/");
+		String[] YesterdayArr = YesterDay.split("/");
+
+		// Start Date Calendar verification
+		if (!isElementPresentVerifyClick(RXstartdate_TXT, browser)) {
+		    throw new Exception("Unable to click on Start date Icon");
+		}
+
+		if (isElementPresentVerification(datePickerDiv_ELM, browser)) {
+		    String HeaderText = getElementByProperty(datePickerHeader_ELM, browser).getText();
+
+		    if (HeaderText.contains(currentDateArr[1]) && HeaderText.contains(currentDateArr[2])) {
+			if (isElementPresentVerification("//table/tbody//a[contains(text(),'" + currentDateArr[0] + "')]", browser)) {
+			    messagesMap.put("Start Date Calendar", "Start date calendar has enabled the current date");
+			    status = WARNING;
+			}
+
+			if (!isElementPresentVerification("//table/tbody//a[contains(text(),'" + YesterdayArr[0] + "')]", browser)) {
+			    messagesMap.put("Start Date Calendar", "Start date calendar has disabled the Yesterday's date");
+			    status = WARNING;
+			}
+
+			if (isElementPresentVerification(datePickerNext_LNK, browser)) {
+			    messagesMap.put("Start Date Calendar", "Start date calendar has Next month link in the current month");
+			    status = WARNING;
+			}
+			// Verifying the functionality of the Previous link in
+			// the Start Date Calendar
+			do {
+			    isElementPresentVerifyClick(datePickerPrev_LNK, browser);
+			    previousMonthFlag++;
+			} while (isElementPresentVerification(datePickerPrev_LNK, browser));
+
+			HeaderText = getElementByProperty(datePickerHeader_ELM, browser).getText();
+			System.out.println("HeaderText=" + HeaderText);
+			System.out.println("beyondDateArr[0]=" + beyondDateArr[0]);
+			if (!((previousMonthFlag == 36) && HeaderText.contains(beyondDateArr[1]) && HeaderText.contains(beyondDateArr[2]))) {
+			    messagesMap.put("Start Date Calendar", "Start date calendar has enabled beyond/disabled before 36 months");
+			    status = WARNING;
+			} else {
+			    if (isElementPresentVerification("//table/tbody//a[contains(text(),'" + (beyondDateArr[0] + 1) + "')]", browser)) {
+				messagesMap.put("Start Date Calendar", "Start date calendar has enabled the date beyond exact 36 months");
+				status = WARNING;
+			    }
+			}
+			// Verifying the functionality of the Next link in the
+			// Start Date Calendar
+			do {
+			    isElementPresentVerifyClick(datePickerNext_LNK, browser);
+			    previousMonthFlag--;
+			} while (isElementPresentVerification(datePickerNext_LNK, browser));
+
+			if (!(previousMonthFlag == 0)) {
+			    messagesMap.put("Start Date Calendar", "Start date calendar has enabled the month after the current month");
+			    status = WARNING;
+			}
+		    }
+		}
+
+		// End Date Calendar verification
+		if (!isElementPresentVerifyClick(RXendDate_TXT, browser)) {
+		    throw new Exception("Unable to click on End date Icon");
+		}
+
+		if (isElementPresentVerification(datePickerDiv_ELM, browser)) {
+		    String HeaderText = getElementByProperty(datePickerHeader_ELM, browser).getText();
+		    if (HeaderText.contains(currentDateArr[1]) && HeaderText.contains(currentDateArr[2])) {
+			if (isElementPresentVerification("//table/tbody//a[contains(text(),'" + currentDateArr[0] + "')]", browser)) {
+			    messagesMap.put("End Date Calendar", "End date calendar has enabled the current date");
+			    status = WARNING;
+			}
+
+			if (!isElementPresentVerification("//table/tbody//a[contains(text(),'" + YesterdayArr[0] + "')]", browser)) {
+			    messagesMap.put("End Date Calendar", "End date calendar has disabled the Yesterday's date");
+			    status = WARNING;
+			}
+
+			if (isElementPresentVerification(datePickerNext_LNK, browser)) {
+			    messagesMap.put("End Date Calendar", "End date calendar has Next month link in the current month");
+			    status = WARNING;
+			}
+			// Verifying the functionality of the Previous link in
+			// the End Date Calendar
+			do {
+			    isElementPresentVerifyClick(datePickerPrev_LNK, browser);
+			    previousMonthFlag++;
+			} while (isElementPresentVerification(datePickerPrev_LNK, browser));
+			HeaderText = getElementByProperty(datePickerHeader_ELM, browser).getText();
+			if (!((previousMonthFlag == 36) && HeaderText.contains(beyondDateArr[1]) && HeaderText.contains(beyondDateArr[2]))) {
+			    messagesMap.put("End Date Calendar", "End date calendar has enabled beyond/disabled before 36 months");
+			    status = WARNING;
+			} else {
+			    if (isElementPresentVerification("//table/tbody//a[contains(text(),'" + (beyondDateArr[0] + 1) + "')]", browser)) {
+				messagesMap.put("End Date Calendar", "End date calendar has enabled the date beyond exact 36 months");
+				status = WARNING;
+			    }
+			}
+			// Verifying the functionality of the Next link in the
+			// End Date Calendar
+			do {
+			    isElementPresentVerifyClick(datePickerNext_LNK, browser);
+			    previousMonthFlag--;
+			} while (isElementPresentVerification(datePickerNext_LNK, browser));
+
+			if (!(previousMonthFlag == 0)) {
+			    messagesMap.put("End Date Calendar", "End date calendar has enabled the month after the current month");
+			    status = WARNING;
+			}
+		    }
+		}
+
+	    }
+	    // # SARAVANAN M-In order to refresh the page after the Error
+	    // validation
+	    browser.get(browser.getCurrentUrl());
+	    if (!clearAndEnterText(RXstartdate_TXT, Startdate, browser)) {
+		messagesMap.put("Enter Start Date", "Not able to enter text in Start date");
+		status = WARNING;
+	    }
+	    if (getElementByProperty(RXendDate_TXT, browser).getAttribute("value").equals("")) {
+		throw new Exception("End date field has null value");
+	    }
+	    if (GetRecords.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(GetRecords_IMG, browser)) {
+		    throw new Exception("Not able to click get records image button");
+		}
+	    }
+	    if (ExpectedTargetPage.equalsIgnoreCase("RxPrintRecords")) {
+		// Verifying Rx history Page Division
+		if (!isElementPresentVerification(RXhistoryPage_DIV, browser)) {
+		    messagesMap.put("Expected page", "Print prescriptions record page is not displayed");
+		    status = WARNING;
+		}
+		// Verifying Print Image button
+		if (!isElementPresentVerification(Print_IMG, browser)) {
+		    messagesMap.put("Expected page", "Print Button is not displayed in Print prescriptions record page");
+		    status = WARNING;
+		}
+	    }
+	    if (GoBack.equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerifyClick(GoBack_LNK, browser)) {
+		    throw new Exception("Not able to click Go back button");
+		}
+		if (!isElementPresentVerification(PrintPrescritionsRecords_ELM, browser)) {
+		    messagesMap.put("Expected page", "Print Prescription Records page is not displayed while clicking Go back button from print prescriptions Records page");
+		    status = WARNING;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to search drugs and compare their interaction results
+     * @author - Mohana Janakavalli K
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 27-12-2012
+     ************************************************************* 
+     */
+    public static void checkDrugInteractionResults(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	// String Drugname_TXT = "input[id='checkdrugsearchKeyword']~CSS";
+	String Drugname_TXT = "//input[@id='finddrug'or @alt='search']~XPATH";
+	String Drugsearch_BTN = "input[name='submit']~CSS";
+	String Comparenow_BTN = "//*[ @alt='Compare Now' or @ alt='Compare']~XPATH";
+	String Interactionresults_ELM = "//b[contains(text(),'Interaction Results')]~XPATH";
+	String InteractionresultsType_ElM = "//*[contains(text(),'Type')]~XPATH";
+	String InteractionresultsSeverity_ELM = "//*[contains(text(),'Severity')]~XPATH";
+	String InteractionresultsDescription_ELM = "//*[contains(text(),'Description')]~XPATH";
+	String Newcomparison_BTN = "//*[ @alt='New Comparison' or @alt='Make Another Comparison']~XPATH";
+	String Profileverification_ELM = "//ul/li[2][contains(text(),'All drugs in')]~XPATH";
+	String FirstSelectedDrug_ELM = "//div[@id='body_content']/div/ul/li";
+	String SecondSelectedDrug_ELM = "//table/tbody/tr[2]/td[2]/span";
+	String ErrorMessage_ELM = "//div[contains(text(),'The drugs you have chosen do not have any interactions.')]~XPATH";
+	char alphabetrequired;
+	String SpecificDrugTobeClicked = null, FinalSelectedDrugName = null, DisplayedDrugName = "", FamilyMemeberOption = null;
+	String RequriedAlphabetObject_LNK = null, BaseDrugObject_LNK = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DrugSelectionType = null, DrugRequired = null, DrugType = null, ErrorValidation = null;
+
+	    for (int count = 1; count <= 2; count++) {
+		// get test data from excel
+		DrugSelectionType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DrugSelectionType" + count);
+		FamilyMemeberOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyNumberOption");
+		DrugRequired = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Drug" + count);
+		DrugType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Type" + count).toUpperCase();
+		ErrorValidation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ErrorValidation");
+		// Drug Selection according to the drug selection type
+		if (!DrugSelectionType.equalsIgnoreCase("ProfileVerification")) {
+		    SpecificDrugTobeClicked = "//a[contains(text(),'" + DrugType + "')]";
+		    BaseDrugObject_LNK = "//a[contains(text(),'" + DrugRequired + "')]~XPATH";
+		    if (DrugSelectionType.equalsIgnoreCase("Alphabetically")) {
+			alphabetrequired = DrugRequired.charAt(0);
+			RequriedAlphabetObject_LNK = "//div/span/a[contains(text(),'" + alphabetrequired + "')]~XPATH";
+			if (!isElementPresentVerifyClick(RequriedAlphabetObject_LNK, browser)) {
+			    throw new Exception("Alphabet link not clicked");
+			}
+			if (!isElementPresentVerifyClick(BaseDrugObject_LNK, browser)) {
+			    throw new Exception("Not able to click on the requied drug");
+			}
+		    } else if (DrugSelectionType.equalsIgnoreCase("Searchbox")) {
+			if (!clearAndEnterText(Drugname_TXT, DrugRequired, browser)) {
+			    messagesMap.put("Drugsearch", "Textbox not present");
+			    status = WARNING;
+			}
+			if (!isElementPresentVerifyClick(Drugsearch_BTN, browser)) {
+			    throw new Exception("Search button is not present");
+			}
+			if (!isElementPresentVerifyClick(BaseDrugObject_LNK, browser)) {
+			    throw new Exception("Drugs not displayed from search");
+			}
+		    } else if (DrugSelectionType.equalsIgnoreCase("MostReferenced")) {
+			if (!isElementPresentVerifyClick(BaseDrugObject_LNK, browser)) {
+			    throw new Exception("Not able to click on the requied drug");
+			}
+		    }
+		    FinalSelectedDrugName = getElementByProperty(SpecificDrugTobeClicked, browser).getText();
+		    if (!isElementPresentVerifyClick(SpecificDrugTobeClicked, browser)) {
+			throw new Exception("Not able to click on specific drug");
+		    }
+		    if (isElementPresentVerification(FirstSelectedDrug_ELM, browser)) {
+			DisplayedDrugName = getElementByProperty(FirstSelectedDrug_ELM, browser).getText();
+		    } else {
+			DisplayedDrugName = getElementByProperty(SecondSelectedDrug_ELM, browser).getText();
+		    }
+		    if (!DisplayedDrugName.contains(FinalSelectedDrugName)) {
+			messagesMap.put("Selected Drug", "Selected drug is not present in the interaction results section");
+			status = WARNING;
+		    }
+		}
+		if (DrugSelectionType.equalsIgnoreCase("ProfileVerification")) {
+		    if (!FamilyMemeberOption.equalsIgnoreCase("-")) {
+			if (!familyMemberSelector(browser, FamilyMemeberOption)) {
+			    messagesMap.put("Family Member", "Not able to select the family member");
+			    status = WARNING;
+			}
+		    }
+		    if (!isElementPresentVerification(Profileverification_ELM, browser)) {
+			messagesMap.put("Profileverification_ELM", "Profile details not present");
+			status = WARNING;
+		    }
+		}
+	    }// Performing Drug Comparison
+	    if (!isElementPresentVerifyClick(Comparenow_BTN, browser)) {
+		messagesMap.put("Interaction Results", "Compare button not present");
+		status = WARNING;
+	    }// Verifying Interaction results/ Error Results
+	    // if (ErrorValidation.equalsIgnoreCase("Yes")) {
+	    // if (!isElementPresentVerification(ErrorMessage_ELM, browser)) {
+	    // messagesMap.put("Error message", "Error message not present");
+	    // status = WARNING;
+	    // }
+	    // if (!isElementPresentVerifyClick(Newcomparison_BTN, browser)) {
+	    // throw new Exception("Not able to click New Comparison button");
+	    // }
+	    // } else if (ErrorValidation.equalsIgnoreCase("No")) {
+	    // if (!isElementPresentVerification(Interactionresults_ELM,
+	    // browser)) {
+	    // messagesMap.put("Interaction Results",
+	    // "Interaction results not present");
+	    // status = WARNING;
+	    // }
+	    // if (!isElementPresentVerification(InteractionresultsType_ElM,
+	    // browser)) {
+	    // messagesMap.put("Interaction Results",
+	    // "Interactionresults-Type not present");
+	    // status = WARNING;
+	    // }
+	    // if
+	    // (!isElementPresentVerification(InteractionresultsSeverity_ELM,
+	    // browser)) {
+	    // messagesMap.put("Interaction Results",
+	    // "Interactionresults-Severity not present");
+	    // status = WARNING;
+	    // }
+	    // if
+	    // (!isElementPresentVerification(InteractionresultsDescription_ELM,
+	    // browser)) {
+	    // messagesMap.put("Interaction Results",
+	    // "Interactionresults-Description not present");
+	    // status = WARNING;
+	    // }
+	    // if (!isElementPresentVerification(Newcomparison_BTN, browser)) {
+	    // messagesMap.put("Interaction Results",
+	    // "Newcomparison button not present");
+	    // status = WARNING;
+	    // }
+	    // }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to check whether the user is unmatched user or Matched
+     *          user
+     * @author - Mohamed Fyrose
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 31-12-2012
+     ************************************************************* 
+     */
+    public static void matchedOrUnmatchedUserValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Usertype = dataMap.get("UserType").get(0);
+	String VerifyIdentity_ELM = "//h1[contains(text(),'Last Step: Verify Your Identity')]~XPATH";
+	String VerifybyPhone_LNK = "//a[contains(text(),'By Phone')]~XPATH";
+	String VerifyOnline_LNK = "//a[contains(text(),'Online')]~XPATH";
+	String VerifyOnlineText_LNK = "//p/b[contains(text(),'Verify Online')]~XPATH";
+	String VerifyByPhoneText_ELM = "//p[contains(text(),'Please call')]~XPATH", VerifyByPhoneContent = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerification(VerifyIdentity_ELM, browser)) {
+		messagesMap.put("Expected page", "Verify your identity page is not displayed");
+		status = WARNING;
+	    }
+	    if (Usertype.equalsIgnoreCase("UNMATCHED")) {
+		if (isElementPresentVerification(VerifyOnline_LNK, browser) && isElementPresentVerification(VerifybyPhone_LNK, browser) && !isElementPresentVerification(VerifyOnlineText_LNK, browser)) {
+		    messagesMap.put("Unmatched Validation", "User is not an unmatched User");
+		    status = WARNING;
+		}
+	    } else if (Usertype.equalsIgnoreCase("MATCHED")) {
+		if (!isElementPresentVerification(VerifybyPhone_LNK, browser) && !isElementPresentVerification(VerifyOnlineText_LNK, browser)) {
+		    messagesMap.put("Matched Validation", "User is not an MATCHED User");
+		    status = WARNING;
+		}
+
+		// Chezhiyan - Modified on 28th Feb to accomodate - Fetching the
+		// Activation code from the "By Phone" tab and saving it in a
+		// file.
+		// This Does not affect the existing scripts
+		if (!dataMap.get("FetchActivationFlag").get(0).equalsIgnoreCase(null)) {
+		    if (dataMap.get("FetchActivationFlag").get(0).equalsIgnoreCase("Yes")) {
+			if (isElementPresentVerifyClick(VerifybyPhone_LNK, browser)) {
+			    // VerifyByPhoneContent =
+			    // browser.getPageSource().replace("\n",
+			    // "").replace(" ",
+			    // "").split("For faster")[0].split("activation code:")[1].replace("/",
+			    // "").replace("<b>", "").replace("<p>", "").trim();
+			    VerifyByPhoneContent = getElementByProperty(VerifyByPhoneText_ELM, browser).getText().replace("\n", "").replace("\t", "").replace(" ", "").split("code:")[1].trim();
+			    TestDataDBManager
+			    .putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserActivationCode", VerifyByPhoneContent);
+			} else {
+			    throw new Exception("Unable to navigate to Verify by phone page");
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Express Pay message verification
+     * @author - Chezhiyan E
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 29-03-2013
+     ************************************************************* 
+     */
+    public static void ExpressPayVerificationInRxSettings(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String CreditCardNumber_TXT = "input[id='ccNum']~CSS";
+	String SaveChanges_BTN = "input[alt='Save Changes']~CSS";
+	String SuccessMsg_ELM = "//p[contains(text(),'You have successfully updated your ExpressPay information.')]~XPATH";
+	String ErrorMsg_ELM = "//*[contains(text(),'The credit card information that has been provided is invalid, please re-enter.')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+		throw new Exception("Unable to click save changes button");
+	    }
+
+	    if (!isElementPresentVerification(ErrorMsg_ELM, browser)) {
+		throw new Exception("Success message is not displayed");
+	    }
+
+	    if (!clearAndEnterText(CreditCardNumber_TXT, dataMap.get("CardNumber").get(0), browser)) {
+		messagesMap.put("Express Pay Credit card verification", "Unable to verify credit card");
+		status = WARNING;
+	    }
+	    // Changes Saved:
+	    if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+		throw new Exception("Unable to click save changes button");
+	    }
+
+	    if (!getElementByProperty(SuccessMsg_ELM, browser).getText().contains(dataMap.get("SuccessMsg").get(0))) {
+		throw new Exception("Success message is not displayed or incorrect");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Select the prescription in the Refill prescription
+     *          faster overlay. user
+     * @author - Kumaran P
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 04-03-2012
+     ************************************************************* 
+     */
+    public static void PrescriptionSelectionInRefillRxFasterOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	int NoofPrescription = Integer.parseInt(dataMap.get("NoofPrescription").get(0));
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    switchToDefault(browser);
+	    switchToOverlay(browser);
+	    do {
+		// Do Nothing
+	    } while (!isElementPresentVerification("//div[@id='chckboxwrapper']/table/tbody/tr[1]/td/div", browser));
+
+	    if(NoofPrescription==1 && dataMap.get("RxPosition")!=null){
+		//String Prescription_CHK = "//div[@id='chckboxwrapper']/div[" + dataMap.get("RxPosition").get(0) + "]/div/input~XPATH";
+		String Prescription_CHK = "//div[@id='chckboxwrapper']/table/tbody/tr[" + dataMap.get("RxPosition").get(0) + "]/td//input~XPATH";
+		int count=0;
+		do{
+		    getElementByProperty(Prescription_CHK, browser).click();
+		    count++;
+		}while((!getElementByProperty(Prescription_CHK, browser).isSelected()) && count<4);
+	    }else{
+		for (int i = 1; i <= NoofPrescription; i++) {
+		    String Prescription_CHK = "//div[@id='chckboxwrapper']/table/tbody/tr[" + i + "]/td/div~XPATH";
+		    if (!(getElementByProperty(Prescription_CHK, browser) == null) && !(getElementByProperty(Prescription_CHK, browser).isSelected())) {
+			if (!isElementPresentVerifyClick(Prescription_CHK, browser)) {
+			    throw new Exception("Not able to click on prescription check box");
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to verifies the display of Restriction message on
+     *          selection of prescriptions in the Refill prescription faster
+     *          overlay.
+     * @author - Kumaran P
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 04-03-2012
+     ************************************************************* 
+     */
+    public static void PrescriptionSelectionRestrictionMsg(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	String RestrictionMSG_ELM = "//strong[contains(text(),'We can only accept')]~XPATH";
+	try {
+
+	    if (!isElementPresentVerification(RestrictionMSG_ELM, browser)) {
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To Verify the Pill Image
+     * @author - Sasikala J
+     * @Created - 18 Apr 2013
+     ************************************************************* 
+     */
+
+    /*
+     * Steps to make the Pill Image switch True: Goto:
+     * nucleus/walgreens/pharmacy/refillhub/util/RefillHubSwitchController/ Make
+     * the following switch value as True: pillImageRefillHubSwitch,
+     * pillImageShowHistorySwitch, pillImageSmartSearchSwitch, pillImageSwitch
+     */
+    public static void PillImageVerificationInRefillHub(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	// String Yes_Radio = "//input[@id='yes_1']~XPATH";
+	String Yes_Radio = "input[id*='yes']~CSS";
+	String CloseWindow_BTN = "//a[@title='Close Window']~XPATH";
+	String Search_TXT = "//input[@id='prescription_search']~XPATH";
+	String Search_BTN = "//input[@id='pres_search']~XPATH";
+	String Return_Manageprescription = "//a[@title='Return to Manage Prescriptions']~XPATH";
+	String Show_MorePrescription = "//*[@title='Show More Prescriptions']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // RAM - 05/14/2013
+	    // ---------------------------------------------------------------------
+	    if (!CommonLibrary.checkBoxSelection(browser, Yes_Radio, "SELECT")) {
+		messagesMap.put("Refill Hub", "Not able click on YES radio button");
+		status = WARNING;
+	    }
+	    // ---------------------------------------------------------------------
+
+	    // To verify the Pill Image for the prescriptions in the Manage
+	    // Prescription page
+
+	    WebElement TableBody = browser.findElement(By.xpath("//table/tbody"));
+	    int TableSize = TableBody.findElements(By.tagName("tr")).size();
+
+	    System.err.println("Initial table size: " + TableSize);
+	    for (int counter = 3; counter <= TableSize; counter = counter + 3) {
+		System.err.println("initial table positions checked: " + counter);
+
+		// SARAVANAN - 05/15/2013 - Verifying the presence of the Pill
+		// Image column in Refill hub page
+		// ---------------------------------------------------------------------
+		//		if (isElementPresentVerifyClick("//table/tbody/tr[" + counter + "]/td", browser)) {
+		//		    System.out.println("Counter:" +counter);
+		//		    throw new Exception("Pill Image column is not present in the Refill hub page, please make sure the Pill image Switches are Turned ON");
+		//		}
+		// ---------------------------------------------------------------------
+		if (isElementPresentVerifyClick("//table/tbody/tr[" + counter + "]/td/a/img", browser)) {
+		    switchToOverlay(browser);
+		    // To Clik on the Close Window button in the Overlay
+		    if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+			messagesMap.put("Close Window", "Not able to click on Close Window Button");
+			status = WARNING;
+		    }
+		    switchToDefault(browser);
+		} else if (!isElementPresentVerification("//table/tbody/tr[" + counter + "]/td/img", browser)) {
+		    messagesMap.put("Pill Image", "Not able to click on Pill Image ");
+		    status = WARNING;
+		}
+
+		isElementPresentVerifyClick("//table/tbody/tr[" + counter + "]/td[2]/div/p/a[@id='showHistoryATag']", browser);
+
+		// To click the Show More Prescriptions Button
+		while (isElementPresentVerification(Show_MorePrescription, browser)) {
+		    getElementByProperty(Show_MorePrescription, browser).click();
+		}
+		// To verify the Pill Image for the prescriptions in the Show
+		// History page
+		WebElement TableBody1 = browser.findElement(By.xpath("//table/tbody"));
+		int TableSize1 = TableBody1.findElements(By.tagName("tr")).size();
+
+		System.err.println("1st table size in show history: " + TableSize1);
+
+		for (int count = 1; count <= TableSize1; count = count + 1) {
+		    if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td[5]", browser)) {
+			if (!(getElementByProperty("//table/tbody/tr[" + count + "]/td[5]", browser).getText().equals(null) || getElementByProperty("//table/tbody/tr[" + count + "]/td[5]", browser)
+				.getText().equals(""))) {
+
+			    if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td/a/img", browser)) {
+				System.err.println("rows clicked in first show more tab: " + count);
+				getElementByProperty("//table/tbody/tr[" + count + "]/td/a/img", browser).click();
+				switchToOverlay(browser);
+				// To Clik on the Close Window button in the
+				// Overlay
+				if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+				    messagesMap.put("Close Window", "Not able to click on Close Window Button");
+				    status = WARNING;
+				}
+				switchToDefault(browser);
+			    } else if (!isElementPresentVerification("//table/tbody/tr[" + count + "]/td/img", browser)) {
+				messagesMap.put("Pill Image in Show history", "Pill Image is not available");
+				status = WARNING;
+			    }
+			}
+		    }
+		}
+		// To click on the Return to Manage Prescription link
+		isElementPresentVerifyClick(Return_Manageprescription, browser);
+	    }
+
+	    // To search for a prescription in the Manage Prescriptions page
+	    String keyword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword");
+
+	    if (isElementPresentVerification(Search_TXT, browser)) {
+		WebElement searchBox = getElementByProperty(Search_TXT, browser);
+		searchBox.clear();
+		searchBox.sendKeys(keyword);
+		isElementPresentVerifyClick(Search_BTN, browser);
+		// To click the Show More Prescriptions Button
+
+		while (isElementPresentVerification(Show_MorePrescription, browser)) {
+		    getElementByProperty(Show_MorePrescription, browser).click();
+		}
+		WebElement TableBody2 = browser.findElement(By.xpath("//table/tbody"));
+		int TableSize2 = TableBody2.findElements(By.tagName("tr")).size();
+		for (int counts = 3; counts <= TableSize2; counts = counts + 3) {
+		    // Clicks on the Pill image
+		    if (isElementPresentVerifyClick("//table/tbody/tr[" + counts + "]/td/a/img", browser)) {
+			System.err.println("rows verifed in smart search main tab: " + counts);
+			switchToOverlay(browser);
+			// To Clik on the Close Window button in the Overlay
+			if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+			    messagesMap.put("Close Window", "Not able to click on Close Window Button");
+			    status = WARNING;
+			}
+			switchToDefault(browser);
+		    } else if (!isElementPresentVerification("//table/tbody/tr[" + counts + "]/td/img", browser)) {
+			messagesMap.put("Pill Image", "Not able to click on Pill Image ");
+			status = WARNING;
+		    }
+		    // To verify the Pill Image for the prescriptions in the
+		    // Show History page
+		    isElementPresentVerifyClick("//table/tbody/tr[" + counts + "]/td[2]/div/p/a[@id='showHistoryATag']", browser);
+		    // To click the Show More Prescriptions Button
+		    while (isElementPresentVerification(Show_MorePrescription, browser)) {
+			getElementByProperty(Show_MorePrescription, browser).click();
+		    }
+
+		    WebElement TableBody3 = browser.findElement(By.xpath("//table/tbody"));
+		    int TableSize3 = TableBody3.findElements(By.tagName("tr")).size();
+		    for (int count = 1; count <= TableSize3; count = count + 1) {
+			// Identifies the Refills
+			if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td[5]", browser)) {
+			    if (!(getElementByProperty("//table/tbody/tr[" + count + "]/td[5]", browser).getText().equals(null) || getElementByProperty("//table/tbody/tr[" + count + "]/td[5]",
+				    browser).getText().equals(""))) {
+
+				// Clicks on the Pill image
+				if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td/a/img", browser)) {
+				    getElementByProperty("//table/tbody/tr[" + count + "]/td/a/img", browser).click();
+				    switchToOverlay(browser);
+				    // To Clik on the Close Window button in the
+				    // Overlay
+				    if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+					messagesMap.put("Close Window", "Not able to click on Close Window Button");
+					status = WARNING;
+				    }
+				    switchToDefault(browser);
+				} else if (!isElementPresentVerification("//table/tbody/tr[" + count + "]/td/img", browser)) {
+				    messagesMap.put("Pill Image in Show history", "Pill Image is not available");
+				    status = WARNING;
+				}
+			    }
+			}
+		    }
+		    // To click on the Return to Manage Prescription link
+		    /*if (!isElementPresentVerifyClick(Return_Manageprescription, browser)) {
+			messagesMap.put("Return To Manage Prescription", "Not able to click on Return To Manage Prescription link");
+			status = WARNING;
+		    }*/
+		}
+	    } else {
+		throw new Exception("Unable to verify the Search Text Box!");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to check whether the user is unmatched user or Matched
+     *          user
+     * @author - Mohamed Fyrose
+     * @Created -
+     * @Modified By -Thangaraj R
+     * @Modified Date - 27-08-2013
+     ************************************************************* 
+     */
+    @SuppressWarnings("unused")
+    public static void AsIsStateVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	WebElement TableBody = null;
+	List<WebElement> TableRows = null;
+	Boolean RxSelected = false;
+	WebElement CheckBoxContainer = null;
+	String RxNoSelected = "";
+	String firstColumnText = null;
+	String SetOrVerifyState = dataMap.get("StateOption").get(0), MemberSelected = null;
+	String PrescriptionColumnHeader_LNK = "a[title='Prescription']~CSS";
+	String SortDownIndicator_IMG = "//th[2]//img[@title='Sort down']~XPATH";
+	String DoNotShowHiddenRxs_RDO = "css=input[id*='no'][name='showhidden']~CSS";
+	String FamilyMemberSelector_SELECT = "//div[contains(@class,'FamilyMember')]//span[contains(@class,'selected')]~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (SetOrVerifyState.equalsIgnoreCase("Set")) {
+		// selecting family member for as is state verification
+		if (dataMap.containsKey("FamilyMemberOption")) {
+		    String SetForFamilyMemberOption = dataMap.get("FamilyMemberOption").get(0);
+		    if (!SetForFamilyMemberOption.equalsIgnoreCase("-") || !SetForFamilyMemberOption.equalsIgnoreCase("0")) {
+			if (familyMemberSelector(browser, SetForFamilyMemberOption)) {
+			    if (isElementPresentVerification(FamilyMemberSelector_SELECT, browser)) {
+				//Modified according to new page
+				//MemberSelected = new Select(getElementByProperty(FamilyMemberSelector_SELECT, browser)).getFirstSelectedOption().getText();
+				MemberSelected =getElementByProperty(FamilyMemberSelector_SELECT, browser).getText();
+				TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberName", MemberSelected);
+			    } else {
+				messagesMap.put("As Is state verification", "Unable to Get MemberName");
+				status = WARNING;
+			    }
+			} else {
+			    messagesMap.put("As Is state verification", "Unable to select required family member");
+			    status = WARNING;
+			}
+		    }
+		}
+
+		// sorting prescription in descending order for as is state
+		// verification
+		for (int i = 0; i < 4; i++) {
+		    isElementPresentVerifyClick(PrescriptionColumnHeader_LNK, browser);
+		    if (isElementPresentVerification(SortDownIndicator_IMG, browser)) {
+			break;
+		    } 
+		    //else {
+		    //messagesMap.put("As Is state verification", "Unable to set prescriptions in descending order");
+		    //status = WARNING;
+		    // }
+		}
+
+		// selecting a random Rx and storing the RX num in sheet to
+		// verify later
+		RxSelected = false;
+		TableBody = browser.findElement(By.xpath("//table[1]/tbody"));
+		TableRows = TableBody.findElements(By.tagName("tr"));
+		int NoOfRows = TableRows.size();
+		for (int row = 3; row <= NoOfRows; row += 3) {
+		    firstColumnText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[2]")).getText();
+		    RxNoSelected = firstColumnText.split("RX #:")[1].split("\n")[0].trim();
+		    CheckBoxContainer = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[6]"));
+		    CheckBoxContainer.findElement(By.tagName("input")).click();
+		    RxSelected = true;
+		    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxSelected", RxNoSelected);
+		    break;
+		}
+	    } else if (SetOrVerifyState.equalsIgnoreCase("Verify")) {
+		// verify if do not show hidden rx's radio button is selected
+		if (isElementPresentVerification(DoNotShowHiddenRxs_RDO, browser)) {
+		    if (!getElementByProperty(DoNotShowHiddenRxs_RDO, browser).isSelected()) {
+			messagesMap.put("As Is state verification", "do not show hidden rx's radio button is not selected");
+			status = WARNING;
+		    }
+		}
+
+		// verify if the prescriptions are sorted in the same order as
+		// before the link navigation
+		if (!isElementPresentVerification(SortDownIndicator_IMG, browser)) {
+		    messagesMap.put("As Is state verification", "The prescriptions are not sorted in descending order");
+		    status = WARNING;
+		}
+
+		// verify if the set family member exists even after navigating
+		// back
+		if (dataMap.containsKey("FamilyMemberOption")) {
+		    String SetForFamilyMemberOption = dataMap.get("FamilyMemberOption").get(0);
+		    if (!SetForFamilyMemberOption.equalsIgnoreCase("-") || !SetForFamilyMemberOption.equalsIgnoreCase("0")) {
+			if (isElementPresentVerification(FamilyMemberSelector_SELECT, browser)) {
+			    MemberSelected =getElementByProperty(FamilyMemberSelector_SELECT, browser).getText();
+			    String MemberSelectedBeforeNav = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberName");
+			    if (!MemberSelected.equalsIgnoreCase(MemberSelectedBeforeNav)) {
+				messagesMap.put("As Is state verification", "The selected family member is not the current family member");
+				status = WARNING;
+			    }
+			} else {
+			    messagesMap.put("As Is state verification", "Unable to Get MemberName");
+			    status = WARNING;
+			}
+		    }
+		}
+	    }
+
+	    // verify if the prescription selected from before the navigation is
+	    // still selected
+	    TableBody = browser.findElement(By.xpath("//table[1]/tbody"));
+	    TableRows = TableBody.findElements(By.tagName("tr"));
+	    int NoOfRows = TableRows.size();
+	    for (int row = 3; row <= NoOfRows; row += 3) {
+		RxNoSelected = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxSelected");
+		firstColumnText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[2]")).getText();
+		if (firstColumnText.contains(RxNoSelected)) {
+		    CheckBoxContainer = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[6]"));
+		    if (!CheckBoxContainer.findElement(By.tagName("input")).getAttribute("checked").equalsIgnoreCase("true")) {
+			messagesMap.put("As Is state verification", "Presviously selected Rx is not selected");
+			status = WARNING;
+		    }
+		    break;
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Validate the absence of any overlay
+     * @author - Sasikala J
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 05-13-2013
+     ************************************************************* 
+     */
+    public static void overlayAbsenceVerification(EventFiringWebDriver browser, StepBean stepBean) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Overlay_newprescription = "//div[@id='wOverlay']~XPATH";
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (isElementPresentVerification(Overlay_newprescription, browser)) {
+		messagesMap.put("Which type of new prescription do you want?", "this Overlay should not present");
+		status = WARNING;
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validating the refill hub page columns sorting
+     * @author - SARAVANAN M
+     * @Created -
+     * @Modified By -
+     * @Modified Date -21-APR-2013
+     ************************************************************* 
+     */
+
+    public static void refillHubSortingVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	String LastFillDateColumn_LNK = "//th[3]/div/a[@title='Last Filled']~XPATH";
+	String PrescriptionColumn_LNK = "//th[2]/div/a[@title='Prescription']~XPATH";
+	String NextRefillColumn_LNK = "//th[5]/div/a[@title='Refills']~XPATH";
+	List<WebElement> TableRows = getElementByProperty("//table[1]/tbody", browser).findElements(By.tagName("tr"));
+	int NoOfRows = TableRows.size();
+	int NextRowPosition = 2, CurrentRow = 1;
+	String ColumnNumber = "";
+	String CurrentRowText = null, NextRowText = null;
+	int flag = 0;
+
+	Map<String, String> messagesMap = null;
+
+	try {
+
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String ColumnToValidate = dataMap.get("ColumnToValidate").get(i);
+		String OrderType = dataMap.get("OrderType").get(i);
+		String NoofTimesToClickTableHeader = dataMap.get("NoofTimesToClickTableHeader").get(i);
+
+		if (ColumnToValidate.equalsIgnoreCase("LastFillDate")) {
+		    ColumnNumber = "3";
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(LastFillDateColumn_LNK, browser))) {// clicking
+				// on
+				// Fill
+				// Date
+				// link
+				// to
+				// sort
+				// the
+				// column
+				throw new Exception("Not able to click on Fill Date Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		}
+
+		if (ColumnToValidate.equalsIgnoreCase("Prescription")) {
+		    ColumnNumber = "2";
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(PrescriptionColumn_LNK, browser))) {// clicking
+				// on
+				// Presciption
+				// link
+				// to
+				// sort
+				// the
+				// column
+				throw new Exception("Not able to click on Prescription Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		}
+
+		if (ColumnToValidate.equalsIgnoreCase("Next Fill")) {
+		    ColumnNumber = "5";
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(NextRefillColumn_LNK, browser))) {// clicking
+				// on
+				// Price
+				// link
+				// to
+				// sort
+				// the
+				// column
+				throw new Exception("Not able to click on Price Column for " + k + " st/nd run");
+			    }
+			}
+		    }
+		}
+		// Verifying the sorting of the given columns in specified order
+		for (int RowCounter = 1; RowCounter < NoOfRows - 1; RowCounter++) {
+
+		    CurrentRow = RowCounter + 1;// setting value of the first
+		    // row of
+		    // the table
+		    NextRowPosition = CurrentRow + 1;// setting value of the
+		    // next
+		    // row of the table to be
+		    // compared
+
+		    if (NextRowPosition <= NoOfRows - 1) {
+			CurrentRowText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + CurrentRow + "]/td[" + ColumnNumber + "]")).getText().replace(",", "").trim();// Fetching
+			// the
+			// value
+			// of
+			// the
+			// first
+			// prescriber
+			// row
+			// in
+			// the
+			// table
+			NextRowText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + NextRowPosition + "]/td[" + ColumnNumber + "]")).getText().replace(",", "").trim();// Fetching
+			// the
+			// value
+			// of
+			// the
+			// next
+			// prescriber
+			// row
+			// in
+			// the
+			// table
+			if (OrderType.equalsIgnoreCase("Descending")) {
+			    if ((CurrentRowText.compareToIgnoreCase(NextRowText) < 0)) {// Verifying
+				// if
+				// the
+				// presciber
+				// names
+				// are
+				// sorted
+				// in
+				// Descending
+				// order
+				flag = flag + 1;
+				break;
+			    } else if (OrderType.equalsIgnoreCase("Ascending")) {
+				if (!(CurrentRowText.compareToIgnoreCase(NextRowText) < 0)) {// Verifying
+				    // if
+				    // the
+				    // presciber
+				    // names
+				    // are
+				    // sorted
+				    // in
+				    // Ascending
+				    // order
+				    flag = flag + 1;
+				    break;
+				}
+			    }
+			}
+		    }
+		}
+
+		if (flag > 0) {
+		    messagesMap.put("Sorting Validation", ColumnToValidate + " Column is not sorted properly in the order of " + OrderType);
+		    status = WARNING;
+		}
+	    }
+	}
+
+	catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to Submit Prescription Insurance Information
+     * @author - Saranya VijayaKumar
+     * @Created -05-31-2013
+     * @Modified By - Nandhini N
+     * @Modified Date - 06-02-2013
+     ************************************************************* 
+     */
+    public static void enteringCardholderInformation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String InsuranceCompany_TXT = "//input[@id='msInsProvider']~XPATH";
+	String MemberNumber_TXT = "//input[@id='msInsChId']~XPATH";
+	String GroupNumber_TXT = "//input[@id='msInsGroupNbr']~XPATH";
+	String PriCardholderName_TXT = "//input[@id='msInsCardholderName']~XPATH";
+	String DoBMonth_LST = "//select[@id='msInsCardholderBirthMonth']~XPATH";
+	String DoBDay_LST = "//select[@id='msInsCardholderBirthDay']~XPATH";
+	String DoBYear_LST = "//select[@id='dobYear_ins']~XPATH";
+	String HealthCond_CHK = "//input[@id='Diabetes']~XPATH";
+	String Allergies_CHK = "//input[@id='Penicillin']~XPATH";
+	String Continue_BTN = "//input[@title='Continue']~XPATH";
+	String Confirm_BTN = "//input[@title='This Information is Correct']~XPATH";
+	String Close_BTN = "a#back~CSS";
+	String YourAcct_LNK = "//a[@title='Your Account']~XPATH";
+	String Pharmacy_TAB = "//span/a[@class='arrow'][contains(text(),'Pharmacy & Health')]~XPATH";
+	String HealthHistory = "a[id*='health_history']~CSS";
+	String HealthConditions = "//div/div[6]/strong/b[contains(text(),'--')]~XPATH";
+	String DrugAllergies = "//div/div[9]/strong/b[contains(text(),'--')]~XPATH";
+
+	String strInsuranceCompany = null, strMemberNumber = null, strGroupNumber = null, strPriCardholderName = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    strInsuranceCompany = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "InsuranceCompany");
+	    strMemberNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "MemberNumber");
+	    strGroupNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "GroupNumber");
+	    strPriCardholderName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CardholderName");
+
+	    // User enters insurance company name
+	    if (strInsuranceCompany != null && !strInsuranceCompany.equals("-")) {
+		if (!clearAndEnterText(InsuranceCompany_TXT, strInsuranceCompany, browser)) {
+		    // throws error message when user is unable to enter insurance company name
+		    messagesMap.put("InsuranceCompany", "Not able to Enter Insurance Company name");
+		    status = WARNING;
+		}
+	    }
+	    if (strMemberNumber != null && !strMemberNumber.equals("-")) {// User enters member number
+		if (!clearAndEnterText(MemberNumber_TXT, strMemberNumber, browser)) {
+		    // throws error message when user is unable to enter member number
+		    messagesMap.put("MemberNumber", "Not able to Enter Member Number name");
+		    status = WARNING;
+		}
+	    }
+	    if (strGroupNumber != null && !strGroupNumber.equals("-")) {
+		// User enters group number
+		if (!clearAndEnterText(GroupNumber_TXT, strGroupNumber, browser))
+		{
+		    // throws error message when user is unable to enter group number
+		    messagesMap.put("GroupNumber", "Not able to Enter GroupNumber");
+		    status = WARNING;
+		}
+	    }
+
+	    if (strPriCardholderName != null && !strPriCardholderName.equals("-")) {
+		// User enters primary cardholder name
+		if (!clearAndEnterText(PriCardholderName_TXT, strPriCardholderName, browser)) 
+		{
+		    // throws error message when user is unable to enter cardholder name
+		    messagesMap.put("CardholderName", "Not able to Enter CardholderName");
+		    status = WARNING;
+		}
+	    }
+	    new Select(getElementByProperty(DoBMonth_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+		    "DOMonth"));// User enters DOMonth
+
+	    // User enters DODay
+	    new Select(getElementByProperty(DoBDay_LST, browser))
+	    .selectByValue(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DODay"));
+
+	    new Select(getElementByProperty(DoBYear_LST, browser)).selectByValue(getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0),
+		    "DOYear"));// User enters DOYear
+
+	    // User selects Health condition
+	    if (!checkBoxSelection(browser, HealthCond_CHK, "SELECT"))
+	    {
+		throw new Exception("Not able to Check Health condition");
+	    }
+	    // User selects Health Allergies
+	    if (!checkBoxSelection(browser, Allergies_CHK, "SELECT"))
+	    {
+		throw new Exception("Not able to Check Allergies");
+	    }
+	    // User clicks continue button once after entering all the required required values
+	    if (!isElementPresentVerifyClick(Continue_BTN, browser))
+	    {
+		throw new Exception("Not able to click on Continue button");
+	    }
+
+	    if (!isElementPresentVerifyClick(Confirm_BTN, browser))// User
+		// clicks
+		// confirm
+		// button in
+		// review
+		// page
+	    {
+		throw new Exception("Not able to click on Confirm button");
+	    }
+	    switchToOverlay(browser);// user switches to MS registration
+	    // completed overlay
+	    if (!isElementPresentVerifyClick(Close_BTN, browser)) // Clicks
+		// close
+		// button in
+		// the overlay
+	    {
+		throw new Exception("Not able to click on Close button");
+	    }
+
+	    switchToDefault(browser);
+
+	    if (!isElementPresentVerifyClick(YourAcct_LNK, browser))// clicks
+		// Your
+		// account
+		// link
+	    {
+		throw new Exception("Not able to click on Your Account link");
+	    }
+
+	    if (!performHoverClickAction(getElementByProperty(Pharmacy_TAB, browser), HealthHistory, browser))// User
+		// clicks
+		// health
+		// history
+		// link
+		// under
+		// pharmacy
+		// and
+		// health
+		// tab
+	    {
+		throw new Exception("Not able to click on Health History Link");
+	    }
+	    if (!isElementPresentVerification(HealthConditions, browser)) // User
+		// verifies
+		// any
+		// health
+		// condition
+		// is
+		// entered
+		// or
+		// not
+	    {
+		throw new Exception("Health Conditions field is not empty");
+	    }
+	    if (!isElementPresentVerification(DrugAllergies, browser))// User
+		// verifies
+		// any
+		// drug
+		// allergy
+		// is
+		// entered
+		// or not
+	    {
+		throw new Exception("Drug Allergies field is not empty");
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validating the refill hub page columns sorting
+     * @author - SARAVANAN M
+     * @Created -
+     * @Modified By -
+     * @Modified Date -21-APR-2013
+     ************************************************************* 
+     */
+
+    public static void validateMSRxPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+
+	try {
+
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String[] AnonymousUserUI = { "//h2/strong[contains(text(),'Sign In')]", "a[title='register now']~CSS", "//h1[contains(text(),'A convenient')]~XPATH",
+		    "//span[contains(text(),'Mail Service Pharmacy')]", "//li[contains(text(),'Save on prescription co-pays')]", "//li[contains(text(),'Receive a 90-day supply of your medication')]",
+		    "//li[contains(text(),'Access to expert pharmacist advice 24/7')]", "//li[contains(text(),'Get maintenance')]", "//li[contains(text(),'Reduce the risk')]",
+		    "//li/strong[contains(text(),'free')]", "//span[contains(text(),'Online Features')]", "//li[contains(text(),'Add family members')]",
+		    "//li[contains(text(),'Order mail service & retail prescription refills')]", "//li[contains(text(),'Update and manage insurance information')]",
+		    "//li[contains(text(),'View order status')]", "//b[contains(text(),'Password')]", "//h2[contains(text(),'Fill')]", "//h2[contains(text(),'Register')]",
+	    "//h2[contains(text(),'Welcome')]" };
+	    String[] LiteUserUI = { "//h2[contains(text(),'Welcome Back')]", "a>img[title='Complete Registration']~CSS//h1[contains(text(),'A convenient')]~XPATH",
+		    "//span[contains(text(),'Mail Service Pharmacy')]", "//li[contains(text(),'Save on prescription co-pays')]", "//li[contains(text(),'Receive a 90-day supply of your medication')]",
+		    "//li[contains(text(),'Access to expert pharmacist advice 24/7')]", "//li[contains(text(),'Get maintenance')]", "//li[contains(text(),'Reduce the risk')]",
+		    "//li/strong[contains(text(),'free')]", "//span[contains(text(),'Online Features')]", "//li[contains(text(),'Add family members')]",
+		    "//li[contains(text(),'Order mail service & retail prescription refills')]", "//li[contains(text(),'Update and manage insurance information')]",
+		    "//li[contains(text(),'View order status')]", "//b[contains(text(),'Password')]", "//h2[contains(text(),'Fill')]", "//h2[contains(text(),'Register')]",
+	    "//h2[contains(text(),'Welcome')]" };
+
+	    if (dataMap.get("UserType").get(0).equalsIgnoreCase("Lite")) {
+		for (int arrInc = 0; arrInc < LiteUserUI.length; arrInc++) {
+		    if (!isElementPresentVerification(LiteUserUI[arrInc], browser)) {
+			messagesMap.put(LiteUserUI[arrInc], " object not found");
+		    }
+		}
+	    } else if (dataMap.get("UserType").get(0).equalsIgnoreCase("Anonymous")) {
+		for (int arrInc = 0; arrInc < AnonymousUserUI.length; arrInc++) {
+		    if (!isElementPresentVerification(AnonymousUserUI[arrInc], browser)) {
+			messagesMap.put(AnonymousUserUI[arrInc], " object not found");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Method to search drugs and compare their interaction results
+     * @author - Rukmani RM
+     * @Created -
+     * @Modified By -
+     * @Modified Date - 30-07-2013
+     ************************************************************* 
+     */
+    public static void validateDrugSearchPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	Map<String, String> messagesMap = null;
+	String Drugname_TXT = "//p/input[@id='finddrug']~XPATH";
+	String Drugsearch_BTN = "input[name='submit']~CSS";
+	String GlobalDrugSearch_TXT = "input[id='query']~CSS";
+	String GlobalSearch_BTN = "input[title='Search']~CSS";
+	String DrugTab_TXT = "a[title='Drugs - Tab']~CSS";
+	String Next_LNK = "//a/b[contains(text(),'Next')]~XPATH";
+	String Next_IMG = "//img[@alt='Last Page']~XPATH";
+	String Page2_TXT = "//span[@class='numpag' and contains(text(),'2')]~XPATH";
+	String []DrugSearchBoxArr = new String[75];
+	String []GlobalSearchBoxArr = new String[75];
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String DrugSelectionType = null, DrugRequired = null;
+
+	    for (int count = 1; count <= 2; count++) {
+		// get test data from excel
+		DrugSelectionType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DrugSelectionType"+ count);
+		DrugRequired = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Drug"+ count);
+		// Drug Selection according to the drug selection type
+		if (DrugSelectionType.equalsIgnoreCase("DrugSearchBox")) {
+		    if (!clearAndEnterText(Drugname_TXT, DrugRequired, browser)) {
+			messagesMap.put("Drugsearch", "Textbox not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(Drugsearch_BTN, browser)) {
+			throw new Exception("Search button is not present");
+		    }
+		    int flag = 0;
+		    do{
+
+			int DrugInfoPage = browser.findElements(By.xpath("//strong/a[contains (@href, 'druginfo')]")).size();
+			for(int ElementInc = 3; ElementInc<=DrugInfoPage*3; ElementInc+=3){
+			    DrugSearchBoxArr[flag] = getElementByProperty("//p["+ElementInc+"]/strong/a", browser).getText();
+			    flag++;
+			}
+		    }while (isElementPresentVerifyClick(Next_LNK, browser));
+		}
+
+		if (DrugSelectionType.equalsIgnoreCase("GlobalDrugSearchBox")) {
+		    if (!clearAndEnterText(GlobalDrugSearch_TXT, DrugRequired, browser)) {
+			messagesMap.put("GlobalDrugsearch", "Global Textbox not present");
+			status = WARNING;
+		    }
+		    if (!isElementPresentVerifyClick(GlobalSearch_BTN, browser)) {
+			throw new Exception("Search button is not present");
+		    }
+		    if(!isElementPresentVerifyClick(DrugTab_TXT, browser)){
+			throw new Exception("Drug information tab is not present");
+
+		    }
+		    int flag1 = 0;
+		    do{
+
+			int GlobalDrugInfoPage = browser.findElements(By.xpath("//a[contains (@href, 'druginfo')]")).size();
+			System.err.println("GlobalDrugInfoPage:"+GlobalDrugInfoPage);
+			for(int Inc = 2; Inc<=(GlobalDrugInfoPage+1); Inc+=1){
+			    GlobalSearchBoxArr[flag1] = getElementByProperty("//div[4]/div["+Inc+"]/p/a", browser).getText();
+			    flag1++;
+			    if (flag1 == GlobalDrugInfoPage){
+				if(isElementPresentVerification(Next_IMG, browser)){
+				    getElementByProperty(Next_IMG, browser).click();
+				}
+			    }
+			}
+		    }while (isElementPresentVerification(Page2_TXT, browser));
+		}
+
+	    }
+	    List <String> DrugSearchBoxArrList = Arrays.asList(DrugSearchBoxArr);
+	    List <String> GlobalSearchBoxArrList = Arrays.asList(GlobalSearchBoxArr);
+	    if (!(DrugSearchBoxArrList.equals(GlobalSearchBoxArrList))){
+		throw new Exception("Search results from both the pages is not the same");
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Pharmacy services verification for 340B landing page
+     * @author - Kalaiselvan s
+     * @throws Exception
+     * @Created -7/25/2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void ThreeFortyBLandingPage(EventFiringWebDriver browser, StepBean step) {
+	String status = PASS;
+	String State_LST1 = "//select[@class='select-box340B1']~XPATH";
+	String Provider_LST1 = "//select[@class='select-box340B2']~XPATH";
+	String Go_BTN ="input[type*='image']~CSS";
+	String Pharmacy_IMG = "a[class*='menu_Pharmacy']~CSS";
+	String SeeAllService_LNK="a[title*='See All']~CSS";
+	String SeeAllService_TXT="//h1[contains(text(),'Pharmacy Services')]~XPATH";
+	String BProgram_LNK="a[alt='340B Program']~CSS";
+	String StoreLocator_LNK= "//a[@class='HCBlueLnk']~XPATH";
+	String DtlsDirection_LNK="//a[contains(text(),'Details and Directions')]~XPATH";
+	String Storelocatotpage_TXT= "//img[@title='Store Locator']~XPATH";
+	String Showmore_LNK="//img[@id='showMore']~XPATH";
+	String HealthService = "//div[@id='health']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		step.setStepStatusMessages(messagesMap);
+	    }
+	    //Navigating to the 340B landing page
+	    if (!isElementPresentVerifyClick(Pharmacy_IMG, browser)) {
+		throw new Exception("Not able to click on Pharmacy link");
+	    }
+	    if (!isElementPresentVerifyClick(SeeAllService_LNK, browser)) {
+		throw new Exception("Unable to navigate to all service page");
+	    }
+	    if (!isElementPresentVerification(SeeAllService_TXT, browser)) {
+		messagesMap.put("Pharmacy service page", "Pharmacy service page is not loaded properly.");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(BProgram_LNK, browser)) {
+		throw new Exception("Unable to navigate to 340 page");
+	    }
+	    //Navigation to the store locatorpage
+	    if (!isElementPresentVerifyClick(StoreLocator_LNK, browser)) {
+		throw new Exception("Unable to navigate to Store locator page.");
+	    }
+	    CommonLibrary.browserBack(browser);
+	    //Option to select state and provider 
+	    new Select(getElementByProperty(State_LST1, browser)).selectByIndex(4);
+	    new Select(getElementByProperty(Provider_LST1, browser)).selectByIndex(1);
+	    Thread.sleep(2000);
+	    if (!isElementPresentVerifyClick(Go_BTN, browser)) {
+		throw new Exception("Unable to Click the Go button");
+	    }
+	    //verify the details and directions link
+	    if (!isElementPresentVerifyClick(DtlsDirection_LNK, browser)) {
+		status = FAIL;
+		throw new Exception("Unable to navigate to Storelocator page.");
+	    }
+	    browser.close();
+	    for (String NewWinHandle : browser.getWindowHandles()) {
+		browser.switchTo().window(NewWinHandle);
+	    }
+	    if (!isElementPresentVerification(Storelocatotpage_TXT, browser)) {
+		messagesMap.put("StoreLocator page", "Storlocator page text is not displayed");
+		status = WARNING;
+	    }
+	    if (!isElementPresentVerifyClick(Showmore_LNK, browser)) {
+		throw new Exception("Unable to click the show more link in the storelocator page");
+	    }
+	    //Checkbox verification for 340B landing page
+	    List<WebElement> totalServices = getElementByProperty(HealthService, browser).findElements(By.tagName("li"));
+	    System.out.println("Total Eelment     " + totalServices.size());
+	    if (totalServices.get(0).getText().equalsIgnoreCase("Health Services")) {
+		for (int i = 1; i < totalServices.size(); i++) {
+		    WebElement curElemnt = totalServices.get(i);
+		    if (curElemnt.getText().equalsIgnoreCase("340B Program Details")) {
+			WebElement curChkbox = curElemnt.findElement(By.tagName("input"));
+			if(curChkbox.isSelected()==true)
+			{
+			    messagesMap.put("Stotre locator page", "Expected checkbox is preselected");
+			}
+			else {
+			    messagesMap.put("Stotre locator page", "Expected checkbox is not preselected");
+			    status = WARNING;
+			}
+		    }
+		} 
+	    }
+	}
+	catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, step);
+	} finally {
+	    step.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************* 
+     * @Purpose - Validating the refill fast overlay columns sorting
+     * @author - Ambika C
+     * @Created - 02-Sep-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void refillfastSortingVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LastFillDateColumn_LNK = "//a[contains(text(),'Last Filled')]~XPATH";
+	String PrescriptionColumn_LNK = "//a[contains(text(),'Prescriptions')]~XPATH";
+	String RefillsleftColumn_LNK = "//a[contains(text(),'Refills Left')]~XPATH";
+	int NextRowPosition = 0;
+	String CurrentRowText = null, NextRowText = null,RowPath=null;
+	int flag = 0;
+	Map<String, String> messagesMap = null;
+
+	try {
+
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String ColumnToValidate = dataMap.get("ColumnToValidate").get(i);
+		String OrderType = dataMap.get("OrderType").get(i);
+		String NoofTimesToClickTableHeader = dataMap.get("NoofTimesToClickTableHeader").get(i);
+
+		if (ColumnToValidate.equalsIgnoreCase("LastFillDate")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(LastFillDateColumn_LNK, browser))) {
+				// clicking on Fill Date link to sort the column
+				throw new Exception("Not able to click on Last Fill Date Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath="/td[2]/div[@class='resultRefillLast']";
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Prescription Name")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(PrescriptionColumn_LNK, browser))) {
+				// clicking on Presciption Name to sort the column
+				throw new Exception("Not able to click on Prescription Name Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath="/td/div[@class='RPCheckBoxLbl']/label";
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Refills Left")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(RefillsleftColumn_LNK, browser))) {
+				// clicking on Refills left link to sort the column
+				throw new Exception("Not able to click on Refills left Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath="/td[3]/div[@class='resultRefillLeft']";
+		}
+		
+		System.out.println(isElementPresentVerification("//div[@id='leftDivContent']", browser));
+		String table="//div[@id='chckboxwrapper']//table/tbody";
+		Thread.sleep(3000);
+		WebElement WE=getElementByProperty(table,browser);
+		List<WebElement> TableRows = WE.findElements(By.tagName("tr"));
+		int NoOfRows = TableRows.size();
+
+		// Verifying the sorting of the given columns in specified order
+		for (int RowCounter = 1; RowCounter <= NoOfRows ; RowCounter++) {
+		    NextRowPosition = RowCounter + 1;// setting value of the
+		    // next row of the table to be compared
+
+		    if (getElementByProperty(table+"/tr["+NextRowPosition+"]", browser)!=null) {
+			CurrentRowText = getElementByProperty(table+"/tr["+RowCounter+"]"+RowPath, browser).getText().trim();
+			NextRowText = getElementByProperty(table+"/tr["+NextRowPosition+"]"+RowPath, browser).getText().trim();
+
+			if (OrderType.equalsIgnoreCase("Descending")) {
+				if (!(CurrentRowText.compareToIgnoreCase(NextRowText) >= 0)) {
+				    // Verifying if the Prescription names are
+				    // sorted in Descending order
+					System.out.println("DSC CurrentRowText="+CurrentRowText);
+					System.out.println("DSC NextRowText="+NextRowText);
+				    flag = flag + 1;
+				    break;
+				}
+			} 
+			if (OrderType.equalsIgnoreCase("Ascending")) {
+				if (!(CurrentRowText.compareToIgnoreCase(NextRowText) <= 0)) {
+				    // Verifying if the Prescription names are
+				    // sorted in Descending order
+					
+					System.out.println("ASC CurrentRowText="+CurrentRowText);
+					System.out.println("ASC NextRowText="+NextRowText);
+				    flag = flag + 1;
+				    break;
+				}
+			}
+		    }
+		}
+		if (flag > 0) {
+		    messagesMap.put("Sorting Validation", ColumnToValidate + " Column is not sorted properly in the order of " + OrderType);
+		    status = WARNING;
+		}
+	    }
+	}
+	catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    
+    
+}
+
+
+
+
+
+

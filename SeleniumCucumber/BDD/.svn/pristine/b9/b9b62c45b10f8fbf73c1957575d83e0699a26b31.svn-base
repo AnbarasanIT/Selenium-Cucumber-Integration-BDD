@@ -1,0 +1,2711 @@
+package walgreens.ecom.batch.automation.library.pharmacy.Prescriptions;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+
+import walgreens.ecom.batch.automation.library.checkout.CheckoutRxRefillLibrary;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.csc.CSCCustomerValidationLibrary;
+import walgreens.ecom.batch.framework.EcommTestRunner;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+import walgreens.ecom.batch.framework.common.dao.TestDataDBManager;
+
+public class RefillHubLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to validate the smart search functionality in
+     *          the Refill Hub
+     * @author - SARAVANAN M
+     * @Created -1-JULY-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateSmartSearch(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourRxs_LNK = "//a[@title='Manage & Refill Prescriptions']~XPATH";
+	String ManageYourPrescriptions_HEADING = "//*[contains(text(),'Manage Prescriptions')]~XPATH";
+	String RefillPrescriptionURL = "pharmacy/refillhub/refillhub.jsp";
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String SearchTextBox_TXT = "//div[@class='termAutoComp_tab']//input[@id='prescription_search']~XPATH";
+	// String BuyoutTab_LNK = "//*[@id='tab']/h3[2]/a~XPATH";
+	String BuyoutTab_LNK = "//a[contains(@href,'BUYOUT')]"; // [contains(text(),'Previous
+	// Pharmacy')]
+	String HideFromList_LNK = "//a[@title='Hide from List']";
+	String Search_BTN = "div[class*='sprite']>input[id='pres_search']~CSS";
+	String BackToPrescriptions_LNK = "a[title='Back to Prescriptions']~CSS";
+	String PrescriptionHistory_LNK = "//a[contains(@href,'HISTORY')][contains(text(),'Prescription')]";
+	String TypeAheadBox_LST = "ul#searchResultsBox_prescription~CSS";
+	String HiddenRxShowYes_RDO = "input[id='yes_1']~CSS";
+	String ExpandCollapse_LNK = "//a[contains(@class,'commonExpCol hide')]";
+	boolean isOnRefillPrescriptionPage = false, isExpandViewPresent = false;
+	String SearchResultLink = null, firstColumnText = null;
+	WebElement TableBody = null;
+	int RowMultiplier = 1, RxNameCol = 2;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String RefillHubTab = dataMap.get("RefillHubTab").get(i).trim();
+		String SearchTerm = dataMap.get("SearchTerm").get(i).trim();
+
+		if (StringUtils.isNotBlank(SearchTerm)) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_IMG, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(ManageYourRxs_LNK, browser)) {
+			    getElementByProperty(ManageYourRxs_LNK, browser).sendKeys(Keys.RETURN);
+			}
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    } else {
+			messagesMap.put("Pharmacy page", "Not able to Navigate to Pharmacy page by clicking on Pharmacy Tab.");
+			status = WARNING;
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			String refillPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + RefillPrescriptionURL;
+			getUrl(browser, refillPrescriptionURL);
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			throw new Exception("Not able to Navigate to Refill Prescriptions page.");
+		    } else {
+			if (RefillHubTab.equalsIgnoreCase("Buyout")) {
+			    if (!isElementPresentVerifyClick(BuyoutTab_LNK, browser)) {
+				throw new Exception("Not able to Navigate to Buyout/Previous Pharmacy Prescriptions page.");
+			    }
+			    SearchResultLink = BuyoutTab_LNK;
+			} else if (RefillHubTab.equalsIgnoreCase("History")) {
+			    if (!isElementPresentVerifyClick(PrescriptionHistory_LNK, browser)) {
+				throw new Exception("Not able to Navigate to Prescription History page.");
+			    }
+			    RowMultiplier = 3;
+			    SearchResultLink = PrescriptionHistory_LNK;
+			}
+
+			// SARAVANAN M - 22-OCT-2013 - Added to manage the
+			// Expand Collapse view in Refill Hub page
+			try{
+			    if (browser.findElement(By.xpath(ExpandCollapse_LNK))!=null) {
+				browser.findElement(By.xpath(ExpandCollapse_LNK)).sendKeys(Keys.RETURN);
+				isExpandViewPresent = true;
+				RxNameCol = 1;
+			    }
+			}catch(org.openqa.selenium.NoSuchElementException e){
+
+			}
+
+			if (!isElementPresentVerification(SearchTextBox_TXT, browser)) {
+			    throw new Exception("Not able to find the search box in " + RefillHubTab + " Prescriptions page.");
+			} else {
+			    if (!clearAndEnterText(SearchTextBox_TXT, SearchTerm, browser)) {
+				throw new Exception("Unable to enter the text in search box in " + RefillHubTab + " Prescriptions page.");
+			    } else {
+				if (!isElementPresentVerification(TypeAheadBox_LST, browser)) {
+				    messagesMap.put("Refill Hub Page->" + RefillHubTab, "Type ahead box is not appearing for the input '" + SearchTerm + "'");
+				    status = WARNING;
+				}
+				getElementByProperty(Search_BTN, browser).sendKeys(Keys.RETURN);
+			    }
+			    // Verifying the 'No Results' found error message
+			    if (SearchTerm.contains("ErrorMsg")) {
+				String ErrorText_LBL = "//strong[contains(text(),'No search results found for')][contains(text(),'" + SearchTerm
+					+ "')][contains(text(),'Prescriptions. Please check spelling and try again or')][contains(text(),'" + RefillHubTab + "')]";
+				String ErrorBackToRxs_LNK = "strong>a[title='Back to Prescriptions']~CSS";
+				if (isElementPresentVerification(ErrorText_LBL, browser)) {
+				    if (!isElementPresentVerifyClick(ErrorBackToRxs_LNK, browser)) {
+					messagesMap.put("Refill Hub Page->" + RefillHubTab, "Unable to click on the Back to Prescriptions button in the Error Message");
+					status = WARNING;
+				    }
+				}
+			    } else {
+
+				if (RefillHubTab.equalsIgnoreCase("History")) {
+				    if (!(getElementByProperty(HiddenRxShowYes_RDO, browser).isSelected())) {
+					messagesMap.put("Smart Search Results", "Show hidden prescription option 'yes' is not selected by default");
+					status = WARNING;
+				    }
+				}
+
+				// Verifying the Smart search results
+				int verifiedRowCount = 0;
+				Thread.sleep(5000);
+				String Header = browser.findElement(By.xpath(SearchResultLink)).getText();
+				int NoOfSearchResults = Integer.parseInt(Header.substring(Header.indexOf("(") + 1, Header.indexOf(")")));
+
+				if (NoOfSearchResults > 25) {
+				    for (int clickCount = 0; clickCount < (NoOfSearchResults / 25); clickCount++) {
+					do {
+					    // do nothing
+					} while (!isElementPresentVerification(ShowMorePrescriptions_BTN, browser));
+
+					if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+					    messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in " + RefillHubTab + " Prescriptions page.");
+					    status = WARNING;
+					}
+				    }
+				}
+				int Flag = (NoOfSearchResults / 25) + 1;
+				for (int table = 1; table <= Flag; table++) {
+				    int row = 0;
+				    TableBody = browser.findElement(By.xpath("//table/tbody[" + table + "]"));
+				    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+				    int NoOfRows = TableRows.size();
+				    while (row < NoOfRows) {
+					row = row + RowMultiplier;
+					if (isElementPresentVerification("//table/tbody[" + table + "]/tr[" + row + "]/td[" + RxNameCol + "]", browser)) {
+
+					    // SARAVANAN M - 22-OCT-2013 - Added
+					    // to manage the Expand Collapse
+					    // view in Refill Hub page
+					    if (isExpandViewPresent) {
+						if (RefillHubTab.equalsIgnoreCase("History")) {
+						    firstColumnText = getElementByProperty("//table[1]/tbody[1]/tr[" + row + "]/td/div", browser).getText()
+							    + getElementByProperty("//table[1]/tbody[1]/tr[" + row + "]/td//div[contains(@class,'presName')]/div", browser).getText();
+						} else {
+						    firstColumnText = browser.findElement(By.xpath("//table/tbody[" + table + "]/tr[" + row + "]/td")).getText().trim();
+						}
+					    } else {
+						firstColumnText = browser.findElement(By.xpath("//table[1]/tbody[1]/tr[" + row + "]/td[2]")).getText();
+					    }
+
+					    if (!StringUtils.contains(firstColumnText, SearchTerm)) {
+						messagesMap.put("Refill Hub Page", "The search term '" + SearchTerm + "' at the row=" + row + " in " + RefillHubTab + " Prescriptions page.");
+						status = WARNING;
+					    }
+					    verifiedRowCount++;
+
+					    if (RefillHubTab.equalsIgnoreCase("History")) {
+						if (isElementPresentVerification("//table/tbody/tr[" + row + "]" + HideFromList_LNK, browser)) {
+						    messagesMap.put("Refill Hub Page", "The Show History Link is present at the row=" + row + " in History Prescriptions page.");
+						    status = WARNING;
+						}
+					    }
+					}
+				    }// While ends here
+				}// for loop ends here
+
+				// Verifying the functionality of 'Back to
+				// Prescriptions' link in the Search Results
+				// page
+				if (verifiedRowCount == NoOfSearchResults) {
+				    if (isElementPresentVerifyClick(BackToPrescriptions_LNK, browser)) {
+					if (!isElementPresentVerification(SearchResultLink, browser)) {
+					    messagesMap.put("Refill Hub Page", "Back To Prescriptions is not working correctly in " + RefillHubTab + " Prescriptions page.");
+					    status = WARNING;
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the new refill hub functionalities
+     *          [MS-SRX Restrictions,Show history,Hide & Show Rxs,Refill Due &
+     *          Hide From List presence validations]
+     * @author - SARAVANAN M
+     * @Created -21-JUNE-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateNewRefillHubpage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourRxs_LNK = "//a[@title='Manage & Refill Prescriptions']~XPATH";
+	String ManageYourPrescriptions_HEADING = "//*[contains(text(),'Manage Prescriptions')]~XPATH";
+	String RefillPrescriptionURL = "pharmacy/refillhub/refillhub.jsp";
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String ShowHistory_LNK = "//a[@title='Show History']";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String MSRXRestrictionOvly_H = "//h1[contains(text(),'Unable to Add Prescriptions to Cart')]~XPATH";
+	String MSRXRestrictionMsg1_LBL = "//p[contains(text(),'We cannot process both a Mail Service Pharmacy prescription and a Specialty Pharmacy prescription in the cart at the same time.')]~XPATH";
+	String MSRXRestrictionMsg2_LBL = "//p[contains(text(),'Please choose only one type of prescription to add to the cart.')]~XPATH";
+	String MSRXRestrictionCloseWnd_BTN = "a[title='Close Window']~CSS";
+	String AddToCart_BTN = "a>img[title='Add To Cart']~CSS";
+	String PrescriptionHistory_LNK = "//a[contains(@href,'HISTORY')]~XPATH";
+	String Banner_LBL = "//div[@class='info']//strong[contains(text(),'Showing')]~XPATH";
+	String ReturnManageRxs_LNK = "//a[@title='Return to Manage Prescriptions']~XPATH";
+	String ReturnToRx = "//div[@id='full_902']//p/a~XPATH";
+	String InfoError_LBL = "//div[@class='rederrorbox']~XPATH";
+	String RefillNow_LNK = "a[id='Refill Now']~CSS";
+	String HideFromList_LNK = "//a[@title='Hide from List']";
+	String HiddenRxShowYes_RDO = "input[id='yes_1']~CSS";
+	String HiddenRxShowNo_RDO = "input[id='no_1']~CSS";
+	String ShowInList_LNK = "//a[@title='Show in Active Prescriptions list']";
+	String Undo_LNK = "//a[@title='Undo']";
+	String EditOrCancelAutoRefill_LNK = "//a[@title='Edit or Cancel Auto Refill']";
+	WebElement TableBody = null;
+	String RxType1 = "Mail Service", RxType2 = "Specialty";
+	String RxHistoryCount_LBL = "//span[@id='active_count']~XPATH";
+	boolean type1 = false, type2 = false, ShowHistory = false, HideRxs = false, RefillDue = false, isOnRefillPrescriptionPage = false;
+	int SHValidations = 0, RefillDueFlag = 0;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String Functionality = dataMap.get("Functionality").get(i);
+
+		if (StringUtils.isNotBlank(Functionality)) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_IMG, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(ManageYourRxs_LNK, browser)) {
+			    getElementByProperty(ManageYourRxs_LNK, browser).sendKeys(Keys.RETURN);
+			}
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    } else {
+			messagesMap.put("Pharmacy page", "Not able to Navigate to Pharmacy page by clicking on Pharmacy Tab.");
+			status = WARNING;
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			String refillPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + RefillPrescriptionURL;
+			getUrl(browser, refillPrescriptionURL);
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			throw new Exception("Not able to Navigate to Refill Prescriptions page.");
+		    } else {
+			String FamilyMember = dataMap.get("FamilyMember").get(i);
+			if (FamilyMember != null) {
+			    familyMemberSelector(browser, FamilyMember);
+			}
+
+			String Header = getElementByProperty(PrescriptionHistory_LNK, browser).getText();
+			int NoOfPrescriptions = Integer.parseInt(Header.substring(Header.indexOf("(") + 1, Header.indexOf(")")));
+			if (NoOfPrescriptions > 25) {
+			    for (int clickCount = 0; clickCount < (NoOfPrescriptions / 25); clickCount++) {
+
+				do {
+				    // do nothing
+				} while (!isElementPresentVerification(ShowMorePrescriptions_BTN, browser));
+
+				if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+				    messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				    status = WARNING;
+				}
+			    }
+			}
+
+			browser.get(browser.getCurrentUrl());// To refresh
+			// whole table
+			int Flag = 1;
+			TableBody = browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]"));
+			List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+			int NoOfRows = TableRows.size();
+			if (Functionality.equalsIgnoreCase("RefillDue")) {
+			    if (isElementPresentVerifyClick(HiddenRxShowYes_RDO, browser)) {
+				while (isElementPresentVerifyClick(ShowInList_LNK, browser)) {
+				    browser.get(browser.getCurrentUrl());
+				}
+			    }
+			    // To check the Refill Due condition
+			    if (isElementPresentVerification(RefillNow_LNK, browser)) {
+				RefillDue = true;
+			    }
+			}
+
+			for (int row = 3; row <= NoOfRows; row += 3) {
+			    // MS-SRx Restriction
+			    if (Functionality.equalsIgnoreCase("MS-SRX Restriction")) {
+				String StatusColumnText = browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[4]")).getText().trim();
+				if (!type1 && StringUtils.contains(StatusColumnText, RxType1)) {
+				    if (isElementPresentVerification("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[6]/label/input", browser)) {
+					getElementByProperty("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[6]/label/input", browser).click();
+					type1 = true;
+				    }
+				} else if (!type2 && StringUtils.contains(StatusColumnText, RxType2)) {
+				    if (isElementPresentVerification("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[6]/label/input", browser)) {
+					getElementByProperty("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[6]/label/input", browser).click();
+					type2 = true;
+				    }
+				}
+			    }// MS-SRx Restriction
+
+			    if (!ShowHistory && Functionality.equalsIgnoreCase("Show History")) {// if-Entry-Show
+				// history
+				String strTable = "//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[2]";
+				String RxNumber = "", RxName = "";
+				if (getElementByProperty(strTable, browser) != null) {// if-strTable
+
+				    String PrescriptioCol = getElementByProperty(strTable, browser).getText().trim();
+				    RxNumber = (PrescriptioCol.split("\n")[1].split("\n")[0]).split(":")[1].trim();
+				    RxName = PrescriptioCol.split("\n")[0].trim();
+				    String RxNameCrop = RxName.toUpperCase();
+				    if (RxName.contains("")) {
+					RxNameCrop = RxName.split(" ")[0].toUpperCase();
+				    }
+				    String drugName = "//a[contains(text(),'" + RxNameCrop + "')]";
+
+				    String DrugInfoHeader_H = "//h2[contains(text(),'" + RxNameCrop + "')]~XPATH";
+				    // Verifying the navigation to the Drug info
+				    // page from one tab view
+				    if (isElementPresentVerifyClick(strTable + drugName, browser)) {
+					if (!(isElementPresentVerification(DrugInfoHeader_H, browser) || isElementPresentVerification(InfoError_LBL, browser))) {
+					    messagesMap.put("Refill hub", "Clicking on the Rx name in the Refill hub page is not navigating to the Drug Info page for the RX=" + RxName);
+					    status = WARNING;
+					} else {
+					    if (isElementPresentVerifyClick(ReturnManageRxs_LNK, browser)) {
+						if (!isElementPresentVerification(PrescriptionHistory_LNK, browser)) {
+						    messagesMap.put("Show History Page", "Clicking on the Return to Manage Prescription link is not navigating to the History page for the RX="
+							    + RxName);
+						    status = WARNING;
+						}
+					    }
+					}
+				    }
+
+				    if (isElementPresentVerifyClick(strTable + ShowHistory_LNK, browser)) {// if-Show
+					// History
+					String BannerText = getElementByProperty(Banner_LBL, browser).getText();
+					if (!StringUtils.contains(BannerText, RxName)) {
+					    messagesMap.put("Show History Page", "Rx Number and name is not mentioned in the show history banner for the Rx=" + RxName);
+					    status = WARNING;
+					}
+					// if the history page has 'show more
+					// prescriptions' button it ll be
+					// clicked
+
+					do {
+					    browser.get(browser.getCurrentUrl());
+					} while (isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser));
+
+					WebElement TableContent = getElementByProperty("//table[@id='prescripiton_content']/tbody", browser);
+					int NoOfHistoryRxs = TableContent.findElements(By.tagName("tr")).size();
+					for (int tcRow = 1; tcRow <= NoOfHistoryRxs; tcRow++) {// for-2
+
+					    if ((tcRow == 2) && getElementByProperty("//table[@id='prescripiton_content']/tbody/tr[" + tcRow + "]/td", browser).getText().contains("Related")) {
+						tcRow += 4;
+					    }
+					    String strHistoryTable = "//table[@id='prescripiton_content']/tbody/tr[" + tcRow + "]/td[2]";
+
+					    if (getElementByProperty(strHistoryTable, browser) != null) {// if-2
+						String HistoryTabText = getElementByProperty(strHistoryTable, browser).getText();
+						if (!(tcRow >= 2) && !(StringUtils.contains(HistoryTabText, RxNumber) && StringUtils.contains(HistoryTabText, RxName))) {
+						    messagesMap.put("Show History Page", "Rx Number and name is not mentioned in the history page results for the Rx=" + RxName);
+						    status = WARNING;
+						} else if ((tcRow > 2) && !(StringUtils.isBlank(HistoryTabText)) && !(StringUtils.contains(HistoryTabText, RxName))) {
+						    messagesMap.put("Show History Page", "Rx name is not mentioned in the history page results for the Rx=" + RxName);
+						    status = WARNING;
+						} else {// else-2
+						    if (isElementPresentVerifyClick(strHistoryTable + drugName, browser)) {// if-3
+							if (!(isElementPresentVerification(DrugInfoHeader_H, browser) || isElementPresentVerification(InfoError_LBL, browser))) {
+							    messagesMap.put("Show History Page", "Clicking on the Rx name in the History page is not navigating to the Drug Info page for the RX="
+								    + RxName);
+							    status = WARNING;
+							} else {// else-3
+							    if (isElementPresentVerifyClick(ReturnManageRxs_LNK, browser)) {// Return
+								// to
+								// Rx
+								if (!isElementPresentVerification(Banner_LBL, browser)) {
+								    messagesMap.put("Show History Page",
+									    "Clicking on the Return to Manage Prescription link is not navigating to the History page for the RX=" + RxName);
+								    status = WARNING;
+								}
+								SHValidations++;
+							    }// Return to Rx
+							}// else-3
+						    }// if-3
+						}// else-2
+					    }// if-2
+					}// for-2
+					if (isElementPresentVerifyClick(ReturnToRx, browser)) {
+					    if (!isElementPresentVerification(PrescriptionHistory_LNK, browser)) {
+						messagesMap.put("Show History Page",
+							"Clicking on the Return to Manage Prescription link is not navigating to the Prescription History page for the RX=" + RxName);
+						status = WARNING;
+					    }
+					    if (SHValidations >= NoOfRows) {
+						ShowHistory = true;
+					    }
+					}
+				    }// if-Show History
+				}// if-strTable
+			    }// if-Entry-Show history
+
+			    if (!HideRxs && Functionality.equalsIgnoreCase("HideAndShowRxs")) {// if-Entry-Hide/Show
+				int TotalNoOfPrescriptions = 0;
+				if (isElementPresentVerifyClick(HiddenRxShowYes_RDO, browser)) {
+				    browser.get(browser.getCurrentUrl());
+
+				    while (isElementPresentVerifyClick(ShowInList_LNK, browser)) {
+					browser.get(browser.getCurrentUrl());
+				    }
+				    String AllRxs = getElementByProperty(RxHistoryCount_LBL, browser).getText();
+				    TotalNoOfPrescriptions = Integer.parseInt(AllRxs);
+
+				    isElementPresentVerifyClick(HiddenRxShowNo_RDO, browser);
+
+				    if (TotalNoOfPrescriptions == 0) {
+					throw new Exception("Unable to Hide prescription, since the TotalNoOfPrescriptions=0");
+				    }
+				}
+
+				String strTable = "//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[2]";
+				String RxName = "";
+				if (getElementByProperty(strTable, browser) != null) {// if-strTable
+				    String PrescriptioCol = getElementByProperty(strTable, browser).getText().trim();
+				    RxName = PrescriptioCol.split("\n")[0].trim();
+
+				    if (isElementPresentVerifyClick(strTable + HideFromList_LNK, browser)) {
+					browser.get(browser.getCurrentUrl());
+					String hideMsg = getElementByProperty("//table/tbody[" + Flag + "]/tr[" + (row - 1) + "]/td[2]", browser).getText();
+					int hideNoOfPrescriptions = Integer.parseInt(getElementByProperty(RxHistoryCount_LBL, browser).getText().trim());
+					if (!(hideMsg.contains(RxName.toUpperCase()) && hideMsg.contains("hidden"))) {
+					    messagesMap.put("One Tab view->Condition-1", "Rx hidden message is not displayed for the RX=" + RxName);
+					    status = WARNING;
+					}
+
+					if (!(hideNoOfPrescriptions == (TotalNoOfPrescriptions - 1))) {
+					    messagesMap.put("One Tab view->Condition-2", "The prescription count is not decreased after the prescription is hidden from the list");
+					    status = WARNING;
+					}
+
+					if (isElementPresentVerifyClick(HiddenRxShowYes_RDO, browser)) {
+					    int ShownNoOfPrescriptions = Integer.parseInt(getElementByProperty(RxHistoryCount_LBL, browser).getText().trim());
+					    if (!(ShownNoOfPrescriptions == TotalNoOfPrescriptions)) {
+						messagesMap.put("One Tab view->Condition-3", "The rx count is not revoked after the show hidden rx 'yes' option is selected");
+						status = WARNING;
+					    }
+					}
+					if (isElementPresentVerifyClick(HiddenRxShowNo_RDO, browser)) {
+					    if (!(hideNoOfPrescriptions == (TotalNoOfPrescriptions - 1))) {
+						messagesMap.put("One Tab view->Condition-4", "The rx count is not decreased after the show hidden rx 'No' option is selected");
+						status = WARNING;
+					    }
+					}
+
+					if (isElementPresentVerifyClick(HiddenRxShowYes_RDO, browser)) {
+					    browser.get(browser.getCurrentUrl());
+					    if (isElementPresentVerifyClick(strTable + ShowInList_LNK, browser)) {
+
+						do {
+						    // Do nothing
+						} while (!isElementPresentVerification(Undo_LNK, browser));
+
+						String ShownMsg = getElementByProperty("//table[1]/tbody[" + Flag + "]/tr[" + (row - 2) + "]/td[2]", browser).getText();
+						browser.get(browser.getCurrentUrl());
+						int ShownNoOfPrescriptions = Integer.parseInt(getElementByProperty(RxHistoryCount_LBL, browser).getText().trim());
+						if (!((ShownNoOfPrescriptions == TotalNoOfPrescriptions) && (ShownMsg.contains(RxName)) && (ShownMsg.contains("shown")))) {
+						    messagesMap.put("One Tab view->Condition-5", "The rx count is not revoked after the show hidden rx 'yes' option is selected");
+						    status = WARNING;
+						}
+					    }
+
+					    if (isElementPresentVerifyClick("//table[1]/tbody[" + Flag + "]/tr[" + (row - 2) + "]/td[2]" + Undo_LNK, browser)) {
+						if (isElementPresentVerifyClick(HiddenRxShowNo_RDO, browser)) {
+						    browser.get(browser.getCurrentUrl());
+						    String UndoMsg = getElementByProperty("//table[1]/tbody[" + Flag + "]/tr[" + (row - 1) + "]/td[2]", browser).getText();
+						    int UndoNoOfPrescriptions = Integer.parseInt(getElementByProperty(RxHistoryCount_LBL, browser).getText().trim());
+						    if (!((UndoNoOfPrescriptions == (TotalNoOfPrescriptions - 1)) && (UndoMsg.contains(RxName)) && (UndoMsg.contains("hidden")))) {
+							messagesMap.put("One Tab view->Condition-6", "The rx count is not revoked after the show hidden rx 'yes' option is selected");
+							status = WARNING;
+						    }
+
+						    if (isElementPresentVerifyClick("//table[1]/tbody[" + Flag + "]/tr[" + (row - 1) + "]/td[2]" + Undo_LNK, browser)) {
+							browser.get(browser.getCurrentUrl());
+							UndoMsg = getElementByProperty("//table[1]/tbody[" + Flag + "]/tr[" + (row - 2) + "]/td[2]", browser).getText();
+							int UndoHideNoOfPrescriptions = Integer.parseInt(getElementByProperty(RxHistoryCount_LBL, browser).getText().trim());
+							if (!((UndoHideNoOfPrescriptions == TotalNoOfPrescriptions) && (UndoMsg.contains(RxName)) && (UndoMsg.contains("shown")))) {
+							    messagesMap.put("One Tab view->Condition-7", "The rx count is not revoked after the show hidden rx 'yes' option is selected");
+							    status = WARNING;
+							}
+						    }
+						}
+					    }
+					    HideRxs = true;
+					}
+
+				    }
+				}// if-strTable
+
+			    }// if-Entry-Hide/Show
+
+			    if (Functionality.equalsIgnoreCase("RefillDue")) {// if-Entry-Hide/Show
+
+				String strRefillDueTable = "//table[1]/tbody[" + Flag + "]/tr[" + row + "]";
+				if (getElementByProperty(strRefillDueTable + "/td[2]", browser) != null) {// if-strTable
+				    if (RefillDue && (getElementByProperty(strRefillDueTable + "/td[6]", browser).getText().contains("Refill Due"))) {
+					RefillDueFlag++;
+				    }
+
+				    if (getElementByProperty(strRefillDueTable + "/td[5]" + EditOrCancelAutoRefill_LNK, browser) != null) {
+					if (getElementByProperty(strRefillDueTable + "/td[2]" + HideFromList_LNK, browser) != null) {
+					    String DefectRx = getElementByProperty(strRefillDueTable + "/td[2]", browser).getText().split("\n")[0].trim();
+					    messagesMap.put("Refill hub one tab view", "Auto Refill Prescription should not have the 'Hide From List' Link. Defect Rx=" + DefectRx);
+					    status = WARNING;
+					}
+				    }
+				}
+			    }
+			}
+			if (Functionality.equalsIgnoreCase("RefillDue")) {
+			    if (RefillDue && !(RefillDueFlag > 0)) {
+				messagesMap.put("Refill Due", "There are no refill due Rx found even the Refill Due Banner is displayed");
+				status = WARNING;
+			    } else if (!RefillDue) {
+				messagesMap.put("Refill Due", "There are no refill due Rx found for this user. Please use some other user with refill due");
+				status = WARNING;
+			    }
+			}
+			if (Functionality.equalsIgnoreCase("MS-SRX Restriction")) {
+			    if (!(type1 && type2)) {
+				throw new Exception("Unable to found SRx and MS Rx in Refill Hub");
+			    } else {
+				if (isElementPresentVerifyClick(AddToCart_BTN, browser)) {
+				    switchToOverlay(browser);
+				    if (!(isElementPresentVerification(MSRXRestrictionOvly_H, browser) && isElementPresentVerification(MSRXRestrictionMsg1_LBL, browser) && isElementPresentVerification(
+					    MSRXRestrictionMsg2_LBL, browser))) {
+					messagesMap.put("MS-SRx Restriction Overlay", "Overlay content is not as expected");
+					status = WARNING;
+				    }
+				}
+				if (!isElementPresentVerifyClick(MSRXRestrictionCloseWnd_BTN, browser)) {
+				    messagesMap.put("MS-SRx Restriction Overlay", "Unable to click on the Close Window button");
+				    status = WARNING;
+				} else {
+				    switchToDefault(browser);
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the Refill status of the Rx in the
+     *          Refill Hub page
+     * 
+     * @author - SARAVANAN M
+     * @Created -30-JULY-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyAutoRefilStatus(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourRxs_LNK = "//a[@title='Manage & Refill Prescriptions']~XPATH";
+	String ManageYourPrescriptions_HEADING = "//*[contains(text(),'Manage Prescriptions')]~XPATH";
+	String RefillPrescriptionURL = "pharmacy/refillhub/refillhub.jsp";
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String ActiveCount_LBL = "span#active_count~CSS";
+	String ExpandCollapse_LNK = "//a[contains(@class,'commonExpCol hide')]";
+
+	boolean isOnRefillPrescriptionPage = false;
+	WebElement TableBody = null;
+	boolean RxFound = false, isShowMoreRxBtnDisplayed = false, isExpandViewPresent = false;
+	int ChkVal = 5;
+	String firstColumnText = "";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String RxNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Rx1");
+	    String AutoRefillStatus = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AutoRefillStatus");
+
+	    if (StringUtils.isNotBlank(RxNumber)) {
+		boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_IMG, browser);
+		if (isPharmacyTabPresent) {
+		    if (isElementPresentVerification(ManageYourRxs_LNK, browser)) {
+			getElementByProperty(ManageYourRxs_LNK, browser).sendKeys(Keys.RETURN);
+		    }
+		    isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		} else {
+		    messagesMap.put("Pharmacy page", "Not able to Navigate to Pharmacy page by clicking on Pharmacy Tab.");
+		    status = WARNING;
+		}
+		if (!isOnRefillPrescriptionPage) {
+		    String refillPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + RefillPrescriptionURL;
+		    getUrl(browser, refillPrescriptionURL);
+		    isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		}
+		if (!isOnRefillPrescriptionPage) {
+		    throw new Exception("Not able to Navigate to Refill Prescriptions page.");
+		} else {
+
+		    String FamilyMember = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberOption1");
+		    if (FamilyMember != null) {
+			familyMemberSelector(browser, FamilyMember);
+		    }
+		    int NoOfRxs = Integer.parseInt(getElementByProperty(ActiveCount_LBL, browser).getText());
+		    RxFound = false;
+
+		    if (NoOfRxs > 25) {
+			for (int clickCount = 0; clickCount < (NoOfRxs / 25); clickCount++) {
+
+			    do {
+				// do nothing
+			    } while (!isElementPresentVerification(ShowMorePrescriptions_BTN, browser));
+
+			    if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+				messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				status = WARNING;
+			    }
+			}
+		    }
+
+		    // SARAVANAN M - 22-OCT-2013 - Added to manage the Expand
+		    // Collapse view in Refill Hub page
+		    if (isElementPresentVerification(ExpandCollapse_LNK, browser)) {
+			// browser.findElement(By.xpath(ExpandCollapse_LNK)).sendKeys(Keys.RETURN);
+			if (!isElementPresentVerifyClick(ExpandCollapse_LNK, browser)) {
+			    throw new Exception("Unable to click on Expand link");
+			}
+			isExpandViewPresent = true;
+			ChkVal = 4;
+		    }
+
+		    isElementPresentVerifyClick("//thead//th//a[contains(text(),'Prescription')]", browser);
+		    do {
+			TableBody = browser.findElement(By.xpath("//table[1]/tbody"));
+			List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+			int NoOfRows = TableRows.size();
+			for (int row = 3; row <= NoOfRows; row = row + 3) {
+
+			    // SARAVANAN M - 22-OCT-2013 - Added to manage the
+			    // Expand Collapse view in Refill Hub page
+			    if (isExpandViewPresent) {
+				firstColumnText = getElementByProperty("//table[1]/tbody[1]/tr[" + row + "]/td/div", browser).getText()
+					+ getElementByProperty("//table[1]/tbody[1]/tr[" + row + "]/td//div[contains(@class,'presName')]/div", browser).getText();
+			    } else {
+				firstColumnText = browser.findElement(By.xpath("//table[1]/tbody[1]/tr[" + row + "]/td[2]")).getText();
+			    }
+
+			    if (StringUtils.contains(firstColumnText, RxNumber)) {
+				String RxStatusText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[" + ChkVal + "]")).getText().trim();
+
+				if (AutoRefillStatus.equalsIgnoreCase("AutoRefill-ON")) {
+				    if (RxStatusText.contains("Auto Refill On")) {
+					if (!isElementPresentVerifyClick("//table[1]/tbody/tr[" + row + "]/td[" + ChkVal + "]//a[contains(text(),'Auto Refill On')]", browser)) {
+					    messagesMap.put("Refill Hub Page", "Unable to click on the 'Auto Refill On' link");
+					    status = WARNING;
+					}
+				    } else {
+					messagesMap.put("Refill Hub Page", "Refill column is not as expected for Auto Refill ON condition");
+					status = WARNING;
+				    }
+				} else {
+				    if (RxStatusText.contains("Setup Auto Refill")) {
+					if (!isElementPresentVerifyClick("//table[1]/tbody/tr[" + row + "]/td[" + ChkVal + "]//a[contains(text(),'Setup Auto Refill')]", browser)) {
+					    messagesMap.put("Refill Hub Page", "Unable to click on the 'Setup Auto Refills' link");
+					    status = WARNING;
+					}
+				    } else {
+					messagesMap.put("Refill Hub Page", "Refill column is not as expected for Auto Refill OFF condition");
+					status = WARNING;
+				    }
+				}
+				RxFound = true;
+				break;
+			    }
+			}
+		    } while (!RxFound && isShowMoreRxBtnDisplayed);
+
+		    if (!RxFound) {
+			throw new Exception("Given Rx was Not Found in Refill Hub");
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to add rx to the cart by the Rx type
+     * @author - SARAVANAN M
+     * @Created -14-AUG-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void addRxByType(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourRxs_LNK = "//a[@title='Manage & Refill Prescriptions']~XPATH";
+	String ManageYourPrescriptions_HEADING = "//*[contains(text(),'Manage Prescriptions')]~XPATH";
+	String RefillPrescriptionURL = "pharmacy/refillhub/refillhub.jsp";
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String ActiveCount_LBL = "span#active_count~CSS";
+	String AddandContinue_BTN = "a[title='Add & Continue to Cart']~CSS";
+	String ChangeAutoRefill_BTN = "input[title*='Change Auto Refill Date']~CSS";
+	String SharpContainerYes_RDO = "input[id*='sh_yes']~CSS";
+	String InjectionYes_RDO = "input[id*='sh_in']~CSS";
+	String Continue_BTN = "*[title='Continue']~CSS";
+	String AddToCart_BTN = "a[title*='Add to Cart']~CSS";
+	String Loader_IMG = "//span[@id='loaderImg']/img[@alt='loader']~XPATH";
+	String NinetyDayHeader_H = "//h1[contains(text(),'Setup 90-Day')]~XPATH";
+	String UpdateAndContinue_BTN = "input[title*='Update']~CSS";
+	String ExpandCollapse_LNK = "//a[contains(@class,'commonExpCol hide')]";
+	String firstColumnText = "";
+	boolean isOnRefillPrescriptionPage = false, isExpandViewPresent = false;
+	WebElement TableBody = null;
+	int ChkVal = 6, AutoColValue = 5, StatusColValue = 4;
+	boolean RxFound = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String AutoRefillStatus = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "AutoRefill");
+		String RxType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxType");
+		String RxNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "PrescriptionOrStore");
+
+		if (RxType.equalsIgnoreCase("Mail Service")) {
+		    RxType = "Mail Service Pharmacy";
+		} else if (RxType.equalsIgnoreCase("Specialty")) {
+		    RxType = "Specialty Pharmacy Prescription";
+		} else {
+		    RxType = "";
+		}
+
+		if (StringUtils.isNotBlank(RxNumber)) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_IMG, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(ManageYourRxs_LNK, browser)) {
+			    getElementByProperty(ManageYourRxs_LNK, browser).sendKeys(Keys.RETURN);
+			}
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    } else {
+			messagesMap.put("Pharmacy page", "Not able to Navigate to Pharmacy page by clicking on Pharmacy Tab.");
+			status = WARNING;
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			String refillPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + RefillPrescriptionURL;
+			getUrl(browser, refillPrescriptionURL);
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			throw new Exception("Not able to Navigate to Refill Prescriptions page.");
+		    } else {
+			String FamilyMember = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "FamilyMemberOption");
+			if (FamilyMember != null) {
+			    familyMemberSelector(browser, FamilyMember);
+			}
+			int NoOfRxs = Integer.parseInt(getElementByProperty(ActiveCount_LBL, browser).getText());
+			RxFound = false;
+			int Navigator = 0;
+			if (NoOfRxs > 25) {
+			    for (int clickCount = 0; clickCount < (NoOfRxs / 25); clickCount++) {
+				do {
+				} while (isElementPresentVerification(Loader_IMG, browser));
+				Thread.sleep(5000);
+				if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+				    messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				    status = WARNING;
+				}
+			    }
+			}
+
+			// SARAVANAN M - 22-OCT-2013 - Added to manage the Expand Collapse view in Refill Hub page
+			try{
+			    if(browser.findElement(By.xpath(ExpandCollapse_LNK))!=null){
+				String Expand_LNK="//a[contains(@class,'expanded')]~XPATH";
+				do{
+				    browser.findElement(By.xpath(ExpandCollapse_LNK)).sendKeys(Keys.RETURN);
+				}while(!isElementPresentVerification(Expand_LNK, browser));
+				isExpandViewPresent = true;
+				ChkVal = 5;
+				AutoColValue = 4;
+				StatusColValue = 3;
+			    }
+			}catch(org.openqa.selenium.NoSuchElementException e){
+			}
+
+
+			do {
+			    String Store = "";
+			    if (RxNumber.contains("-")) {
+				Store = RxNumber.split("-")[1].trim();
+			    } else if (RxNumber.length() == 5) {
+				Store = RxNumber;
+			    }
+			    browser.get(browser.getCurrentUrl());
+			    TableBody = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody"));
+			    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+			    int NoOfRows = TableRows.size();
+			    for (int row = 3; row <= NoOfRows; row = row + 3) {
+				Navigator++;
+
+				// SARAVANAN M - 22-OCT-2013 - Added to manage
+				// the Expand Collapse view in Refill Hub page
+				if (isExpandViewPresent) {
+				    firstColumnText = getElementByProperty("//table[1]/tbody/tr[" + row + "]/td/div", browser).getText();
+				} else {
+				    firstColumnText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[2]")).getText();
+				}
+
+				if (StringUtils.contains(firstColumnText, Store)) {
+				    String RxTypeText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[" + StatusColValue + "]")).getText().trim();
+				    if (RxTypeText.contains(RxType)) {
+					String RxStatusText = browser.findElement(By.xpath("//table[1]/tbody/tr[" + row + "]/td[" + AutoColValue + "]")).getText().trim();
+					if (AutoRefillStatus.equalsIgnoreCase("Yes")) {
+					    if (RxStatusText.contains("Auto Refill On")) {
+						if (!isElementPresentVerifyClick("//table[1]/tbody/tr[" + row + "]/td[" + ChkVal + "]//input", browser)) {
+						    throw new Exception("Unable to Select the prescription with auto refill ON state");
+						}
+						RxFound = true;
+						break;
+					    }
+					} else {
+//					    if (RxStatusText.contains("Setup Auto Refill")) {
+						if (!isElementPresentVerifyClick("//table[1]/tbody/tr[" + row + "]/td[" + ChkVal + "]//input", browser)) {
+						    throw new Exception("Unable to Select the prescription with auto refill OFF state");
+						}
+						RxFound = true;
+						break;
+//					    }
+					}
+				    }
+				}
+			    }
+			} while (!RxFound && (Navigator != NoOfRxs));
+
+			if (!RxFound) {
+			    throw new Exception("Given Rx was Not Found in Refill Hub:" + RxNumber);
+			} else {
+			    if (!isElementPresentVerifyClick(AddToCart_BTN, browser)) {				
+				throw new Exception("Unable to click on Add To Cart Button");
+			    }
+			    switchToOverlay(browser);
+			    if (AutoRefillStatus.equalsIgnoreCase("Yes")) {
+				if (RxType.equals("") || RxType.contains("Mail Service")) {
+				    if (isElementPresentVerification(NinetyDayHeader_H, browser)) {
+					if (!isElementPresentVerifyClick(UpdateAndContinue_BTN, browser)) {
+					    throw new Exception("Unable to Add the Prescription To cart with store number=" + RxNumber);
+					}
+				    }
+				    // Modified by : FYROSE
+				    // DATE : 18-SEP-2013
+				    // COMMENTS : To Click add and continue
+				    // button after slecting change auto refill
+				    // button
+				    if (isElementPresentVerification(ChangeAutoRefill_BTN, browser)) {
+					if (!isElementPresentVerifyClick(ChangeAutoRefill_BTN, browser)) {
+					    throw new Exception("Unable to Add the Prescription To cart with store number=" + RxNumber);
+					}
+					if (!isElementPresentVerifyClick(AddandContinue_BTN, browser)) {
+					    throw new Exception("Unable to Add the Prescription To cart with store number=" + RxNumber);
+					}
+				    }
+				}
+			    } else {
+				if (RxType.equals("") || RxType.contains("Mail Service")) {
+				    if (isElementPresentVerification(NinetyDayHeader_H, browser)) {
+					if (!isElementPresentVerifyClick(UpdateAndContinue_BTN, browser)) {
+					    throw new Exception("Unable to Add the Prescription To cart with store number=" + RxNumber);
+					}
+				    }
+				    if (!isElementPresentVerifyClick(AddandContinue_BTN, browser)) {
+					throw new Exception("Unable to Add the Prescription To cart with store number=" + RxNumber);
+				    }
+				}
+			    }
+
+			    if (RxType.contains("Specialty")) {
+
+				String SharpsContainer = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SharpsContainer");
+				String InjectionSupplies = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "InjectionSupplies");
+
+				if (SharpsContainer.equalsIgnoreCase("Yes")) {
+				    if (!isElementPresentVerifyClick(SharpContainerYes_RDO, browser)) {
+					throw new Exception("Unable to select the Sharps Container");
+				    }
+				}
+
+				if (InjectionSupplies.equalsIgnoreCase("Yes")) {
+				    if (!isElementPresentVerifyClick(InjectionYes_RDO, browser)) {
+					throw new Exception("Unable to select the Injection Supplies");
+				    }
+				}
+
+				if (!isElementPresentVerifyClick(Continue_BTN, browser)) {
+				    throw new Exception("Unable to click on Continue in the SRx Add to Cart Overlay");
+				}
+
+			    }
+			    switchToDefault(browser);
+			}
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the creation of New Rx in the Refill
+     *          Hub
+     * 
+     * @author - THanigaivelan G
+     * @Created -21-JUNE-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyExpandCollapse(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourRxs_LNK = "//a[@title='Manage & Refill Prescriptions']~XPATH";
+	String ManageYourPrescriptions_HEADING = "//h1[contains(text(),'Manage Prescriptions')]~XPATH";
+	String ExpColHeaderCollapsed_LNK = "//a[@class='commonExpCol hide']/img~XPATH";
+	String ExpColHeaderExpanded_LNK = "//a[@class='commonExpCol hide expanded']/img~XPATH";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String RefillPrescriptionURL = "pharmacy/refillhub/refillhub.jsp";
+
+	boolean isOnRefillPrescriptionPage = false;
+	WebElement TableBody = null;
+	boolean isShowMoreRxBtnDisplayed = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		String verifyLineItemClick = "";
+		String verifyExpandedMode = "";
+		int Flag = 1;
+
+		if (!isOnRefillPrescriptionPage) {
+		    boolean isPharmacyTabPresent = isElementPresentVerifyClick(Pharmacy_IMG, browser);
+		    if (isPharmacyTabPresent) {
+			if (isElementPresentVerification(ManageYourRxs_LNK, browser)) {
+			    getElementByProperty(ManageYourRxs_LNK, browser).sendKeys(Keys.RETURN);
+			}
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    } else {
+			messagesMap.put("Pharmacy page", "Not able to Navigate to Pharmacy page by clicking on Pharmacy Tab.");
+			status = WARNING;
+		    }
+
+		    if (!isOnRefillPrescriptionPage) {
+			String refillPrescriptionURL = EcommTestRunner.config.getString("walgreensURL") + RefillPrescriptionURL;
+			getUrl(browser, refillPrescriptionURL);
+			isOnRefillPrescriptionPage = isElementPresentVerification(ManageYourPrescriptions_HEADING, browser);
+		    }
+		    if (!isOnRefillPrescriptionPage) {
+			throw new Exception("Not able to Navigate to Refill Prescriptions page.");
+		    }
+		}
+
+		// Getting the values from data Map
+		if (dataMap.containsKey("VerifyExpandedMode")) {
+		    verifyExpandedMode = dataMap.get("VerifyExpandedMode").get(i);
+		}
+
+		if (dataMap.containsKey("VerifyLineItemClick")) {
+		    verifyLineItemClick = dataMap.get("VerifyLineItemClick").get(i);
+		}
+
+		Thread.sleep(5000);
+		// Clicking the Expand all button in the REfillhub
+		if (verifyExpandedMode.equalsIgnoreCase("YES")) {
+		    if (!isElementPresentVerifyClick(ExpColHeaderCollapsed_LNK, browser)) {
+			messagesMap.put("Clicking the Expand All button in REfill hub", "Unable to Click the Expand all button");
+			status = WARNING;
+		    } else {
+			if (!isElementPresentVerification(ExpColHeaderExpanded_LNK, browser)) {
+			    messagesMap.put("Verifying the presence of Collapse all Button in refill hub", "The Element is not present in refill hub");
+			    status = WARNING;
+			}
+		    }
+		}
+
+		do {
+		    isShowMoreRxBtnDisplayed = false;
+		    TableBody = browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]"));
+		    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+		    int NoOfRows = TableRows.size();
+
+		    // Verifying the Collapsed mode of the Refill hub
+		    if (verifyExpandedMode.equalsIgnoreCase("No")) {
+			for (int row = 3; row <= NoOfRows; row += 3) {
+			    if (browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				messagesMap.put("Verifying the collapsed Refill Hub Page", "Refill hub is not displayed in the collapsed mode.");
+				status = WARNING;
+			    }
+			}
+		    }
+
+		    // Verifying the Expanded mode of the refill hub
+		    else if (verifyExpandedMode.equalsIgnoreCase("YES")) {
+			for (int row = 3; row <= NoOfRows; row += 3) {
+			    if (!browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				messagesMap.put("Verifying the Expanded Refill Hub Page", "Refill hub is not displayed in the Expanded mode.");
+				status = WARNING;
+			    }
+			}
+		    }
+
+		    // Verifying the Line item Click - Rx name click Expand
+		    // collapse Verification
+		    if (verifyLineItemClick.equalsIgnoreCase("Yes")) {
+			String rxName = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RxName");
+			String lineItemToClick = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "LineItem");
+
+			if (lineItemToClick == null || lineItemToClick.isEmpty())
+			    throw new Exception("The Line item is not specified in Data Sheet to Click");
+
+			for (int row = 3; row <= NoOfRows; row += 3) {
+			    String RxNameColumn = "//table/tbody[" + Flag + "]/tr[" + row + "]/td";
+			    String strStatusColumn = "//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td[3]/div/div[2]";
+			    String firstColumnText = browser.findElement(By.xpath(RxNameColumn + "/div/div[2]/div/span")).getText().trim();
+
+			    if (StringUtils.contains(firstColumnText, rxName)) {
+				if (browser.findElement(By.xpath(RxNameColumn + "//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				    messagesMap.put("Verifying the Collapsed State of a Rx line item", "The Line Item Already in Expanded state without clicking anything in the Row");
+				    status = WARNING;
+				}
+
+				if (lineItemToClick.equalsIgnoreCase("RxName")) {
+				    browser.findElement(By.xpath(RxNameColumn + "/div/div[2]/div/span")).click(); // Clicking
+				    // the
+				    // Rx
+				    // name
+				} else if (lineItemToClick.equalsIgnoreCase("Status")) {
+				    browser.findElement(By.xpath("//table/tbody[" + Flag + "]/tr[" + row + "]/td[3]//a[@title='View Status and Price']")).click(); // Clicking
+				    // the
+				    // view
+				    // status
+				    // and
+				    // price
+				    // link
+				    // of
+				    // the
+				    // corresponding
+				    // line
+				    // item.
+				} else if (lineItemToClick.equalsIgnoreCase("ExpandIcon")) {
+				    browser.findElement(By.xpath(RxNameColumn + "/div/div/a/img")).click(); // Clicking
+				    // the
+				    // Expand
+				    // Icon
+				    // of
+				    // the
+				    // corresponding
+				    // line
+				    // item.
+				}
+
+				// Waiting until View status and price Detail
+				// Load
+				do {
+				    Thread.sleep(1500);
+				} while (browser.findElement(By.xpath(strStatusColumn + "/img")).isDisplayed());
+
+				if (!(browser.findElement(By.xpath(RxNameColumn + "//div[contains(@class,'presName')]/div")).isDisplayed()
+					&& browser.findElement(By.xpath(strStatusColumn + "//b[contains(text(),'Status')]")).isDisplayed() && browser.findElement(By.xpath(strStatusColumn + "/div"))
+					.isDisplayed())) {
+				    messagesMap.put("Verifying the Expanded mode of a Rx line item", "The Line Item Is not in the Expanded state after clicking Rx name.");
+				    status = WARNING;
+				}
+				Thread.sleep(2000);
+				if (lineItemToClick.equalsIgnoreCase("RxName")) {
+				    browser.findElement(By.xpath(RxNameColumn + "/div/div[2]/div/span")).click(); // Clicking
+				    // the
+				    // Rx
+				    // name
+				} else if (lineItemToClick.equalsIgnoreCase("ExpandIcon")) {
+				    browser.findElement(By.xpath(RxNameColumn + "/div/div/a/img")).click(); // Clicking
+				    // the
+				    // Expand
+				    // Icon
+				    // of
+				    // the
+				    // corresponding
+				    // line
+				    // item.
+				}
+
+				if (!lineItemToClick.equalsIgnoreCase("Status")) {
+				    if ((browser.findElement(By.xpath(RxNameColumn + "//div[contains(@class,'presName')]/div")).isDisplayed()
+					    && browser.findElement(By.xpath(strStatusColumn + "//b[contains(text(),'Status')]")).isDisplayed() && browser.findElement(
+						    By.xpath(strStatusColumn + "/div")).isDisplayed())) {
+					messagesMap.put("Verifying the Collapsed mode of a Rx line item", "The Line Item Is not in the Collapsed state after clicking Again the " + lineItemToClick);
+					status = WARNING;
+				    }
+				}
+				break;
+			    }
+			}
+		    }
+
+		    if (isElementPresentVerification(ShowMorePrescriptions_BTN, browser)) {
+			getElementByProperty(ShowMorePrescriptions_BTN, browser).click();
+			Flag = Flag + 1;
+			// Waiting for the Additional Prescriptions Elements to
+			// load
+			Thread.sleep(12000);
+			if (!isElementPresentVerification("//table[1]/tbody[" + Flag + "]", browser)) {
+			    messagesMap.put("Show More Prescriptions", "The Additional Rxs are not displayed on clicking the Show More Prescriptions Button");
+			    status = WARNING;
+			}
+			isShowMoreRxBtnDisplayed = true;
+		    }
+		} while (isShowMoreRxBtnDisplayed);
+		// Verifying whether the Refill hub is loaded in collapsed state
+		// after selecting a family member.
+		if (dataMap.containsKey("FamilyMember") || dataMap.containsKey("VerifyCollapseAfterExpand")) {
+		    Boolean isFamilymemberSelected = true;
+		    if (dataMap.containsKey("FamilyMember")) {
+			String familyMemberOption = dataMap.get("FamilyMember").get(i).trim();
+			if (familyMemberOption != null)
+			    isFamilymemberSelected = familyMemberSelector(browser, familyMemberOption);
+		    } else if (dataMap.containsKey("VerifyCollapseAfterExpand") && dataMap.get("VerifyCollapseAfterExpand").get(i).equalsIgnoreCase("Yes")) {
+			if (!isElementPresentVerifyClick(ExpColHeaderExpanded_LNK, browser)) {
+			    messagesMap.put("Clicking the collapse All button in REfill hub", "Unable to Click the Collapse all button");
+			    status = WARNING;
+			} else {
+			    if (!isElementPresentVerification(ExpColHeaderCollapsed_LNK, browser)) {
+				messagesMap.put("Verifying the presence of Collapse all Button in refill hub", "The Element is not present in refill hub");
+				status = WARNING;
+			    }
+			}
+		    }
+		    Flag = 1;
+		    do {
+			if (!isFamilymemberSelected)
+			    break;
+			isShowMoreRxBtnDisplayed = false;
+
+			TableBody = browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]"));
+			List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+			int NoOfRows = TableRows.size();
+
+			// Verifying the line items are in collapsed state
+			for (int row = 3; row <= NoOfRows; row += 3) {
+			    if (browser.findElement(By.xpath("//table[1]/tbody[" + Flag + "]/tr[" + row + "]/td//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				messagesMap.put("Verifying the Collapsed mode of the REfill hub for Family member",
+					"The REfill hub is not Loaded in the Collapsed mode by Default for the family member.");
+				status = WARNING;
+			    }
+			}
+
+			if (isElementPresentVerification(ShowMorePrescriptions_BTN, browser)) {
+			    getElementByProperty(ShowMorePrescriptions_BTN, browser).click();
+			    Flag = Flag + 1;
+			    // Waiting for the Additional Prescriptions to load
+			    Thread.sleep(12000);
+			    if (!isElementPresentVerification("//table[1]/tbody[" + Flag + "]", browser)) {
+				messagesMap.put("Show More Prescriptions", "The Additional Rxs are not displayed on clicking the Show More Prescriptions Button");
+				status = WARNING;
+			    }
+			    isShowMoreRxBtnDisplayed = true;
+			}
+		    } while (isShowMoreRxBtnDisplayed);
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - Validating the refill hub page columns sorting
+     * @author - SARAVANAN M
+     * @Created -
+     * @Modified By - Thanigaivelan G
+     * @Modified Date - 22-OCT-2013
+     ************************************************************* 
+     */
+    public static void refillHubSortingVerification(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String LastFillDateColumn_LNK = "//a[@title='Last Filled']~XPATH";
+	String PrescriptionColumn_LNK = "//a[@title='Prescription']~XPATH";
+	String RefillsleftColumn_LNK = "//a[@title='Refills']~XPATH";
+	String ExpandCollapse_LNK = "//a[contains(@class,'commonExpCol hide')]";
+	String Loader_IMG = "//span[@id='loaderImg']/img[@alt='loader']~XPATH";
+	String ActiveCount_LBL = "span#active_count~CSS";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+
+	int NextRowPosition = 0, CurRowRefillCnt, NextRowRefillCnt, flag = 0, LastFillVal = 3, RxNameVal = 2, RefillsColVal = 5;
+	String CurrentRowText = null, NextRowText = null, RowPath = null;
+	Date CurRowDate, NextRowDate;
+	boolean isExpandViewPresent = false;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		String ColumnToValidate = dataMap.get("ColumnToValidate").get(i);
+		String OrderType = dataMap.get("OrderType").get(i);
+		String NoofTimesToClickTableHeader = dataMap.get("NoofTimesToClickTableHeader").get(i);
+		SimpleDateFormat simpleDate = new SimpleDateFormat("MM/dd/yyyy");
+
+		// SARAVANAN M - 22-OCT-2013 - Added to manage the Expand Collapse view in Refill Hub page
+		try{
+		    if(browser.findElement(By.xpath(ExpandCollapse_LNK))!=null){
+			isExpandViewPresent = true;
+			RxNameVal = 1;
+			LastFillVal = 2;
+			RefillsColVal = 4;
+		    }
+		}catch(NoSuchElementException e){
+		}
+
+		int NoOfRxs = Integer.parseInt(getElementByProperty(ActiveCount_LBL, browser).getText());
+		if (NoOfRxs > 25) {
+		    for (int clickCount = 0; clickCount < (NoOfRxs / 25); clickCount++) {
+			do {
+			} while (isElementPresentVerification(Loader_IMG, browser));
+			Thread.sleep(5000);
+			if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+			    messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+			    status = WARNING;
+			}
+		    }
+		}
+
+
+		Thread.sleep(2000); // Wait till the refill hub loads.
+		if (ColumnToValidate.equalsIgnoreCase("LastFillDate")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(LastFillDateColumn_LNK, browser))) {
+				// clicking on Fill Date link to sort the column
+				throw new Exception("Not able to click on Last Fill Date Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath = "/td[" + LastFillVal + "]";
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Prescription Name")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(PrescriptionColumn_LNK, browser))) {
+				// clicking on Presciption Name to sort the
+				// column
+				throw new Exception("Not able to click on Prescription Name Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath = "/td[" + RxNameVal + "]//strong[contains(@class,'drugname')]";
+		}
+		if (ColumnToValidate.equalsIgnoreCase("Refills Left")) {
+		    if (!NoofTimesToClickTableHeader.equals("-")) {
+			for (int k = 0; k < Integer.parseInt(NoofTimesToClickTableHeader); k++) {
+			    if (!(isElementPresentVerifyClick(RefillsleftColumn_LNK, browser))) {
+				// clicking on Refills left link to sort the
+				// column
+				throw new Exception("Not able to click on Refills left Column for " + k + "");
+			    }
+			}
+		    }
+		    RowPath = "/td[" + RefillsColVal + "]/div/b";
+		}
+
+		browser.get(browser.getCurrentUrl());
+		String table = "//table/tbody";
+		Thread.sleep(3000);
+		WebElement WE = getElementByProperty(table, browser);
+		List<WebElement> TableRows = WE.findElements(By.tagName("tr"));
+		int NoOfRows = TableRows.size();
+		int RowCounter = 3;
+		boolean isMoveNextRowPosOnly = false;
+		// Verifying the sorting of the given columns in specified order
+		while (RowCounter < NoOfRows) {
+		    if (!isMoveNextRowPosOnly)
+			NextRowPosition = RowCounter + 3;// setting value of the
+		    // next row of the table to be compared
+		    else {
+			NextRowPosition += 3;
+			if (NextRowPosition > NoOfRows) {
+			    break;
+			}
+		    }
+
+		    if (getElementByProperty(table + "/tr[" + NextRowPosition + "]", browser) != null) {
+			if (getElementByProperty(table + "/tr[" + RowCounter + "]" + RowPath, browser) != null) {
+			    CurrentRowText = getElementByProperty(table + "/tr[" + RowCounter + "]" + RowPath, browser).getText().trim();
+			} else {
+			    RowCounter += 3;
+			    continue;
+			}
+
+			if (getElementByProperty(table + "/tr[" + NextRowPosition + "]" + RowPath, browser) != null) {
+			    NextRowText = getElementByProperty(table + "/tr[" + NextRowPosition + "]" + RowPath, browser).getText().trim();
+			    isMoveNextRowPosOnly = false;
+			} else {
+			    isMoveNextRowPosOnly = true;
+			    continue;
+			}
+
+			if (ColumnToValidate.equalsIgnoreCase("Prescription Name")) {
+			    if (OrderType.equalsIgnoreCase("Descending")) {
+				if (!(CurrentRowText.compareToIgnoreCase(NextRowText) >= 0)) {
+				    // Verifying if the Prescription names are
+				    // sorted in Descending order
+				    flag = flag + 1;
+				    break;
+				}
+			    } else if (OrderType.equalsIgnoreCase("Ascending")) {
+				if (!(CurrentRowText.compareToIgnoreCase(NextRowText) <= 0)) {
+				    // Verifying if the Prescription names are
+				    // sorted in Descending order
+				    flag = flag + 1;
+				    break;
+				}
+			    }
+			} else if (ColumnToValidate.equalsIgnoreCase("LastFillDate")) {
+			    CurRowDate = simpleDate.parse(CurrentRowText);
+			    NextRowDate = simpleDate.parse(NextRowText);
+			    if (OrderType.equalsIgnoreCase("Descending")) {
+				if (!(CurRowDate.compareTo(NextRowDate) >= 0)) {
+				    flag = flag + 1;
+				    break;
+				}
+			    } else if (OrderType.equalsIgnoreCase("Ascending")) {
+				if (!(CurRowDate.compareTo(NextRowDate) <= 0)) {
+				    flag = flag + 1;
+				    break;
+				}
+			    }
+			} else if (ColumnToValidate.equalsIgnoreCase("Refills Left")) {
+			    CurRowRefillCnt = Integer.parseInt(CurrentRowText);
+			    NextRowRefillCnt = Integer.parseInt(NextRowText);
+			    if (OrderType.equalsIgnoreCase("Descending")) {
+				if (!(CurRowRefillCnt >= NextRowRefillCnt)) {
+				    flag = flag + 1;
+				    break;
+				}
+			    } else if (OrderType.equalsIgnoreCase("Ascending")) {
+				if (!(CurRowRefillCnt <= NextRowRefillCnt)) {
+				    flag = flag + 1;
+				    break;
+				}
+			    }
+			}
+		    }
+		    RowCounter += 3;
+		}// while loop ends
+		if (flag > 0) {
+		    messagesMap.put("Sorting Validation", ColumnToValidate + " Column is not sorted properly in the order of " + OrderType);
+		    status = WARNING;
+		}
+
+		if (dataMap.containsKey("VerificationMode") && isExpandViewPresent) {
+		    String sortingVerificationMode = dataMap.get("VerificationMode").get(0);
+		    int tbodyFlag = 1;
+		    WebElement TableBody = null;
+		    //		    do {
+		    TableBody = browser.findElement(By.xpath("//table[1]/tbody[" + tbodyFlag + "]"));
+		    List<WebElement> TableRow = TableBody.findElements(By.tagName("tr"));
+		    int NoOfRow = TableRow.size();
+
+		    // Verifying the Collapsed mode of the Refill hub
+		    if (sortingVerificationMode.equalsIgnoreCase("Collapsed")) {
+			for (int row = 3; row <= NoOfRow; row += 3) {
+			    if (browser.findElement(By.xpath("//table[1]/tbody[" + tbodyFlag + "]/tr[" + row + "]/td//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				messagesMap.put("Verifying the collapsed Refill Hub Page after sorting", "Refill hub is not displayed in the collapsed mode.");
+				status = WARNING;
+			    }
+			}
+		    } else if (sortingVerificationMode.equalsIgnoreCase("Expanded")) {
+			for (int row = 3; row <= NoOfRow; row += 3) {
+			    if (!browser.findElement(By.xpath("//table[1]/tbody[" + tbodyFlag + "]/tr[" + row + "]/td//div[contains(@class,'presName')]/div")).isDisplayed()) {
+				messagesMap.put("Verifying the Expaned Refill Hub Page after sorting", "Refill hub is not displayed in the Expanded mode.");
+				status = WARNING;
+			    }
+			}
+		    }
+		    //			tbodyFlag++;
+		    //		    } while (isElementPresentVerification("//table[1]/tbody[" + tbodyFlag + "]", browser));
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - To Verify the Pill Image
+     * @author - Sasikala J
+     * @Created - 18 Apr 2013
+     * @Modified By - Thanigaivelan G [Modified as per the New refill hub -
+     *           Expand collapse]
+     * @Modified_Date: 23 OCT 2013
+     ************************************************************* 
+     */
+
+    /*
+     * No need to access the Pill Image switch 
+     */
+    public static void PillImageVerificationInRefillHub(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	// String Yes_Radio = "//input[@id='yes_1']~XPATH";
+	String Yes_Radio = "input[id*='yes']~CSS";
+	String CloseWindow_BTN = "//a[@title='Close Window']~XPATH";
+	String Search_TXT = "//input[@id='prescription_search']~XPATH";
+	String Search_BTN = "//input[@id='pres_search']~XPATH";
+	String Return_Manageprescription = "//a[@title='Return to Manage Prescriptions']~XPATH";
+	String Show_MorePrescription = "//*[@title='Show More Prescriptions']~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    // To search for a prescription in the Manage Prescriptions page
+	    String keyword = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "Keyword");
+
+	    if (isElementPresentVerification(Search_TXT, browser)) {
+		WebElement searchBox = getElementByProperty(Search_TXT, browser);
+		searchBox.clear();
+		Thread.sleep(2000);
+		searchBox.sendKeys(keyword);
+		isElementPresentVerifyClick(Search_BTN, browser);
+		// To click the Show More Prescriptions Button
+
+		while (isElementPresentVerification(Show_MorePrescription, browser)) {
+		    getElementByProperty(Show_MorePrescription, browser).click();
+		}
+		WebElement TableBody2 = browser.findElement(By.xpath("//table/tbody"));
+		int TableSize2 = TableBody2.findElements(By.tagName("tr")).size();
+		for (int counts = 3; counts <= TableSize2; counts = counts + 3) {
+
+		    // Clicks on the Pill image
+		    if (isElementPresentVerifyClick("//table/tbody/tr[" + counts + "]/td/div/div[2]/div[2]/a/img", browser)) {
+			switchToOverlay(browser);
+			// To Clik on the Close Window button in the Overlay
+			if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+			    messagesMap.put("Close Window", "Not able to click on Close Window Button");
+			    status = WARNING;
+			}
+			switchToDefault(browser);
+		    } else if (!isElementPresentVerification("//table/tbody/tr[" + counts + "]/td/div/div[2]/div[2]/img", browser)) {
+			messagesMap.put("Pill Image", "Not able to click on Pill Image-Search Results ");
+			status = WARNING;
+		    }
+		    // To verify the Pill Image for the prescriptions in the
+		    // Show History page
+		    if (getElementByProperty("//table/tbody/tr[" + counts + "]/td//div[contains(@class,'presName')]/div", browser) != null) {
+			Thread.sleep(1000);
+			if (!isElementPresentVerifyClick("//table/tbody/tr[" + counts + "]/td//span/a[@title='Show History']", browser)) {
+			    messagesMap.put("Show history page", "Not able to navigate to show history page-Search Results");
+			    status = WARNING;
+			}
+		    }
+		    // To click the Show More Prescriptions Button
+		    while (isElementPresentVerification(Show_MorePrescription, browser)) {
+			getElementByProperty(Show_MorePrescription, browser).click();
+		    }
+
+		    WebElement TableBody3 = browser.findElement(By.xpath("//table/tbody"));
+		    int TableSize3 = TableBody3.findElements(By.tagName("tr")).size();
+		    for (int count = 1; count <= TableSize3; count = count + 1) {
+			// Identifies the Refills
+			if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td[4]", browser)) {
+			    if (!(getElementByProperty("//table/tbody/tr[" + count + "]/td[4]", browser).getText().equals(null) || getElementByProperty("//table/tbody/tr[" + count + "]/td[4]",
+				    browser).getText().equals(""))) {
+
+				// Clicks on the Pill image
+				if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td/div[2]/a/img", browser)) {
+				    getElementByProperty("//table/tbody/tr[" + count + "]/td/div[2]/a/img", browser).click();
+				    switchToOverlay(browser);
+				    // To Clik on the Close Window button in the
+				    // Overlay
+				    if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+					messagesMap.put("Close Window", "Not able to click on Close Window Button");
+					status = WARNING;
+				    }
+				    switchToDefault(browser);
+				} else if (!isElementPresentVerification("//table/tbody/tr[" + count + "]/td/div[2]/img", browser)) {
+				    messagesMap.put("Pill Image in Show history", "Pill Image is not available");
+				    status = WARNING;
+				}
+			    }
+			}
+		    }
+		    // To click on the Return to Manage Prescription link
+		    if (!isElementPresentVerifyClick(Return_Manageprescription, browser)) {
+			messagesMap.put("Return To Manage Prescription", "Not able to click on Return To Manage Prescription link");
+			status = WARNING;
+		    }
+		}
+	    } else {
+		throw new Exception("Unable to verify the Search Text Box!");
+	    }
+
+	    // RAM - 05/14/2013
+	    // ---------------------------------------------------------------------
+	    if (!CommonLibrary.checkBoxSelection(browser, Yes_Radio, "SELECT")) {
+		messagesMap.put("Refill Hub", "Not able click on YES radio button");
+		status = WARNING;
+	    }
+	    // ---------------------------------------------------------------------
+
+	    // To verify the Pill Image for the prescriptions in the Manage
+	    // Prescription page
+
+	    WebElement TableBody = browser.findElement(By.xpath("//table/tbody"));
+	    int TableSize = TableBody.findElements(By.tagName("tr")).size();
+
+	    for (int counter = 3; counter <= TableSize; counter = counter + 3) {
+		if (isElementPresentVerifyClick("//table/tbody/tr[" + counter + "]/td/div/div[2]/div[2]/a/img", browser)) {
+		    switchToOverlay(browser);
+		    // To Clik on the Close Window button in the Overlay
+		    if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+			messagesMap.put("Close Window", "Not able to click on Close Window Button");
+			status = WARNING;
+		    }
+		    switchToDefault(browser);
+		} else if (!isElementPresentVerification("//table/tbody/tr[" + counter + "]/td/div/div[2]/div[2]/img", browser)) {
+		    messagesMap.put("Pill Image", "Not able to click on Pill Image");
+		    status = WARNING;
+		}
+
+		if (getElementByProperty("//table/tbody/tr[" + counter + "]/td//div[contains(@class,'presName')]/div", browser) != null) {
+		    Thread.sleep(1000);
+		    if (!isElementPresentVerifyClick("//table/tbody/tr[" + counter + "]/td//span/a[@id='showHistoryATag']", browser)) {
+			messagesMap.put("Show history page", "Not able to navigate to show history page");
+			status = WARNING;
+		    }
+		}
+
+		// To click the Show More Prescriptions Button
+		while (isElementPresentVerification(Show_MorePrescription, browser)) {
+		    getElementByProperty(Show_MorePrescription, browser).click();
+		}
+		// To verify the Pill Image for the prescriptions in the Show
+		// History page
+		WebElement TableBody1 = browser.findElement(By.xpath("//table/tbody"));
+		int TableSize1 = TableBody1.findElements(By.tagName("tr")).size();
+
+
+		for (int count = 1; count <= TableSize1; count = count + 1) {
+		    if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td[4]", browser)) {
+			if (!(getElementByProperty("//table/tbody/tr[" + count + "]/td[4]", browser).getText().equals(null) || getElementByProperty("//table/tbody/tr[" + count + "]/td[4]", browser)
+				.getText().equals(""))) {
+
+			    if (isElementPresentVerification("//table/tbody/tr[" + count + "]/td/div[2]/a/img", browser)) {
+				getElementByProperty("//table/tbody/tr[" + count + "]/td/div[2]/a/img", browser).click();
+				switchToOverlay(browser);
+				// To Clik on the Close Window button in the
+				// Overlay
+				if (!isElementPresentVerifyClick(CloseWindow_BTN, browser)) {
+				    messagesMap.put("Close Window", "Not able to click on Close Window Button");
+				    status = WARNING;
+				}
+				Thread.sleep(2000);
+				switchToDefault(browser);
+			    } else if (!isElementPresentVerification("//table/tbody/tr[" + count + "]/td/div[2]/img", browser)) {
+				messagesMap.put("Pill Image in Show history", "Pill Image is not available");
+				status = WARNING;
+			    }
+			}
+		    }
+		}
+		// To click on the Return to Manage Prescription link
+		isElementPresentVerifyClick(Return_Manageprescription, browser);
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the Auto refill overlays from refillhub page
+     * @author - Mukesh Varun R S
+     * @Created -25-NOV-13
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void verifyAutoRefillOverlay(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	boolean numberfrefill = false;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    WebElement AutoOverlay = null;
+
+	    String TurnOn_BTN="input[title='Turn On Auto Refill']~CSS";
+	    String AutoRefillOn_TXT="//div[contains(text(),'Auto Refill is on')]~XPATH";
+	    String ChangeLocation_LNK="a[title='Change location']~CSS";
+	    String TurnOff_BTN="input[title='Turn off Auto Refill']~CSS";
+	    String AutoRefillOff="//div[contains(text(),'Auto Refill is off')]~XPATH";
+	    String Continueautorefill_BTN = "input[title='Continue Auto Refill']~CSS";
+	    String Closewindow_BTN="a[title='Close Window']~CSS";
+	    String StoreLocator_TXT="//h1[contains(text(),'Prescription Auto Refills')]~XPATH";;
+	    String AutoRefillPage_TXT="//h1[contains(text(),'Set Up Auto Refill Prescriptions')]~XPATH";
+	    String DftLocation = null,Removable=null,DefaultLocation = null,ShipOrPickup=null;
+
+
+	    String RxName = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxName");
+	    String NumOfRefill = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "NumOfRefill");
+	    String AutoRefillStatus = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AutoRefillStatus");
+	    String LocationOeCloseSwitch = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "LocationOeCloseSwitch");
+	    String DefaultLocationSwitch = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocationSwitch");
+	    if(DefaultLocationSwitch.equalsIgnoreCase("Yes")){
+		DefaultLocation = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation");
+	    }
+	    ShipOrPickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ShipOrPickup");
+	    String UserType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "UserType");
+
+
+	    if(UserType.equalsIgnoreCase("CC")){
+		switchToOverlay(browser);
+
+		if(!isElementPresentVerification("//H1[contains(text(),'"+RxName+"')]", browser)){
+		    status = FAIL;
+		    messagesMap.put("Auto refill Overlay", " #1) Rx name is not found in overlay");
+		}
+
+		AutoOverlay = browser.findElement(By.cssSelector("div[id='content']"));
+		List<WebElement> NoOfRefill = AutoOverlay.findElements(By.tagName("p"));
+
+
+		for(int i=0;i<NoOfRefill.size();i++)
+		{
+		    if(NoOfRefill.get(i).findElements(By.tagName("span")).size()!=0){
+			if(NoOfRefill.get(i).findElement(By.tagName("span")).getText().contains(NumOfRefill))
+			    numberfrefill = true;
+		    }
+		}
+		if(!numberfrefill){
+		    status = FAIL;
+		    messagesMap.put("Auto refill Overlay", "Number of refill is not found in auto refill overlay");
+		}
+
+		String[] Locations= new String[10];
+		WebElement LocationEle = browser.findElement(By.xpath("//div[@id='content']/form/div[3]/div/div"));
+		List<WebElement> LocationDetails = LocationEle.findElements(By.tagName("p"));
+		for(int i=0;i<LocationDetails.size();i++){
+		    Locations[i]=LocationDetails.get(i).getText().trim();
+		}
+		if(ShipOrPickup.equalsIgnoreCase("Ship")){
+		    if(!Locations[0].contains("Ship To Location")){
+			messagesMap.put("Auto refill Overlay", "Unable to find shipping address");
+			status = WARNING;	
+		    }
+		}else if(ShipOrPickup.equalsIgnoreCase("Pickup")){
+		    if(!Locations[0].contains("Pick Up Location")){
+			messagesMap.put("Auto refill Overlay", "Unable to find pick up address");
+			status = WARNING;	
+		    }
+		}
+		if(DefaultLocationSwitch.equalsIgnoreCase("Yes")){
+
+
+		    if(ShipOrPickup.equalsIgnoreCase("Pickup")){
+			Removable = Locations[1].split("\n")[0];
+			DftLocation = Locations[1].replace(Removable, "");
+		    }else if(ShipOrPickup.equalsIgnoreCase("Ship")){
+			DftLocation = Locations[1];
+		    }
+		    if(!DefaultLocation.contains(DftLocation)){
+
+			messagesMap.put("Auto refill Overlay", "Unable to find Default location text");
+			status = WARNING;	
+		    }
+		}
+		if(AutoRefillStatus.equalsIgnoreCase("CotinueAutorefill")){
+
+		    if(!isElementPresentVerifyClick(Continueautorefill_BTN, browser)){
+			status = FAIL;
+			messagesMap.put("Auto refill Overlay", "Continue auto refill Button is not found in Turn ON auto refill overlay");
+		    }
+
+
+		}
+
+		if (AutoRefillStatus.equalsIgnoreCase("AutoRefill-ON")) {
+
+		    if(!NoOfRefill.get(0).getText().trim().contains("Auto Refill is on for:")){
+			messagesMap.put("Auto refill Overlay", "Unable to find 'Auto Refill is on for:' text");
+			status = WARNING;	
+		    }
+		    if(!isElementPresentVerifyClick(TurnOff_BTN, browser)){
+			messagesMap.put("Auto refill Overlay", "Unable to click 'Auto Refill OFF' Button");
+			status = FAIL;	
+		    }
+		    if(!isElementPresentVerification(AutoRefillOff, browser)){
+			messagesMap.put("Auto refill Overlay", "Unable to find 'Auto Refill OFF' Sucess message after clicking the 'Auto Refill OFF' Button");
+			status = FAIL;
+		    }
+		    if(!isElementPresentVerification("//H1[contains(text(),'"+RxName+"')]", browser)){
+			status = FAIL;
+			messagesMap.put("Auto refill Overlay", " Rx name is not found in Turn OFF confirmation overlay");
+		    }
+
+		    AutoOverlay = browser.findElement(By.cssSelector("div[id='content']"));
+		    NoOfRefill = AutoOverlay.findElements(By.tagName("p"));
+		    for(int i=0;i<NoOfRefill.size();i++)
+		    {
+			if(NoOfRefill.get(i).findElements(By.tagName("span")).size()!=0){
+			    if(NoOfRefill.get(i).findElement(By.tagName("span")).getText().contains(NumOfRefill))
+				System.err.println("Number of refill in confirmation overlay"+NoOfRefill.get(i).findElement(By.tagName("span")).getText());
+			    numberfrefill = true;
+			}
+		    }
+		    if(!numberfrefill){
+			status = FAIL;
+			messagesMap.put("Auto refill Overlay", "Number of refill is not found in auto refill confirmation overlay");
+		    }
+		    String[] Locations1= new String[10];
+		    WebElement LocationEle1 = browser.findElement(By.xpath("//div[@id='content']/div/div[2]/div"));
+		    List<WebElement> LocationDetails1 = LocationEle1.findElements(By.tagName("p"));
+		    for(int i=0;i<LocationDetails1.size();i++){
+			Locations1[i] = LocationDetails1.get(i).getText().trim();
+			if(!Locations[i].contains(Locations1[i])){
+			    messagesMap.put("Auto refill Turn OFF Confirmation Overlay", "Unable to find the store details");
+			    status = WARNING;
+			}
+
+		    }
+		    if(!isElementPresentVerifyClick(Closewindow_BTN, browser)){
+			messagesMap.put("Auto refill Overlay", "Unable to click 'Close window' Button in the Turn OFF confirmation overlay");
+			status = FAIL;
+		    }
+		}else if(AutoRefillStatus.equalsIgnoreCase("Setup Auto Refill")){
+		    if(!NoOfRefill.get(0).getText().trim().contains("Turn On Auto Refill for:")){
+			messagesMap.put("Auto refill Overlay", "Unable to find 'Auto Refill is on for:' text");
+			status = WARNING;	
+		    }
+		    if(!isElementPresentVerifyClick(TurnOn_BTN, browser)){
+			messagesMap.put("Auto refill Overlay", "Unable to find 'Auto Refill ON' Button");
+			status = FAIL;	
+		    }
+		    if(!isElementPresentVerification(AutoRefillOn_TXT, browser)){
+			messagesMap.put("Auto refill Overlay", "Unable to find 'Auto Refill ON' Sucess message after clicking the 'Auto Refill ON' Button");
+			status = FAIL;
+		    }
+		    if(!isElementPresentVerification("//H1[contains(text(),'"+RxName+"')]", browser)){
+			status = FAIL;
+			messagesMap.put("Auto refill Overlay", "Rx name is not found in Turn ON confirmation overlay");
+		    }
+
+		    AutoOverlay = browser.findElement(By.cssSelector("div[id='content']"));
+		    NoOfRefill = AutoOverlay.findElements(By.tagName("p"));
+		    for(int i=0;i<NoOfRefill.size();i++)
+		    {
+			if(NoOfRefill.get(i).findElements(By.tagName("span")).size()!=0){
+			    if(NoOfRefill.get(i).findElement(By.tagName("span")).getText().contains(NumOfRefill))
+				numberfrefill = true;
+			}
+		    }
+		    if(!numberfrefill){
+			status = FAIL;
+			messagesMap.put("Auto refill Overlay", "Number of refill is not found in auto refill turn ON confirmation overlay");
+		    }
+		    String[] Locations1= new String[10];
+		    WebElement LocationEle1 = browser.findElement(By.xpath("//div[@id='content']/div/div[2]/div"));
+		    List<WebElement> LocationDetails1 = LocationEle1.findElements(By.tagName("p"));
+		    for(int i=0;i<LocationDetails1.size();i++){
+			Locations1[i]=LocationDetails1.get(i).getText().trim();
+			if(!Locations[i].contains(Locations1[i])){
+			    messagesMap.put("Auto refill Turn ON Confirmation Overlay", "Unable to find the store details");
+			    status = WARNING;
+			}
+
+		    }
+		    if(LocationOeCloseSwitch.equalsIgnoreCase("Location")){
+			if(!isElementPresentVerifyClick(ChangeLocation_LNK, browser)){
+			    messagesMap.put("Auto refill Overlay", "Unable to click 'Change Location LNK in Turn ON confirmation overlay");
+			    status = FAIL;
+			}
+
+			if(!isElementPresentVerification(StoreLocator_TXT, browser)){
+			    messagesMap.put("Auto refill Overlay", "Unable to navigate to store locator page after clciking the c=hangelocation link");
+			    status = FAIL;
+			}
+		    }else{
+
+			if(!isElementPresentVerifyClick(Closewindow_BTN, browser)){
+			    messagesMap.put("Auto refill Overlay", "Unable to click 'Change Location LNK in Turn ON confirmation overlay");
+			    status = FAIL;
+			}
+
+		    }
+		}
+
+
+		switchToDefault(browser);  
+	    }else if(UserType.equalsIgnoreCase("WithoutCC")){
+		System.out.println("entring");
+		if(AutoRefillStatus.equalsIgnoreCase("Setup Auto Refill")){
+		    if(!isElementPresentVerification(AutoRefillPage_TXT, browser)){
+			messagesMap.put("Auto refill page", "Unable to navigate to Auto refill for without CC users");
+			status = FAIL;
+		    }
+		}else if (AutoRefillStatus.equalsIgnoreCase("AutoRefill-ON")) {
+		    if(!isElementPresentVerification(StoreLocator_TXT, browser)){
+			messagesMap.put("Auto refill page", "Unable to navigate to Auto refill for without CC users");
+			status = FAIL;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    LogIt(null, e.getMessage(), null);
+	} 
+	finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to get the default address (Ship/Pickup) from auto refill page
+     * @author - Mukesh Varun R S
+     * @Created -25-NOV-13
+     * @Modified By -SARAVANAN M
+     * @Modified Date -5-DEC-13
+     * @Modification - Added the functionality to change the delivery option in auto refill page and family member selection
+     * @Modified By AMBIKA C
+     * @Modified Date -13-FEB-14
+     * @Modification - Added the functionality to add credit card and validate error message for shiptoHome & MS Rx
+     ************************************************************* 
+     */
+    public static void fetchDefaultPickupShipLocation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String Pharmacy_IMG = "a.menu_Pharmacy~CSS";
+	String AutoRefillPage_LNK="a[title='Setup Automatic Refills']~CSS";
+	String Autorefill_ELM="//h1[contains(text(),'Prescription Auto Refills')]~XPATH";
+	String Shippinginfo_LBL="//p/b[contains(text(),'Shipping information')]~XPATH";
+	String ChangeDeliveryOptions_LNK="//a[@title='Change delivery options']~XPATH";
+	String ShipOption_RDO="input[id='ship']~CSS";
+	String lastPickup_RDO="input[id='lastpickup']~CSS";
+	String DeliveryOptContinue_BTN="input[alt='Continue']~CSS";
+	String SaveAndContinue_BTN="input[alt='Save and Continue']~CSS";
+	String ChangeStore_LNK="//a[contains(text(),'Change Store')]~XPATH";
+	String PrescriptionType_LST= "select#selectType~CSS";
+	
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    String ShipOrPickup = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxType");
+	    String ChangeDeliveryOption = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ChangeDeliveryOption");
+            String PrescriptionType = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "PrescriptionType");
+	    if(!isElementPresentVerifyClick(Pharmacy_IMG, browser)){
+		status = FAIL;
+		messagesMap.put("Default location fetch", "Unable to navigate to pharmacy home page");
+	    }
+	    if(!isElementPresentVerifyClick(AutoRefillPage_LNK, browser)){
+		status = FAIL;
+		messagesMap.put("Default location fetch", "Unable to click on Auto refill link rx home page");
+	    }
+	    if(!isElementPresentVerification(Autorefill_ELM, browser)){
+		status = FAIL;
+		messagesMap.put("Default location fetch", "Unable to navigate to Auto refill page");
+	    }
+	    if (PrescriptionType != null && PrescriptionType.equalsIgnoreCase("Retail")) {
+		new Select(getElementByProperty(PrescriptionType_LST, browser)).selectByIndex(0);
+	}if (PrescriptionType != null && PrescriptionType.equalsIgnoreCase("Mail")) {
+		new Select(getElementByProperty(PrescriptionType_LST, browser)).selectByIndex(1);
+	}
+
+//	    String FamilyMember = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberOption");
+//	    if (!FamilyMember.equals("-") && FamilyMember != null) {
+//		familyMemberSelector(browser, FamilyMember);
+//	    }
+		System.out.println("ShipOrPickup : "+ShipOrPickup);
+	    if(ShipOrPickup.equalsIgnoreCase("Pickup")){
+		System.out.println("ChangeDeliveryOption : "+ChangeDeliveryOption);
+		String AddressContainer_ELM = "//div[@id='main_body']/div[3]/div[3]/div/div ~XPATH";
+		if(ChangeDeliveryOption.equalsIgnoreCase("Yes")){
+		    if(isElementPresentVerification(Shippinginfo_LBL, browser)){
+			if(isElementPresentVerifyClick(ChangeDeliveryOptions_LNK, browser)){
+			    getElementByProperty(lastPickup_RDO, browser).click();
+			    getElementByProperty(DeliveryOptContinue_BTN, browser).click();
+			    if(isElementPresentVerification(Shippinginfo_LBL, browser)){
+				messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				status=WARNING;
+			    }
+			}
+		    }
+		}
+
+// AMBIKA C - Modified Auto refill for Mail service RX
+
+		if(isElementPresentVerification(ChangeStore_LNK, browser)){
+		    List<WebElement> AddressHolder = getElementByProperty(AddressContainer_ELM, browser).findElements(By.tagName("p"));
+		    String address = AddressHolder.get(1).getText().trim();
+		    System.out.println("Shipping Address  : "+address);
+		    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation", address);
+		}
+	    }
+	    else if(ShipOrPickup.equalsIgnoreCase("Ship")){
+		String AddressContainer_ELM = "//div[@id='main_body']/div[3]/div[3]/div/div~XPATH";
+		
+		if(ChangeDeliveryOption.equalsIgnoreCase("Yes")){
+		    if(!isElementPresentVerification(Shippinginfo_LBL, browser)){
+			if(isElementPresentVerifyClick(ChangeDeliveryOptions_LNK, browser)){
+			    getElementByProperty(ShipOption_RDO, browser).click();
+			    getElementByProperty(DeliveryOptContinue_BTN, browser).click();
+			    getElementByProperty(SaveAndContinue_BTN, browser).click();
+			    if(!isElementPresentVerification(Shippinginfo_LBL, browser)){
+				messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				status=WARNING;
+			    }
+			}
+		    }
+		}
+		if(isElementPresentVerification(Shippinginfo_LBL, browser)){
+		    List<WebElement> AddressHolder = getElementByProperty(AddressContainer_ELM, browser).findElements(By.tagName("p"));
+		    String address = AddressHolder.get(0).getText().trim();
+		    System.out.println("Shipping Address  : "+address);
+		    address=address.split("\n")[2]+"\n"+address.split("\n")[3].trim();
+		    TestDataDBManager.putTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation", address);
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    LogIt(null, e.getMessage(), null);
+	} 
+	finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to verify the Auto refill overlays from refillhub,History pages for both admin and family member
+     * 		  [Pikup,Ship to home,hidden rx auto refill overlay validations]
+     * @author - SARAVANAN M
+     * @Created -4-DEC-13
+     * @Modified By - AMBIKA C
+     * @Modified Date - 12-FEB-14
+     ************************************************************* 
+     */
+    public static void refillHubAutoRefillValidation(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String ManageYourPrescriptions_HEADING = "//*[contains(text(),'Manage Prescriptions')]~XPATH";
+	String NewHubAutoJoinURL="/pharmacy/refillhub/refillhub.jsp?FSRtt=RxExpandedViews&expandedView=yes&autoRefill=yes";
+//	String NewHubAutoJoinURL="pharmacy/refillhub/refillhub.jsp?expandedView=yes";
+	String HiddenRxShowYes_RDO = "input[id='yes_1']~CSS";
+	String ShowMorePrescriptions_BTN = "img[alt='Show More Prescriptions']~CSS";
+	String ActiveCount_LBL = "span#active_count~CSS";
+	String ExpandCollapse_LNK = "//a[contains(@class,'commonExpCol hide')]";
+	String Loader_IMG = "//span[@id='loaderImg']/img[@alt='loader']~XPATH";
+	String ShipTo_LBL= "//b[contains(text(),'Shipping Location:')]~XPATH";
+	String Preferred_LBL="//b[contains(text(),'Preferred Address:')]~XPATH";
+	String BillingInfo_LBL="//b[contains(text(),'Billing Information:')]~XPATH";
+	String ExpressPay_LBL="//b[contains(text(),'ExpressPay Information:')]~XPATH";
+	String PickupInfo_LBL="//b[contains(text(),'Pick Up')]~XPATH";
+	String TurnONAutoRefill_BTN="//input[@title='Turn On Auto Refill']~XPATH";
+	String ShipToAddress_LBL="//form//div[2]/div/div/p[2]";
+	String ShipToAddress2_LBL="//form//div[4]/div/div/p[2]";
+	String PickupLocation_LBL="//form//div/div/p[2]";
+	String AutoRefillOnMsg_LBL="//div[@class='successMsg']~XPATH";
+	String ExpiryDate_LBL= "//div[5]/p/span[contains(text(),'Exp')]~XPATH";
+	String CloseWindow_BTN="//p/a[@title='Close Window']~XPATH";
+	String Cancel_LNK="//a[@title='Cancel']~XPATH";
+	String HubAutoRefilON_LNK="//a[contains(text(),'Auto Refill On:')]";
+	String TurnOffAutoRefill_BTN="//input[@title='Turn off Auto Refill']~XPATH";
+	String TurnOffSuccessMsg_LBL="//div[@class='successMsg']~XPATH";
+	String SetupAutoRefill_LNK="//a[contains(@title,'Setup Auto Refill')]";
+	String ShowHistory_LNK= "//a[@title='Show History']";
+	Select SelectBox = null;
+	String HideFromList_LNK= "//a[@title='Hide from List']";
+	String BillingZipCode_TXT="input[id='new_billZipCode']~CSS";
+	String OldBillingZipCode_TXT= "input[id='old_billZipCode']~CSS";
+	String EnterNewCard_RDB= "input[id='cardChoice2']~CSS";
+	String UseExisting_RDB= "input[id='cardChoice1']~CSS";
+	String NewCreditCardNumber_TXT= "input[id='nccNumber']~CSS";
+	String ExpireMonth_SELECT = "//select[@name='ccMonth']~XPATH";
+	String ExpireYear_SELECT = "//select[@name='ccYear']~XPATH";
+	String EnterCC_LBL= "//p/label[contains(text(),'Please enter a credit card')]~XPATH";
+	String CCNumber_LBL="//form//div[2]/div[5]/p";
+	String Autorefill_ELM="//h1[contains(text(),'Prescription Auto Refills')]~XPATH";
+	String EditDelivery_LNK="//a[contains(text(),'Edit delivery settings')] ~XPATH";
+	String ManageAutorefill_ELM="//h1[contains(text(),'Manage Auto Refills')]~XPATH";
+	String ManageRx_LNK="//a[contains(text(),'Manage Prescriptions')]~XPATH";
+	String CCNumberErrorMessage_ELM ="//p[contains(text(),'Enter a valid credit card number.')]~XPATH";
+	String CCMonthErrorMessage_ELM="//p[contains(text(),'Enter a valid month.')]~XPATH";
+	String CCYearErrorMessage_ELM="//p[contains(text(),'Enter a valid year.')]~XPATH";
+	String CCInvlidDate_ELM="//p[contains(text(),'Expiration date is not valid.')]~XPATH";
+	String ZipcodeErrorMessage_ELM="//p[contains(text(),'Enter a valid ZIP code.')]";
+	
+	boolean AutoRefillONValidation=false, AutoRefillOFFValidation=false, isExpandViewPresent=false,RxFound=false;
+	String firstColumnText=null,RxName=null;
+	Map<String, String> messagesMap = null;
+
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    String RxNumber=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxNumber");
+	    String StoreAddress=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "DefaultLocation");
+	    String DefaultAddressVerification=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "AddressVerification");
+	    String RxType=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "RxType");
+	    String VerificationPage=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "VerificationPage");
+	    String isHiddenRx=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "isHiddenRx");
+	    String FamilyMemberHOH = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMemberHOH");
+            String ErrorFields = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ErrorFields");
+	    String Edit = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "EditDelivery");
+            if( !(RxNumber.equals("-")||RxNumber.equals(null))){
+		browser.get(EcommTestRunner.config.getString("walgreensURL")+NewHubAutoJoinURL);
+
+		if(isElementPresentVerification(ManageYourPrescriptions_HEADING, browser)){
+		    if(isElementPresentVerifyClick(HiddenRxShowYes_RDO, browser)){
+			int NoOfRxs = Integer.parseInt(getElementByProperty(ActiveCount_LBL, browser).getText());
+			if (NoOfRxs > 25) {
+			    for (int clickCount = 0; clickCount < (NoOfRxs / 25); clickCount++) {
+				do {
+				} while (isElementPresentVerification(Loader_IMG, browser));
+				Thread.sleep(5000);
+				if (!isElementPresentVerifyClick(ShowMorePrescriptions_BTN, browser)) {
+				    messagesMap.put("Refill Hub Page", "Unable to click on the Show More Prescriptions button in Prescriptions page.");
+				    status = WARNING;
+				}
+			    }
+			}
+
+			browser.get(browser.getCurrentUrl());// To refresh whole table
+			// SARAVANAN M - 22-OCT-2013 - Added to manage the Expand Collapse view in Refill Hub page
+			try{
+			    if(browser.findElement(By.xpath(ExpandCollapse_LNK))!=null){
+				String Expand_LNK="//a[contains(@class,'expanded')]~XPATH";
+				do{
+				    browser.findElement(By.xpath(ExpandCollapse_LNK)).sendKeys(Keys.RETURN);
+				}while(!isElementPresentVerification(Expand_LNK, browser));
+				isExpandViewPresent = true;
+			    }
+			    browser.get(EcommTestRunner.config.getString("walgreensURL")+NewHubAutoJoinURL);
+			}catch(org.openqa.selenium.NoSuchElementException e){
+			}
+
+			if(isExpandViewPresent){
+			    WebElement TableBody = browser.findElement(By.xpath("//table[@id='prescripiton_content']/tbody"));
+			    List<WebElement> TableRows = TableBody.findElements(By.tagName("tr"));
+			    int NoOfRows = TableRows.size();
+
+			    for (int row = 3; row <= NoOfRows; row = row + 3) {
+				if(!RxFound){
+				    String tableText="//table[1]/tbody/tr[" + row + "]";
+				    firstColumnText = getElementByProperty(tableText+"/td/div", browser).getText();
+				    if (StringUtils.contains(firstColumnText, RxNumber)) {
+					RxFound=true;
+					RxName=getElementByProperty(tableText+"/td/div//strong[contains(@class,'drugname')]", browser).getText().trim();
+					String strVerificationAddress="";
+					String RefillsLeft=getElementByProperty(tableText+"/td[4]/div/b", browser).getText().trim();
+					String OvlyHeader="//h1[contains(text(),'"+RxName+"')]";
+
+					if(VerificationPage.equalsIgnoreCase("History Page")){
+					    if(!isElementPresentVerifyClick(tableText+"/td"+ShowHistory_LNK, browser)){
+						throw new Exception("Unable to click on "+RxName+"'s History link");
+					    }else{
+						tableText="//table[1]/tbody/tr";
+					    }
+					}
+					else{
+					    if(isHiddenRx.equalsIgnoreCase("Yes")){
+						if(!firstColumnText.contains("Show in List")){
+						    if(!isElementPresentVerifyClick(tableText+"/td"+HideFromList_LNK, browser)){
+							throw new Exception("Unable to hide "+RxName);
+						    }
+						    else{
+							browser.get(browser.getCurrentUrl());
+						    }
+						}
+
+					    }
+					}
+					// AMBIKA C - 12-FEB-2014 - Added to Credit card functionality and modified the labels and functionality as per new requirement in Refill Hub page for Ship and MS Rx
+					do{
+					    String OvlyRefillsLeft="//p[3]/span[contains(text(),'"+RefillsLeft+"')]";
+					    String AutorefillStatus=getElementByProperty(tableText+"/td[4]", browser).getText();
+
+					    if(AutorefillStatus.contains("Setup")){
+						if(isElementPresentVerifyClick(tableText+"/td[4]/div[2]/span"+SetupAutoRefill_LNK, browser)){
+						    switchToOverlay(browser);
+						    if(isElementPresentVerification(OvlyHeader, browser)){
+							if(!(isElementPresentVerification(OvlyRefillsLeft, browser))){
+							    status = WARNING;
+							    messagesMap.put("Overlay verfication", "Unable verify the Refills left");
+							}
+					    String CreditCardNumber =getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CreditCardNumber");
+					    String ExpireMonth = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireMonth");
+					    String ExpireYear = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "ExpireYear");
+					    String BillingZipcode = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BillingZipcode");
+					    String BillingOption=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "BillingOption");
+					    String CreditCard=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CreditCard");
+					    String FamilyMember = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "FamilyMember");
+							
+					    		if (!RxType.equalsIgnoreCase("Pickup")){
+					    		System.out.println("CC  : "+CreditCard);
+					    		if(!FamilyMemberHOH.equalsIgnoreCase("NonHOH")){
+							    if(CreditCard.equalsIgnoreCase("Available")){
+								if(BillingOption.equalsIgnoreCase("Exists")){
+								if(!checkBoxSelection(browser,UseExisting_RDB,"SELECT")){
+							        throw new Exception("Use Existing card onfile radio button is not selected");
+								}
+								if(RxType.equalsIgnoreCase("SHIP")){
+								    if(!isElementPresentVerification(ExpressPay_LBL, browser)){
+									status = WARNING;
+									messagesMap.put("Turn ON Overlay Express pay info verfication", "Unable to verify Express pay info");
+								    }
+							    		}
+						    		if(RxType.equalsIgnoreCase("Mail")){
+							        if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+								status = WARNING;
+								messagesMap.put("Turn ON Overlay Billing info verfication", "Unable to verify Billing info");
+							   		 }
+						   		 }
+					                    if(!isElementPresentVerification(CCNumber_LBL, browser)){
+						               status = WARNING;
+						               messagesMap.put("Credit card number", "Cc number is not available");
+						                  }
+					                    if(!isElementPresentVerification(ExpiryDate_LBL, browser)){
+							               status = WARNING;
+							               messagesMap.put("Expiry Date", "Expiry Date is not available");
+							                  }
+								if(!clearAndEnterText(OldBillingZipCode_TXT, BillingZipcode, browser)){
+												messagesMap.put("Edit Billing Zipcode", "Not Able to enter the text in the Billing Zipcode text box");
+												status=WARNING;   
+											}
+								}
+								else if(BillingOption.equalsIgnoreCase("New")){
+								if(!checkBoxSelection(browser,EnterNewCard_RDB, "SELECT")){
+							        throw new Exception("Enter a new creditcard radio button is not selected");
+												}
+								if(!clearAndEnterText(NewCreditCardNumber_TXT, CreditCardNumber, browser)){
+												messagesMap.put("Enter Credit card Number", "Not Able to enter the text in the Credit Card Number text box");
+												status=WARNING;   
+											}
+											if(isElementPresentVerification(ExpireMonth_SELECT, browser)){
+												WebElement Expiremonth = getElementByProperty(ExpireMonth_SELECT, browser);
+												SelectBox = new Select(Expiremonth);
+												SelectBox.selectByValue(ExpireMonth);
+											}
+								if(isElementPresentVerification(ExpireYear_SELECT, browser)){
+												WebElement Expireyear = getElementByProperty(ExpireYear_SELECT, browser);
+												SelectBox = new Select(Expireyear);
+												SelectBox.selectByValue(ExpireYear);
+											}
+
+											if(!clearAndEnterText(BillingZipCode_TXT, BillingZipcode, browser)){
+												messagesMap.put("Enter Billing Zipcode", "Not Able to enter the text in the Billing Zipcode text box");
+												status=WARNING;   
+											}
+								}
+								if(RxType.equalsIgnoreCase("SHIP")){
+									if(!isElementPresentVerification(Preferred_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Overlay Shipping info verfication", "Shipping Info is not available");
+									}
+									if(!isElementPresentVerification(ExpressPay_LBL, browser)){
+										status = WARNING;
+										messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+									    }
+									strVerificationAddress=getElementByProperty(Preferred_LBL, browser).getText().trim();
+								    }
+								    else if(RxType.equalsIgnoreCase("Mail")){
+									if(!isElementPresentVerification(ShipTo_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Overlay Pickup info verfication", "Pickup Info is not available");
+									}
+									if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+										status = WARNING;
+										messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+									    }									
+									strVerificationAddress=getElementByProperty(ShipTo_LBL, browser).getText().trim();
+								    }
+								    else if(RxType.equalsIgnoreCase("Pickup")){ 
+									if(!isElementPresentVerification(PickupInfo_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Overlay Pickup info verfication", "Pickup Info is not available");
+									}
+									strVerificationAddress=getElementByProperty(PickupLocation_LBL, browser).getText().trim();
+								    }
+								}
+							    else if(CreditCard.equalsIgnoreCase("NotAvailable")){
+							    if(FamilyMember.equalsIgnoreCase("Yes")){
+							    if(!isElementPresentVerification(CCNumber_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("creditcard info verfication", "Cc number is not available");
+								}
+							}
+							    else if(FamilyMember.equalsIgnoreCase("No")){
+								if(!isElementPresentVerification(EnterCC_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Enter CC info verfication", "Enter CC Info is not available");
+								}
+								if(!clearAndEnterText(NewCreditCardNumber_TXT, CreditCardNumber, browser)){
+									messagesMap.put("Enter New CC number", "Not Able to enter the text in the Credit Card Number text box");
+									status=WARNING;   
+								}
+								if(isElementPresentVerification(ExpireMonth_SELECT, browser)){
+									WebElement Expiremonth = getElementByProperty(ExpireMonth_SELECT, browser);
+									SelectBox = new Select(Expiremonth);
+									SelectBox.selectByValue(ExpireMonth);
+								}
+								if(isElementPresentVerification(ExpireYear_SELECT, browser)){
+									WebElement Expireyear = getElementByProperty(ExpireYear_SELECT, browser);
+									SelectBox = new Select(Expireyear);
+									SelectBox.selectByValue(ExpireYear);
+								}
+
+								if(!clearAndEnterText(BillingZipCode_TXT, BillingZipcode, browser)){
+									messagesMap.put("Enter Billing zipcode", "Not Able to enter the text in the Billing Zipcode text box");
+									status=WARNING;   
+								}
+							}
+							    }						      
+							    }
+					    		}
+					    		else {
+					    		    if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+								status = WARNING;
+								messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+							    }									
+							strVerificationAddress=getElementByProperty(ShipTo_LBL, browser).getText().trim();
+//							
+						}
+							String FormText=getElementByProperty("//form", browser).getText();
+//							if(DefaultAddressVerification.equalsIgnoreCase("Yes")){
+//							    if(!(FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1]))){
+//								status = WARNING;
+//								messagesMap.put("Default Address verification", "Default Address is not present");
+//							    }
+//							}
+							if(isElementPresentVerifyClick(TurnONAutoRefill_BTN, browser)){
+							    OvlyRefillsLeft="//p[2]/span[contains(text(),'"+RefillsLeft+"')]";
+							    FormText=getElementByProperty("//div[3]/div/div[@id='content']", browser).getText();
+							    
+							//  Credit card fields Error Validation
+							    if(ErrorFields != null && !ErrorFields.equals("-")) {
+								    String[] strErrorFields = ErrorFields.split(":");
+								for (int k = 0; k < strErrorFields.length; k++) {
+								    if (ErrorFields.equalsIgnoreCase("EmptyFields")) {
+									if (!isElementPresentVerification(CCNumberErrorMessage_ELM, browser)) {
+									messagesMap.put("CC Number Error Message", "Not able to find the error message");
+									status = WARNING;
+									}
+									if (!isElementPresentVerification(CCMonthErrorMessage_ELM, browser)) {
+									messagesMap.put("CC Month Error", "Not able to find the error message");
+									status = WARNING;
+									}
+									if (!isElementPresentVerification(CCYearErrorMessage_ELM, browser)) {
+									messagesMap.put("CC Year Error", "Not able to find the error message");
+									status = WARNING;
+									}
+									if (!isElementPresentVerification(ZipcodeErrorMessage_ELM, browser)) {
+									messagesMap.put("Zipcode Error Message", "Not able to find the Error Message");
+									status = WARNING;
+									}
+								}
+								    else {
+									if (ErrorFields.equalsIgnoreCase("InvalidFields")) {
+									if (!isElementPresentVerification(CCNumberErrorMessage_ELM, browser)) {
+									messagesMap.put("CC Number Error Message", "Not able to find the error message");
+									status = WARNING;
+									}
+									if (!isElementPresentVerification(CCInvlidDate_ELM, browser)) {
+									messagesMap.put("CC Date Invalid", "Not able to find the error message");
+									status = WARNING;
+									}										
+									if (!isElementPresentVerification(ZipcodeErrorMessage_ELM, browser)) {
+									messagesMap.put("Zipcode Error Message", "Not able to find the Error Message");
+									status = WARNING;
+									}
+									}
+									}
+							
+								    if (!isElementPresentVerifyClick(Cancel_LNK, browser)) {
+									messagesMap.put("Zipcode Error Message", "Not able to find the Error Message");
+									status = WARNING;
+									}
+							    
+						}
+							
+						    }
+							  else{
+							    if(!isElementPresentVerification(AutoRefillOnMsg_LBL, browser)){
+								status = WARNING;
+								messagesMap.put("Turn ON Auto Refill", "Unable to Turn ON Auto Refill for "+RxName);
+							    }
+								if(!(isElementPresentVerification(OvlyHeader, browser) && isElementPresentVerification(OvlyRefillsLeft, browser) && 
+									(FormText.contains(strVerificationAddress)||FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1])))){
+								    status = WARNING;
+								    messagesMap.put("Turn ON Auto Refill ovly", "Overlay header,Refills left arenot found");
+								}
+//							    }
+//							
+
+//							if(DefaultAddressVerification.equalsIgnoreCase("Yes")){
+//							    if(!(FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1]))){
+//								status = WARNING;
+//								messagesMap.put("Default Address verification", "Default Address is not present");
+//							    }
+//							} 
+							    if(RxType.equalsIgnoreCase("SHIP")){
+									if(!isElementPresentVerification(Preferred_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Turn OFF-Overlay Shipping info verfication", "Shipping Info is not available");
+									}
+									if(CreditCard.equalsIgnoreCase("Available")){
+									if(!isElementPresentVerification(ExpressPay_LBL, browser)){
+										status = WARNING;
+										messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+									    }
+									}
+									    strVerificationAddress=getElementByProperty(ShipToAddress2_LBL, browser).getText().trim();
+								    }
+								    else if(RxType.equalsIgnoreCase("Mail")){
+									if(!isElementPresentVerification(ShipTo_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Turn OFF-Overlay Shipping info verfication", "Shipping Info is not available");
+									}
+									if(CreditCard.equalsIgnoreCase("Available")){
+									if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+										status = WARNING;
+										messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+									    }
+									}
+									strVerificationAddress=getElementByProperty(ShipToAddress2_LBL, browser).getText().trim();
+								    
+								    }
+								    else{
+									if(!isElementPresentVerification(PickupInfo_LBL, browser)){
+									    status = WARNING;
+									    messagesMap.put("Turn OFF-Overlay Pickup info verfication", "Shipping Info is not available");
+									}
+									strVerificationAddress=getElementByProperty(PickupLocation_LBL, browser).getText().trim();
+								    }
+							    	if(Edit.equalsIgnoreCase("Yes")){
+//									    if(FamilyMemberHOH.equalsIgnoreCase("HOH")){
+								 if(!isElementPresentVerifyClick(EditDelivery_LNK, browser)){
+									status = FAIL;
+									messagesMap.put("Edit delivery settings", "Unable to click on Edit delivery settings link");
+								    }
+								    if(!isElementPresentVerification(ManageAutorefill_ELM, browser)){
+									status = FAIL;
+									messagesMap.put("Default location fetch", "Unable to navigate to Auto refill page");
+								    }
+								    if(!isElementPresentVerifyClick(ManageRx_LNK, browser)){
+									status = WARNING;
+									messagesMap.put("Manage rx", "Refill hub not displayed");
+								    }
+//							    }
+							    	}
+							
+							AutoRefillONValidation=true;
+							    if(isElementPresentVerifyClick(CloseWindow_BTN, browser)){
+							    switchToDefault(browser);
+							    if(!isElementPresentVerification(tableText+"/td[4]/div[2]"+HubAutoRefilON_LNK, browser)){
+								status = WARNING;
+								messagesMap.put("Auto Refill ON link", "Auto Refill ON link is not present");
+							    }
+							}
+							}
+								
+						    }
+						    }
+						}
+					    }
+					    else {
+						if(isElementPresentVerifyClick(tableText+"/td[4]/div[2]"+HubAutoRefilON_LNK, browser)){
+						    switchToOverlay(browser);
+						    String CreditCard=getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CreditCard");
+						    if(isElementPresentVerification(OvlyHeader, browser)){
+							if(!(isElementPresentVerification(OvlyRefillsLeft, browser))){
+							    status = WARNING;
+							    messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Refills left");
+							}
+							    if(Edit.equalsIgnoreCase("Yes")){
+//								if(FamilyMemberHOH.equalsIgnoreCase("HOH")){
+								 if(!isElementPresentVerifyClick(EditDelivery_LNK, browser)){
+									status = FAIL;
+									messagesMap.put("Edit delivery settings", "Unable to click on Edit delivery settings link");
+								    }
+								    if(!isElementPresentVerification(ManageAutorefill_ELM, browser)){
+									status = FAIL;
+									messagesMap.put("Manage Auto Refill", "Unable to navigate to Auto refill page");
+								    }
+								    if(!isElementPresentVerifyClick(ManageRx_LNK, browser)){
+									status = WARNING;
+									messagesMap.put("Manage rx", "Refill hub not displayed");
+								    }
+//							}
+							}
+							else{
+							    if(RxType.equalsIgnoreCase("Ship")){
+								if(!isElementPresentVerification(Preferred_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Overlay Shipping info verfication", "Shipping Info is not available");
+								}
+								if(CreditCard.equalsIgnoreCase("Available")){
+								if(!isElementPresentVerification(ExpressPay_LBL, browser)){
+									status = WARNING;
+									messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+								    }
+								}
+								strVerificationAddress=getElementByProperty(Preferred_LBL, browser).getText().trim();
+							    }
+							    else if(RxType.equalsIgnoreCase("Mail")){
+								if(!isElementPresentVerification(ShipTo_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Overlay Pickup info verfication", "Pickup Info is not available");
+								}
+								if(CreditCard.equalsIgnoreCase("Available")){
+									if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+										status = WARNING;
+										messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+									    }
+									}
+								strVerificationAddress=getElementByProperty(ShipTo_LBL, browser).getText().trim();
+							    }
+							    else if(RxType.equalsIgnoreCase("Pickup")){ 
+								if(!isElementPresentVerification(PickupInfo_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Overlay Pickup info verfication", "Pickup Info is not available");
+								}
+								strVerificationAddress=getElementByProperty(PickupLocation_LBL, browser).getText().trim();
+							    }
+							}
+						}
+						    String  FormText=getElementByProperty("//form", browser).getText();
+//							if(DefaultAddressVerification.equalsIgnoreCase("Yes")){
+//							    if(!(FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1]))){
+//								status = WARNING;
+//								messagesMap.put("Turn OFF-Default Address verification", "Default Address is not present");
+//							    }
+//							}
+							if(isElementPresentVerifyClick(TurnOffAutoRefill_BTN, browser)){
+							    OvlyRefillsLeft="//p/span[contains(text(),'"+RefillsLeft+"')]";
+							    FormText=getElementByProperty("//div[3]/div/div[@id='content']", browser).getText();
+//							    System.out.println("OFF ovly FormText2="+FormText);
+							    if(!isElementPresentVerification(TurnOffSuccessMsg_LBL, browser)){
+								status = WARNING;
+								messagesMap.put("Turn OFF Auto Refill", "Unable to Turn OFF Auto Refill for "+RxName); 
+							    }
+							    else{
+								if(!(isElementPresentVerification(OvlyHeader, browser) && isElementPresentVerification(OvlyRefillsLeft, browser) && 
+									(FormText.contains(strVerificationAddress)||FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1])))){
+								    status = WARNING;
+								    messagesMap.put("Turn ON Auto Refill ovly", "Overlay header,Refills left arenot found");
+								}
+							    }
+//							    if(DefaultAddressVerification.equalsIgnoreCase("Yes")){
+//								    if(!(FormText.contains(StoreAddress.split("\n")[0]) && FormText.contains(StoreAddress.split("\n")[1]))){
+//									status = WARNING;
+//									messagesMap.put("Default Address verification", "Default Address is not present");
+//								    }
+//								}
+							    if(RxType.equalsIgnoreCase("Ship")){
+								if(!isElementPresentVerification(Preferred_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Turn OFF-Overlay Shipping info verfication", "Shipping Info is not available");
+								}
+								if(CreditCard.equalsIgnoreCase("Available")){
+								if(!isElementPresentVerification(ExpressPay_LBL, browser)){
+									status = WARNING;
+									messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+								    }
+								}
+								    strVerificationAddress=getElementByProperty(ShipToAddress2_LBL, browser).getText().trim();
+							    }
+
+							    else if(RxType.equalsIgnoreCase("Mail")){
+								if(!isElementPresentVerification(ShipTo_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Turn OFF-Overlay Shipping info verfication", "Shipping Info is not available");
+								}
+								if(CreditCard.equalsIgnoreCase("Available")){
+								if(!isElementPresentVerification(BillingInfo_LBL, browser)){
+									status = WARNING;
+									messagesMap.put("Turn OFF Overlay verfication", "Unable to verify Billing info");
+								    }
+								}
+								strVerificationAddress=getElementByProperty(ShipToAddress2_LBL, browser).getText().trim();
+							    }
+							    else{
+								if(!isElementPresentVerification(PickupInfo_LBL, browser)){
+								    status = WARNING;
+								    messagesMap.put("Turn OFF-Overlay Pickup info verfication", "Shipping Info is not available");
+								}
+								strVerificationAddress=getElementByProperty(PickupLocation_LBL, browser).getText().trim();
+							    }
+
+							}
+						    
+							AutoRefillOFFValidation=true;
+							if(isElementPresentVerifyClick(CloseWindow_BTN, browser)){
+							    switchToDefault(browser);
+							    if(!isElementPresentVerification(tableText+"/td[4]/div[2]"+SetupAutoRefill_LNK, browser)){
+								status = WARNING;
+								messagesMap.put("Setup Auto Refill link", "Setup Auto Refill link is not present");
+							    }
+							}
+//						    }
+						
+						}
+					    
+					    else{
+						status = WARNING;
+						messagesMap.put("Overlay RX verfication", "Respective Auto Refill overlay is not opened for RX="+RxName);
+					    }
+					    }
+					}
+					while(!(AutoRefillOFFValidation && AutoRefillONValidation ));
+				    }
+				}
+			    }
+			    if(!RxFound){
+				throw new Exception("Unable to find the Rx:"+RxNumber);
+			    }
+			}else{
+			    throw new Exception("Auto Refill functionality can be verified in Expanded/Collapsed view refill hub only");
+			}
+		    }
+	} 
+	}
+	}
+	catch (Exception e) {
+	    status = FAIL;
+	    LogIt(null, e.getMessage(), null);
+	} 
+	finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+    
+    /**
+     ************************************************************* 
+     * @Purpose - Method to delete credit card detail in
+     *          Express Pay prescriptions page Page
+     * @author - AMBIKA C
+     * @Created - 12-FEB-2014
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void DeleteCCDetail(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String PersonalSettings_ELM="//a[contains(text(),'Personal Settings')]~ XPATH";
+	String YourAccount_LNK="//a[contains(text(),'Your Account')]~ XPATH";
+	String ExpressPay_LNK="//a[@id='express_pay']~ XPATH";
+	String Delete_LNK = "a[title*='Delete']~CSS";
+	String DeleteCardDetailsOvly_H = "//h2[contains(text(),'Delete ExpressPay Information')]~XPATH";
+	String DeleteCardYes_LNK = "input[title='Delete ExpressPay Info']~CSS";
+	String DeleteSuccessMsg_LBL = "//p[contains(text(),'You have successfully deleted your expresspay information')]~XPATH";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    if (!isElementPresentVerifyClick(YourAccount_LNK, browser)) {
+		    throw new Exception("Not able to Click on Your account Link");
+		}
+	    
+	    if (!performHoverClickAction(getElementByProperty(PersonalSettings_ELM, browser), ExpressPay_LNK, browser)) {
+		    throw new Exception("Not able to Click on Express Pay Link");
+	    }
+		if (!isElementPresentVerifyClick(Delete_LNK, browser)) {
+		    throw new Exception("Not able to Click on Delete Link");
+		}
+		switchToOverlay(browser);
+
+		if (!isElementPresentVerification(DeleteCardDetailsOvly_H, browser)) {
+		    throw new Exception("Unable to find the Delete Card Details Overlay");
+		}
+
+		if (!isElementPresentVerifyClick(DeleteCardYes_LNK, browser)) {
+		    throw new Exception("Not able to Click on 'Yes' button");
+		}
+		switchToDefault(browser);
+		
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

@@ -1,0 +1,32 @@
+@Marketing @AddAdult
+Feature: Store locator related functionalities
+
+# Contains the add adult Error validation scenario - additional message invalid data error message validation
+#-----------------------------------------------------------------------------------------------------------
+@MARKETING-AddAdult-1
+Scenario: additional message invalid data error message validation for an authenticated user.
+
+Given  "MARKETING-AddAdult-1" Customer starts the scenario:
+| InputFileName | SheetName    | RowId         	   |
+| QC-MARKETING	| AddAdult | MARKETING-AddAdult-1 |
+
+Given "MARKETING-AddAdult-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     |
+| CommonData  	 | login     | YahooUser |
+
+Then "MARKETING-AddAdult-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName | RowId      |
+| PharmacyLinkVerification  |Authenticated  | AddFamilyMembers |
+| PharmacyLinkVerification  |Authenticated  | AddAdult |
+
+Then "MARKETING-AddAdult-1" Customer adds a family member to profile:
+| InputFileName 			| SheetName | RowId      |
+| Marketing  |AddAdult  | InvalidAdultData |
+
+Then "MARKETING-AddAdult-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "MARKETING-AddAdult-1" Customer finished testing the scenario:
+| InputFileName | SheetName    | RowId					  |
+| QC-MARKETING	| AddAdult | MARKETING-AddAdult-1 |

@@ -1,0 +1,470 @@
+@dailyliving @sdd @ShippingInfoandMethodPages
+Feature: This feature is Contains different validations in Shipping Info and Shipping Method for SDD.
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-1
+Scenario: Customer Adds new Rx to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-1|
+
+Given "SDD-SHIPINFOANDMETHOD-1" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-SHIPINFOANDMETHOD-1" Customer Clears the Shopping Cart
+
+When  "SDD-SHIPINFOANDMETHOD-1" Customer adds a New Prescription to the cart: 
+| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |
+| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection1 |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | ProductInformation1 |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | -         | -         | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+| newshippingaddress  | -           |  -    			 | -                | -         | -         | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS		   |	-		 	|	-			|    -				 |		-				 | -	   |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 104 wilmot road | Deerfield | 16    | 60015	|-              | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-1|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-2
+Scenario: Customer Adds Transfer Rx to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-2|
+
+Given "SDD-SHIPINFOANDMETHOD-2" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-SHIPINFOANDMETHOD-2" Customer Clears the Shopping Cart
+
+When "SDD-SHIPINFOANDMETHOD-2" Customer adds a Transfer Prescription to the cart:
+| FamilyMemberOption | isNinetyDay  | PharmacyName | PharmacyPhone | PrescriptionName    | PrescriptionNumber |
+| -                  | no           | cvs          | 123-323-3234  | CVS Transfer Rx     | 123654             |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection2 |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | ProductInformation2 |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | -         | -         | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+| newshippingaddress  | -           |  -    			 | -                | -         | -         | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS		    |	-		 	 |	-			|    -				 |		-				  | -	    |	Yes             |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    |  City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 104 wilmot road | Deerfield | 16    | 60015	| -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-2|
+
+#----------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-3
+Scenario: Customer Adds Refill Rx to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-3|
+
+Given "SDD-SHIPINFOANDMETHOD-3" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | RxRefill1	  |
+
+And "SDD-SHIPINFOANDMETHOD-3" Customer Clears the Shopping Cart
+
+When "SDD-SHIPINFOANDMETHOD-3" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | Rxretail1  |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection3 |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer selects the product delivery option and updates the quantity from Shopping Cart page:
+| InputFileName | SheetName 	   | RowId 			     |
+| SDDData       | Product Details  | RefillRxInfo1		 |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | -         | -         | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+| newshippingaddress  | -           |  -    			 | -                | -         | -         | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS		    |	-		 	|	-			|    -				 |		-			     | -	   |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -         | -         | 104 wilmot road | Deerfield | 16    | 60015	| -             | -            | -               |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-3" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-3|
+
+#----------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-4
+Scenario: Customer Adds DL Web(DC) only product to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-4" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-4|
+
+Given "SDD-SHIPINFOANDMETHOD-4" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-SHIPINFOANDMETHOD-4" Customer Clears the Shopping Cart
+
+And "SDD-SHIPINFOANDMETHOD-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	  |
+| CommonData    | search    | sdd_webonly |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer Goes to the Shopping Cart
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption |
+|ChangeStore  |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection8 |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | SDDTest   | User      | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | -			   |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  - 		   |	-		 	|	SS			|    -				 |		-				  | -	    |	Yes             |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes         |  -    			 | -                | SDDTest   | User      | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  - 		   |	-		 	|	SS			|    -				 |		-				  | -	    |	Yes             |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | SDDTest   | User      | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -    	   |	-			|	SS   		|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | SDDTest   | User      | 104 wilmot road | Deerfield | 16    | 60015	| -             | -            | -               |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -    	   |	-			|	SS,ES		|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-4" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-4|
+
+#----------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-5
+Scenario: Customer Adds DL Web(CH) only product to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-5" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-5|
+
+Given "SDD-SHIPINFOANDMETHOD-5" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-SHIPINFOANDMETHOD-5" Customer Clears the Shopping Cart
+
+And "SDD-SHIPINFOANDMETHOD-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | sdd_web_ch1 |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer adds Daily Living items to the cart from search.
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer Goes to the Shopping Cart
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	 | RowId   		   |
+| SDDData       | storedetails   | storeselection5 |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | SDDUser   | Test      | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -           |	-		    |	SS			|    -				 |		-				  | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes         |  -    			 | -                | SDDUser   | Test      | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -           |	-		    |	SS			|    -				 |		-				  | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | SDDUser   | Test      | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -    	   |	-			|	SS,ES		|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | SDDUser   | Test      | 104 wilmot road | Deerfield | 16    | 60015	|-             | -            | -               |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -    	   |	-			|	SS,ES		|   Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-5" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-5|
+
+#----------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-6
+Scenario: Customer Adds CL item to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-6" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-6|
+
+Given "SDD-SHIPINFOANDMETHOD-6" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | Pharmauser1  |
+
+And "SDD-SHIPINFOANDMETHOD-6" Customer Clears the Shopping Cart
+
+And "SDD-SHIPINFOANDMETHOD-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Doctor Information   |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | TEST      | TEST      | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+| newshippingaddress  | -           |  -    			 | -                | TEST      | TEST      | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -		   |	SS  	 	|	-			|    -				 |		-				  | -	    |	Yes             |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | TEST      | TEST      | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -		   |	SS,OS		|	-			|    -				 |		-				 | -	    |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | TEST      | TEST      | 104 wilmot road | Deerfield | 16    | 60015	|-             | -            | -               |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  -		   |	SS,OS		|	-			|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-6" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-6|
+
+#----------------------------------------------------------------------------------------------------------------------------------
+@SDD-SHIPINFOANDMETHOD-7
+Scenario: Customer Adds Mail Plan Rx to Cart, Verify Shipping Address Validations and Functionality of links in Shipping Method page
+
+Given  "SDD-SHIPINFOANDMETHOD-7" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId       		     |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-7|
+
+Given "SDD-SHIPINFOANDMETHOD-7" Customer login to the walgreens.com:
+| InputFileName   | SheetName  | RowId        |
+| CommonData      | login      | RxRefill1	  |
+
+And "SDD-SHIPINFOANDMETHOD-7" Customer Clears the Shopping Cart
+
+When "SDD-SHIPINFOANDMETHOD-7" Customer adds prescriptions for refill to cart:
+| InputFileName | SheetName | RowId      |
+| CACData       | RefillRx  | MailPlan1  |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer selects a new store or changes store option from Shopping Cart:
+|ChooseOption|
+|ChangeStore |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer follows the store selection overlay to select a store based upon the Store Offerings from search results page:
+| InputFileName | SheetName 	| RowId   		  |
+| SDDData       | storedetails  | storeselection7 |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage   |
+| Shipping Information |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|  -                 | -                | -		    | -         | 1234 Test St.  | Fajardo   | 43    | 00734   | -             | -            | UnionTerritory |
+| newshippingaddress  | Yes           |  -    			 | -                | -		    | -         | POBox 1234     | Deerfield | 16    | 60015   | -             | -            | -	           |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS		   |	-		 	|	-			|    -				 |		-				 | -	   |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress    | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -		    | -         | 1140 W Parks Hwy | Wasilla   | 1     | 99654   | -             | -            | -              |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    -				 |		-				 | -	   |	Yes            |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | EditAddress |SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress   | City      | State | ZipCode | EmailAddress  | PhoneNumber  |ErrorValidation |
+| newshippingaddress  | Yes 		|-                   | -                | -		    | -         | 104 wilmot road | Deerfield | 16    | 60015	| -             | -            | -               |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer verifies available Ship Method Options or links in the Shipping Method Page:
+|RxShipMethods | CLShipMethods  | DLShipMethods |ShipPriceValidation |ViewOurShippingFAQLink | ChatNow |BacktoShipInfoLink |
+|  SS,ES,OS	   |	-			|	-			|    Yes			 |		Yes  			 | Yes     |	-              |
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer navigates back to Shopping cart using back to Cart link:
+
+Then "SDD-SHIPINFOANDMETHOD-7" Customer finished testing the scenario:
+| InputFileName | SheetName 		| RowId        			 |
+| QC-SDD        | SHIPINFOANDMETHOD | SDD-SHIPINFOANDMETHOD-7|
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+

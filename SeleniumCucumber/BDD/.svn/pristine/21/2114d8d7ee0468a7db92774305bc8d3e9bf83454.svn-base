@@ -1,0 +1,92 @@
+@pharmacyAndHealth @HealthHistoryInformation
+
+Feature:  Customer Adds, Edits Health History related informations from Account home page
+ 
+#-----------------------------------------------------------------------------------------
+@RX-AuthRxValidations-9
+Scenario: Admin member updates Health History information for family memeber from his account home page.(Chrome)
+
+Given "RX-AuthRxValidations-9" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		 |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-9 |
+
+Given "RX-AuthRxValidations-9" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId      |
+| Pharmacy  	 | login     | AdminUser1 |
+
+Then "RX-AuthRxValidations-9" Customer adds Health History or Health Insurance Information:
+| InputFileName    | SheetName 			        | RowId       |
+| AccountDashboard | HealthHistoryAndInsurance  | Healthinfo5 |
+
+Then "RX-AuthRxValidations-9" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-9" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-9	|
+
+#----------------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-5
+Scenario: Unauthenticated customer updates Health History information from his account home page.
+
+Given "RX-UnAuthRxValidations-5" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-5	|
+
+Given "RX-UnAuthRxValidations-5" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId                 |
+| Pharmacy  	 | login     | Unauthenticateduser1	 |
+
+Then "RX-UnAuthRxValidations-5" Customer adds Health History or Health Insurance Information:
+| InputFileName    | SheetName 				   | RowId     	|
+|AccountDashboard  |HealthHistoryAndInsurance  |Healthinfo4 |
+
+Then "RX-UnAuthRxValidations-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-5" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-5	|
+
+#-----------------------------------------------------------------------------------------
+@RX-UnAuthRxValidations-17
+Scenario: Verify Matched User is able to Add medications, Health Conditions and Drug allergies from My Account Health History page
+
+Given  "RX-UnAuthRxValidations-17" Customer starts the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-17	|
+
+Given "RX-UnAuthRxValidations-17" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId             |
+| Pharmacy  	 | login     | Unmatcheduser2	 |
+
+Then "RX-UnAuthRxValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	       			 |TargetOverlay	|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RefillPrescriptions        |Yes		    |
+
+Then "RX-UnAuthRxValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	       |ClickObjectOverlay	|TargetOverlay	|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | UpdateNow        |Yes					|No			    |
+
+Then "RX-UnAuthRxValidations-17" Customer checks whether the user is unmatched user or matched user in Verify your Identity page:
+| UserType       |
+| Unmatched      |
+
+Then "RX-UnAuthRxValidations-17" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	   |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | YourAccount  |
+
+Then "RX-UnAuthRxValidations-17" Customer adds Health History or Health Insurance Information:
+| InputFileName    | SheetName 				   | RowId     	|
+|AccountDashboard  |HealthHistoryAndInsurance  |Healthinfo4 |
+
+Then "RX-UnAuthRxValidations-17" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-UnAuthRxValidations-17" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | UnAuthRxValidations   | RX-UnAuthRxValidations-17	|
+#-----------------------------------------------------------------------------------------------------------

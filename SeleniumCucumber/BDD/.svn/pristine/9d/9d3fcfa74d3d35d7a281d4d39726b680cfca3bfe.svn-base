@@ -1,0 +1,75 @@
+@registration @DigitalOffersRegistration
+Feature: All the scenarios in the feature are to verify registration via digital offers CTA
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-DIGITALOFFERSREG-1
+Scenario: Verify confirmation modal displayed via register link from header in Digital offers page
+
+Given  "CSLR-DIGITALOFFERSREG-1" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            	     |
+| QC-CSLR       | DIGITALOFFERSREG | CSLR-DIGITALOFFERSREG-1 |
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      	    	|
+| CSLR  		 | LinkNavigation   | CouponsPageRegister	|
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+|InputFileName  | SheetName    | RowId         | BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser |
+|CommonData     | personalInfo | digitaluser1  |7120121065417                | ActivateNow          | 78456   | -			| JAN     	| 01      | 1943     | Yes 		|
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer finds the info in We Found Page and clicks Submit:
+|DiscrepencyOverly |Update  | NotNow |
+|    Yes		   | Yes    |    -   |
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer verifies the loyalty registeration by observing the Congratulations message.
+|MembershipType |Coupon |		
+|Activation	    |Yes	|
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      	  	|
+| CSLR  		 | LinkNavigation   | RegOverlayClose	|
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-DIGITALOFFERSREG-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            	     |
+| QC-CSLR       | DIGITALOFFERSREG | CSLR-DIGITALOFFERSREG-1 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@CSLR-DIGITALOFFERSREG-2
+Scenario: Verify confirmation page displayed when a logged in light user is attached with loyalty no match criteria
+
+Given  "CSLR-DIGITALOFFERSREG-2" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            	     |
+| QC-CSLR       | DIGITALOFFERSREG | CSLR-DIGITALOFFERSREG-2 |
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	    |
+| HomepageLinks  | Homepage  | Register Light 	|
+| HomepageLinks  | Homepage  |Regn Basic Access |
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 			 |
+| -                           | MaybeLater		     | -       | -     | -		  | -        | -        | Yes       |CommonData     | personalInfo| digitaluser2	 |
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName 		| RowId      	    	|
+| CSLR  		 | LinkNavigation   | CouponsPageJoinBRLink	|
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone       | DOB-Month | DOB-Day | DOB-Year |GuestUser |InputFileName  | SheetName    | RowId        |  
+|4567891235		              | ActivateNow          | 74856   | -			 | JAN     	 | 01      | 1948     | -	 	 |CommonData     | personalInfo | digitaluser3 |
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer clicks on an object and validates the expected results:
+| InputFileName   		| SheetName 	   	| RowId     				|ClickObjectOverlay |TargetOverlay  |
+| DWARLinkVerification  |Walkwithwalgreens  | NoMatchError		 		|-					|-		   		|
+| DWARLinkVerification  |Walkwithwalgreens  | NoMatchErrorSubmitButton2	|-					|-		   		|
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-DIGITALOFFERSREG-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            	     |
+| QC-CSLR       | DIGITALOFFERSREG | CSLR-DIGITALOFFERSREG-2 |
+#-----------------------------------------------------------------------------------------------------------------------------------------------

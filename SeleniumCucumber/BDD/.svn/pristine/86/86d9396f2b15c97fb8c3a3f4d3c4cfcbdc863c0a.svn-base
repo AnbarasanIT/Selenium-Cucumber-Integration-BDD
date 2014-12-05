@@ -1,0 +1,766 @@
+@checkout @ContactLensReorder
+Feature: Customer is able to do Contact Lens Checkout for Self and Family from Reorder Page
+
+#CAC-5367
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-1
+Scenario: Add CL pair to cart from VPD same brand in reorder for Patient, Multiple left and right eye order in reorder,All Check box enabled But,Drop Down, Disabled with Error message Obtained (condition 1)
+
+Given  "CL-CLFamReorder-1" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId              |
+| QC-CL	        | CLFamReorder     | CL-CLFamReorder-1	|
+
+Given "CL-CLFamReorder-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | CLReorderUser1 |
+
+And "CL-CLFamReorder-1" Customer Clears the Shopping Cart
+
+And "CL-CLFamReorder-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLFamReorder-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 2         | -     | -  | -        | -    | -        | -        |
+
+And "CL-CLFamReorder-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLFamReorder-1" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLFamReorder-1" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType |
+| CACData	    | CLReorder		| CLReorder1  |	 Yes			  |		Condition1	  |
+
+Then "CL-CLFamReorder-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		   |
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-1|
+
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-2
+Scenario: add to cart in reorder enabled. Add One pair to Cart from reorder, back to reorder , All Check box enabled, but Add to cart , Drop Down, Disabled but Error message Obtained (condition 1) checkout Skip presc pages, verify Disabled link, Verify For in review, Conf page
+
+Given  "CL-CLFamReorder-2" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId         	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-2	|
+
+Given "CL-CLFamReorder-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | ClDobUser3	 |
+
+And "CL-CLFamReorder-2" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-2" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder4  |	 -  			  |	-					|
+| CACData	    | CLReorder		| CLReorder3  |	 -				  |		-			    |
+| CACData	    | CLReorder		| CLReorder1  |	 Yes			  |		Condition1	    |
+
+Then "CL-CLFamReorder-2" Customer Goes to the Shopping Cart
+
+Then "CL-CLFamReorder-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage 	 |
+| Shipping Information   |
+
+Then "CL-CLFamReorder-2" Customer reviews right Navigation box in shipping information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav8	 | No			|
+
+Then "CL-CLFamReorder-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName  | StreetAddress  | City      | State | ZipCode | EmailAddress  | PhoneNumber  |
+| homeaddress         | -                   | -                | -         | -         | -              | -         | -     | -       | -             | -            |
+
+Then "CL-CLFamReorder-2" Customer reviews right Navigation box in shipping method page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav8	 | No			|
+
+Then "CL-CLFamReorder-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLFamReorder-2" Customer reviews right Navigation box in Payment information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav8	 | No			|
+
+
+Then "CL-CLFamReorder-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption | BillingAddress | SameAsShippingAddress | SaveBillingAddress |
+| CreditCard    | -              | -                     | -                  |
+
+Then "CL-CLFamReorder-2" Customer verifies the right Navigation box in Review Order page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav8	 | No			|
+
+Then "CL-CLFamReorder-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLFamReorder-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-2 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-3
+Scenario: add to cart in reorder enabled. Add right eye to Cart from reorder, All Check box Disabled left eye enabled, Add to cart enabled , Drop Down, Disabled with Error message Obtained (condition 2)
+
+Given  "CL-CLFamReorder-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId        		|
+| QC-CL	        | CLFamReorder      | CL-CLFamReorder-3	|
+
+Given "CL-CLFamReorder-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | ClDobUser3	 |
+
+And "CL-CLFamReorder-3" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-3" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder4  |	 -  			  |	-					|
+| CACData	    | CLReorder		| CLReorder7  |	 PatientDropdown  |	Condition2			|
+
+Then "CL-CLFamReorder-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-3 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-4
+Scenario: add to cart in reorder enabled. Add left eye to Cart from reorder, All Check box Disabled right eye enabled, Add to cart enabled ,Drop Down, Disabled with Error message Obtained (condition 2)
+
+Given  "CL-CLFamReorder-4" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        			|
+| QC-CL	        | CLFamReorder     | CL-CLFamReorder-4	|
+
+Given "CL-CLFamReorder-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | CLReorderUser1 |
+
+And "CL-CLFamReorder-4" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-4" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder3  |	 -  			  |	-					|
+| CACData	    | CLReorder		| CLReorder7  |	 PatientDropdown  |	Condition2			|
+
+Then "CL-CLFamReorder-4" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-4 |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLFamReorder-5
+Scenario: Multiple left and right eye order in reorder, Click Multiple right and left and Add to cart ,
+Drop Down, Cart enabled but Error message Obtained and checks cleared (condition 3)
+
+Given  "CL-CLFamReorder-5" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-5	|
+
+Given "CL-CLFamReorder-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     		 |
+| CommonData    | login     | CLReorderUser1	 |
+
+And "CL-CLFamReorder-5" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-5" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder5  |	 -  			  | Condition3			|
+
+Then "CL-CLFamReorder-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-5 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-6
+Scenario: check Patient and FM (fulfilled same set of lens for Patient and FM ) Drop down page refresh JS check fields
+
+Given  "CL-CLFamReorder-6" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-6	|
+
+Given "CL-CLFamReorder-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | CLReorderUser1 |
+
+Then "CL-CLFamReorder-6" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder6  |	 -  			  | -					|
+
+Then "CL-CLFamReorder-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-6 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-7
+Scenario: Add to cart no lens chosen Admin  (condition 4)  JS
+
+Given  "CL-CLFamReorder-7" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-7	|
+
+Given "CL-CLFamReorder-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 		 |
+| CommonData    | login     | Clwithmultipledoc1	 |
+
+And "CL-CLFamReorder-7" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-7" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId       | FeildDisabled	  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder9  |	 -  			  | Condition4			|
+
+Then "CL-CLFamReorder-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-7 |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLFamReorder-8
+Scenario: reorder lens chosen for Admin and choose FM in dropdown no lens chosen Family Member Add to cart (condition 4) JS
+
+Given  "CL-CLFamReorder-8" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-8	|
+
+Given "CL-CLFamReorder-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 		 |
+| CommonData    | login     | Clwithmultipledoc1	 |
+
+And "CL-CLFamReorder-8" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-8" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId        | FeildDisabled		  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder10  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder11  |	 -  			  | -					|
+
+Then "CL-CLFamReorder-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-8 |
+
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLFamReorder-9
+Scenario: left and right eye order in reorder from 2 diff prescrptions ,Add to cart , Drop Down, 
+Add to Cart enabled but Error message Obtained  (condition 5) JS for Admin and FM
+
+
+Given  "CL-CLFamReorder-9" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-9	|
+
+Given "CL-CLFamReorder-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | CLReorderUser1 |
+
+And "CL-CLFamReorder-9" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-9" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId        | FeildDisabled		  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder12  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder13  |	 -  			  | Condition5			|
+| CACData	    | CLReorder		| CLReorder14  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder15  |	 -  			  | Condition5			|
+
+Then "CL-CLFamReorder-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-9 |
+
+#-----------------------------------------------------------------------------------------------------------
+
+@CL-CLFamReorder-10
+Scenario: right eye order in reorder from 2 diff prescrptions ,Add to cart , Drop Down, 
+Add to Cart enabled but Error message Obtained  (condition 5) JS for Admn and FM
+
+
+Given  "CL-CLFamReorder-10" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-10	|
+
+Given "CL-CLFamReorder-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 		 |
+| CommonData    | login     | ClDobUser3			 |
+
+And "CL-CLFamReorder-10" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-10" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId        | FeildDisabled		  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder16  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder17  |	 -  			  | Condition5			|
+| CACData	    | CLReorder		| CLReorder18  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder19  |	 -  			  | Condition5			|
+
+Then "CL-CLFamReorder-10" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		  	 |
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-10 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-11
+Scenario: Right eye order in reorder from 2 diff prescrptions ,Add to cart , Drop Down, 
+Add to Cart enabled but Error message Obtained  (condition 5) JS for Admin and FM
+
+
+Given  "CL-CLFamReorder-11" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId        		|
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-11	|
+
+Given "CL-CLFamReorder-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId     	 |
+| CommonData    | login     | CLReorderUser1 |
+
+And "CL-CLFamReorder-11" Customer Clears the Shopping Cart
+
+Then "CL-CLFamReorder-11" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId        | FeildDisabled		  |ConditionErrorType   |
+| CACData	    | CLReorder		| CLReorder20  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder21  |	 -  			  | Condition5			|
+| CACData	    | CLReorder		| CLReorder22  |	 -  			  | -					|
+| CACData	    | CLReorder		| CLReorder23  |	 -  			  | Condition5			|
+
+Then "CL-CLFamReorder-11" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId    		     |
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-11 |
+
+#-----------------------------------------------------------------------------------------------------------
+@CL-CLFamReorder-12
+Scenario: Place CL order and fulfill for a new patient of age below 13 and place Cl order and fulfill for admin user also,
+checks for UI and error validation in reorder lenses page and verifies UI of order confirmation email.
+
+Given "CL-CLFamReorder-12" Customer starts the scenario:
+| InputFileName | SheetName 	| RowId                 |
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-12	|
+
+And "CL-CLFamReorder-12" Customer clicks on an object and validates the expected results:
+| InputFileName  | SheetName | RowId      	    |
+| HomepageLinks  | Homepage  | Register Light 	|
+| HomepageLinks  | Homepage  |Regn Basic Access |
+
+Then "CL-CLFamReorder-12" Customer enters the information in the fields on Join Balance Rewards page and clicks on Submit:
+| BalanceRewardsOrPhoneNumber | BalanceRewardsOption | ZipCode | Phone | DOB-Month | DOB-Day | DOB-Year | GuestUser | InputFileName | SheetName   | RowId 	 |saveUserNameAndPasswordInDataSheet|
+| -                           | MaybeLater		     | -       | -     | -         | -       | -        | Yes       |CommonData     | personalInfo| CLlight1 |Yes								|
+
+Then "CL-CLFamReorder-12" Customer performs Valdiations in Signin and Security Page from Accountdashobard Page:
+| InputFileName      | SheetName      | RowId 			  	  |
+| AccountDashboard	 | SigninSecurity | EmailAddressUpdation4 |
+
+And "CL-CLFamReorder-12" Customer Clears the Shopping Cart
+
+And "CL-CLFamReorder-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLFamReorder-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+And "CL-CLFamReorder-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl1   |
+
+Then "CL-CLFamReorder-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLFamReorder-12" Customer Goes to the Shopping Cart
+
+Then "CL-CLFamReorder-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLFamReorder-12" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		  |Continue	    |AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC1   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLFamReorder-12" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		    | RowId       |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC1   |   -		 		 |  -    	  |     -         |  -	 		  |  -		 		   | -  		    |   - 			| yes 	   |  -			  		  | ShippingInfoPage     |
+
+Then "CL-CLFamReorder-12" Customer reviews right Navigation box in shipping information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav9	 | -     		|
+
+Then "CL-CLFamReorder-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName    | StreetAddress  | City      | State | ZipCode | EmailAddress      | PhoneNumber   |
+| newshippingaddress  | -                   | -                | CLuser  | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   | sam@testebiz.com | 8471234567    |
+
+Then "CL-CLFamReorder-12" Customer reviews right Navigation box in shipping method page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav9	 | -    		|
+
+Then "CL-CLFamReorder-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLFamReorder-12" Customer reviews right Navigation box in Payment information page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav9	 | -    		|
+
+Then "CL-CLFamReorder-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | NewBillingAddress | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "CL-CLFamReorder-12" Customer verifies the right Navigation box in Review Order page:
+| InputFileName | SheetName 		| RowId      |  ChangeLink  | 
+| CACData	    | CLRightNav		| CLNav9	 | -    		|
+
+# Customer submits the order
+Then "CL-CLFamReorder-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLFamReorder-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName        | SheetName  | RowId         |
+| CheckoutOrderDetails | OrderIds   |PatientOrder   |
+
+Then "CL-CLFamReorder-12" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_CAC_QUERY1    |
+
+Given "CL-CLFamReorder-12" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CL-CLFamReorder-12" Customer selects the CSC Window
+
+And "CL-CLFamReorder-12" Customer either accpets or rejects the Contact Lens Order from CSC:
+| InputFileName        | SheetName 		| RowId   		|OrderNumber    |
+| CheckoutOrderDetails | OrderIds       |PatientOrder   |no  			|
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_CAC_QUERY2    |
+
+Given "CL-CLFamReorder-12" Customer login to feeds instance:
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CHPefromJob1		 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY3   |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CLFulfillerJob1	 |
+
+And "CL-CLFamReorder-12" Customer finds the CL order XML file:
+| InputFileName  | SheetName    | RowId  			|
+| BatchData	     | CLOrderXML   | CLOrderXMLFile1   |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY4   |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  		  	      |
+| BatchData     | Fulfillment  | CLInboundBatchOrderFile  |
+
+Then "CL-CLFamReorder-12" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     		 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData1	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData2	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData3	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data1 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data2 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data3 	 |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	        |
+| BatchData     | Fulfillment  | CLOutboundACKFile  |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			     |
+| DYNADMIN      | FEEDS			 | CLVendorAckPerformJob	 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY5   |
+
+Then "CL-CLFamReorder-12" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName    | 			RowId                     |
+|  DataBase     | MutlipleRowsQuery | CL_MultipleItems_CommerceItemIds1   |
+
+Then "CL-CLFamReorder-12" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     			             |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetBatchID_MultipleItems  |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetOrderID_MultipleItems  |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetFulfillID_MultipleItems|
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetUPC_MultipleItems 	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutBatchID_MultipleItems	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutOrderID_MultipleItems	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutFulfillID_MultipleItems|
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutUPC_MultipleItems 	 |
+| BatchData     | XMLDATA    | CLCommerceIDupdate1 	 	                 |
+| BatchData     | XMLDATA    | CLCommerceIDupdate2			             |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	      			              |
+| BatchData     | Fulfillment  | CLOutboundOrderStatusFile_MultipleItems  |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						     |
+| DYNADMIN      | FEEDS			 | CLVendorOrderStatusManagerPerformJob	 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY6    |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | CSCUrlQA1	|
+
+And "CL-CLFamReorder-12" Customer clicks on an object and validates the expected results:
+| InputFileName    | 	SheetName  | 		RowId   |
+| 	HomepageLinks  | Homepage      |ContactLensTab  |
+| 	HomepageLinks  | Homepage      |ReorderLenses   |
+
+Then "CL-CLFamReorder-12" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId          | FeildDisabled	  |ConditionErrorType |
+| CACData	    | CLReorder		| CLCACReorder1  |	 -   			  |		-       	  |
+
+And "CL-CLFamReorder-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl3   |
+
+Then "CL-CLFamReorder-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| right | 1         | -     | -  | -        | -    | -        | -        |
+
+And "CL-CLFamReorder-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId |
+| CommonData    | search    | cl3   |
+
+Then "CL-CLFamReorder-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1         | -     | -  | -        | -    | -        | -        |
+
+Then "CL-CLFamReorder-12" Customer Goes to the Shopping Cart
+
+Then "CL-CLFamReorder-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "CL-CLFamReorder-12" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		   |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2   | 	Yes 	| - 						|   - 							 |
+
+Then "CL-CLFamReorder-12" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		    | RowId       |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN   |NewSearchAgain  | ErrorMsgType 	| Select   | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData       |	CLPatientDoctorInfo | CLDataCAC2  |   -		 		   |  -    	    |     -         |  -	 		|  -		 		   | -  		    |   - 			| yes 	   |  -			  		  | ShippingInfoPage     |
+
+Then "CL-CLFamReorder-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName | LastName    | StreetAddress  | City      | State | ZipCode | EmailAddress      | PhoneNumber   |
+| newshippingaddress  | -                   | -                | CLuser    | Checkout    | 104 WILMOT RD  | DEERFIELD | 16    | 60015   | sam@testebiz.com  | 8471234567    |
+
+Then "CL-CLFamReorder-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -               | -                        | standard                 |
+
+Then "CL-CLFamReorder-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress    | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | NewBillingAddress | true                  | -                  | CACData         | CreditCard  | cc1     | -		   |
+
+# Customer submits the order
+Then "CL-CLFamReorder-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        | 
+
+Then "CL-CLFamReorder-12" Customer gets the Order IDs and verifies Order details in the Order Confirmation Page:
+| InputFileName        | SheetName  | RowId         |
+| CheckoutOrderDetails | OrderIds   |AdminOrder     |
+
+Then "CL-CLFamReorder-12" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_CAC_QUERY1    |
+
+Given "CL-CLFamReorder-12" Customer login to the csc application:
+| InputFileName | SheetName | RowId    |
+| CSCData       | login     | cscuser1 |
+
+Then "CL-CLFamReorder-12" Customer selects the CSC Window
+
+And "CL-CLFamReorder-12" Customer either accpets or rejects the Contact Lens Order from CSC:
+| InputFileName        | SheetName 		| RowId   		|OrderNumber    |
+| CheckoutOrderDetails | OrderIds       |AdminOrder     |no  			|
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment     | CL_CAC_QUERY2    |
+
+Given "CL-CLFamReorder-12" Customer login to feeds instance:
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CHPefromJob1		 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY3    |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     	     |
+| DYNADMIN      | FEEDS			 | CLFulfillerJob1	 |
+
+And "CL-CLFamReorder-12" Customer finds the CL order XML file:
+| InputFileName  | SheetName    | RowId  			|
+| BatchData	     | CLOrderXML   | CLOrderXMLFile1   |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY4    |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  		  	      |
+| BatchData     | Fulfillment  | CLInboundBatchOrderFile  |
+
+Then "CL-CLFamReorder-12" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     		 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData1	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData2	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLGetData3	 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data1 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data2 	 |
+| BatchData     | XMLDATA    | CLOrderXMLFile1Data3 	 |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	        |
+| BatchData     | Fulfillment  | CLOutboundACKFile  |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     			     |
+| DYNADMIN      | FEEDS			 | CLVendorAckPerformJob	 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY5   |
+
+Then "CL-CLFamReorder-12" Customer validates the mutliple rows result for a query from the DB:
+| InputFileName | 		SheetName    | 			RowId                     |
+|  DataBase     | MutlipleRowsQuery  | CL_MultipleItems_CommerceItemIds2   |
+
+Then "CL-CLFamReorder-12" Customer updates the required Order XML file:
+| InputFileName | SheetName  | 		RowId  	     			             |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetBatchID_MultipleItems  |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetOrderID_MultipleItems  |
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetFulfillID_MultipleItems|
+| BatchData     | XMLDATA    | CLOrderStatusXMLGetUPC_MultipleItems 	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutBatchID_MultipleItems	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutOrderID_MultipleItems	 |
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutFulfillID_MultipleItems|
+| BatchData     | XMLDATA    | CLOrderStatusXMLPutUPC_MultipleItems 	 |
+| BatchData     | XMLDATA    | CLCommerceIDupdate1 	 	                 |
+| BatchData     | XMLDATA    | CLCommerceIDupdate2			             |
+
+Then "CL-CLFamReorder-12" Customer ftp the file for the batch job:
+| InputFileName | SheetName    | RowId  	      			              |
+| BatchData     | Fulfillment  | CLOutboundOrderStatusFile_MultipleItems  |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId      	|
+| PharmacyLinkVerification   |DestinationPageURL  | Feedspage	|
+
+Then "CL-CLFamReorder-12" Customer performs required operation in Dyn Admin Configuration:
+| InputFileName | SheetName 	 | RowId     						     |
+| DYNADMIN      | FEEDS			 | CLVendorOrderStatusManagerPerformJob	 |
+
+Then "CL-CLFamReorder-12" Customer runs the Required Query from the DB:
+| InputFileName | SheetName 		| RowId            |
+| DataBase      | CLFulfillment   	| CL_CAC_QUERY6    |
+
+Then "CL-CLFamReorder-12" Customer clicks on an object and validates the expected page URL:
+| InputFileName 			 | SheetName  		  | RowId 	   	|
+| PharmacyLinkVerification   |DestinationPageURL  | CSCUrlQA1	|
+
+And "CL-CLFamReorder-12" Customer clicks on an object and validates the expected results:
+| InputFileName    | 	SheetName  | 		RowId   |
+| 	HomepageLinks  | Homepage      |ContactLensTab  |
+| 	HomepageLinks  | Homepage      |ReorderLenses   |
+
+Then "CL-CLFamReorder-12" Customer Goes to Reorder page and enters required information and selects the required option in Reorder Page:
+| InputFileName | SheetName 	| RowId          | FeildDisabled	  |ConditionErrorType |
+| CACData	    | CLReorder		| CLCACReorder2  |	 -   			  |		-       	  |
+
+Then "CL-CLFamReorder-12" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "CL-CLFamReorder-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	| RowId      	    |
+| QC-CL	        | CLFamReorder  | CL-CLFamReorder-12|
+#-------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,147 @@
+@pharmacy @HealthConditionsUpdate
+Feature: Updating Health Conditions when user selects any allergies or medications while registering in Mail Service
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+@RX-HealthConditionsUpdate-1
+Scenario: Updating Health Conditions when Rx unauthenticated user selects any allergies or medications while registering in Mail Service enrollment
+
+Given  "RX-HealthConditionsUpdate-1" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     	| RowId             	     |
+| QC-RX	     	 | HealthConditionsUpdate	| RX-HealthConditionsUpdate-1|
+
+Then "RX-HealthConditionsUpdate-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName           	| RowId 	    	    	  |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | RegRefillPrescriptions      |
+
+Given "RX-HealthConditionsUpdate-1" Customer performs Pharmacy Registration:
+| InputFileName | SheetName		 | RowId 	 		      | SaveUserNameFlag |
+| Registration  | RxRegistration | HealthCondReg		  | Yes				 |
+
+Then "RX-HealthConditionsUpdate-1" Customer clicks on an object and validates the expected results:
+| InputFileName	   	               | SheetName              | RowId 	        	|
+| PharmacyHomePageLinkVerification | UnAuthenticated        | MailService           |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | CompleteRegBtn        |
+| PharmacyHomePageLinkVerification | UnAuthenticated        | EnterInsurInfoBtn     |
+ 
+Then "RX-HealthConditionsUpdate-1" Customer enters Cardholder Information:
+ | InputFileName	| SheetName          	   | RowId 	        	  |
+ | Pharmacy		 	| MailServiceInputData     | MailService          |
+ 
+Then "RX-HealthConditionsUpdate-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 		 		  | RowId                            |
+| QC-RX	 		 | HealthConditionsUpdate 	  | RX-HealthConditionsUpdate-1		 |
+#-----------------------------------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-21
+Scenario: Rx authenticated + MS Enrolled user verifies the functionality of Refill from account,Previous Pharmacy Prescriptions and View order status links
+
+Given "RX-AuthRxValidations-21" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-21 |
+
+Given "RX-AuthRxValidations-21" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   		   |
+| Pharmacy  	 | login     | MSEnrolledUser  |
+
+Then "RX-AuthRxValidations-21" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId   	   		       			 |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions 		 |
+| PharmacyLinkVerification  |Authenticated   | MSRefillFromAccount		 		 |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions 		 |
+| PharmacyLinkVerification  |Authenticated   | MSViewOrderStatus				 |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions 		 |
+| PharmacyLinkVerification  |Authenticated   | MSPreviousPharmacyPrescriptions   |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions 		 |
+| PharmacyLinkVerification  |Authenticated   | MSEditInsuranceInfo				 |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions 		 |
+| PharmacyLinkVerification  |Authenticated   | MSManageFamilyParticipation		 |
+
+Then "RX-AuthRxValidations-21" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-21" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-21	|
+#------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-22
+Scenario: Rx authenticated + MS not Enrolled user verifies the functionality of Enter Insurance Information button
+
+Given "RX-AuthRxValidations-22" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-22 |
+
+Given "RX-AuthRxValidations-22" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   		   |
+| Pharmacy  	 | login     | MSInfoNeedUser  |
+
+Then "RX-AuthRxValidations-22" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId   	   		        |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions |
+| PharmacyLinkVerification  |Authenticated   | MSEnterInsInfo			|
+
+Then "RX-AuthRxValidations-22" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-22" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-22	|
+#------------------------------------------------------------------------------------------------
+@RX-LightRxValidations-8
+Scenario: Anonymous and lite user validates the MS 540 landing page
+
+Given "RX-LightRxValidations-8" Customer starts the scenario:
+| InputFileName | SheetName 		 | RowId         		   |
+| QC-RX	        | LightRxValidations | RX-LightRxValidations-8 |
+
+Then "RX-LightRxValidations-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId   	   		        |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions |
+
+Then "RX-LightRxValidations-8" Customer validates the MailService page:
+| UserType  |
+| Anonymous |
+
+Given "RX-LightRxValidations-8" Customer login to the walgreens.com:
+| InputFileName  | SheetName   | RowId   	|
+| CommonData  	 | login       | LightUser	|
+
+Then "RX-LightRxValidations-8" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId   	   		        |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions |
+
+Then "RX-LightRxValidations-8" Customer validates the MailService page:
+| UserType   |
+| Lite		 |
+
+Then "RX-LightRxValidations-8" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-LightRxValidations-8" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         			|
+| QC-RX	        | LightRxValidations     | RX-LightRxValidations-8	|
+#------------------------------------------------------------------------------------------------
+@RX-AuthRxValidations-23
+Scenario: MS Enrolled Buyout user verifies the functionality of Previous Pharmacy Prescriptions link
+
+Given "RX-AuthRxValidations-23" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId         		  |
+| QC-RX	        | AuthRxValidations | RX-AuthRxValidations-23 |
+
+Given "RX-AuthRxValidations-23" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId   		   |
+| Pharmacy  	 | login     | MSBuyoutUser	   |
+
+Then "RX-AuthRxValidations-23" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName      | RowId   	   		        |
+| PharmacyLinkVerification  |Authenticated   | MailServicePrescriptions |
+| PharmacyLinkVerification  |Authenticated   | MSBuyoutPPPLink			|
+
+Then "RX-AuthRxValidations-23" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-AuthRxValidations-23" Customer finished testing the scenario:
+| InputFileName | SheetName 			| RowId         			|
+| QC-RX	        | AuthRxValidations     | RX-AuthRxValidations-23	|
+#------------------------------------------------------------------------------------------------

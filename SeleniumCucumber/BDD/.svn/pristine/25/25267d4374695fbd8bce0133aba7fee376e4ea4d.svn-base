@@ -1,0 +1,167 @@
+@dailyliving @ShoppingCartValidations
+Feature: Verify the product pages and shopping cart of Self Serve Products
+
+#----------------------------------------------------------------------------------------------------
+@SS-ShoppingCartValidation-1
+Scenario: Authenticated user verifies Continue to shopping button and verifying unavailability of product when not available swatch selected
+
+Given  "SS-ShoppingCartValidation-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId      				  	 |
+| QC-SS	        | ShoppingCartValidation | SS-ShoppingCartValidation-1   |
+
+Given "SS-ShoppingCartValidation-1" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | localuser1	 |
+
+And "SS-ShoppingCartValidation-1" Customer Clears the Shopping Cart
+
+Then "SS-ShoppingCartValidation-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   				|
+| CommonData    | search    | SSMultiVariationProduct1  |
+
+Then "SS-ShoppingCartValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId      			|
+| SelfService   |LinkVerification  	| ProductLink           |
+
+# Then "SS-ShoppingCartValidation-1" Customer clicks on an object and validates the expected results:
+# | InputFileName | SheetName 	    | RowId      		     |
+# | SelfService   |LinkVerification  	| NotAvailableColor      |
+# | SelfService   |LinkVerification  	| AvailableOption 	     |
+
+Then "SS-ShoppingCartValidation-1" Customer Adds Color or Size variation Product to Cart or Shopping List:
+| AddItem  | ItemType   |  ExpectedPage  | UIvalidation	  | Color  | Size  | ProdType   |
+| -        | -          | -              | NC             | -      | -     | -          |
+
+Then "SS-ShoppingCartValidation-1" Customer Adds Color or Size variation Product to Cart or Shopping List:
+| InputFileName | SheetName 	    | RowId          | AddItem  | ItemType   |  ExpectedPage  | UIvalidation	  | Color  | Size  | ProdType   |
+| SelfService   | ColorSizeData     | Product1       | Cart     | Color      | -              | -              | -      | -     | -          |
+
+Then "SS-ShoppingCartValidation-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId          |
+| SelfService   | LinkVerification  | BeautyTab      |
+| SelfService   | LinkVerification  | MakeupLeftNav  |
+| SelfService   | LinkVerification  | NailsLeftNav   |
+
+# And "SS-ShoppingCartValidation-1" Customer adds the product to the cart and verifies the UI of item added successful overlay:
+# |ItemsAdded |ProductName					                |AddItemTo		|VerifyOverlay|UpdateQty |ViewShopList|
+# |1			|SallyHansenSalonEffectsRealNailPolishStrips	|Cart			|Yes		  |-		 |No		  |
+
+And "SS-ShoppingCartValidation-1" Customer finds the desired product from the tier3page:
+|MultivariantProductName	     | InputFileName | SheetName 	    | RowId      			|
+|Kiss Everlasting French Nails	 |SelfService    |LinkVerification  | Tier3Page1 	        |
+
+# Then "SS-ShoppingCartValidation-1" Customer clicks on an object and validates the expected results:
+# | InputFileName | SheetName 	    | RowId      		     |
+# | SelfService   |LinkVerification  	| NotAvailableOption     |
+# | SelfService   |LinkVerification  	| AvailableOption 	     |
+
+Then "SS-ShoppingCartValidation-1" Customer Adds Color or Size variation Product to Cart or Shopping List:
+| AddItem  | ItemType   |  ExpectedPage  | UIvalidation	  | Color  | Size  | ProdType   |
+| -        | -          | -              | NA             | -      | -     | -          |
+
+Then "SS-ShoppingCartValidation-1" Customer Adds Color or Size variation Product to Cart or Shopping List:
+| InputFileName | SheetName 	    | RowId          | AddItem  | ItemType   |  ExpectedPage  | UIvalidation	  | Color  | Size  | ProdType   |
+| SelfService   | ColorSizeData     | Product2       | Cart     | Color      | -              | -              | -      | -     | -          |
+
+# And "SS-ShoppingCartValidation-1" Customer adds the product to the cart and verifies the UI of item added successful overlay:
+# |ItemsAdded |ProductName	|AddItemTo		|VerifyOverlay|UpdateQty |ViewShopList|
+# |1			|-				|Cart			|Yes		  |-		 |No		  |
+
+Then "SS-ShoppingCartValidation-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-ShoppingCartValidation-1" Customer finished testing the scenario:
+| InputFileName | SheetName 				 | RowId           				|
+| QC-SS	        | ShoppingCartValidation     | SS-ShoppingCartValidation-1  |
+#----------------------------------------------------------------------------------
+@SS-ShoppingCartValidation-2
+Scenario: Authenticated user adds a product to the cart from shopiing list
+
+Given  "SS-ShoppingCartValidation-2" Customer starts the scenario:
+| InputFileName | SheetName 				 | RowId           				|
+| QC-SS	        | ShoppingCartValidation     | SS-ShoppingCartValidation-2  |
+
+Given "SS-ShoppingCartValidation-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | SS_AuthUser	 |
+
+And "SS-ShoppingCartValidation-2" Customer Clears the Shopping List
+
+Then "SS-ShoppingCartValidation-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   				|
+| CommonData    | search    | SSMultiVariationProduct2  |
+
+Then "SS-ShoppingCartValidation-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId      			|
+#| SelfService   |LinkVerification  	| TwoWaysClose          |
+| SelfService   |LinkVerification  	| ProductLink           |
+
+And "SS-ShoppingCartValidation-2" Customer adds the product to the cart and verifies the UI of item added successful overlay:
+|ItemsAdded |ProductName						|AddItemTo		|VerifyOverlay|UpdateQty |ViewShopList|
+|1			|Sally Hansen Magnetic Nail Color	|ShoppingList   |No			  |-		 |Yes		  |
+#|1			|L'Oreal Colour Riche Nail Polish	|ShoppingList   |No			  |-		 |Yes		  |
+
+Then "SS-ShoppingCartValidation-2" Customer adds the product to the cart from shopping list:
+|UpdateQty |
+|2		   |
+
+Then "SS-ShoppingCartValidation-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-ShoppingCartValidation-2" Customer finished testing the scenario:
+| InputFileName | SheetName 				 | RowId           				|
+| QC-SS	        | ShoppingCartValidation     | SS-ShoppingCartValidation-2  |
+#----------------------------------------------------------------------------------
+@SS-ShoppingCartValidation-3
+Scenario: Authenticated user adds multiple products to the cart from shopiing list with updated quantity
+
+Given  "SS-ShoppingCartValidation-3" Customer starts the scenario:
+| InputFileName | SheetName 				 | RowId           				|
+| QC-SS	        | ShoppingCartValidation     | SS-ShoppingCartValidation-3  |
+
+Given "SS-ShoppingCartValidation-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId         |
+| CommonData  	 | login     | lightregNew	 |
+
+And "SS-ShoppingCartValidation-3" Customer Clears the Shopping List
+
+Then "SS-ShoppingCartValidation-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   				|
+| CommonData    | search    | SSMultiVariationProduct3  |
+
+Then "SS-ShoppingCartValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId      			|
+#| SelfService   |LinkVerification  	| TwoWaysClose          |
+| SelfService   |LinkVerification  	| ProductLink           |
+
+And "SS-ShoppingCartValidation-3" Customer adds the product to the cart and verifies the UI of item added successful overlay:
+|ItemsAdded |ProductName						|AddItemTo		|VerifyOverlay|UpdateQty |ViewShopList|
+|1			|SaLLy HanSEN Magnetic Nail Color	|ShoppingList   |No			  |-		 |Yes		  |
+
+Then "SS-ShoppingCartValidation-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    	   				|
+| CommonData    | search    | SSMultiVariationProduct2  |
+
+Then "SS-ShoppingCartValidation-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 	    | RowId      			|
+#| SelfService   |LinkVerification  	| TwoWaysClose          |
+| SelfService   |LinkVerification  	| ProductLink           |
+
+And "SS-ShoppingCartValidation-3" Customer adds the product to the cart and verifies the UI of item added successful overlay:
+|ItemsAdded |ProductName					|AddItemTo		|VerifyOverlay|UpdateQty |ViewShopList|
+|1			|essie nail color Nail Color	|ShoppingList   |No			  |3		 |Yes		  |
+
+Then "SS-ShoppingCartValidation-3" Customer adds the product to the cart from shopping list:
+|UpdateQty |
+|10		   |
+
+Then "SS-ShoppingCartValidation-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "SS-ShoppingCartValidation-3" Customer finished testing the scenario:
+| InputFileName | SheetName 				 | RowId           				|
+| QC-SS	        | ShoppingCartValidation     | SS-ShoppingCartValidation-3  |
+#----------------------------------------------------------------------------------

@@ -1,0 +1,85 @@
+@registration @GlobalLinksNavigationVerification
+Feature: All the scenarios in the feature are to validate the Global Links Navigation.
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-GLOBALLINKS-1
+Scenario: Verify the UI validation of the steps link in the footer as a Guest user and light user.
+
+Given  "CSLR-GLOBALLINKS-1" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId               |
+| QC-CSLR	     | GLOBALLINKS		     | CSLR-GLOBALLINKS-1  |
+
+Then "CSLR-GLOBALLINKS-1" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     		 |
+| 		CSLR      | LinkNavigation | footersteps     |
+
+Given "CSLR-GLOBALLINKS-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId      |
+| CommonData  	| login   	| lightreg	 |
+
+Then "CSLR-GLOBALLINKS-1" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   | RowId     		 |
+| 		CSLR      | LinkNavigation | footersteps     |
+
+Then "CSLR-GLOBALLINKS-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "CSLR-GLOBALLINKS-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 		   | RowId              |
+| QC-CSLR	 	 | GLOBALLINKS		   | CSLR-GLOBALLINKS-1	|
+
+# A/B Testing Scenario, #Chrome
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-GLOBALLINKS-2
+Scenario: Verify the UI validations of the walgreens header as an anonymous user
+
+Given  "CSLR-GLOBALLINKS-2" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId               |
+| QC-CSLR	     | GLOBALLINKS		     | CSLR-GLOBALLINKS-2  |
+
+Then "CSLR-GLOBALLINKS-2" Customer clicks on an object and validates the expected results:
+| InputFileName   | SheetName 	   		| RowId     			|ClickObjectOverlay |TargetOverlay  |
+| 		CSLR      |	LinkNavigation		| BalanceRewards 		|		-			|	- 		 	|
+| 		CSLR      |	LinkNavigation		| SavingsandDeals 		|		-			|	- 		 	|
+| 		CSLR      | LinkNavigation		| SearchButton	 		|		-			|	- 		 	|
+| 		CSLR      | LinkNavigation		| StoreLocator	 		|		-			|	- 		 	|
+|		CSLR      |	LinkNavigation		| NewGlobalRegisterLink	|		-			|	- 		 	|
+| 		CSLR      | LinkNavigation		| NewGlobalSigninLink	|		-			|	- 		 	|
+| 		CSLR      |	LinkNavigation		| CheckoutLink	 		|		-			|	- 		 	|
+| 		CSLR      | LinkNavigation		| WalgreensLogo	 		|		-			|	- 		 	|
+| 		CSLR      | LinkNavigation		| TakeCareClinicLink    |		-			|	Yes	   		|
+| 		CSLR      | LinkNavigation		| WeeklyAd		 		|		-			|	- 		 	|
+
+Then "CSLR-GLOBALLINKS-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	   	     | RowId               |
+| QC-CSLR	     | GLOBALLINKS		     | CSLR-GLOBALLINKS-2  |
+
+# A/B Testing Scenario, #Chrome
+#-----------------------------------------------------------------------------------------------------------------------------
+@CSLR-GLOBALLINKS-3
+Scenario: Verify the UI validations of the walgreens header as an logged in user
+
+Given  "CSLR-GLOBALLINKS-3" Customer starts the scenario:
+| InputFileName  | SheetName 	   	     | RowId               |
+| QC-CSLR	     | GLOBALLINKS		     | CSLR-GLOBALLINKS-3  |
+
+Given "CSLR-GLOBALLINKS-3" Customer login to the walgreens.com:
+| InputFileName  | SheetName | RowId     		 |
+| CommonData  	 | login     | authenticateuser  |
+
+Then "CSLR-GLOBALLINKS-3" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName 		| RowId           				   | ClickObjectinTab 	 |
+| 	CSLR		| LinkNavigation	| SavingsandDeals  				   |		No		     |
+| 	CSLR		| LinkNavigation	| SearchButton   				   |		No		     |
+| 	CSLR		| LinkNavigation	| StoreLocator   				   |		No		     |
+| 	CSLR		| LinkNavigation	| CheckoutLink   				   |		No		     |
+| 	CSLR		| LinkNavigation	| HoverAccountSettings			   |		yes		     |
+| 	CSLR		| LinkNavigation	| HoverRefillPrescriptions		   |		yes		     |
+| 	CSLR		| LinkNavigation	| HoverShoppingList				   |		yes  	     |
+| 	CSLR		| LinkNavigation	| HoverMessages					   |		yes		     |
+| 	CSLR		| LinkNavigation	| HoverSignout					   |		yes		     |
+
+Then "CSLR-GLOBALLINKS-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	   	     | RowId               |
+| QC-CSLR	     | GLOBALLINKS		     | CSLR-GLOBALLINKS-3  |
+#-----------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,65 @@
+@pharmacy @ImmunizationPageVerification
+Feature: All the scenarios in the feature are related  UI and Functionalities related to Immunization Records page.
+
+#---------------------------------------------------------------------------------------------------------
+@RX-IMMUNIZATION-1
+Scenario: Customer validates Manage your family's prescription health information banner along with Add your first family member Link in it for a authenticated user with no family members.
+
+Given  "RX-IMMUNIZATION-1" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      		|
+| QC-RX	    	| IMMUNIZATION  	| RX-IMMUNIZATION-1	|
+
+Given "RX-IMMUNIZATION-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |
+| CommonData    | login	    | Authwithnofamilymember |
+
+And "RX-IMMUNIZATION-1" Customer clicks on an object and validates the expected results:
+| InputFileName    |SheetName  	 	| RowId      	 	 		 |ClickObjectinTab    |
+| AccountDashboard | LinkNavigation | MaintainImmunizationRecords|Yes			      |
+
+Then "RX-IMMUNIZATION-1" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | IMMUNIZATION  |RX-IMMUNIZATION-1  |
+#---------------------------------------------------------------------------------------------------------
+@RX-IMMUNIZATION-2
+Scenario: Customer validates the navigation of  Edit/Delete link for a immunization in the Your Immunization Records table.
+
+Given  "RX-IMMUNIZATION-2" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      	   |
+| QC-RX	    	| IMMUNIZATION  	| RX-IMMUNIZATION-2|
+
+Given "RX-IMMUNIZATION-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login	    | Immunizationuser |
+
+And "RX-IMMUNIZATION-2" Customer clicks on an object and validates the expected results:
+| InputFileName            |SheetName  	 	| RowId      	 	      |ClickObjectinTab     |
+| AccountDashboard         | LinkNavigation | YourImmunizationRecords |			Yes			|
+| PharmacyLinkVerification | Authenticated  | ImmunizationEditorDelete|			-			|
+| PharmacyLinkVerification | Authenticated  | AddNewImmunizationRecord|			-			|
+
+Then "RX-IMMUNIZATION-2" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | IMMUNIZATION  |RX-IMMUNIZATION-2  |
+#---------------------------------------------------------------------------------------------------------
+@RX-IMMUNIZATION-3
+Scenario: Customer validates the functionality of Add Selected Record button in Immunization History page.
+
+Given  "RX-IMMUNIZATION-3" Customer starts the scenario:
+| InputFileName | SheetName 		| RowId      	   |
+| QC-RX	    	| IMMUNIZATION  	| RX-IMMUNIZATION-3|
+
+Given "RX-IMMUNIZATION-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login	    | Immunizationuser |
+
+And "RX-IMMUNIZATION-3" Customer clicks on an object and validates the expected results:
+| InputFileName            |SheetName  	 	| RowId      	 	      |ClickObjectinTab     |
+| AccountDashboard         | LinkNavigation | YourImmunizationRecords |			Yes			|
+
+And "RX-IMMUNIZATION-3" Customer adds Selected Immunization Records
+
+Then "RX-IMMUNIZATION-3" Customer finished testing the scenario:
+| InputFileName  | SheetName 	 | RowId      	 	 |
+| QC-RX   		 | IMMUNIZATION  |RX-IMMUNIZATION-3  |
+#---------------------------------------------------------------------------------------------------------

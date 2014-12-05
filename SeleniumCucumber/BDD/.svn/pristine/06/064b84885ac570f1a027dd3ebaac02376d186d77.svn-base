@@ -1,0 +1,170 @@
+@accountdashboard @WwWEmailPreference
+Feature: All the scenarios in the feature are tests the Steps Email preference for a WAG member.
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-1
+Scenario: Verify the Steps preference is not displayed for light loyalty non walk member
+
+Given  "WwW-EmailPreference-1" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-1 |
+
+Given "WwW-EmailPreference-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 |
+| WwWCSAData  	| login   	| LightLtyNonWalkMember	|
+
+Then "WwW-EmailPreference-1" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId                 | EmailPreference | VerifyPresence |
+| WwWCSAData    | login     | LightLtyNonWalkMember | StepsCommunity  | No      	   |
+
+Then "WwW-EmailPreference-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-1" Customer finished testing the scenario:
+| InputFileName  | SheetName       | RowId                 |
+| QC-WwW	     | EmailPreference | WwW-EmailPreference-1 |
+
+#--------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-2
+Scenario: Verify the Steps preference is not displayed for Rx unauthenticated loyalty non walk member
+
+Given  "WwW-EmailPreference-2" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-2 |
+
+Given "WwW-EmailPreference-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                    |
+| WwWCSAData  	| login   	| RxunauthLtyNonWalkMember | 
+
+Then "WwW-EmailPreference-2" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId                    | EmailPreference | VerifyPresence |
+| WwWCSAData    | login     | RxunauthLtyNonWalkMember | StepsCommunity  | No      	      |
+
+Then "WwW-EmailPreference-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-2" Customer finished testing the scenario:
+| InputFileName  | SheetName       | RowId                 |
+| QC-WwW	     | EmailPreference | WwW-EmailPreference-2 |
+
+#--------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-3
+Scenario: Verify the Steps preference is not displayed for Rx authenticated loyalty non walk member
+
+Given  "WwW-EmailPreference-3" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-3 |
+
+Given "WwW-EmailPreference-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                  |
+| WwWCSAData  	| login   	| RxauthLtyNonWalkMember |
+
+Then "WwW-EmailPreference-3" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId                  | EmailPreference | VerifyPresence |
+| WwWCSAData    | login     | RxauthLtyNonWalkMember | StepsCommunity  | No      	    |
+
+Then "WwW-EmailPreference-3" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-3" Customer finished testing the scenario:
+| InputFileName  | SheetName       | RowId                 |
+| QC-WwW	     | EmailPreference | WwW-EmailPreference-3 |
+
+#--------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-4
+Scenario: Verify the light loyalty walk member is able to update the Steps preference 
+
+Given  "WwW-EmailPreference-4" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-4 |
+
+Given "WwW-EmailPreference-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 |
+| WwWCSAData  	| login   	| LightLtyWalkMember	|
+
+Then "WwW-EmailPreference-4" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId              | EmailPreference | VerifyPresence | UpdatePreference | InputFileName2 | SheetName2 | RowId2         | ColumnId2    |
+| WwWCSAData    | login     | LightLtyWalkMember | StepsCommunity  | Yes      	    | Yes              |  DataBase      | Query      | DBEmailQuery1  | VerifyValue1 |
+
+Then "WwW-EmailPreference-4" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  | 
+|  DataBase     | Query      | DBEmailQuery1  | 
+
+Then "WwW-EmailPreference-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-4" Customer finished testing the scenario:
+| InputFileName  | SheetName       | RowId                 |
+| QC-WwW	     | EmailPreference | WwW-EmailPreference-4 |
+
+#--------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-5
+Scenario: Verify the Rx unauthenticated loyalty walk member is able to update the Steps preference 
+
+Given  "WwW-EmailPreference-5" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-5 |
+
+Given "WwW-EmailPreference-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 |
+| WwWCSAData  	| login   	| RxunauthLtyWalkMember	|
+
+Then "WwW-EmailPreference-5" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId                 | EmailPreference | VerifyPresence | UpdatePreference | InputFileName2 | SheetName2 | RowId2         | ColumnId2    |
+| WwWCSAData    | login     | RxunauthLtyWalkMember | StepsCommunity  | Yes      	   | Yes              |  DataBase      | Query      | DBEmailQuery2  | VerifyValue1 |
+
+Then "WwW-EmailPreference-5" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  | 
+|  DataBase     | Query      | DBEmailQuery2  | 
+
+Then "WwW-EmailPreference-5" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-5" Customer finished testing the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-5 |
+
+#--------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+@WwW-EmailPreference-6
+Scenario: Verify the Rx authenticated loyalty walk member is able to update the Steps preference 
+
+Given  "WwW-EmailPreference-6" Customer starts the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-6 |
+
+Given "WwW-EmailPreference-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId                 |
+| WwWCSAData  	| login   	| RxauthLtyWalkMember	|
+
+Then "WwW-EmailPreference-6" Customer Validates the Email Preference in Communication Preferences page:
+| InputFileName | SheetName | RowId                | EmailPreference | VerifyPresence | UpdatePreference | InputFileName2 | SheetName2 | RowId2         | ColumnId2    |
+| WwWCSAData    | login     | RxauthLtyWalkMember  | StepsCommunity  | Yes      	  | Yes              |  DataBase      | Query      | DBEmailQuery3  | VerifyValue1 |
+
+Then "WwW-EmailPreference-6" Customer runs the Required Query from the DB:
+| InputFileName | SheetName  | RowId      	  | 
+|  DataBase     | Query      | DBEmailQuery3  | 
+
+Then "WwW-EmailPreference-6" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "WwW-EmailPreference-6" Customer finished testing the scenario:
+| InputFileName | SheetName       | RowId                 |
+| QC-WwW	    | EmailPreference | WwW-EmailPreference-6 |
+
+#--------------------------------------------------------------------

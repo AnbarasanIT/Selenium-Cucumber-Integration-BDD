@@ -1,0 +1,1400 @@
+@dailyliving @PricingRuleValidations
+Feature: Customer is able to do different kinds of Pricing Rules in Cart, Order Review and Confirmation Pages
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-1
+Scenario: Registered User is able to see BOGOLEV(BOGOLEV+1Eligible Item) related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with BML as Payment Option.
+
+Given  "DL-PRICINGRULE-1" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-1 |
+
+Given "DL-PRICINGRULE-1" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser1 |
+
+And "DL-PRICINGRULE-1" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-1" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-1" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-1" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-1" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+Then "DL-PRICINGRULE-1" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+| CommonData    | search    | BOGOLEVSecondary |
+
+Then "DL-PRICINGRULE-1" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage     |
+| Shipping Information	 |
+
+Then "DL-PRICINGRULE-1" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName   | StreetAddress  	| City      		   | State | ZipCode |ZipExtn | EmailAddress        | PhoneNumber  |OffersbyEmail|
+| newshippingaddress  | -                   | -                | MARCUS        | MERCHANTK  | 10332 LAVA WEST	| LAVA HOT SPRINGS     | 15    | 83246   |   -	  |MARCUS@MERCHANT.COM  | 2082082590   |  No	       |
+
+Then "DL-PRICINGRULE-1" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-1" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "DL-PRICINGRULE-1" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+| CommonData    | search    | BOGOLEVSecondary |
+
+Then "DL-PRICINGRULE-1" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-1" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+
+Then "DL-PRICINGRULE-1" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-1" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-1 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-2
+Scenario: Registered User is able to see BOGOLEV(BOGOLEV+1Eligible Item) related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option.
+
+Given  "DL-PRICINGRULE-2" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-2 |
+
+Given "DL-PRICINGRULE-2" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser1 |
+
+And "DL-PRICINGRULE-2" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-2" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-2" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-2" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-2" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+Then "DL-PRICINGRULE-2" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+| CommonData    | search    | BOGOLEVSecondary |
+
+Then "DL-PRICINGRULE-2" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-2" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-2" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-2" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-2" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+| CommonData    | search    | BOGOLEVSecondary |
+
+Then "DL-PRICINGRULE-2" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-2" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEV  		   |
+
+Then "DL-PRICINGRULE-2" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-2" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-2 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-3
+Scenario: Registered User is able to see BOGOLEV(BOGOLEV+1Eligible Item) related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option.
+
+Given  "DL-PRICINGRULE-3" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-3 |
+
+Given "DL-PRICINGRULE-3" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser1 |
+
+And "DL-PRICINGRULE-3" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-3" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-3" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-3" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-3" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+And "DL-PRICINGRULE-3" Customer Clears the Shopping Cart
+
+Then "DL-PRICINGRULE-3" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-3" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-3 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-4
+Scenario: Registered User is verifies BAGB offer in shopping cart page( 1 item free message )
+
+Given  "DL-PRICINGRULE-4" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-4 |
+
+Given "DL-PRICINGRULE-4" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-4" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-4" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB  |
+
+Then "DL-PRICINGRULE-4" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-4" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-4" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-4" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   	|
+| CommonData    | search    | PR_BAGB 			|
+| CommonData    | search    | PR_BAGB_Eligible  |
+
+Then "DL-PRICINGRULE-4" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-4" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-4" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-4" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-PRICINGRULE-4" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-4" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-4" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-4" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "DL-PRICINGRULE-4" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-4 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-5
+Scenario: Registered User is verifies BAGB+CL  offer in shopping cart page, Order review , Oreder Confirmation 1 item free message )
+
+Given  "DL-PRICINGRULE-5" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-5 |
+
+Given "DL-PRICINGRULE-5" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-5" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-5" Customer adds Daily Living items to the cart from search.
+
+And "DL-PRICINGRULE-5" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | cl2   	  |
+
+Then "DL-PRICINGRULE-5" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "DL-PRICINGRULE-5" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-5" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-5" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "DL-PRICINGRULE-5" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-PRICINGRULE-5" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |   -	 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  -			|  Yes 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "DL-PRICINGRULE-5" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |
+| shippingaddress	  | -                   | -                | -		       | -		     | -			   | -		   | -     | -        | -      |-					   | -			  |
+
+Then "DL-PRICINGRULE-5" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-5" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-PRICINGRULE-5" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-5" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-5" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-5" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-5" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-5 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-6
+Scenario: Registered User is verifies BAGB+CL+RX+CH offer in shopping cart page (1 item free message )
+
+Given  "DL-PRICINGRULE-6" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-6 |
+
+Given "DL-PRICINGRULE-6" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-6" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-6" Customer adds Daily Living items to the cart from search.
+
+And "DL-PRICINGRULE-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | CH1     	  |
+
+Then "DL-PRICINGRULE-6" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-6" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               		 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions 		 |
+
+When  "DL-PRICINGRULE-6" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | Yes				 |
+
+And "DL-PRICINGRULE-6" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | cl2   	  |
+
+Then "DL-PRICINGRULE-6" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "DL-PRICINGRULE-6" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-6" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-6" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PickupLocation	  |
+
+Then "DL-PRICINGRULE-6" Customer selects rx pick up date and time and click on continue
+
+Then "DL-PRICINGRULE-6" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName | SheetName  		 | RowId	    |Continue  |AgeErrorValidationType |DoctorErrorValidationType |
+| CACData       |CLPatientDoctorInfo | CLuser1info1 | 	Yes    | - 					   |   - 					  |
+
+Then "DL-PRICINGRULE-6" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName  			  | RowId        |ContinueToShipping  | NewSearch  | PrePopVerify | PreviousRowID |ContinueShippingBTN |NewSearchAgain | ErrorMsgType| Select| BacktoPatientInfoLnk | ExpectedTargetPage |
+| CACData	    | CLPatientDoctorInfo	  | CLuser1info2 |    -   	 		  |  -	  	   |     -        |  -	 		  |  -				   | -      	   |   - 		 | Yes   |  -			  		|  ShippingInfoPage	 |
+
+Then "DL-PRICINGRULE-6" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |
+| shippingaddress	  | -                   | -                | -		       | -		     | -			   | -		   | -     | -        | -      |-					   | -			  |
+
+Then "DL-PRICINGRULE-6" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-6" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-PRICINGRULE-6" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+#| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-6" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-6" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-6" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-6" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-6 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-7
+Scenario: Registered User is verifies BAGB+CL  offer in shopping cart page, Order review , Oreder Confirmation (1 item free message ) Using Pay pal payment option
+
+Given  "DL-PRICINGRULE-7" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-7 |
+
+Given "DL-PRICINGRULE-7" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser2 |
+
+And "DL-PRICINGRULE-7" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-7" Customer adds Daily Living items to the cart from search.
+
+And "DL-PRICINGRULE-7" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | cl2   	  |
+
+Then "DL-PRICINGRULE-7" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1	        | -     | -  | -        | -    | -        | -        |
+
+
+Then "DL-PRICINGRULE-7" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-7" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-7" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage |
+| Doctor Information |
+
+Then "DL-PRICINGRULE-7" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-PRICINGRULE-7" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |   -	 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  -			|  Yes 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "DL-PRICINGRULE-7" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName  | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | KAREN      | MERCHANTK   | 9690 DEERECO RD | TIMONIUM 	| 23    | 21093    | 5121   |karen@merchant.com     | 4439211900   |  No	        |
+
+Then "DL-PRICINGRULE-7" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-7" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "DL-PRICINGRULE-7" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-7" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-7" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-7" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-7" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-7 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-8
+Scenario: Registered User is verifies BAGB+Eligible Item  offer in shopping cart page, Order review , Oreder Confirmation (1 item free message ) Using Pay pal payment option
+
+Given  "DL-PRICINGRULE-8" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-8 |
+
+Given "DL-PRICINGRULE-8" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-8" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-8" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-8" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-8" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-8" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-8" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-8" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-8" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-8" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-8" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-8" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-8" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-8" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-8" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-8" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-8 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-9
+Scenario: Registered User is verifies BOGO Same item offer in shopping cart page, Order review , Oreder Confirmation (1 item free message ) Using CC
+
+Given  "DL-PRICINGRULE-9" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-9 |
+
+Given "DL-PRICINGRULE-9" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-9" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-9" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-9" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-9" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-9" Customer updates the primary product quantity in shopping cart page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-9" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-9" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-9" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 104 WILMOT RD  | DEERFIELD  | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-9" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-9" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-PRICINGRULE-9" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-9" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-9" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-9" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-9" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-9 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-10
+Scenario: Registered User is verifies BOGO Same item offer in shopping cart page, Order review , Oreder Confirmation (1 item free message ) Using BML
+
+Given  "DL-PRICINGRULE-10" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-10 |
+
+Given "DL-PRICINGRULE-10" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser1 |
+
+And "DL-PRICINGRULE-10" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-10" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-10" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-10" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-10" Customer updates the primary product quantity in shopping cart page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-10" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-10" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-10" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress    | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK   | 9690 DEERECO RD  | TIMONIUM  | 23    | 21093    | 5121   |KAREN@MERCHANT.COM     | 4439211900   |  No	        |
+
+Then "DL-PRICINGRULE-10" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-10" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | NewBillingAddress   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "DL-PRICINGRULE-10" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-10" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-10" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-10" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-10" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-10 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-11
+Scenario: Registered User is verifies BOGO Same item offer in shopping cart page, Order review , Oreder Confirmation (1 item free message ) Using Papal
+
+Given  "DL-PRICINGRULE-11" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-11 |
+
+Given "DL-PRICINGRULE-11" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-11" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-11" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-11" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-11" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-11" Customer updates the primary product quantity in shopping cart page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-11" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-11" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-11" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress    | City       | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD   | DEERFIELD  | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	       |
+
+Then "DL-PRICINGRULE-11" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-11" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-11" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-11" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-11" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-11" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-11" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-11 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+@DL-PRICINGRULE-12
+Scenario: Registered User is verifies BOGOLEV+CH+CL+RX  offer in shopping cart page (1 item free message )
+
+Given  "DL-PRICINGRULE-12" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-12 |
+
+Given "DL-PRICINGRULE-12" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser3 |
+
+And "DL-PRICINGRULE-12" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId          |
+| CommonData    | search    | BOGOLEV+RX     |
+
+Then "DL-PRICINGRULE-12" Customer adds Daily Living items to the cart from search.
+
+And "DL-PRICINGRULE-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | CH1     	  |
+
+Then "DL-PRICINGRULE-12" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-12" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName 	| RowId               		 |
+| PharmacyLinkVerification  | Anonymous  	| New Prescriptions 		 |
+
+When  "DL-PRICINGRULE-12" Customer adds a New Prescription to the cart: 
+| InputFileName 		| SheetName 				| RowId			| FamilyMemberOption | isNinetyDayCheck | isGenericEquivalentCheck | DoctorFirstName | DoctorLastName | DoctorPhoneNumber | DrugNameAndStrength | DrugQuantity |AddHealthHistoryLink | 
+| AccountDashboard		| HealthHistoryAndInsurance	| Healthinfo1 	| -                  | -                | yes                      | James           | Anderson       | 8471234567        | Aspirin 10 Mg       | 12           | no				 |
+
+
+And "DL-PRICINGRULE-12" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | cl2   	  |
+
+Then "DL-PRICINGRULE-12" Customer adds Contact Lens items to the cart from search:
+| Side  | Quantity  | Power | BC | Cylinder | Axis | Addition | Diameter |
+| left  | 1	        | -     | -  | -        | -    | -        | -        |
+
+Then "DL-PRICINGRULE-12" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   	 |
+| CommonData    | search    | BOGOLEV+RX |
+
+Then "DL-PRICINGRULE-12" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   		   |
+| CommonData    | search    | BOGOLEV+RX 		   	   |
+| CommonData    | search    | BOGOLEVSecondary2		   |
+
+Then "DL-PRICINGRULE-12" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| PickupLocation	  |
+
+Then "DL-PRICINGRULE-12" Customer selects rx pick up date and time and click on continue
+
+Then "DL-PRICINGRULE-12" Customer enters required information and selects the required option in Patient Info and Doctor Details Page:
+| InputFileName |   SheetName  			| RowId		 |Continue	|AgeErrorValidationType     |DoctorErrorValidationType       |
+| CACData       |	CLPatientDoctorInfo | CL1Data4   | 	Yes 	| - 						|   - 							 |
+
+Then "DL-PRICINGRULE-12" Customer Selects required Option From Doctor Search Results Page:
+| InputFileName | SheetName 		   | RowId      |ContinueToShipping  | NewSearch  | PrePopVerify  | PreviousRowID |ContinueShippingBTN |NewSearchAgain  | ErrorMsgType 	| Select  | BacktoPatientInfoLnk | ExpectedTargetPage   |
+| CACData	    | CLPatientDoctorInfo  | CL1Data5   |   -	 			 | -		  |   -  		  |  -			  | -	  			   |  -     		|  -			|  Yes 	  | 	   -			 | 	ShippingInfo	    |
+
+Then "DL-PRICINGRULE-12" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-12" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-12" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment|
+| NewCreditCard    | -              | true                  | -                  | CACData         | CreditCard  | cc1     | -			 |
+
+Then "DL-PRICINGRULE-12" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   		   |
+| CommonData    | search    | BOGOLEV+RX 		   	   |
+| CommonData    | search    | BOGOLEVSecondary2		   |
+
+Then "DL-PRICINGRULE-12" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-12" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | BOGOLEVSecondary2		   |
+
+Then "DL-PRICINGRULE-12" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-12" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-12 |
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-13
+Scenario: Registered User is able to see BOGOLEV(BOGOLEV+1Eligible Item) related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option.
+
+Given  "DL-PRICINGRULE-13" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-13 |
+
+And "DL-PRICINGRULE-13" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-13" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | BOGOLEV     |
+
+Then "DL-PRICINGRULE-13" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-13" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-13" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId      |
+| CommonData    | search    | BOGOLEV    |
+
+Then "DL-PRICINGRULE-13" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		    	|
+| CommonData    | search    | BOGOLEV  		        |
+| CommonData    | search    | BOGOLEVSecondary  	|
+
+Then "DL-PRICINGRULE-13" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-13" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-13" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-13" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-13" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment  	 |
+| CreditCard       | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard    	 |
+
+Then "DL-PRICINGRULE-13" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   		|
+| CommonData    | search    | BOGOLEV  		        |
+| CommonData    | search    | BOGOLEVSecondary 		|
+
+Then "DL-PRICINGRULE-13" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-13" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   		|
+| CommonData    | search    | BOGOLEV  		        |
+| CommonData    | search    | BOGOLEVSecondary 		|
+
+Then "DL-PRICINGRULE-13" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-13 |
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-14
+Scenario: Guest User is able to remove BOGOLEV(BOGOLEV+1Eligible Item) related pricing rules in Cart.
+
+Given  "DL-PRICINGRULE-14" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-14 |
+
+And "DL-PRICINGRULE-14" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-14" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-14" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-14" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-14" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+And "DL-PRICINGRULE-14" Customer Clears the Shopping Cart
+
+Then "DL-PRICINGRULE-14" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-14|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-15
+Scenario: Guest User is able to see BOGO(BOGO_Buy1GetSameFree)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with BML as Payment Option.
+
+Given  "DL-PRICINGRULE-15" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-15 |
+
+And "DL-PRICINGRULE-15" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-15" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-15" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-15" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-15" Customer updates the primary product quantity in shopping cart page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-15" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-15" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-15" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-15" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress    | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK   | 9690 DEERECO RD  | TIMONIUM  | 23    | 21093    | 5121   |KAREN@MERCHANT.COM     | 4439211900   |  No	        |
+
+Then "DL-PRICINGRULE-15" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-15" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress      | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -                   | true                  | -                  | CACData               | CustomerBilling      | BML2           | -			      |
+
+Then "DL-PRICINGRULE-15" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-15" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-15" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-15" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-15|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-16
+Scenario: Guest User is able to see BOGO(BOGO_Buy1GetSameFree)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option.
+
+Given  "DL-PRICINGRULE-16" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-16 |
+
+And "DL-PRICINGRULE-16" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-16" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-16" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-16" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-16" Customer updates the primary product quantity in shopping cart page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-16" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-16" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-16" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-16" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-16" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-16" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-16" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-16" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-16" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId       		  |
+| CommonData    | search    | PR_BOGOSameItem     |
+
+Then "DL-PRICINGRULE-16" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-16|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-17
+Scenario: Guest User is able to see BAGB(BAGB+1EligibleItem)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with BML as Payment Option.
+
+Given  "DL-PRICINGRULE-17" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-17 |
+
+And "DL-PRICINGRULE-17" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-17" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-17" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-17" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-17" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-17" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB 		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-17" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-17" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-17" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress    | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK   | 9690 DEERECO RD  | TIMONIUM  | 23    | 21093    | 5121   |KAREN@MERCHANT.COM     | 4439211900   |  No	        |
+
+Then "DL-PRICINGRULE-17" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-17" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress   | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -   				| true                  | -                  | CACData               | CustomerBilling      | BML2           | -			   |
+
+Then "DL-PRICINGRULE-17" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-17" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-17" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+
+Then "DL-PRICINGRULE-17" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-17|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-18
+Scenario: Guest User is able to see BAGB(BAGB+1EligibleItem)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option.
+
+Given  "DL-PRICINGRULE-18" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-18 |
+
+And "DL-PRICINGRULE-18" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-18" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId       |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-18" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-18" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-18" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-18" Customer validates pricing rule configuration in Shopping Cart:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB 		   |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-18" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-18" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-18" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-18" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-18" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-18" Customer validates pricing rule configuration in Order Review page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-18" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-18" Customer validates pricing rule configuration in Order Confirmation page:
+| InputFileName | SheetName | RowId  		   |
+| CommonData    | search    | PR_BAGB          |
+| CommonData    | search    | PR_BAGB_Eligible |
+
+Then "DL-PRICINGRULE-18" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-18|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-19
+Scenario: Guest User is able to see BAGB(BAGB+RemoveItemA)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Credit Card as Payment Option.
+
+Given  "DL-PRICINGRULE-19" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-19 |
+
+And "DL-PRICINGRULE-19" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-19" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-19" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-19" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-19" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-19" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-19" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-19" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-19" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-19" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-19" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | CCInputFileName | CCSheetName | CCRowId |GuestPayment  	 |
+| CreditCard       | -              | true                  | -                  | CACData         | CreditCard  | cc1     | CreditCard    	 |
+
+Then "DL-PRICINGRULE-19" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-19" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-19" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-19" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-19|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-20
+Scenario: Guest User is able to see BAGB(BAGB+RemoveItemA)related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with BML as Payment Option. 
+
+Given  "DL-PRICINGRULE-20" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-20 |
+
+And "DL-PRICINGRULE-20" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-20" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId        |
+| CommonData    | search    | PR_BAGB     |
+
+Then "DL-PRICINGRULE-20" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-20" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-20" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-20" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-20" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage  |
+| SigninorRegister    |
+
+Then "DL-PRICINGRULE-20" Customer selects either Login to walgreens or Register a new account:
+| UserisonSigninPage | Signin | Register |GuestCheckout|
+| -                  | -      | -        |  Yes	       |
+
+Then "DL-PRICINGRULE-20" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress    | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | KAREN         | MERCHANTK   | 9690 DEERECO RD  | TIMONIUM  | 23    | 21093    | 5121   |KAREN@MERCHANT.COM     | 4439211900   |  No	        |
+
+Then "DL-PRICINGRULE-20" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-20" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption  | BillingAddress   | SameAsShippingAddress | SaveBillingAddress | CustomerInputFileName | CustomerSheetName    | CustomerRowId  |GuestPayment     |
+| BillMeLater    | -   				| true                  | -                  | CACData               | CustomerBilling      | BML2           | -			   |
+
+Then "DL-PRICINGRULE-20" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |
+
+Then "DL-PRICINGRULE-20" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-20" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | PR_BAGB |                       
+
+
+Then "DL-PRICINGRULE-20" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-20|
+#------------------------------------------------------------------------------------------------------------------------------------------------
+@DL-PRICINGRULE-21
+Scenario: Registered User is able to see BOGOLEV(BOGOLEV+RemoveItemA) related pricing rules in Cart, Order Review and Order Confirmation Page while placing order with Paypal as Payment Option. 
+
+Given  "DL-PRICINGRULE-21" Customer starts the scenario:
+| InputFileName | SheetName 	   | RowId             |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-21 |
+
+Given "DL-PRICINGRULE-21" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId            |
+| CommonData    | login     | PricingRuleUser1 |
+
+And "DL-PRICINGRULE-21" Customer Clears the Shopping Cart
+
+And "DL-PRICINGRULE-21" Customer searches for a product using keywords in the search textbox:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-21" Customer adds Daily Living items to the cart from search.
+
+Then "DL-PRICINGRULE-21" Customer Goes to the Shopping Cart
+
+Then "DL-PRICINGRULE-21" Customer adds a qualifying BOGO product to get the discount from the shopping cart page:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+Then "DL-PRICINGRULE-21" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId    |
+| CommonData    | search    | BOGOLEV  |
+
+Then "DL-PRICINGRULE-21" Customer clicks on proceed to checkout button in the cart:
+| ExpectedTargetPage         |
+| Shipping Information		 |
+
+Then "DL-PRICINGRULE-21" Customer selects a shipping option from the shipping information page and clicks on continue:
+| ShippingAddressType | SaveShippingAddress | VerifyYourCounty | FirstName     | LastName    | StreetAddress   | City      | State | ZipCode  |ZipExtn | EmailAddress          | PhoneNumber  |OffersbyEmail |
+| newshippingaddress  | -                   | -                | Testuser      | Checkout    | 1204 WILMOT RD  | DEERFIELD | 16    | 60015    | 5121   |taxwaremay22@yahoo.com | 847122345127 |  No	        |
+
+Then "DL-PRICINGRULE-21" Customer selects a shipping speed from shipping method page and clicks on continue:
+| RxShippingSpeed | DailyLivingShippingSpeed | ContactLensShippingSpeed |
+| -      	      | standard		         |     -			        |
+
+Then "DL-PRICINGRULE-21" Customer selects a payment option and clicks on continue button on the payment Information page:
+| PaymentOption    | BillingAddress | SameAsShippingAddress | SaveBillingAddress | PaypalInputFileName | PaypalSheetName | PaypalRowId 	|GuestPayment|
+| PayPal	       | -              | -               	    | -                  | CACData        	   | Paypal		  	 | sandbox1     | -			 |
+
+Then "DL-PRICINGRULE-21" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |
+
+Then "DL-PRICINGRULE-21" Customer makes the selection from Review Order and Submit page:
+| SubmitOrder | ChangeStoreOrPickUpTime | ChangeShippingInformation | ChangeShippingMethod | ChangeBillingInformation |
+| yes         | -                       | -                         | -                    | -                        |
+
+Then "DL-PRICINGRULE-21" Customer validates NonExistence of Promo message when Primary Item is removed:
+| InputFileName | SheetName | RowId   |
+| CommonData    | search    | BOGOLEV |      
+
+Then "DL-PRICINGRULE-21" Customer logout from walgreens:
+|Source  |
+| Global |
+
+Then "DL-PRICINGRULE-21" Customer finished testing the scenario:
+| InputFileName | SheetName 	   | RowId            |
+| QC-DL         | PRICINGRULE      | DL-PRICINGRULE-21|
+#------------------------------------------------------------------------------------------------------------------------------------------------

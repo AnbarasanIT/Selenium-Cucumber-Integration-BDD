@@ -1,0 +1,320 @@
+package walgreens.ecom.batch.framework.common.beans;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.common.ReportingLibrary;
+
+
+public class ScenarioBean {
+    private boolean isScenarioInitialize = false;
+    private boolean isCucumberReportEnabled = false;
+    private boolean isExcelReportEnabled = false;
+    private boolean isALMReportEnabled = false; // RAM (1/14/13) - Setting it to
+					       // false by default
+    private boolean isWarningStatus = false; //RAM (2/4/13) - Setting this to get the scenario status in between the execution 
+    private String scenarioId = null;
+    private int scenarioCurrentStepId = 0;
+    private int scenarioCurrentStepImageId = 0;
+    private String scenarioNumber = null;
+    private String scenarioDescription = null;
+    private String scenarioFeatureName = null;
+    private String scenarioModuleName = null; // RAM (1/14/13) Added to get the
+					      // module name from which scenario
+					      // is called
+    private String scenarioReportPath = null; // RAM (1/14/13) Added to get the
+					      // report path of the scenario
+    private String scenarioReportFile = null; // RAM (1/14/13) Added to get the
+					      // report file name of the
+					      // scenario with full path
+    private String scenarioOverAllReportingStatus = "NORUN"; // RAM (1/14/13)
+							     // Added to get the
+							     // overall scenario
+							     // reporting status
+    private int scenarioExecutionTime = 0; // RAM (1/17/13) Added to get the
+					   // total execution time per scenario
+    private String scenarioTagName = null;
+    private String scenarioStatus = null;
+    private String scenarioCurrentUrl = null;
+    private Date scenarioStartDttm = null;
+    private Date scenarioEndDttm = null; // RAM (1/14/13) Added to get the end
+					 // time of the scenario
+    private Date scenarioUpdateDttm = null;
+    private String scenarioBrowserName = null;
+    private EventFiringWebDriver browser = null;
+    private Map<String, String> sharedStepProperties = null;
+    private OrderBean orderBean = null;
+    
+    private List<StepBean> stepBeans = null;
+    private boolean isEnableExecution = true;
+    private Map<String, String> scenarioDBvalues = null;
+
+    public boolean isEnableExecution() {
+	return isEnableExecution;
+    }
+
+    public void setEnableExecution(boolean isEnableExecution) {
+	this.isEnableExecution = isEnableExecution;
+    }
+
+    public Map<String, String> getSharedStepProperties() {
+	return sharedStepProperties;
+    }
+
+    public void setSharedStepProperties(Map<String, String> sharedStepProperties) {
+	this.sharedStepProperties = sharedStepProperties;
+    }
+
+    public String getScenarioId() {
+	return scenarioId;
+    }
+
+    public void setScenarioId(String scenarioId) {
+	this.scenarioId = scenarioId;
+    }
+
+    public List<StepBean> getStepBeans() {
+	return stepBeans;
+    }
+
+    public void setStepBeans(List<StepBean> stepBeans) {
+	this.stepBeans = stepBeans;
+    }
+
+    public String getScenarioDescription() {
+	return scenarioDescription;
+    }
+
+    public void setScenarioDescription(String scenarioDescription) {
+	this.scenarioDescription = scenarioDescription;
+    }
+
+    public EventFiringWebDriver getBrowser() {
+	return browser;
+    }
+
+    public void setBrowser(EventFiringWebDriver browser) {
+	this.browser = browser;
+    }
+
+    public String getScenarioNumber() {
+	return scenarioNumber;
+    }
+
+    public void setScenarioNumber(String scenarioNumber) {
+	this.scenarioNumber = scenarioNumber;
+    }
+
+    public String getScenarioFeatureName() {
+	return scenarioFeatureName;
+    }
+
+    public void setScenarioFeatureName(String scenarioFeatureName) {
+	this.scenarioFeatureName = scenarioFeatureName;
+    }
+
+    // RAM (1/14/13) - Added for reporting purpose
+    // ---------------------------------------------------------------------------------------
+    public String getScenarioModuleName() {
+	return scenarioModuleName;
+    }
+
+    public void setScenarioModuleName(String scenarioModuleName) {
+	this.scenarioModuleName = scenarioModuleName;
+    }
+
+    public String getScenarioReportPath() {
+	return scenarioReportPath;
+    }
+
+    public void setScenarioReportPath(String scenarioReportPath) {
+	this.scenarioReportPath = scenarioReportPath;
+    }
+
+    public String getScenarioReportFile() {
+	return scenarioReportFile;
+    }
+
+    public void setScenarioReportFile(String scenarioReportFile) {
+	this.scenarioReportFile = scenarioReportFile;
+    }
+
+    public String getScenarioOverAllReportingStatus() {
+	return scenarioOverAllReportingStatus;
+    }
+
+    public void setScenarioOverAllReportingStatus(String scenarioOverAllReportingStatus) {
+	this.scenarioOverAllReportingStatus = scenarioOverAllReportingStatus;
+    }
+
+    public Date getScenarioEndDttm() {
+	return scenarioEndDttm;
+    }
+
+    public void setScenarioEndDttm(Date scenarioEndDttm) {
+	this.scenarioEndDttm = scenarioEndDttm;
+    }
+
+    public int getScenarioExecutionTime() {
+	return scenarioExecutionTime;
+    }
+
+    public void setScenarioExecutionTime(int scenarioExecutionTime) {
+	this.scenarioExecutionTime = scenarioExecutionTime;
+    }
+    
+    public boolean isWarningStatus() {
+	return isWarningStatus;
+    }
+
+    public void setWarningStatus(boolean isWarningStatus) {
+	this.isWarningStatus = isWarningStatus;
+    }
+    
+    // ---------------------------------------------------------------------------------------
+
+    public String getScenarioTagName() {
+	return scenarioTagName;
+    }
+
+    public void setScenarioTagName(String scenarioTagName) {
+	this.scenarioTagName = scenarioTagName;
+    }
+
+    public String getScenarioStatus() {
+	return scenarioStatus;
+    }
+
+    public void setScenarioStatus(String scenarioStatus) {
+	if (scenarioStatus != null && !ReportingLibrary.COMPUTE_SCENARIO_STATUS.equals(scenarioStatus)) {
+	    this.scenarioStatus = scenarioStatus;
+	} else {
+	    StepBean step = null;
+
+	    int successCounter = 0;
+	    int failureCounter = 0;
+	    int warningCounter = 0;
+
+	    List<StepBean> beansList = this.getStepBeans();
+	    int size = beansList.size();
+	    for (int i = 0; i < size; i++) {
+		step = beansList.get(i);
+		if (CommonLibrary.FAIL.equalsIgnoreCase(step.getStepStatus()) || "fail".equalsIgnoreCase(step.getStepStatus())) {
+		    failureCounter++;
+		} else if (CommonLibrary.WARNING.equalsIgnoreCase(step.getStepStatus()) || "warning".equalsIgnoreCase(step.getStepStatus())) {
+		    warningCounter++;
+		} else {
+		    successCounter++;
+		}
+	    }
+	    if (successCounter == size) {
+		this.scenarioStatus = "pass";
+	    } else if (failureCounter == size) {
+		this.scenarioStatus = "fail";
+	    } else {
+		this.scenarioStatus = "warning";
+	    }
+
+	}
+    }
+
+    public String getScenarioCurrentUrl() {
+	return scenarioCurrentUrl;
+    }
+
+    public void setScenarioCurrentUrl(String scenarioCurrentUrl) {
+	this.scenarioCurrentUrl = scenarioCurrentUrl;
+    }
+
+    public Date getScenarioCreateDttm() {
+	return scenarioStartDttm;
+    }
+
+    public void setScenarioCreateDttm(Date scenarioStartDttm) {
+	this.scenarioStartDttm = scenarioStartDttm;
+    }
+
+    public Date getScenarioUpdateDttm() {
+	return scenarioUpdateDttm;
+    }
+
+    public void setScenarioUpdateDttm(Date scenarioUpdateDttm) {
+	this.scenarioUpdateDttm = scenarioUpdateDttm;
+    }
+
+    public boolean isScenarioInitialize() {
+	return isScenarioInitialize;
+    }
+
+    public void setScenarioInitialize(boolean isScenarioInitialize) {
+	this.isScenarioInitialize = isScenarioInitialize;
+    }
+
+    public String getScenarioBrowserName() {
+	return scenarioBrowserName;
+    }
+
+    public void setScenarioBrowserName(String scenarioBrowserName) {
+	this.scenarioBrowserName = scenarioBrowserName;
+    }
+
+    public int getScenarioCurrentStepId() {
+	return scenarioCurrentStepId;
+    }
+
+    public void setScenarioCurrentStepId(int scenarioCurrentStepId) {
+	this.scenarioCurrentStepId = scenarioCurrentStepId;
+    }
+
+    public int getScenarioCurrentStepImageId() {
+	return scenarioCurrentStepImageId;
+    }
+
+    public void setScenarioCurrentStepImageId(int scenarioCurrentStepImageId) {
+	this.scenarioCurrentStepImageId = scenarioCurrentStepImageId;
+    }
+
+    public boolean isCucumberReportEnabled() {
+	return isCucumberReportEnabled;
+    }
+
+    public void setCucumberReportEnabled(boolean isCucumberReportEnabled) {
+	this.isCucumberReportEnabled = isCucumberReportEnabled;
+    }
+
+    public boolean isExcelReportEnabled() {
+	return isExcelReportEnabled;
+    }
+
+    public void setExcelReportEnabled(boolean isExcelReportEnabled) {
+	this.isExcelReportEnabled = isExcelReportEnabled;
+    }
+
+    public boolean isALMReportEnabled() {
+	return isALMReportEnabled;
+    }
+
+    public void setALMReportEnabled(boolean isALMReportEnabled) {
+	this.isALMReportEnabled = isALMReportEnabled;
+    }
+
+    public Map<String, String> getscenarioDBvalues() {
+	return scenarioDBvalues;
+    }
+
+    public void setscenarioDBvalues(Map<String, String> scenarioDBvalues) {
+	this.scenarioDBvalues = scenarioDBvalues;
+    }
+    
+    public OrderBean getOrderBean() {
+        return orderBean;
+    }
+
+    public void setOrderBean(OrderBean orderBean) {
+        this.orderBean = orderBean;
+    }
+
+
+}

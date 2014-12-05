@@ -1,0 +1,846 @@
+@pharmacy @AppointmentScheduler
+Feature: Scheduling/rescheduling/cacelling appointment for the Vaccination and Health Clinic services
+
+# Contains all appointment confirmation page related flows 
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-1
+Scenario: Anonymous user schedules an appointment and Anonymous user verifies the  appointment confirmation page
+
+Given "RX-WAGAndHCCAppScheduler-1" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-1 |
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption1			|
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption1			|No			|
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption1 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption1  |
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption1  |
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer verify the links in the appoinment confirmation page:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption1  |
+
+Then "RX-WAGAndHCCAppScheduler-1" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-1   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-2
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler 
+
+Given "RX-WAGAndHCCAppScheduler-2" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-2 |
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption2			|
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption2			|No				|
+| AppointmentScheduler  	| MouseOverValidation	| Option1					|-				|
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption2 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption2  |
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption2  |
+
+Then "RX-WAGAndHCCAppScheduler-2" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-2   |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-3
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler ,reschedules and cancels the appointment
+
+Given  "RX-WAGAndHCCAppScheduler-3" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-3 |
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption3			|
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption3			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption3 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption3  |
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption3  |
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		         |
+| AppointmentScheduler   	| PageNav 		| RescheduleAppointment  |
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer Reschedules an appointment from appointment confirmation page:
+| InputFileName 		| SheetName   			| RowId            |SchedulerOption	|
+| AppointmentScheduler  |WAGwithHCCIntegrated	| SchedulerOption3 |Reschedule		|
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer verifies the Cancel appointment confirmation page via Appointment confirmation page:
+| InputFileName 		 | SheetName 		 	| RowId            |
+| AppointmentScheduler   |WAGwithHCCIntegrated  | SchedulerOption3 |
+
+Then "RX-WAGAndHCCAppScheduler-3" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-3   |
+
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-4
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler ,reschedules and cancels the appointment for Medicare service
+
+Given  "RX-WAGAndHCCAppScheduler-4" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-4 |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption4			|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption4			|No			|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption4 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption4  |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption4  |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     |
+| AppointmentScheduler   | PageNav 	| Pharmacy  					 |
+| AppointmentScheduler   | PageNav 	| Walgreens Appointment Scheduler|
+| AppointmentScheduler   | PageNav 	| RescheduleandCancel			 |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer finds a scheduled appointment in Find Your Scheduled Appointment page:
+| InputFileName 		 | SheetName 			| RowId	    		|ErrorMessageValidation |
+| AppointmentScheduler   | WAGwithHCCIntegrated | SchedulerOption4 	|No      				|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId             |LinkToClick		|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption4  |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer Reschedules an appointment from My appointments page:
+| InputFileName 		| SheetName 	| RowId	  		    		|SchedulerOption	|
+| AppointmentScheduler	| WAGwithHCCIntegrated | SchedulerOption4   |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     |
+| AppointmentScheduler   | PageNav 	| Pharmacy  					 |
+| AppointmentScheduler   | PageNav 	| Walgreens Appointment Scheduler|
+| AppointmentScheduler   | PageNav 	| RescheduleandCancel			 |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer finds a scheduled appointment in Find Your Scheduled Appointment page:
+| InputFileName 		 | SheetName 			| RowId	    		|ErrorMessageValidation |
+| AppointmentScheduler   | WAGwithHCCIntegrated | SchedulerOption4 	|No      				|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId             |LinkToClick	|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption4  |Cancel			|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer cancels a scheduled appointment from Myappointment page:
+| InputFileName 		 | SheetName 	| RowId	    |
+| AppointmentScheduler  | PageNav 		| Pharmacy  |
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		          |
+| AppointmentScheduler  | PageNav 	| Find another appointment|
+
+Then "RX-WAGAndHCCAppScheduler-4" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-4   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-5
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler for self and family member
+
+Given "RX-WAGAndHCCAppScheduler-5" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			  |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-5 |
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption5			|
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption5			|No			|
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption5 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId             |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption5  |
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             |  
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption5  |
+
+Then "RX-WAGAndHCCAppScheduler-5" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-5   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-6
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler ,reschedules and cancels the appointment for self and family member
+
+Given  "RX-WAGAndHCCAppScheduler-6" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-6 |
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption6			|
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption6			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption6 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption6   |
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              | 
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption6   |
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		         |
+| AppointmentScheduler   	| PageNav 		| RescheduleAppointment  |
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer Reschedules an appointment from appointment confirmation page:
+| InputFileName 		| SheetName   			| RowId             |SchedulerOption	|
+| AppointmentScheduler  |WAGwithHCCIntegrated	| SchedulerOption6 |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer verifies the Cancel appointment confirmation page via Appointment confirmation page:
+| InputFileName 		 | SheetName 		 	| RowId             |
+| AppointmentScheduler   |WAGwithHCCIntegrated  | SchedulerOption6  |
+
+Then "RX-WAGAndHCCAppScheduler-6" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		 |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-6   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-7
+Scenario: Rx unauthenticated user schedules an appointment via Walgreens Appointment scheduler ,reschedules the appointment
+
+Given "RX-WAGAndHCCAppScheduler-7" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-7  |
+
+Given "RX-WAGAndHCCAppScheduler-7" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 				| RowId      | 
+| EHSData 	 	| RxRegistrationNonLoyalty  | Testuser	 |
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption7			|
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption7			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption7 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption7   |
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |  
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption7   |
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     |
+| AppointmentScheduler  | PageNav 	| Pharmacy  					 |
+| AppointmentScheduler  | PageNav 	| Walgreens Appointment Scheduler|
+| AppointmentScheduler  | PageNav 	| RescheduleHome				 |
+| AppointmentScheduler  | PageNav 	| RescheduleApp					 |
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer Reschedules an appointment from My appointments page:
+| InputFileName 		| SheetName 			| RowId	  		     |SchedulerOption		|
+| AppointmentScheduler	| WAGwithHCCIntegrated  | SchedulerOption9	 |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-7" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-7   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-8
+Scenario: Logged in user schedules an appointment via Walgreens Appointment scheduler and cancels the appointment
+
+Given  "RX-WAGAndHCCAppScheduler-8" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-8  |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer login to the walgreens.com:
+| InputFileName | SheetName 			| RowId     |
+| EHSData  		| ScheduleAppointment 	| QA5Login  |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption8			|
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption8			|No		    	|
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption8	 	|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption8   |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption8   |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer verifies the Cancel appointment confirmation page via Appointment confirmation page:
+| InputFileName 		 | SheetName 		 	| RowId             |
+| AppointmentScheduler   |WAGwithHCCIntegrated  | SchedulerOption8  |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-8" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		 |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-8    |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-9
+Scenario: Rx unauthenticated user schedules an appointment via Walgreens Appointment scheduler ,reschedules and cancels the appointment for Medicare service
+
+Given "RX-WAGAndHCCAppScheduler-9" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-9  |
+
+Given "RX-WAGAndHCCAppScheduler-9" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 				| RowId      | 
+| EHSData 	 	| RxRegistrationNonLoyalty  | Testuser	 |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption9			|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption9			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption9 		|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption9   |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId             | 
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption9  |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer Verify the display of the Scheduled appointment:
+| InputFileName 			| SheetName 			| RowId     				|ErrorMessageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption9			|No						|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+| AppointmentScheduler   	| PageNav 		| My Appointments	             |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick			|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption9   |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer Reschedules an appointment from My appointments page:
+| InputFileName 		| SheetName 			| RowId	  		     |SchedulerOption		|
+| AppointmentScheduler	| WAGwithHCCIntegrated  | SchedulerOption9   |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+| AppointmentScheduler   	| PageNav 		| My Appointments	             |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick	|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption9   |Cancel		|
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer cancels a scheduled appointment from Myappointment page:
+| InputFileName 		 | SheetName 	| RowId	    |
+| AppointmentScheduler  | PageNav 		| Pharmacy  |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       |
+| AppointmentScheduler   	| PageNav 		| Schedule Appointment |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-9" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-9   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-10
+Scenario: Logged in user schedules an appointment via Walgreens Appointment scheduler and reschedule the appointment
+
+Given  "RX-WAGAndHCCAppScheduler-10" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-10 |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer login to the walgreens.com:
+| InputFileName | SheetName 			| RowId     |
+| EHSData  		| ScheduleAppointment 	| QA5Login  |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption10			|
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption10			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption10 	|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption10  |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |  
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption10  |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		         |
+| AppointmentScheduler   	| PageNav 		| RescheduleAppointment  |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer Reschedules an appointment from appointment confirmation page:
+| InputFileName 		| SheetName   			| RowId             |SchedulerOption	|
+| AppointmentScheduler  |WAGwithHCCIntegrated	| SchedulerOption10 |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-10" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		 |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-10   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-11
+Scenario: Logged in user schedules an appointment via Walgreens Appointment scheduler ,reschedules and cancels the appointmentof family member
+
+Given "RX-WAGAndHCCAppScheduler-11" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-11 |
+
+Given "RX-WAGAndHCCAppScheduler-11" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 				| RowId      | 
+| EHSData 	 	| RxRegistrationNonLoyalty  | Testuser	 |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption11			|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption11			|Yes			|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption11 	|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption11  |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |  
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption11  |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer Verify the display of the Scheduled appointment:
+| InputFileName 			| SheetName 			| RowId     				|ErrorMessageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption11			|No						|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+| AppointmentScheduler   	| PageNav 		| My Appointments	             |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick		|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption11  |Reschedule		|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer Reschedules an appointment from My appointments page:
+| InputFileName 		| SheetName 			| RowId	  		   	|SchedulerOption	|
+| AppointmentScheduler	| WAGwithHCCIntegrated 	| SchedulerOption11 |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       			 |
+| AppointmentScheduler   	| PageNav 		| Pharmacy  					 |
+| AppointmentScheduler   	| PageNav 		| Walgreens Appointment Scheduler|
+| AppointmentScheduler   	| PageNav 		| My Appointments	             |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick	|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption11  |Cancel		|
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer cancels a scheduled appointment from Myappointment page:
+| InputFileName 		 | SheetName 	| RowId	    |
+| AppointmentScheduler  | PageNav 		| Pharmacy  |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		       |
+| AppointmentScheduler   	| PageNav 		| Schedule Appointment |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-11" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-11  |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-12
+Scenario: Logged in user schedules an appointment via Walgreens Appointment scheduler and verify th appointment confirmation page ,reschedule and cancels the appointment of family member
+
+Given  "RX-WAGAndHCCAppScheduler-12" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-12 |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer login to the walgreens.com:
+| InputFileName | SheetName 			| RowId     |
+| EHSData  		| ScheduleAppointment 	| QA5Login  |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption12			|
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption12			|No			|
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption12	 	|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption12	 |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption12	 |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer clicks on an object and validates the expected results:
+| InputFileName 		    | SheetName 	| RowId	  		         |
+| AppointmentScheduler   	| PageNav 		| RescheduleAppointment  |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer Reschedules an appointment from appointment confirmation page:
+| InputFileName 		| SheetName   			| RowId             |SchedulerOption	|
+| AppointmentScheduler  |WAGwithHCCIntegrated	| SchedulerOption12	|Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer verifies the Cancel appointment confirmation page via Appointment confirmation page:
+| InputFileName 		 | SheetName 		 	| RowId            |
+| AppointmentScheduler   |WAGwithHCCIntegrated  | SchedulerOption12|
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer logout from walgreens:
+| Source |
+| Global |
+
+Then "RX-WAGAndHCCAppScheduler-12" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		 |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-12   |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-13
+Scenario: Anonymous user schedules an appointment via Walgreens Appointment scheduler ,find and reschedules for family member from wiew all appointments page
+
+Given "RX-WAGAndHCCAppScheduler-13" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-13 |
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption13			|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption13			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer Verifies The Special Messaging Overlay:
+| InputFileName 			| SheetName 					| RowId     			|HealthPlan	|Assessment			| 
+| AppointmentScheduler  	| WAGwithHCCIntegrated 			| SchedulerOption13 	|Plan 1		|Assessment Type 1	|
+| AppointmentScheduler  	| SpecialMessagingOverlay 		| Services  			|-			|					|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption13  |
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption13  |
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     |
+| AppointmentScheduler  | PageNav 	| Pharmacy  					 |
+| AppointmentScheduler  | PageNav 	| Walgreens Appointment Scheduler|
+| AppointmentScheduler  | PageNav 	| RescheduleandCancel			 |
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer finds a scheduled appointment in Find Your Scheduled Appointment page:
+| InputFileName 		 | SheetName 			| RowId	    		  |ErrorMessageValidation 	|
+| AppointmentScheduler   | WAGwithHCCIntegrated | SchedulerOption13   |No      					|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick		|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption13  |Reschedule		|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer Reschedules an appointment from My appointments page:
+| InputFileName 		| SheetName 			| RowId	  		   	 |SchedulerOption		|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption13  |Reschedule			|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     	|
+| AppointmentScheduler  | PageNav 	| Pharmacy  					 	|
+| AppointmentScheduler  | PageNav 	| Walgreens Appointment Scheduler	|
+| AppointmentScheduler  | PageNav 	| RescheduleandCancel				|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer finds a scheduled appointment in Find Your Scheduled Appointment page:
+| InputFileName 		 | SheetName 			| RowId	    		  |ErrorMessageValidation 	|
+| AppointmentScheduler   | WAGwithHCCIntegrated | SchedulerOption13   |No      					|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer finds particular appointment in My Appointment page with confirmation No:
+| InputFileName 		| SheetName 			| RowId              |LinkToClick	|
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption13  |Cancel		|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer cancels a scheduled appointment from Myappointment page:
+| InputFileName 		 | SheetName 	| RowId	    |
+| AppointmentScheduler  | PageNav 		| Pharmacy  |
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		          |
+| AppointmentScheduler   | PageNav 	| Find another appointment|
+
+Then "RX-WAGAndHCCAppScheduler-13" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-13  |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-14
+Scenario: Anonymous user verfies the signup in the Health care clinic emails from the footer of the dot com 
+
+Given "RX-WAGAndHCCAppScheduler-14" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-14 |
+
+Then "RX-WAGAndHCCAppScheduler-14" Customer clicks on an object and validates the expected results:
+| InputFileName 		 | SheetName| RowId	  		        	     |
+| AppointmentScheduler   | PageNav 	| Pharmacy  					 |
+
+Then "RX-WAGAndHCCAppScheduler-14" Customer enter sign up information:
+|ZipCode|
+|60018	|
+
+Then "RX-WAGAndHCCAppScheduler-14" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-14  |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-15
+Scenario: Anonymous user verifies the health care clinic link in the pharmacy mouse over
+
+Given "RX-WAGAndHCCAppScheduler-15" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-15 |
+
+Then "RX-WAGAndHCCAppScheduler-15" Customer verifies the Health Care clinic in the pharmacy home page:
+
+Then "RX-WAGAndHCCAppScheduler-15" Customer finished testing the scenario:
+| InputFileName | SheetName 		  	 | RowId         		   		|
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-15  |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-16
+Scenario: Anonymous user schedules an appointment for flu via Walgreens Appointment scheduler 
+
+Given "RX-WAGAndHCCAppScheduler-16" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-16 |
+
+Then "RX-WAGAndHCCAppScheduler-16" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption14			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-16" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption14			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-16" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption14  |
+
+Then "RX-WAGAndHCCAppScheduler-16" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |SaveAppointmentNo  |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption14  |Yes				 |
+
+Then "RX-WAGAndHCCAppScheduler-16" Customer finished testing the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-16 |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-17
+Scenario: LoggedIn user schedules an appointment for flu via Walgreens Appointment scheduler 
+
+Given "RX-WAGAndHCCAppScheduler-17" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-17 |
+
+And "RX-WAGAndHCCAppScheduler-17" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          		 |
+| CommonData  	| login   	| OnePatientPharmacy	 |
+
+Then "RX-WAGAndHCCAppScheduler-17" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption14			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-17" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption14			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-17" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption14  |
+
+Then "RX-WAGAndHCCAppScheduler-17" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |SaveAppointmentNo  |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption14  |Yes				 |
+
+Then "RX-WAGAndHCCAppScheduler-17" Customer finished testing the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-17 |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-18
+Scenario: LoggedIn user schedules an appointment for flu via Walgreens Appointment scheduler for multiple patient
+
+Given "RX-WAGAndHCCAppScheduler-18" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-18 |
+
+And "RX-WAGAndHCCAppScheduler-18" Customer login to the walgreens.com:
+| InputFileName | SheetName | RowId          		 |
+| CommonData  	| login   	| OnePatientPharmacy	 |
+
+Then "RX-WAGAndHCCAppScheduler-18" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption15			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-18" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption15			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-18" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption15  |
+
+Then "RX-WAGAndHCCAppScheduler-18" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |SaveAppointmentNo  |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption15  |Yes				 |
+
+Then "RX-WAGAndHCCAppScheduler-18" Customer finished testing the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-18 |
+#---------------------------------------------------------------------------------------------------------
+@RX-WAGAndHCCAppScheduler-19
+Scenario: Anonymous user schedules an appointment for flu via Walgreens Appointment scheduler for multiple patient
+
+Given "RX-WAGAndHCCAppScheduler-19" Customer starts the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-19 |
+
+Then "RX-WAGAndHCCAppScheduler-19" Customer Enter Details and verify schedule an Appointment page:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption15			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-19" Customer Selects Appointment service and Verifies Error Message:
+| InputFileName 			| SheetName 			| RowId     				|PageValidation	|
+| AppointmentScheduler  	| WAGwithHCCIntegrated 	| SchedulerOption15			|No				|
+
+Then "RX-WAGAndHCCAppScheduler-19" Customer selects Appointment Date and Time:
+| InputFileName 		| SheetName 			| RowId              |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption15  |
+
+Then "RX-WAGAndHCCAppScheduler-19" Customer fills in Patient Information:
+| InputFileName 		| SheetName 			| RowId              |SaveAppointmentNo  |
+| AppointmentScheduler  |WAGwithHCCIntegrated   | SchedulerOption15  |Yes				 |
+
+Then "RX-WAGAndHCCAppScheduler-19" Customer finished testing the scenario:
+| InputFileName | SheetName 			 | RowId         			   |
+| QC-RX	        | WAGAndHCCAppScheduler  | RX-WAGAndHCCAppScheduler-19 |
+#---------------------------------------------------------------------------------------------------------
+

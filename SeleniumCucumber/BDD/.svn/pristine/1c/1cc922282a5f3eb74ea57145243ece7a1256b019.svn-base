@@ -1,0 +1,518 @@
+package walgreens.ecom.batch.automation.library.accountdashboard.balancerewards;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import walgreens.ecom.batch.automation.library.common.CommonLibrary;
+import walgreens.ecom.batch.automation.library.pharmacy.homepage.PrintRxRecordsLibrary;
+import walgreens.ecom.batch.framework.common.beans.StepBean;
+
+public class BalanceRewardsAccountValidationsLibrary extends CommonLibrary {
+    /**
+     ************************************************************* 
+     * @Purpose - This method is to Validate Default filtered Options and
+     *          Sorting of Date column and selection of Different Filters
+     * @author - Siva Santhi Reddy P
+     * @Created - 10-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateTransactionDetailsSection(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String View_LST = "select#days~CSS";
+	String FilterBy_LST = "select#order~CSS";
+	String DateColumn_LNK = "a[title='Order Date']~CSS";
+	String Next_BTN = "img[alt='Next']~CSS";
+	String Previous_BTN = "img[alt='Previous']~CSS";
+	String NoBalancePointsActivityMessage_ELM = "//p[contains(text(),'no Balance™ Rewards points activity available')]~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // verifying Default Filtered Options
+	    if (dataMap.get("VerifyDefaultFilterOptions").get(0).equalsIgnoreCase("Yes")) {
+		if (isElementPresentVerification(View_LST, browser)) {
+		    String DefaultSelectedDays = new Select(getElementByProperty(View_LST, browser)).getFirstSelectedOption().getText();
+		    if (!DefaultSelectedDays.equals("last 30 days")) {
+			messagesMap.put("Default filtered Days", "30 Days are not dispalying by default");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("View List", "Drop down is missing");
+		    status = WARNING;
+		}
+		if (isElementPresentVerification(FilterBy_LST, browser)) {
+		    String DefaultSelectedDays = new Select(getElementByProperty(FilterBy_LST, browser)).getFirstSelectedOption().getText();
+		    if (!DefaultSelectedDays.equals("all orders")) {
+			messagesMap.put("Default filtered Option", "all orders are not dispalying by default");
+			status = WARNING;
+		    }
+		} else {
+		    messagesMap.put("Filter By List", "Filter By drop down is missing");
+		    status = WARNING;
+		}
+	    }
+	    // Verifying display of Pagination for more than 15 orders
+	    if (dataMap.get("DisplayofPagination").get(0).equalsIgnoreCase("Yes")) {
+		new Select(getElementByProperty(View_LST, browser)).selectByIndex(2);
+		if (!isElementPresentVerifyClick(Next_BTN, browser)) {
+		    throw new Exception("Not able to Click on Next Button");
+		}
+		if (!isElementPresentVerification(Previous_BTN, browser)) {
+		    messagesMap.put("Prvious Button", "Button is not displaying may be Next button is not working");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(Previous_BTN, browser)) {
+		    throw new Exception("Not able to Click on Previous Button");
+		}
+		if (isElementPresentVerification(Previous_BTN, browser)) {
+		    messagesMap.put("Prvious Button dispalyed", "Previous Button is dispalying so Previous Button functionality is not working");
+		    status = WARNING;
+		}
+		new Select(getElementByProperty(View_LST, browser)).selectByIndex(0);
+	    }
+	    // verifying Sroting(Ascending & Descending) for Date Column
+	    if (dataMap.get("DateColumnSort").get(0).equalsIgnoreCase("Yes")) {
+		if (!PrintRxRecordsLibrary.TableSortByFillDate(browser, "Descending")) {
+		    messagesMap.put("Descending Order", "Not sorted Properly");
+		    status = WARNING;
+		}
+		if (!isElementPresentVerifyClick(DateColumn_LNK, browser)) {
+		    throw new Exception("Not able to click on Date Column Link");
+		}
+		if (!PrintRxRecordsLibrary.TableSortByFillDate(browser, "Ascending")) {
+		    messagesMap.put("Ascending Order", "Not sorted Properly");
+		    status = WARNING;
+		}
+	    }
+	    // Selecting required Filter Option
+	    if (!dataMap.get("FilterBy").get(0).equalsIgnoreCase("-")) {
+		String FilterByOption = dataMap.get("FilterBy").get(0).toLowerCase();
+		new Select(getElementByProperty(FilterBy_LST, browser)).selectByVisibleText(FilterByOption);
+	    }
+	    // Validating No Results Message
+	    if (dataMap.get("NoResultMessage").get(0).equalsIgnoreCase("Yes")) {
+		if (!isElementPresentVerification(NoBalancePointsActivityMessage_ELM, browser)) {
+		    messagesMap.put("No Activity Found Message", "Not able to Found the Message");
+		    status = WARNING;
+		}
+	    }
+	    // Validating Filter Results based on Sorted By
+	    if (dataMap.get("ValidateFilterResults").get(0).equalsIgnoreCase("Yes")) {
+		String FilterOption = dataMap.get("FilterBy").get(0).toLowerCase();
+		// In the Transaction results
+		if (!FilterOption.equalsIgnoreCase("steps")) {
+		    FilterOption = FilterOption.replace(FilterOption.charAt(FilterOption.length() - 1), ' ');
+		}
+		// Changing the First Character to Upper case in the String
+		FilterOption = FilterOption.replace(FilterOption.charAt(0), Character.toUpperCase(FilterOption.charAt(0))).trim();
+		// Adding ":" to String, to validate the Transaction Details are
+		// Starting up with this String.
+		// FilterOption = FilterOption.trim() + ":";
+		// Selecting Maximum display of Transactions.
+		new Select(getElementByProperty(View_LST, browser)).selectByIndex(2);
+		WebElement TransactionTable = browser.findElement(By.xpath("//table[contains(@class,'summaryTbl')]/tbody"));
+		List<WebElement> TableRows = TransactionTable.findElements(By.tagName("tr"));
+		for (int i = 1; i < TableRows.size(); i++) {
+		    String TransactionColumnText = browser.findElement(By.xpath("//table/tbody/tr[" + (i + 1) + "]/td[4]")).getText();
+		    if (!TransactionColumnText.contains(FilterOption)) {
+			messagesMap.put("Filter Type: for " + i + "- row", "Filter Option results are displaying wrongly");
+			status = WARNING;
+		    }
+		}
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is to validate Fileds or Adding Points from
+     *          Request Missing Points Overaly
+     * @author - Siva Santhi Reddy P
+     * @Created - 11-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateFiledsOrAddPointsFromRequestMissingPointsOveraly(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewards_TAB = "a.menuTolonoe~CSS";
+	String RequestMissingPoints_LNK = "a#missingOverlay~CSS";
+	String RequestMissingPointsHeader_ELM = "//h2[contains(text(),'Request Missing Points')]~XPATH";
+	String StoreReceipt_RADIO = "input#storereceipt~CSS";
+	String OnlineOrder_RADIO = "input#onlineordernum~CSS";
+	String RFNNumber_TXT = "input#rfnNum~CSS";
+	String RFNTotal_TXT = "input#rfnTotal~CSS";
+	String StoreSubmit_BNT = "input#btnSubmit~CSS";
+	String OrderNumber_TXT = "input#orderNumber~CSS";
+	String OrderTotal_TXT = "input#orderTotal~CSS";
+	String OnlineSubmit_BTN = "input#onlinebtnSubmit~CSS";
+	String OrderNumberErrorText_ELM = "div#orderNumberErrorText~CSS";
+	String OrderTotalErrorText_ELM = "div#orderTotalErrorText~CSS";
+	String ServerLineErrorValidationMessage_ELM = "div#error~CSS";
+	String RFNNumberErrorText_ELM = "div#rfnNumErrorText~CSS";
+	String RFNOrderTotalErrorText_ELM = "div#rfnTotalErrorText~CSS";
+
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Click on Balance Rewards Tab
+	    if (!isElementPresentVerifyClick(BalanceRewards_TAB, browser)) {
+		throw new Exception("Not able to Click on Balance Rewards Tab");
+	    }
+	    // click on Request Missing Points Link
+	    if (!isElementPresentVerifyClick(RequestMissingPoints_LNK, browser)) {
+		throw new Exception("Not able to Click on Request Missing Points Link");
+	    }
+	    // Switch to Overaly
+	    switchToOverlay(browser);
+	    // Verify Overaly Header
+	    if (!isElementPresentVerification(RequestMissingPointsHeader_ELM, browser)) {
+		messagesMap.put("Request Missing Point Overlay Header", "Not able to find the required Header");
+		status = WARNING;
+	    }
+	    // Multiple Rows
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Data From Excel Sheet
+		String SourceType = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "SourceType");
+		String OrderNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderNumber");
+		String OrderTotal = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderTotal");
+		String RFNNumber = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RFNNumber");
+		String RFNorOrderNumberErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "RFNorOrderNumberErrorMessage");
+		String OrderTotalErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderTotalErrorMessage");
+		String NoMatachErrorMessage = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "OrderTotalErrorMessage");
+		// Source type(Store Receipt) , enter data into the fileds
+		if (SourceType != null && SourceType.equalsIgnoreCase("StoreReceipt")) {
+		    if (!checkBoxSelection(browser, StoreReceipt_RADIO, "SELECT")) {
+			throw new Exception("Not able to click on Store Receipt Radio Button");
+		    }
+		    System.out.println("RFNNumber:"+RFNNumber);
+		    if(!RFNNumber.equals("-")){
+			if (!clearAndEnterText(RFNNumber_TXT, RFNNumber, browser)) {
+			    messagesMap.put("RFN Number", "Not able to enter the value into RFN filed");
+			    status = WARNING;
+			}
+		    }
+		    System.out.println(dataMap.get("RowId").get(i));
+		    if(!OrderTotal.equals("-")){
+			System.out.println("RFNTotal:"+OrderTotal);
+			if (!clearAndEnterText(RFNTotal_TXT, OrderTotal, browser)) {
+			    messagesMap.put("RFN Total", "Not able to enter the value into RFN Total filed");
+			    status = WARNING;
+			}
+		    }
+		    getElementByProperty(StoreSubmit_BNT, browser).sendKeys(Keys.RETURN);
+		    /*
+		     * if (!isElementPresentVerifyClick(StoreSubmit_BNT,
+		     * browser)) { throw new
+		     * Exception("Not able to Click on Store Submit Button"); }
+		     */
+		}
+		// Source type(Online Order) , enter data into the fileds
+		if (SourceType != null && SourceType.equalsIgnoreCase("OnlineOrder")) {
+		    if (!checkBoxSelection(browser, OnlineOrder_RADIO, "SELECT")) {
+			throw new Exception("Not able to click on Online Order Radio Button");
+		    }
+		    if (!clearAndEnterText(OrderNumber_TXT, OrderNumber, browser)) {
+			messagesMap.put("RFN Number", "Not able to enter the value into Order number filed");
+			status = WARNING;
+		    }
+		    if (!clearAndEnterText(OrderTotal_TXT, OrderTotal, browser)) {
+			messagesMap.put("Order Total", "Not able to enter the value into Order Total filed");
+			status = WARNING;
+		    }
+		    getElementByProperty(OnlineSubmit_BTN, browser).sendKeys(Keys.RETURN);
+		    /*
+		     * if (!isElementPresentVerifyClick(OnlineSubmit_BTN,
+		     * browser)) { throw new
+		     * Exception("Not able to Click on Online Submit Button"); }
+		     */
+		}
+		// Switch to Overaly
+		switchToOverlay(browser);
+		// Verify Error Message for RFN Number filed or Order Number
+		// field
+		if (RFNorOrderNumberErrorMessage != null && !RFNorOrderNumberErrorMessage.equals("-")) {
+		    String AppErrorMessage = null;
+		    if (isElementPresentVerification(OrderNumberErrorText_ELM, browser) || isElementPresentVerification(RFNNumberErrorText_ELM, browser)) {
+			if (getElementByProperty(OrderNumberErrorText_ELM, browser).isDisplayed()) {
+			    AppErrorMessage = getElementByProperty(OrderNumberErrorText_ELM, browser).getText().trim();
+			} else {
+			    AppErrorMessage = getElementByProperty(RFNNumberErrorText_ELM, browser).getText().trim();
+			}
+		    } else {
+			messagesMap.put("RFN & Order Number Error Element", "Object Properties has been changed. Please Change");
+			status = WARNING;
+		    }
+		    if (!AppErrorMessage.equals(RFNorOrderNumberErrorMessage.trim())) {
+			messagesMap.put("RFN or Order Number Error Message-" + i, "Error message is not matching");
+			status = WARNING;
+		    }
+		}
+		// Verify Error Message for Order Total field
+		if (OrderTotalErrorMessage != null && !OrderTotalErrorMessage.equals("-")) {
+		    String AppErrorMessage = null;
+		    if (isElementPresentVerification(OrderTotalErrorText_ELM, browser) || isElementPresentVerification(RFNOrderTotalErrorText_ELM, browser)) {
+			if (getElementByProperty(OrderTotalErrorText_ELM, browser).isDisplayed()) {
+			    AppErrorMessage = getElementByProperty(OrderTotalErrorText_ELM, browser).getText().trim();
+			} else {
+			    AppErrorMessage = getElementByProperty(RFNOrderTotalErrorText_ELM, browser).getText().trim();
+			}
+		    } else {
+			messagesMap.put("RFN & Order Total Error Element", "Object Properties has been changed. Please Change");
+			status = WARNING;
+		    }
+		    if (!AppErrorMessage.equals(OrderTotalErrorMessage.trim())) {
+			messagesMap.put("RFN or Order Total Error Message-" + i, "Error message is not matching");
+			status = WARNING;
+		    }
+		}
+		// Validating No match Error Message
+		if (NoMatachErrorMessage != null && NoMatachErrorMessage.equals("-")) {
+		    String NomatchErrorMessage = getElementByProperty(ServerLineErrorValidationMessage_ELM, browser).getText();
+		    if (!NomatchErrorMessage.contains(NoMatachErrorMessage)) {
+			messagesMap.put("No Match Error Message", "Error Message is not getting dispalyed");
+			status = WARNING;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is to Update Personal Information from Balance
+     *          Rewards Settings Page
+     * @author - Siva Santhi Reddy P
+     * @Created - 12-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void updatePersonalInfoFromBalanceRewardsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewards_TAB = "a.menuTolonoe~CSS";
+	String BalanceRewardsSettings_LNK = "a[title='Balance Rewards Settings']~CSS";
+	String BalanceRewardsSettingsHeader_ELM = "//h2[contains(text(),'Your Balance™ Rewards Settings')]~XPATH";
+	String DateEdit_LNK = "//div[@class='PersonalInformation']/div/div[8]/div[3]/p/a[@title='edit']~XPATH";
+	String Month_LST = "//select[@id='dobMonth']~XPATH";
+	String Date_LST = "//select[@id='dobDay']~XPATH";
+	String Year_LST = "//select[@id='dobYear']~XPATH";
+	String SaveChanges_BTN = "//input[@title='Save Changes']~XPATH";
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+	    // Click on Balance Rewards Tab
+	    if (!isElementPresentVerifyClick(BalanceRewards_TAB, browser)) {
+		throw new Exception("Not able to Click on Balance Rewards Tab");
+	    }
+	    // Click on Balance Rewards Settings Link
+	    if (!isElementPresentVerifyClick(BalanceRewardsSettings_LNK, browser)) {
+		throw new Exception("Not able to Click on Balance Rewards Settings Link");
+	    }
+	    if (!isElementPresentVerification(BalanceRewardsSettingsHeader_ELM, browser)) {
+		messagesMap.put("Balance Rewards Settings Header", "Header is missing");
+		status = WARNING;
+	    }
+	    // Click on Edit Link
+	    if (!isElementPresentVerifyClick(DateEdit_LNK, browser)) {
+		throw new Exception("Not able to Click on Date -Edit Link");
+	    }
+
+	    // Multiple Rows
+	    int totalRowCount = Integer.parseInt(dataMap.get("totalRowCount").get(0));
+	    for (int i = 0; i < totalRowCount; i++) {
+		// Data From Excel Sheet
+		String Address = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Address");
+		String City = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "City");
+		String State = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "State");
+		String ZipCode = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ZipCode");
+		String Phone = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "Phone");
+		String DOBMonth = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Month");
+		String DOBDate = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Day");
+		String DOBYear = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "DOB-Year");
+		String ClickSaveChanges = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ClickSaveChanges");
+		String ErrorMessages = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "ErrorMessages");
+		String UpdateChangestoWagAccount = getTestData(dataMap.get("InputFileName").get(i), dataMap.get("SheetName").get(i), dataMap.get("RowId").get(i), "UpdateChangestoWagAccount");
+		if (DOBMonth != null && !DOBMonth.equals("-")) {
+		    new Select(getElementByProperty(Month_LST, browser)).selectByVisibleText(DOBMonth);
+		}
+		if (DOBDate != null && !DOBDate.equals("-")) {
+		    new Select(getElementByProperty(Date_LST, browser)).selectByVisibleText(DOBDate);
+		}
+		if (DOBYear != null && !DOBYear.equals("-")) {
+		    new Select(getElementByProperty(Year_LST, browser)).selectByVisibleText(DOBYear);
+		}
+		getElementByProperty(Year_LST, browser).sendKeys(Keys.TAB);
+		if (ClickSaveChanges != null && ClickSaveChanges.equalsIgnoreCase("Yes")) {
+		    if (!isElementPresentVerifyClick(SaveChanges_BTN, browser)) {
+			throw new Exception("Not able to Click on Save Changes Button");
+		    }
+		}
+		if (ErrorMessages != null && !ErrorMessages.equals("-")) {
+		    String[] IndividualErrorMessages = ErrorMessages.split(":");
+		    String IndividualErrorElement = null;
+		    for (int j = 0; j < IndividualErrorMessages.length; j++) {
+			IndividualErrorElement = "//p[contains(text(),'" + IndividualErrorMessages[j].trim() + "')]";
+			if (!isElementPresentVerification(IndividualErrorElement, browser)) {
+			    messagesMap.put(IndividualErrorMessages[j], "Error Message is Missing");
+			    status = WARNING;
+			}
+		    }
+		} else {
+		    // Created else loop for future implementation.
+		}
+	    }
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+
+    /**
+     ************************************************************* 
+     * @Purpose - This Method is to validate Loyalty Order details from Balance
+     *          Rewards Activity Module Page
+     * @author - Siva Santhi Reddy P
+     * @Created - 27-JUN-2013
+     * @Modified By -
+     * @Modified Date -
+     ************************************************************* 
+     */
+    public static void validateOrderDetailsFromBRActivityDetailsPage(EventFiringWebDriver browser, StepBean stepBean, Map<String, List<String>> dataMap) {
+	String status = PASS;
+	String BalanceRewards_TAB = "a.menuTolonoe~CSS";
+	String VieBy_LST = "select#days~CSS";
+	String YourBalanceRewardsActivityDetails_ELM = "//h2[contains(text(),'Your Balance™ Activity Details')]~XPATH";
+	String BacktoBalanceRewardsActivity_LNK = "a[title='< Back to Balance™ Rewards activity']~CSS";
+	String CustomerServiceNumber_ELM = "//p[contains(text(),'Review your order details')]~XPATH";
+	String RewardsSummaryforthisOrder_ELM = "//*[contains(text(),'Balance™ Rewards summary for this order')]~XPATH";
+	String OrderDetails_DIV = "//div[contains(@class,'order_total')]~XPATH";
+	String Type_ELM = "//p[contains(text(),'Type:')]~XPATH";
+	String TotalPoints_ELM = "//*[contains(text(),'Total Points:')]~XPATH";
+	String ManageBRMembershipHeader_ELM = "//h2[contains(text(),'Manage Your Balance™ Rewards Membership')]~XPATH";
+	String OrderorRFNNumber_ELM = "//form[@id='loyaltyActibityDetails']/div[3]/div/div[2]/p~XPATH";
+	String OrderDate_ELM = "//form[@id='loyaltyActibityDetails']/div[3]/div/div[2]/p[2]~XPATH";
+	String OrderChannelorRestoreTrasaction_ELM = "//form[@id='loyaltyActibityDetails']/div[3]/div/div[2]/p[3]~XPATH";
+	String OrderTable = "//table/tbody";
+	String OrderDate = null;
+	Map<String, String> messagesMap = null;
+	try {
+	    if (messagesMap == null) {
+		messagesMap = new HashMap<String, String>();
+		stepBean.setStepStatusMessages(messagesMap);
+	    }
+
+	    if (!isElementPresentVerifyClick(BalanceRewards_TAB, browser)) {
+		throw new Exception("Not able to click on Balance Rewards Tab");
+	    }
+	    // Selecting view by 180 to display of all available orders
+	    new Select(getElementByProperty(VieBy_LST, browser)).selectByIndex(2);
+	    String OrderNumber = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "OrderNumber");
+	    String CustomerServiceMessage = getTestData(dataMap.get("InputFileName").get(0), dataMap.get("SheetName").get(0), dataMap.get("RowId").get(0), "CustomerServiceMessage");
+	    // Storing the Date of the Order
+	    List<WebElement> TableRows = getElementByProperty(OrderTable, browser).findElements(By.tagName("tr"));
+	    for (int i = 0; i < TableRows.size(); i++) {
+		if (TableRows.get(i).getText().contains(OrderNumber)) {
+		    OrderDate = browser.findElement(By.xpath("//table/tbody/tr[" + (i + 1) + "]/td")).getText();
+		    break;
+		}
+	    }
+	    // Clicking on Order Number Link
+	    String OrderNumber_LNK = "//a[contains(text(),'" + OrderNumber + "')]~XPATH";
+	    if (!isElementPresentVerifyClick(OrderNumber_LNK, browser)) {
+		throw new Exception("Not able to click on Order Number Link");
+	    }
+	    // Verifying Order Details Page header
+	    if (!isElementPresentVerification(YourBalanceRewardsActivityDetails_ELM, browser)) {
+		messagesMap.put("Order Details Page", "Not able to find the Header in Order details Page");
+		status = WARNING;
+	    }
+	    // Verifying Cusotmer Service Message
+	    if (isElementPresentVerification(CustomerServiceNumber_ELM, browser)) {
+		if (!getElementByProperty(CustomerServiceNumber_ELM, browser).getText().contains(CustomerServiceMessage)) {
+		    messagesMap.put("Cusomter Service Message & Number", "Message is dispalying wrongly");
+		    status = WARNING;
+		}
+	    } else {
+		messagesMap.put("Customer Service Number", "Object is missing");
+		status = WARNING;
+	    }
+	    // Verification of Order Number
+	    if (!getElementByProperty(OrderorRFNNumber_ELM, browser).getText().contains(OrderNumber)) {
+		messagesMap.put("Order Number in Order Details Page", "Missing");
+		status = WARNING;
+	    }
+	    // Verification of Order Date
+	    if (!getElementByProperty(OrderDate_ELM, browser).getText().contains(OrderDate)) {
+		messagesMap.put("Order Date in Order Details Page", "Missing");
+		status = WARNING;
+	    }
+	    // Verification of display of Order Channel
+	    String ChannelAndLocation = getElementByProperty(OrderChannelorRestoreTrasaction_ELM, browser).getText();
+	    if (!ChannelAndLocation.contains("Walgreen")) {
+		messagesMap.put("Channel Location in Order Details Page", "Missing");
+		status = WARNING;
+	    }
+	    // Verifying Order Total Elements
+	    String[] OrderTotalElementstoVerify = { RewardsSummaryforthisOrder_ELM, OrderDetails_DIV, Type_ELM, TotalPoints_ELM };
+	    for (int k = 0; k < OrderTotalElementstoVerify.length; k++) {
+		if (!isElementPresentVerification(OrderTotalElementstoVerify[k], browser)) {
+		    messagesMap.put(OrderTotalElementstoVerify[k], "Object is missing in Order Total Section");
+		    status = WARNING;
+		}
+	    }
+	    // clicking on Bakc to Blance Rewards Activity Link
+	    if (!isElementPresentVerifyClick(BacktoBalanceRewardsActivity_LNK, browser)) {
+		throw new Exception("Not able to click on Back to Balance Rewards Activity Link");
+	    }
+	    // Verifying the Header in Balance Rewards page to make sure Back
+	    // link is working fine.
+	    if (!isElementPresentVerification(ManageBRMembershipHeader_ELM, browser)) {
+		messagesMap.put("Back to Balance Rewards Activity Link is not working", "Not able to find Balance Rewards Page Header");
+		status = WARNING;
+	    }
+
+	} catch (Exception e) {
+	    status = FAIL;
+	    messagesMap.put("An Exception Occured:", e.getMessage());
+	    LogIt(e, null, stepBean);
+	} finally {
+	    stepBean.setStepStatus(status);
+	}
+    }
+}

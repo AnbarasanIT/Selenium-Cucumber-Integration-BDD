@@ -1,0 +1,101 @@
+@pharmacy @LoyaltyOverlayInDrugInteraction
+Feature: All the scenarios in the feature are related  to Loyalty Overlay In Drug Interaction
+
+#---------------------------------------------------------------------------------------------------------
+@RX-LoyaltyOverlayInDrugInteraction-1
+Scenario: Verify the loyalty window displayed befor chat window  when Rx authenticated non loyalty user clicks Chat now link while checking the drug interaction and gerts result as major
+
+Given  "RX-LoyaltyOverlayInDrugInteraction-1" Customer starts the scenario:
+| InputFileName | SheetName 							| RowId      		    |
+| QC-RX	    	| LoyaltyOverlayInDrugInteraction  		| RX-LoyaltyOverlayInDrugInteraction-1 		|
+
+Given "RX-LoyaltyOverlayInDrugInteraction-1" Customer performs Pharmacy Registration:
+| InputFileName | SheetName 				| RowId             | 
+| EHSData 	 	| RxRegistrationNonLoyalty  | Testuser	 |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       				| RowId  |
+| EHSData       | LoyaltyOverlayInDrugInteraction | Druginfo5  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  			  |CTAChatboxDisplay  |
+|Yes      	 |LoyaltyRegistrationPage |-				  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName   	   | RowId      		|
+| EHSData		|JoinNowNavigation |JoinBalanceRewards  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                | -           | -                      | Yes      |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  			  |CTAChatboxDisplay  |
+|-      	 |LoyaltyOverlay		   |-|
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  		|CTAChatboxDisplay  |
+| -		 |ChatPopUpWindow   |-   |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-1" Customer finished testing the scenario:
+| InputFileName | SheetName 							| RowId      		    |
+| QC-RX	    	| LoyaltyOverlayInDrugInteraction  		| RX-LoyaltyOverlayInDrugInteraction-1 		|
+
+
+#---------------------------------------------------------------------------------------------------------
+@RX-LoyaltyOverlayInDrugInteraction-2
+Scenario: Verify the loyalty window displayed befor chat window  when Rx authenticated admin non loyalty user clicks Chat now link while checking the drug interaction against prescription in the Rx history
+
+Given  "RX-LoyaltyOverlayInDrugInteraction-2" Customer starts the scenario:
+| InputFileName | SheetName 							| RowId      		    |
+| QC-RX	    	| LoyaltyOverlayInDrugInteraction  		| RX-LoyaltyOverlayInDrugInteraction-2 		|
+
+Given "RX-LoyaltyOverlayInDrugInteraction-2" Customer login to the walgreens.com:
+| InputFileName  | SheetName 		 | RowId             	| 
+| EHSData	 	 | CTAChatValidations| RxAuthNonLoyaltyUser |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer clicks on an object and validates the expected results:
+| InputFileName 			| SheetName   | RowId      |
+| PharmacyLinkVerification  |Authenticated |CheckDrugInteractions    |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer checks Drug Interaction from Check Drug Interactions page:
+| InputFileName | SheetName       				| RowId  |
+| EHSData       | LoyaltyOverlayInDrugInteraction | Druginfo5  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  			  |CTAChatboxDisplay  |
+|Yes      	 |LoyaltyRegistrationPage |-				  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer clicks on an object and validates the expected results:
+| InputFileName | SheetName   	   | RowId      		|
+| EHSData		|JoinNowNavigation |JoinBalanceRewards  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer makes the loyalty registeration selection from Join Balance Rewards page:
+| CreateNewMembership | ActivateNow | UseInformationonFileCheck | Submit |
+| -                 | -           | -                       | Yes      |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  			  |CTAChatboxDisplay  |
+|-      	 |LoyaltyOverlay		   |-|
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer validate functionality of chat now link in cta chat box:
+|ClickChatNow|TargetPage  		|CTAChatboxDisplay  |
+| -			 |ChatPopUpWindow   |-   |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer logout from walgreens:
+| Source  |
+| Global  |
+
+Then "RX-LoyaltyOverlayInDrugInteraction-2" Customer finished testing the scenario:
+| InputFileName | SheetName 							| RowId      		    |
+| QC-RX	    	| LoyaltyOverlayInDrugInteraction  		| RX-LoyaltyOverlayInDrugInteraction-2 		|
+
+#---------------------------------------------------------------------------------------------------------
